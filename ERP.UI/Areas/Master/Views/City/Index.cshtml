@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "City List";
+}
+
+<h1>City</h1>
+<div class="row">
+    <div class="col-lg-12">
+        <button type="button" id="add-new-city">Add</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <table id="citylistgrid" class="display" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>City Id</th>
+                    <th>City Name</th>
+                    <th>State Name</th>
+                    <th>Country Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $("#citylistgrid").DataTable({
+        //dom: 'lftip',
+        "pageLength": 20,
+        //"lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+        "ajax": {
+            "url": "@Url.Action("GetCityList", "City")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+            { "data": "CityId", "name": "City Id" },
+            { "data": "CityName", "name": "City Name" },
+            { "data": "StateName", "name": "State Name" },
+            { "data": "CountryName", "name": "Country Name" },
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        '<button type="button" onclick="javascript: fnEditCity(' + full.CityId + ')">Edit</button>' +
+                        '<button type="button" data-toggle="modal" onclick="javascript: fnDeleteCity(this, ' + full.CityId + ')">Delete</button>' +
+                        '</div>';
+                }
+            }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-city').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddCity", "City")', 'html', '',
+    function (data) {
+        $('#modal-city-master').empty();
+        $('#modal-city-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit city
+    function fnEditCity(cityId) {
+        var model = { cityId: cityId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCity", "City")', 'html', model,
+        function (data) {
+            $('#modal-city-master').empty();
+            $('#modal-city-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+<div id="modal-city-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteCity"); }

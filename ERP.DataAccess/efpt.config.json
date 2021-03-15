@@ -1,0 +1,174 @@
+﻿{
+   "CodeGenerationMode": 1,
+   "ContextClassName": "ErpDbContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": "EntityData",
+   "OutputPath": "EntityModels",
+   "ProjectRootNamespace": "ERP.DataAccess",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "chargetype",
+         "ObjectType": 0
+      },
+      {
+         "Name": "city",
+         "ObjectType": 0
+      },
+      {
+         "Name": "company",
+         "ObjectType": 0
+      },
+      {
+         "Name": "country",
+         "ObjectType": 0
+      },
+      {
+         "Name": "currency",
+         "ObjectType": 0
+      },
+      {
+         "Name": "currencyconversion",
+         "ObjectType": 0
+      },
+      {
+         "Name": "department",
+         "ObjectType": 0
+      },
+      {
+         "Name": "designation",
+         "ObjectType": 0
+      },
+      {
+         "Name": "employee",
+         "ObjectType": 0
+      },
+      {
+         "Name": "financialyear",
+         "ObjectType": 0
+      },
+      {
+         "Name": "financialyearcompanyrelation",
+         "ObjectType": 0
+      },
+      {
+         "Name": "form",
+         "ObjectType": 0
+      },
+      {
+         "Name": "ledger",
+         "ObjectType": 0
+      },
+      {
+         "Name": "ledgeraddress",
+         "ObjectType": 0
+      },
+      {
+         "Name": "ledgercompanyrelation",
+         "ObjectType": 0
+      },
+      {
+         "Name": "ledgerfinancialyearbalance",
+         "ObjectType": 0
+      },
+      {
+         "Name": "module",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchaseinvoice",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchaseinvoicecharges",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchaseinvoicedetails",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchaseinvoicedetailstax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchaseinvoicetax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "salesinvoice",
+         "ObjectType": 0
+      },
+      {
+         "Name": "salesinvoicecharges",
+         "ObjectType": 0
+      },
+      {
+         "Name": "salesinvoicedetails",
+         "ObjectType": 0
+      },
+      {
+         "Name": "salesinvoicedetailstax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "salesinvoicetax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "state",
+         "ObjectType": 0
+      },
+      {
+         "Name": "status",
+         "ObjectType": 0
+      },
+      {
+         "Name": "taxregister",
+         "ObjectType": 0
+      },
+      {
+         "Name": "taxregisterdetails",
+         "ObjectType": 0
+      },
+      {
+         "Name": "unitofmeasurement",
+         "ObjectType": 0
+      },
+      {
+         "Name": "user",
+         "ObjectType": 0
+      },
+      {
+         "Name": "vouchersetup",
+         "ObjectType": 0
+      },
+      {
+         "Name": "vouchersetupdetails",
+         "ObjectType": 0
+      },
+      {
+         "Name": "voucherstyle",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": ".erpdb",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseNoConstructor": false,
+   "UseNoNavigations": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSpatial": false
+}

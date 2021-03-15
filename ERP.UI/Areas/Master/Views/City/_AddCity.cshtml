@@ -1,0 +1,113 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using ERP.Models.Master;
+@model CityModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">City</div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveCity" class="width100" method="post"
+              asp-action="SaveCity" asp-controller="City" asp-area="Master"
+              data-ajax-begin="return BeginSaveCity();" data-ajax-success="SuccessSaveCity"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.CityId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CityName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.CityName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.CityName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CountryId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "CountryId", "CountryName"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CountryId)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StateId, new { @class = "required" })
+                    <select class="form-control" asp-for="StateId">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.StateId)
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (0 == '@Model.CityId') {
+            $('#StateId').empty();
+            $('#StateId').append("<option value=''>Select</option>");
+        }
+
+        if ('@Model.CityId' > 0 && '@Model.CountryId' > 0) {
+            fnGetStateByCountryId('@Model.CountryId');
+        }
+    });
+
+    // country change.
+    $('#CountryId').change(function () {
+        fnGetStateByCountryId(this.value);
+    });
+
+    // get state by countryId.
+    function fnGetStateByCountryId(countryId) {
+        $('#StateId').empty();
+        $('#StateId').append("<option value=''>Select</option>");
+
+        if ('' != countryId) {
+            var model = { countryId: countryId };
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetStateByCountryId", "City")', '', model,
+            function (response) {
+                if (true == response.Result.Status) {
+                    $.each(response.Result.Data, function (i, item) {
+                        $('#StateId').append("<option value='" + item.StateId + "'>" + item.StateName + "</option>");
+                    });
+                    if ('@Model.StateId' > 0) {
+                         $('#StateId').val('@Model.StateId');
+                    }
+                }
+                else {
+                    if ('NoItems' == response.Result.Message) {
+                        $("span[data-valmsg-for='StateId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                        $("span[data-valmsg-for='StateId']").html('<span for="StateId" class="">No data found.</span>');
+                    }
+                }
+            }, null, true, null, false);
+        }
+    }
+
+    // begin form
+    function BeginSaveCity() {
+        //$("#frmSaveCity").removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($('form[id="frmSaveCity"]'));
+        //$.validator.unobtrusive.parse($('#frmSaveCity'));
+        var validator = $("#frmSaveCity").validate();
+        var isModelValid = $('#frmSaveCity').valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveCity(data) {
+        if (data.Result.Status) {
+            $('#modal-city-master').modal('hide');
+            $('#citylistgrid').DataTable().ajax.reload();
+            fnSuccessNotify('Record saved sucessfully.');
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
