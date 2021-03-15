@@ -154,18 +154,19 @@ namespace ERP.Services.Master
                 cityModelList = new List<CityModel>();
                 foreach (City city in cityList)
                 {
-                    cityModelList.Add(await AssidnValueToModel(city));
+                    cityModelList.Add(await AssignValueToModel(city));
                 }
             }
 
             return cityModelList; // returns.
         }
 
-        private async Task<CityModel> AssidnValueToModel(City city)
+        private async Task<CityModel> AssignValueToModel(City city)
         {
             return await Task.Run(() =>
             {
                 CityModel cityModel = new CityModel();
+
                 cityModel.CityId = city.CityId;
                 cityModel.CityName = city.CityName;
                 cityModel.StateId = city.State.StateId;

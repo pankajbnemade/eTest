@@ -63,7 +63,7 @@ namespace ERP.UI.Areas.Master.Controllers
         [HttpGet]
         public async Task<IActionResult> AddCity()
         {
-            ViewBag.CountryList = await _country.GetAllCountry();
+            ViewBag.CountryList = await _country.GetCountryList();
 
             return View("_AddCity", new CityModel());
         }
@@ -75,7 +75,7 @@ namespace ERP.UI.Areas.Master.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCity(int cityId)
         {
-            ViewBag.CountryList = await _country.GetAllCountry();
+            ViewBag.CountryList = await _country.GetCountryList();
 
             CityModel cityModel = await _city.GetCityById(cityId);
 
