@@ -24,6 +24,7 @@ namespace ERP.Services.Master
             State state = new State();
             state.StateName = stateModel.StateName;
             state.CountryId = stateModel.CountryId;
+
             stateId = await Create(state);
 
             return stateId; // returns.
@@ -40,6 +41,7 @@ namespace ERP.Services.Master
                 // assign values.
                 state.StateName = stateModel.StateName;
                 state.CountryId = stateModel.CountryId;
+
                 isUpdated = await Update(state);
             }
 

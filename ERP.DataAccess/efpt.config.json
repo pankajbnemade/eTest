@@ -86,15 +86,15 @@
          "ObjectType": 0
       },
       {
-         "Name": "purchaseinvoicecharges",
+         "Name": "purchaseinvoicecharge",
          "ObjectType": 0
       },
       {
-         "Name": "purchaseinvoicedetails",
+         "Name": "purchaseinvoicedetail",
          "ObjectType": 0
       },
       {
-         "Name": "purchaseinvoicedetailstax",
+         "Name": "purchaseinvoicedetailtax",
          "ObjectType": 0
       },
       {
@@ -106,15 +106,15 @@
          "ObjectType": 0
       },
       {
-         "Name": "salesinvoicecharges",
+         "Name": "salesinvoicecharge",
          "ObjectType": 0
       },
       {
-         "Name": "salesinvoicedetails",
+         "Name": "salesinvoicedetail",
          "ObjectType": 0
       },
       {
-         "Name": "salesinvoicedetailstax",
+         "Name": "salesinvoicedetailtax",
          "ObjectType": 0
       },
       {
@@ -134,7 +134,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "taxregisterdetails",
+         "Name": "taxregisterdetail",
          "ObjectType": 0
       },
       {
@@ -150,7 +150,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "vouchersetupdetails",
+         "Name": "vouchersetupdetail",
          "ObjectType": 0
       },
       {
@@ -168,6 +168,7 @@
    "UseLegacyPluralizer": false,
    "UseNoConstructor": false,
    "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
    "UseNodaTime": false,
    "UseNullableReferences": false,
    "UseSpatial": false

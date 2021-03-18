@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP.DataAccess.EntityModels
 {
-    [Table("vouchersetupdetails")]
+    [Table("vouchersetupdetail")]
     public partial class Vouchersetupdetail
     {
         [Key]

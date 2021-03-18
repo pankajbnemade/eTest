@@ -10,7 +10,7 @@ namespace ERP.DataAccess.EntityModels
     public partial class Ledgerfinancialyearbalance
     {
         [Key]
-        public int Id { get; set; }
+        public int LedgerBalanceId { get; set; }
         public int? LedgerId { get; set; }
         public int? FinancialYearId { get; set; }
         public int? CompanyId { get; set; }

@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace ERP.Models.Accounts
 {
-    class CurrencyModel
+    public class CurrencyModel
     {
+        
+        public int CurrencyId { get; set; }
+        public string CurrencyCode { get; set; }
+        public string CurrencyName { get; set; }
+        public string Denomination { get; set; }
+
     }
 }

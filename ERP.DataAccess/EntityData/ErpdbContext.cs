@@ -37,12 +37,12 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Purchaseinvoice> Purchaseinvoices { get; set; }
         public virtual DbSet<Purchaseinvoicecharge> Purchaseinvoicecharges { get; set; }
         public virtual DbSet<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
-        public virtual DbSet<Purchaseinvoicedetailstax> Purchaseinvoicedetailstaxes { get; set; }
+        public virtual DbSet<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
         public virtual DbSet<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
         public virtual DbSet<Salesinvoice> Salesinvoices { get; set; }
         public virtual DbSet<Salesinvoicecharge> Salesinvoicecharges { get; set; }
         public virtual DbSet<Salesinvoicedetail> Salesinvoicedetails { get; set; }
-        public virtual DbSet<Salesinvoicedetailstax> Salesinvoicedetailstaxes { get; set; }
+        public virtual DbSet<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
         public virtual DbSet<Salesinvoicetax> Salesinvoicetaxes { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
@@ -407,6 +407,9 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Financialyearcompanyrelation>(entity =>
             {
+                entity.HasKey(e => e.RelationId)
+                    .HasName("PRIMARY");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_FinancialYearCompanyRelation_CompanyId");
 
@@ -594,6 +597,9 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Ledgercompanyrelation>(entity =>
             {
+                entity.HasKey(e => e.RelationId)
+                    .HasName("PRIMARY");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_LedgerCompanyRelation_CompanyId");
 
@@ -629,6 +635,9 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Ledgerfinancialyearbalance>(entity =>
             {
+                entity.HasKey(e => e.LedgerBalanceId)
+                    .HasName("PRIMARY");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_LedgerFinancialYearBalance_CompanyId");
 
@@ -835,7 +844,7 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Purchaseinvoicecharge>(entity =>
             {
-                entity.HasKey(e => e.InvoiceChargesId)
+                entity.HasKey(e => e.InvoiceChargeId)
                     .HasName("PRIMARY");
 
                 entity.HasIndex(e => e.ChargeTypeId)
@@ -917,7 +926,7 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_PurchaseInvoiceDetails_User_UpdatedByUserId");
             });
 
-            modelBuilder.Entity<Purchaseinvoicedetailstax>(entity =>
+            modelBuilder.Entity<Purchaseinvoicedetailtax>(entity =>
             {
                 entity.HasKey(e => e.InvoiceDetTaxId)
                     .HasName("PRIMARY");
@@ -947,22 +956,22 @@ namespace ERP.DataAccess.EntityData
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.HasOne(d => d.InvoiceDet)
-                    .WithMany(p => p.Purchaseinvoicedetailstaxes)
+                    .WithMany(p => p.Purchaseinvoicedetailtaxes)
                     .HasForeignKey(d => d.InvoiceDetId)
                     .HasConstraintName("FK_PurchaseInvoiceDetailsTax_PurchaseInvoiceDetails_InvoiceDetId");
 
                 entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.PurchaseinvoicedetailstaxPreparedByUsers)
+                    .WithMany(p => p.PurchaseinvoicedetailtaxPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
                     .HasConstraintName("FK_PurchaseInvoiceDetailsTax_User_PreparedByUserId");
 
                 entity.HasOne(d => d.TaxLedger)
-                    .WithMany(p => p.Purchaseinvoicedetailstaxes)
+                    .WithMany(p => p.Purchaseinvoicedetailtaxes)
                     .HasForeignKey(d => d.TaxLedgerId)
                     .HasConstraintName("FK_PurchaseInvoiceDetailsTax_Ledger_TaxLedgerId");
 
                 entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.PurchaseinvoicedetailstaxUpdatedByUsers)
+                    .WithMany(p => p.PurchaseinvoicedetailtaxUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_PurchaseInvoiceDetailsTax_User_UpdatedByUserId");
             });
@@ -1153,7 +1162,7 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Salesinvoicecharge>(entity =>
             {
-                entity.HasKey(e => e.InvoiceChargesId)
+                entity.HasKey(e => e.InvoiceChargeId)
                     .HasName("PRIMARY");
 
                 entity.HasIndex(e => e.ChargeTypeId)
@@ -1239,7 +1248,7 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_SalesInvoiceDetails_User_UpdatedByUserId");
             });
 
-            modelBuilder.Entity<Salesinvoicedetailstax>(entity =>
+            modelBuilder.Entity<Salesinvoicedetailtax>(entity =>
             {
                 entity.HasKey(e => e.InvoiceDetTaxId)
                     .HasName("PRIMARY");
@@ -1269,22 +1278,22 @@ namespace ERP.DataAccess.EntityData
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.HasOne(d => d.InvoiceDet)
-                    .WithMany(p => p.Salesinvoicedetailstaxes)
+                    .WithMany(p => p.Salesinvoicedetailtaxes)
                     .HasForeignKey(d => d.InvoiceDetId)
                     .HasConstraintName("FK_SalesInvoiceDetailsTax_SalesInvoiceDetails_InvoiceDetId");
 
                 entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.SalesinvoicedetailstaxPreparedByUsers)
+                    .WithMany(p => p.SalesinvoicedetailtaxPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
                     .HasConstraintName("FK_SalesInvoiceDetailsTax_User_PreparedByUserId");
 
                 entity.HasOne(d => d.TaxLedger)
-                    .WithMany(p => p.Salesinvoicedetailstaxes)
+                    .WithMany(p => p.Salesinvoicedetailtaxes)
                     .HasForeignKey(d => d.TaxLedgerId)
                     .HasConstraintName("FK_SalesInvoiceDetailsTax_Ledger_TaxLedgerId");
 
                 entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.SalesinvoicedetailstaxUpdatedByUsers)
+                    .WithMany(p => p.SalesinvoicedetailtaxUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_SalesInvoiceDetailsTax_User_UpdatedByUserId");
             });

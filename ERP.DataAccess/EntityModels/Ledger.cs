@@ -18,13 +18,13 @@ namespace ERP.DataAccess.EntityModels
             PurchaseinvoiceAccountLedgers = new HashSet<Purchaseinvoice>();
             PurchaseinvoiceBillToAddresses = new HashSet<Purchaseinvoice>();
             PurchaseinvoiceSupplierLedgers = new HashSet<Purchaseinvoice>();
-            Purchaseinvoicedetailstaxes = new HashSet<Purchaseinvoicedetailstax>();
+            Purchaseinvoicedetailtaxes = new HashSet<Purchaseinvoicedetailtax>();
             Purchaseinvoicetaxes = new HashSet<Purchaseinvoicetax>();
             SalesinvoiceAccountLedgers = new HashSet<Salesinvoice>();
             SalesinvoiceBankLedgers = new HashSet<Salesinvoice>();
             SalesinvoiceBillToAddresses = new HashSet<Salesinvoice>();
             SalesinvoiceCustomerLedgers = new HashSet<Salesinvoice>();
-            Salesinvoicedetailstaxes = new HashSet<Salesinvoicedetailstax>();
+            Salesinvoicedetailtaxes = new HashSet<Salesinvoicedetailtax>();
             Salesinvoicetaxes = new HashSet<Salesinvoicetax>();
             Taxregisterdetails = new HashSet<Taxregisterdetail>();
         }
@@ -73,8 +73,8 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Purchaseinvoice> PurchaseinvoiceBillToAddresses { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.SupplierLedger))]
         public virtual ICollection<Purchaseinvoice> PurchaseinvoiceSupplierLedgers { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicedetailstax.TaxLedger))]
-        public virtual ICollection<Purchaseinvoicedetailstax> Purchaseinvoicedetailstaxes { get; set; }
+        [InverseProperty(nameof(Purchaseinvoicedetailtax.TaxLedger))]
+        public virtual ICollection<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.TaxLedger))]
         public virtual ICollection<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
         [InverseProperty(nameof(Salesinvoice.AccountLedger))]
@@ -85,8 +85,8 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Salesinvoice> SalesinvoiceBillToAddresses { get; set; }
         [InverseProperty(nameof(Salesinvoice.CustomerLedger))]
         public virtual ICollection<Salesinvoice> SalesinvoiceCustomerLedgers { get; set; }
-        [InverseProperty(nameof(Salesinvoicedetailstax.TaxLedger))]
-        public virtual ICollection<Salesinvoicedetailstax> Salesinvoicedetailstaxes { get; set; }
+        [InverseProperty(nameof(Salesinvoicedetailtax.TaxLedger))]
+        public virtual ICollection<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
         [InverseProperty(nameof(Salesinvoicetax.TaxLedger))]
         public virtual ICollection<Salesinvoicetax> Salesinvoicetaxes { get; set; }
         [InverseProperty(nameof(Taxregisterdetail.TaxLedger))]

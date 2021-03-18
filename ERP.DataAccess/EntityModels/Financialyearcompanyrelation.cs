@@ -10,7 +10,7 @@ namespace ERP.DataAccess.EntityModels
     public partial class Financialyearcompanyrelation
     {
         [Key]
-        public int Id { get; set; }
+        public int RelationId { get; set; }
         public int? CompanyId { get; set; }
         public int? FinancialYearId { get; set; }
         public int? PreparedByUserId { get; set; }

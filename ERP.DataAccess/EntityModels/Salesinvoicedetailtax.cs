@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP.DataAccess.EntityModels
 {
-    [Table("purchaseinvoicedetailstax")]
-    public partial class Purchaseinvoicedetailstax
+    [Table("salesinvoicedetailtax")]
+    public partial class Salesinvoicedetailtax
     {
         [Key]
         public int InvoiceDetTaxId { get; set; }
@@ -34,16 +34,16 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         [ForeignKey(nameof(InvoiceDetId))]
-        [InverseProperty(nameof(Purchaseinvoicedetail.Purchaseinvoicedetailstaxes))]
-        public virtual Purchaseinvoicedetail InvoiceDet { get; set; }
+        [InverseProperty(nameof(Salesinvoicedetail.Salesinvoicedetailtaxes))]
+        public virtual Salesinvoicedetail InvoiceDet { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.PurchaseinvoicedetailstaxPreparedByUsers))]
+        [InverseProperty(nameof(User.SalesinvoicedetailtaxPreparedByUsers))]
         public virtual User PreparedByUser { get; set; }
         [ForeignKey(nameof(TaxLedgerId))]
-        [InverseProperty(nameof(Ledger.Purchaseinvoicedetailstaxes))]
+        [InverseProperty(nameof(Ledger.Salesinvoicedetailtaxes))]
         public virtual Ledger TaxLedger { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.PurchaseinvoicedetailstaxUpdatedByUsers))]
+        [InverseProperty(nameof(User.SalesinvoicedetailtaxUpdatedByUsers))]
         public virtual User UpdatedByUser { get; set; }
     }
 }

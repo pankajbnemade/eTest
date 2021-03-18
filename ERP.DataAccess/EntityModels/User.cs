@@ -53,8 +53,8 @@ namespace ERP.DataAccess.EntityModels
             PurchaseinvoicechargeUpdatedByUsers = new HashSet<Purchaseinvoicecharge>();
             PurchaseinvoicedetailPreparedByUsers = new HashSet<Purchaseinvoicedetail>();
             PurchaseinvoicedetailUpdatedByUsers = new HashSet<Purchaseinvoicedetail>();
-            PurchaseinvoicedetailstaxPreparedByUsers = new HashSet<Purchaseinvoicedetailstax>();
-            PurchaseinvoicedetailstaxUpdatedByUsers = new HashSet<Purchaseinvoicedetailstax>();
+            PurchaseinvoicedetailtaxPreparedByUsers = new HashSet<Purchaseinvoicedetailtax>();
+            PurchaseinvoicedetailtaxUpdatedByUsers = new HashSet<Purchaseinvoicedetailtax>();
             PurchaseinvoicetaxPreparedByUsers = new HashSet<Purchaseinvoicetax>();
             PurchaseinvoicetaxUpdatedByUsers = new HashSet<Purchaseinvoicetax>();
             SalesinvoicePreparedByUsers = new HashSet<Salesinvoice>();
@@ -63,8 +63,8 @@ namespace ERP.DataAccess.EntityModels
             SalesinvoicechargeUpdatedByUsers = new HashSet<Salesinvoicecharge>();
             SalesinvoicedetailPreparedByUsers = new HashSet<Salesinvoicedetail>();
             SalesinvoicedetailUpdatedByUsers = new HashSet<Salesinvoicedetail>();
-            SalesinvoicedetailstaxPreparedByUsers = new HashSet<Salesinvoicedetailstax>();
-            SalesinvoicedetailstaxUpdatedByUsers = new HashSet<Salesinvoicedetailstax>();
+            SalesinvoicedetailtaxPreparedByUsers = new HashSet<Salesinvoicedetailtax>();
+            SalesinvoicedetailtaxUpdatedByUsers = new HashSet<Salesinvoicedetailtax>();
             SalesinvoicetaxPreparedByUsers = new HashSet<Salesinvoicetax>();
             SalesinvoicetaxUpdatedByUsers = new HashSet<Salesinvoicetax>();
             StatePreparedByUsers = new HashSet<State>();
@@ -191,10 +191,10 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Purchaseinvoicedetail> PurchaseinvoicedetailPreparedByUsers { get; set; }
         [InverseProperty(nameof(Purchaseinvoicedetail.UpdatedByUser))]
         public virtual ICollection<Purchaseinvoicedetail> PurchaseinvoicedetailUpdatedByUsers { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicedetailstax.PreparedByUser))]
-        public virtual ICollection<Purchaseinvoicedetailstax> PurchaseinvoicedetailstaxPreparedByUsers { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicedetailstax.UpdatedByUser))]
-        public virtual ICollection<Purchaseinvoicedetailstax> PurchaseinvoicedetailstaxUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Purchaseinvoicedetailtax.PreparedByUser))]
+        public virtual ICollection<Purchaseinvoicedetailtax> PurchaseinvoicedetailtaxPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Purchaseinvoicedetailtax.UpdatedByUser))]
+        public virtual ICollection<Purchaseinvoicedetailtax> PurchaseinvoicedetailtaxUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.PreparedByUser))]
         public virtual ICollection<Purchaseinvoicetax> PurchaseinvoicetaxPreparedByUsers { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.UpdatedByUser))]
@@ -211,10 +211,10 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Salesinvoicedetail> SalesinvoicedetailPreparedByUsers { get; set; }
         [InverseProperty(nameof(Salesinvoicedetail.UpdatedByUser))]
         public virtual ICollection<Salesinvoicedetail> SalesinvoicedetailUpdatedByUsers { get; set; }
-        [InverseProperty(nameof(Salesinvoicedetailstax.PreparedByUser))]
-        public virtual ICollection<Salesinvoicedetailstax> SalesinvoicedetailstaxPreparedByUsers { get; set; }
-        [InverseProperty(nameof(Salesinvoicedetailstax.UpdatedByUser))]
-        public virtual ICollection<Salesinvoicedetailstax> SalesinvoicedetailstaxUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Salesinvoicedetailtax.PreparedByUser))]
+        public virtual ICollection<Salesinvoicedetailtax> SalesinvoicedetailtaxPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Salesinvoicedetailtax.UpdatedByUser))]
+        public virtual ICollection<Salesinvoicedetailtax> SalesinvoicedetailtaxUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Salesinvoicetax.PreparedByUser))]
         public virtual ICollection<Salesinvoicetax> SalesinvoicetaxPreparedByUsers { get; set; }
         [InverseProperty(nameof(Salesinvoicetax.UpdatedByUser))]

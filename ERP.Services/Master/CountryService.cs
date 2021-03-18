@@ -21,7 +21,7 @@ namespace ERP.Services.Master
             // assign values.
             Country country = new Country();
             country.CountryName = countryModel.CountryName;
-            country.CountryId = countryModel.CountryId;
+
             countryId = await Create(country);
 
             return countryId; // returns.
@@ -37,7 +37,7 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 country.CountryName = countryModel.CountryName;
-                country.CountryId = countryModel.CountryId;
+
                 isUpdated = await Update(country);
             }
 

@@ -72,9 +72,26 @@ namespace ERP.Models.Accounts
         public decimal? DiscountAmount { get; set; }
         public int? StatusId { get; set; }
 
-        [Display(Name = "Customer")]
+        [Display(Name = "Company")]
         public int? CompanyId { get; set; }
         public int? FinancialYearId { get; set; }
         public int? MaxNo { get; set; }
+
+        //#####
+
+        public string CustomerLedgerName { get; set; }
+
+        public string BillToAddress { get; set; }
+
+        public string AccountLedgerName { get; set; }
+
+        public string BankLedgerName { get; set; }
+
+        public string TaxRegisterName { get; set; }
+
+        public string CurrencyName { get; set; }
+
+        public string StatusName { get; set; }
+
     }
 }

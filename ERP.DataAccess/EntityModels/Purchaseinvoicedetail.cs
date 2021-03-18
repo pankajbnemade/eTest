@@ -6,12 +6,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP.DataAccess.EntityModels
 {
-    [Table("purchaseinvoicedetails")]
+    [Table("purchaseinvoicedetail")]
     public partial class Purchaseinvoicedetail
     {
         public Purchaseinvoicedetail()
         {
-            Purchaseinvoicedetailstaxes = new HashSet<Purchaseinvoicedetailstax>();
+            Purchaseinvoicedetailtaxes = new HashSet<Purchaseinvoicedetailtax>();
         }
 
         [Key]
@@ -57,7 +57,7 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(User.PurchaseinvoicedetailUpdatedByUsers))]
         public virtual User UpdatedByUser { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicedetailstax.InvoiceDet))]
-        public virtual ICollection<Purchaseinvoicedetailstax> Purchaseinvoicedetailstaxes { get; set; }
+        [InverseProperty(nameof(Purchaseinvoicedetailtax.InvoiceDet))]
+        public virtual ICollection<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
     }
 }

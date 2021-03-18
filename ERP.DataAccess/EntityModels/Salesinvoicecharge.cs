@@ -6,11 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP.DataAccess.EntityModels
 {
-    [Table("salesinvoicecharges")]
+    [Table("salesinvoicecharge")]
     public partial class Salesinvoicecharge
     {
         [Key]
-        public int InvoiceChargesId { get; set; }
+        public int InvoiceChargeId { get; set; }
         public int? InvoiceId { get; set; }
         public int? SrNo { get; set; }
         public int? ChargeTypeId { get; set; }

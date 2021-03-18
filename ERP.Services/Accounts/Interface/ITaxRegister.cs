@@ -1,12 +1,20 @@
 ﻿using ERP.DataAccess.EntityModels;
+using ERP.Models.Accounts;
 using ERP.Models.Common;
-using ERP.Models.Master;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
 {
     public interface ITaxRegister : IRepository<Taxregister>
     {
+        Task<int> CreateTaxRegister(TaxRegisterModel taxRegisterModel);
+
+        Task<bool> UpdateTaxRegister(TaxRegisterModel taxRegisterModel);
+
+        Task<bool> DeleteTaxRegister(int taxRegisterId);
+
+        Task<TaxRegisterModel> GetTaxRegisterById(int taxRegisterId);
+
+        Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList();
     }
 }

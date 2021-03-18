@@ -10,7 +10,7 @@ namespace ERP.DataAccess.EntityModels
     public partial class Ledgercompanyrelation
     {
         [Key]
-        public int Id { get; set; }
+        public int RelationId { get; set; }
         public int? CompanyId { get; set; }
         public int? LedgerId { get; set; }
         public int? PreparedByUserId { get; set; }

@@ -16,13 +16,6 @@ namespace ERP.Services.Master.Interface
         Task<bool> UpdateCountry(CountryModel countryModel);
         Task<bool> DeleteCountry(int countryId);
         Task<CountryModel> GetCountryById(int countryId);
-
-        /// <summary>
-        /// get all country list.
-        /// </summary>
-        /// <returns>
-        /// return list.
-        /// </returns>
         Task<DataTableResultModel<CountryModel>> GetCountryList();
     }
 }
