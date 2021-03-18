@@ -11,7 +11,6 @@ namespace ERP.DataAccess.EntityModels
     {
         public Salesinvoice()
         {
-            Salesinvoicecharges = new HashSet<Salesinvoicecharge>();
             Salesinvoicedetails = new HashSet<Salesinvoicedetail>();
             Salesinvoicetaxes = new HashSet<Salesinvoicetax>();
         }
@@ -59,10 +58,6 @@ namespace ERP.DataAccess.EntityModels
         public decimal? TaxAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal? TaxAmount { get; set; }
-        [Column("ChargeAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal? ChargeAmountFc { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal? ChargeAmount { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string DiscountPercentageOrAmount { get; set; }
         [Column(TypeName = "decimal(18,4)")]
@@ -119,8 +114,6 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Salesinvoices))]
         public virtual Voucherstyle VoucherStyle { get; set; }
-        [InverseProperty(nameof(Salesinvoicecharge.Invoice))]
-        public virtual ICollection<Salesinvoicecharge> Salesinvoicecharges { get; set; }
         [InverseProperty(nameof(Salesinvoicedetail.Invoice))]
         public virtual ICollection<Salesinvoicedetail> Salesinvoicedetails { get; set; }
         [InverseProperty(nameof(Salesinvoicetax.Invoice))]

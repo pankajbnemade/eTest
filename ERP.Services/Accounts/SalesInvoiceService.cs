@@ -53,8 +53,7 @@ namespace ERP.Services.Accounts
             salesInvoice.NetAmountFcinWord = "";
             salesInvoice.TaxAmountFc = 0;
             salesInvoice.TaxAmount = 0;
-            salesInvoice.ChargeAmountFc = 0;
-            salesInvoice.ChargeAmount = 0;
+            
             salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
             salesInvoice.DiscountPercentage = salesInvoiceModel.DiscountPercentage;
             salesInvoice.DiscountAmountFc = 0;
@@ -191,8 +190,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.NetAmountFcinWord = salesinvoice.NetAmountFcinWord;
                 salesInvoiceModel.TaxAmountFc = salesinvoice.TaxAmountFc;
                 salesInvoiceModel.TaxAmount = salesinvoice.TaxAmount;
-                salesInvoiceModel.ChargeAmountFc = salesinvoice.ChargeAmountFc;
-                salesInvoiceModel.ChargeAmount = salesinvoice.ChargeAmount;
+                
                 salesInvoiceModel.DiscountPercentageOrAmount = salesinvoice.DiscountPercentageOrAmount;
                 salesInvoiceModel.DiscountPercentage = salesinvoice.DiscountPercentage;
                 salesInvoiceModel.DiscountAmountFc = salesinvoice.DiscountAmountFc;

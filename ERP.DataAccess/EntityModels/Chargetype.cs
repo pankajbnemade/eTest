@@ -9,12 +9,6 @@ namespace ERP.DataAccess.EntityModels
     [Table("chargetype")]
     public partial class Chargetype
     {
-        public Chargetype()
-        {
-            Purchaseinvoicecharges = new HashSet<Purchaseinvoicecharge>();
-            Salesinvoicecharges = new HashSet<Salesinvoicecharge>();
-        }
-
         [Key]
         public int ChargeTypeId { get; set; }
         [Required]
@@ -33,9 +27,5 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(User.ChargetypeUpdatedByUsers))]
         public virtual User UpdatedByUser { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicecharge.ChargeType))]
-        public virtual ICollection<Purchaseinvoicecharge> Purchaseinvoicecharges { get; set; }
-        [InverseProperty(nameof(Salesinvoicecharge.ChargeType))]
-        public virtual ICollection<Salesinvoicecharge> Salesinvoicecharges { get; set; }
     }
 }

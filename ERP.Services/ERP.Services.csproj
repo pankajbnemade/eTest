@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Accounts\Interface\IPurchaseInvoiceCharge.cs" />
+    <Compile Remove="Accounts\Interface\ISalesInvoiceCharge.cs" />
     <Compile Remove="Accounts\Interface\I_.cs" />
+    <Compile Remove="Accounts\PurchaseInvoiceChargeService.cs" />
+    <Compile Remove="Accounts\SalesInvoiceChargeService.cs" />
   </ItemGroup>
 
   <ItemGroup>

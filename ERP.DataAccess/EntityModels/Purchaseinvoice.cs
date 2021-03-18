@@ -11,7 +11,6 @@ namespace ERP.DataAccess.EntityModels
     {
         public Purchaseinvoice()
         {
-            Purchaseinvoicecharges = new HashSet<Purchaseinvoicecharge>();
             Purchaseinvoicedetails = new HashSet<Purchaseinvoicedetail>();
             Purchaseinvoicetaxes = new HashSet<Purchaseinvoicetax>();
         }
@@ -48,10 +47,6 @@ namespace ERP.DataAccess.EntityModels
         public decimal GrossAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal GrossAmount { get; set; }
-        [Column("ChargeAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal ChargeAmountFc { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal ChargeAmount { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string DiscountPercentageOrAmount { get; set; }
         [Column(TypeName = "decimal(18,4)")]
@@ -115,8 +110,6 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Purchaseinvoices))]
         public virtual Voucherstyle VoucherStyle { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicecharge.Invoice))]
-        public virtual ICollection<Purchaseinvoicecharge> Purchaseinvoicecharges { get; set; }
         [InverseProperty(nameof(Purchaseinvoicedetail.Invoice))]
         public virtual ICollection<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.Invoice))]

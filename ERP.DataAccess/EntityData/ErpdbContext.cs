@@ -35,12 +35,10 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<Purchaseinvoice> Purchaseinvoices { get; set; }
-        public virtual DbSet<Purchaseinvoicecharge> Purchaseinvoicecharges { get; set; }
         public virtual DbSet<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
         public virtual DbSet<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
         public virtual DbSet<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
         public virtual DbSet<Salesinvoice> Salesinvoices { get; set; }
-        public virtual DbSet<Salesinvoicecharge> Salesinvoicecharges { get; set; }
         public virtual DbSet<Salesinvoicedetail> Salesinvoicedetails { get; set; }
         public virtual DbSet<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
         public virtual DbSet<Salesinvoicetax> Salesinvoicetaxes { get; set; }
@@ -842,48 +840,6 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_PurchaseInvoice_VoucherStyle_VoucherStyleId");
             });
 
-            modelBuilder.Entity<Purchaseinvoicecharge>(entity =>
-            {
-                entity.HasKey(e => e.InvoiceChargeId)
-                    .HasName("PRIMARY");
-
-                entity.HasIndex(e => e.ChargeTypeId)
-                    .HasName("IX_PurchaseInvoiceCharges_ChargeTypeId");
-
-                entity.HasIndex(e => e.InvoiceId)
-                    .HasName("IX_PurchaseInvoiceCharges_InvoiceId");
-
-                entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_PurchaseInvoiceCharges_User_PreparedByUserId");
-
-                entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_PurchaseInvoiceCharges_UpdatedByUserId");
-
-                entity.Property(e => e.Remark)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.HasOne(d => d.ChargeType)
-                    .WithMany(p => p.Purchaseinvoicecharges)
-                    .HasForeignKey(d => d.ChargeTypeId)
-                    .HasConstraintName("FK_PurchaseInvoiceCharges_ChargeType_ChargeTypeId");
-
-                entity.HasOne(d => d.Invoice)
-                    .WithMany(p => p.Purchaseinvoicecharges)
-                    .HasForeignKey(d => d.InvoiceId)
-                    .HasConstraintName("FK_PurchaseInvoiceCharges_PurchaseInvoice_InvoiceId");
-
-                entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.PurchaseinvoicechargePreparedByUsers)
-                    .HasForeignKey(d => d.PreparedByUserId)
-                    .HasConstraintName("FK_PurchaseInvoiceCharges_User_PreparedByUserId");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.PurchaseinvoicechargeUpdatedByUsers)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .HasConstraintName("FK_PurchaseInvoiceCharges_User_UpdatedByUserId");
-            });
-
             modelBuilder.Entity<Purchaseinvoicedetail>(entity =>
             {
                 entity.HasKey(e => e.InvoiceDetId)
@@ -1158,48 +1114,6 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.Salesinvoices)
                     .HasForeignKey(d => d.VoucherStyleId)
                     .HasConstraintName("FK_SalesInvoice_VoucherStyle_VoucherStyleId");
-            });
-
-            modelBuilder.Entity<Salesinvoicecharge>(entity =>
-            {
-                entity.HasKey(e => e.InvoiceChargeId)
-                    .HasName("PRIMARY");
-
-                entity.HasIndex(e => e.ChargeTypeId)
-                    .HasName("IX_SalesInvoiceCharges_ChargeTypeId");
-
-                entity.HasIndex(e => e.InvoiceId)
-                    .HasName("IX_SalesInvoiceCharges_InvoiceId");
-
-                entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_SalesInvoiceCharges_User_PreparedByUserId");
-
-                entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_SalesInvoiceCharges_UpdatedByUserId");
-
-                entity.Property(e => e.Remark)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.HasOne(d => d.ChargeType)
-                    .WithMany(p => p.Salesinvoicecharges)
-                    .HasForeignKey(d => d.ChargeTypeId)
-                    .HasConstraintName("FK_SalesInvoiceCharges_ChargeType_ChargeTypeId");
-
-                entity.HasOne(d => d.Invoice)
-                    .WithMany(p => p.Salesinvoicecharges)
-                    .HasForeignKey(d => d.InvoiceId)
-                    .HasConstraintName("FK_SalesInvoiceCharges_SalesInvoice_InvoiceId");
-
-                entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.SalesinvoicechargePreparedByUsers)
-                    .HasForeignKey(d => d.PreparedByUserId)
-                    .HasConstraintName("FK_SalesInvoiceCharges_User_PreparedByUserId");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.SalesinvoicechargeUpdatedByUsers)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .HasConstraintName("FK_SalesInvoiceCharges_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Salesinvoicedetail>(entity =>
