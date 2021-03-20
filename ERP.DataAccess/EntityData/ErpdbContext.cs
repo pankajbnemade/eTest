@@ -499,7 +499,7 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxRegistredNo)
+                entity.Property(e => e.TaxRegisteredNo)
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -722,7 +722,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_PurchaseInvoice_AccountLedgerId");
 
                 entity.HasIndex(e => e.BillToAddressId)
-                    .HasName("IX_PurchaseInvoice_BillToAddressId");
+                    .HasName("FK_PurchaseInvoice_Ledger_BillToAddressId_idx");
 
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_PurchaseInvoice_CompanyId");
@@ -789,7 +789,7 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_PurchaseInvoice_Ledger_AccountLedgerId");
 
                 entity.HasOne(d => d.BillToAddress)
-                    .WithMany(p => p.PurchaseinvoiceBillToAddresses)
+                    .WithMany(p => p.Purchaseinvoices)
                     .HasForeignKey(d => d.BillToAddressId)
                     .HasConstraintName("FK_PurchaseInvoice_Ledger_BillToAddressId");
 
@@ -994,7 +994,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_SalesInvoice_BankLedgerId");
 
                 entity.HasIndex(e => e.BillToAddressId)
-                    .HasName("IX_SalesInvoice_BillToAddressId");
+                    .HasName("FK_SalesInvoice_Ledger_BillToAddressId_idx");
 
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_SalesInvoice_CompanyId");
@@ -1066,7 +1066,7 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_SalesInvoice_Ledger_BankLedgerId");
 
                 entity.HasOne(d => d.BillToAddress)
-                    .WithMany(p => p.SalesinvoiceBillToAddresses)
+                    .WithMany(p => p.Salesinvoices)
                     .HasForeignKey(d => d.BillToAddressId)
                     .HasConstraintName("FK_SalesInvoice_Ledger_BillToAddressId");
 

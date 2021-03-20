@@ -149,6 +149,7 @@ namespace ERP.Services.Master
 
             // get records by query.
             List<City> cityList = await query.ToListAsync();
+
             if (null != cityList && cityList.Count > 0)
             {
                 cityModelList = new List<CityModel>();

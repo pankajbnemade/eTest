@@ -15,6 +15,6 @@ namespace ERP.Services.Accounts.Interface
         
         Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int purchaseInvoiceId);
 
-        //Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList();
+        Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList();
     }
 }

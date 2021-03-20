@@ -11,16 +11,16 @@ namespace ERP.Models.Accounts
         public int LedgerId { get; set; }
         public string LedgerCode { get; set; }
         public string LedgerName { get; set; }
-        public sbyte IsGroup { get; set; }
-        public sbyte IsMasterGroup { get; set; }
-        public int ParentGroupId { get; set; }
-        public sbyte IsDeActived { get; set; }
-        public string TaxRegistredNo { get; set; }
+        public sbyte? IsGroup { get; set; }
+        public sbyte? IsMasterGroup { get; set; }
+        public int? ParentGroupId { get; set; }
+        public sbyte? IsDeActived { get; set; }
+        public string TaxRegisteredNo { get; set; }
 
         //######
 
-        public int ParentGroupName { get; set; }
-
+        public string ParentGroupName { get; set; }
+        public string PreparedByName { get; set; }
 
     }
 }

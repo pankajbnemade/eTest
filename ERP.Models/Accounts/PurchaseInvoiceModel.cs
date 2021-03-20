@@ -24,8 +24,6 @@ namespace ERP.Models.Accounts
         public decimal TotalLineItemAmount { get; set; }
         public decimal GrossAmountFc { get; set; }
         public decimal GrossAmount { get; set; }
-        public decimal ChargeAmountFc { get; set; }
-        public decimal ChargeAmount { get; set; }
         public string DiscountPercentageOrAmount { get; set; }
         public decimal DiscountPercentage { get; set; }
         public decimal DiscountAmountFc { get; set; }
@@ -40,6 +38,12 @@ namespace ERP.Models.Accounts
         public int? FinancialYearId { get; set; }
         public int? MaxNo { get; set; }
         public int? VoucherStyleId { get; set; }
+
+        public int? PreparedByUserId { get; set; }
+        public int? UpdatedByUserId { get; set; }
+        public DateTime? PreparedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
+
         //####
 
         public string SupplierLedgerName { get; set; }
@@ -48,7 +52,8 @@ namespace ERP.Models.Accounts
         public string TaxRegisterName { get; set; }
         public string CurrencyName { get; set; }
 
-
         public string StatusName { get; set; }
+        public string PreparedByName { get; set; }
+
     }
 }

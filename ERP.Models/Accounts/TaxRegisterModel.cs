@@ -10,8 +10,9 @@ namespace ERP.Models.Accounts
     {
         public int TaxRegisterId { get; set; }
         public string TaxRegisterName { get; set; }
-       
+
         //####
-        //public string Name { get; set; }
+        public string PreparedByName { get; set; }
+
     }
 }

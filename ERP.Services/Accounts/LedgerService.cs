@@ -2,6 +2,7 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -14,7 +15,6 @@ namespace ERP.Services.Accounts
     {
         public LedgerService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateLedger(LedgerModel ledgerModel)
         {
             int ledgerId = 0;
@@ -22,13 +22,18 @@ namespace ERP.Services.Accounts
             // assign values.
             Ledger ledger = new Ledger();
 
-            //ledger.LedgerName = ledgerModel.LedgerName;
+            ledger.LedgerCode = ledgerModel.LedgerCode;
+            ledger.LedgerName = ledgerModel.LedgerName;
+            ledger.IsGroup = ledgerModel.IsGroup;
+            ledger.IsMasterGroup = ledgerModel.IsMasterGroup;
+            ledger.ParentGroupId = ledgerModel.ParentGroupId;
+            ledger.IsDeActived = ledgerModel.IsDeActived;
+            ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
 
             ledgerId = await Create(ledger);
 
             return ledgerId; // returns.
         }
-
 
         public async Task<bool> UpdateLedger(LedgerModel ledgerModel)
         {
@@ -40,14 +45,19 @@ namespace ERP.Services.Accounts
             if (null != ledger)
             {
                 // assign values.
-                //ledger.LedgerName = ledgerModel.LedgerName;
+                ledger.LedgerCode = ledgerModel.LedgerCode;
+                ledger.LedgerName = ledgerModel.LedgerName;
+                ledger.IsGroup = ledgerModel.IsGroup;
+                ledger.IsMasterGroup = ledgerModel.IsMasterGroup;
+                ledger.ParentGroupId = ledgerModel.ParentGroupId;
+                ledger.IsDeActived = ledgerModel.IsDeActived;
+                ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
 
                 isUpdated = await Update(ledger);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteLedger(int ledgerId)
         {
@@ -64,12 +74,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<LedgerModel> GetLedgerById(int ledgerId)
         {
             LedgerModel ledgerModel = null;
 
-            IList<LedgerModel> ledgerModelList = await GetLedgerList(ledgerId);
+            IList<LedgerModel> ledgerModelList = await GetLedgerList(ledgerId, 0);
 
             if (null != ledgerModelList && ledgerModelList.Any())
             {
@@ -79,18 +88,11 @@ namespace ERP.Services.Accounts
             return ledgerModel; // returns.
         }
 
-
-        public async Task<IList<LedgerModel>> GetLedgerByStateId(int stateId)
-        {
-            return await GetLedgerList(0);
-        }
-
-
-        public async Task<DataTableResultModel<LedgerModel>> GetLedgerList()
+        public async Task<DataTableResultModel<LedgerModel>> GetLedgerListByParentGroupId(int parentGroupId)
         {
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
-            IList<LedgerModel> ledgerModelList = await GetLedgerList(0);
+            IList<LedgerModel> ledgerModelList = await GetLedgerList(0, parentGroupId);
 
             if (null != ledgerModelList && ledgerModelList.Any())
             {
@@ -102,21 +104,41 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        private async Task<IList<LedgerModel>> GetLedgerList(int ledgerId)
+        public async Task<DataTableResultModel<LedgerModel>> GetLedgerList()
+        {
+            DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
+
+            IList<LedgerModel> ledgerModelList = await GetLedgerList(0, 0);
+
+            if (null != ledgerModelList && ledgerModelList.Any())
+            {
+                resultModel = new DataTableResultModel<LedgerModel>();
+                resultModel.ResultList = ledgerModelList;
+                resultModel.TotalResultCount = ledgerModelList.Count();
+            }
+
+            return resultModel; // returns.
+        }
+
+        private async Task<IList<LedgerModel>> GetLedgerList(int ledgerId, int parentGroupId)
         {
             IList<LedgerModel> ledgerModelList = null;
 
             // create query.
-            IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0);
+            IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
+                                            .Include(w => w.ParentGroup).Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != ledgerId)
                 query = query.Where(w => w.LedgerId == ledgerId);
 
-          
+            // apply filters.
+            if (0 != parentGroupId)
+                query = query.Where(w => w.ParentGroupId == parentGroupId);
 
             // get records by query.
             List<Ledger> ledgerList = await query.ToListAsync();
+
             if (null != ledgerList && ledgerList.Count > 0)
             {
                 ledgerModelList = new List<LedgerModel>();
@@ -136,11 +158,47 @@ namespace ERP.Services.Accounts
             {
                 LedgerModel ledgerModel = new LedgerModel();
 
-                //ledgerModel.LedgerId = ledger.LedgerId;
-                //ledgerModel.LedgerName = ledger.LedgerName;
+                ledgerModel.LedgerId = ledger.LedgerId;
+                ledgerModel.LedgerCode = ledger.LedgerCode;
+                ledgerModel.LedgerName = ledger.LedgerName;
+                ledgerModel.IsGroup = ledger.IsGroup;
+                ledgerModel.IsMasterGroup = ledger.IsMasterGroup;
+                ledgerModel.ParentGroupId = ledger.ParentGroupId;
+                ledgerModel.IsDeActived = ledger.IsDeActived;
+                ledgerModel.TaxRegisteredNo = ledger.TaxRegisteredNo;
+
+                //######
+
+                ledgerModel.ParentGroupName = ledger.ParentGroup.LedgerName;
+                ledgerModel.PreparedByName = ledger.PreparedByUser.UserName;
 
                 return ledgerModel;
             });
         }
+
+        public async Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.LedgerId != 0))
+            {
+                IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0);
+
+                // apply filters.
+                if (0 != parentGroupId)
+                    query = query.Where(w => w.ParentGroupId == parentGroupId);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.LedgerName,
+                                        Value = s.LedgerId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
     }
 }

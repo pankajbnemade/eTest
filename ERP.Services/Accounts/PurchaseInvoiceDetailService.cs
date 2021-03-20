@@ -14,7 +14,6 @@ namespace ERP.Services.Accounts
     {
         public PurchaseInvoiceDetailService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreatePurchaseInvoiceDetail(PurchaseInvoiceDetailModel purchaseInvoiceDetailModel)
         {
             int purchaseInvoiceDetailId = 0;
@@ -22,13 +21,24 @@ namespace ERP.Services.Accounts
             // assign values.
             Purchaseinvoicedetail purchaseInvoiceDetail = new Purchaseinvoicedetail();
 
-            //purchaseInvoiceDetail.PurchaseInvoiceDetailName = purchaseInvoiceDetailModel.PurchaseInvoiceDetailName;
+            purchaseInvoiceDetail.InvoiceId = purchaseInvoiceDetailModel.InvoiceId;
+            purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;
+            purchaseInvoiceDetail.Description = purchaseInvoiceDetailModel.Description;
+            purchaseInvoiceDetail.UnitOfMeasurementId = purchaseInvoiceDetailModel.UnitOfMeasurementId;
+            purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity;
+            purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit;
+            purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice;
+            purchaseInvoiceDetail.GrossAmountFc = 0;
+            purchaseInvoiceDetail.GrossAmount = 0;
+            purchaseInvoiceDetail.TaxAmountFc = 0;
+            purchaseInvoiceDetail.TaxAmount = 0;
+            purchaseInvoiceDetail.NetAmountFc = 0;
+            purchaseInvoiceDetail.NetAmount = 0;
 
             purchaseInvoiceDetailId = await Create(purchaseInvoiceDetail);
 
             return purchaseInvoiceDetailId; // returns.
         }
-
 
         public async Task<bool> UpdatePurchaseInvoiceDetail(PurchaseInvoiceDetailModel purchaseInvoiceDetailModel)
         {
@@ -40,14 +50,24 @@ namespace ERP.Services.Accounts
             if (null != purchaseInvoiceDetail)
             {
                 // assign values.
-                //purchaseInvoiceDetail.PurchaseInvoiceDetailName = purchaseInvoiceDetailModel.PurchaseInvoiceDetailName;
+                purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;
+                purchaseInvoiceDetail.Description = purchaseInvoiceDetailModel.Description;
+                purchaseInvoiceDetail.UnitOfMeasurementId = purchaseInvoiceDetailModel.UnitOfMeasurementId;
+                purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity;
+                purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit;
+                purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice;
+                //purchaseInvoiceDetail.GrossAmountFc = 0;
+                //purchaseInvoiceDetail.GrossAmount = 0;
+                //purchaseInvoiceDetail.TaxAmountFc = 0;
+                //purchaseInvoiceDetail.TaxAmount = 0;
+                //purchaseInvoiceDetail.NetAmountFc = 0;
+                //purchaseInvoiceDetail.NetAmount = 0;
 
                 isUpdated = await Update(purchaseInvoiceDetail);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeletePurchaseInvoiceDetail(int purchaseInvoiceDetailId)
         {
@@ -64,12 +84,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<PurchaseInvoiceDetailModel> GetPurchaseInvoiceDetailById(int purchaseInvoiceDetailId)
         {
             PurchaseInvoiceDetailModel purchaseInvoiceDetailModel = null;
 
-            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(purchaseInvoiceDetailId);
+            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(purchaseInvoiceDetailId,0);
 
             if (null != purchaseInvoiceDetailModelList && purchaseInvoiceDetailModelList.Any())
             {
@@ -79,18 +98,11 @@ namespace ERP.Services.Accounts
             return purchaseInvoiceDetailModel; // returns.
         }
 
-
-        public async Task<IList<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailByStateId(int stateId)
-        {
-            return await GetPurchaseInvoiceDetailList(0);
-        }
-
-
-        public async Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList()
+        public async Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailListByPurchaseInvoiceId(int purchaseInvoiceId)
         {
             DataTableResultModel<PurchaseInvoiceDetailModel> resultModel = new DataTableResultModel<PurchaseInvoiceDetailModel>();
 
-            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(0);
+            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(0, purchaseInvoiceId);
 
             if (null != purchaseInvoiceDetailModelList && purchaseInvoiceDetailModelList.Any())
             {
@@ -102,7 +114,24 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        private async Task<IList<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList(int purchaseInvoiceDetailId)
+
+        public async Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList()
+        {
+            DataTableResultModel<PurchaseInvoiceDetailModel> resultModel = new DataTableResultModel<PurchaseInvoiceDetailModel>();
+
+            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(0, 0);
+
+            if (null != purchaseInvoiceDetailModelList && purchaseInvoiceDetailModelList.Any())
+            {
+                resultModel = new DataTableResultModel<PurchaseInvoiceDetailModel>();
+                resultModel.ResultList = purchaseInvoiceDetailModelList;
+                resultModel.TotalResultCount = purchaseInvoiceDetailModelList.Count();
+            }
+
+            return resultModel; // returns.
+        }
+
+        private async Task<IList<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList(int purchaseInvoiceDetailId, int purchaseInvoiceId)
         {
             IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = null;
 
@@ -113,7 +142,9 @@ namespace ERP.Services.Accounts
             if (0 != purchaseInvoiceDetailId)
                 query = query.Where(w => w.InvoiceDetId == purchaseInvoiceDetailId);
 
-
+            // apply filters.
+            if (0 != purchaseInvoiceId)
+                query = query.Where(w => w.InvoiceId == purchaseInvoiceId);
 
             // get records by query.
             List<Purchaseinvoicedetail> purchaseInvoiceDetailList = await query.ToListAsync();
@@ -136,8 +167,20 @@ namespace ERP.Services.Accounts
             {
                 PurchaseInvoiceDetailModel purchaseInvoiceDetailModel = new PurchaseInvoiceDetailModel();
 
-                //purchaseInvoiceDetailModel.InvoiceDetId = purchaseInvoiceDetail.InvoiceDetId;
-                //purchaseInvoiceDetailModel.PurchaseInvoiceDetailName = purchaseInvoiceDetail.PurchaseInvoiceDetailName;
+                purchaseInvoiceDetailModel.InvoiceDetId = purchaseInvoiceDetail.InvoiceDetId;
+                purchaseInvoiceDetailModel.InvoiceId = purchaseInvoiceDetail.InvoiceId;
+                purchaseInvoiceDetailModel.SrNo = purchaseInvoiceDetail.SrNo;
+                purchaseInvoiceDetailModel.Description = purchaseInvoiceDetail.Description;
+                purchaseInvoiceDetailModel.UnitOfMeasurementId = purchaseInvoiceDetail.UnitOfMeasurementId;
+                purchaseInvoiceDetailModel.Quantity = purchaseInvoiceDetail.Quantity;
+                purchaseInvoiceDetailModel.PerUnit = purchaseInvoiceDetail.PerUnit;
+                purchaseInvoiceDetailModel.UnitPrice = purchaseInvoiceDetail.UnitPrice;
+                purchaseInvoiceDetailModel.GrossAmountFc = purchaseInvoiceDetail.GrossAmountFc;
+                purchaseInvoiceDetailModel.GrossAmount = purchaseInvoiceDetail.GrossAmount;
+                purchaseInvoiceDetailModel.TaxAmountFc = purchaseInvoiceDetail.TaxAmountFc;
+                purchaseInvoiceDetailModel.TaxAmount = purchaseInvoiceDetail.TaxAmount;
+                purchaseInvoiceDetailModel.NetAmountFc = purchaseInvoiceDetail.NetAmountFc;
+                purchaseInvoiceDetailModel.NetAmount = purchaseInvoiceDetail.NetAmount;
 
                 return purchaseInvoiceDetailModel;
             });

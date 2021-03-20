@@ -2,6 +2,7 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -22,7 +23,9 @@ namespace ERP.Services.Accounts
             // assign values.
             Currency currency = new Currency();
 
-            //currency.CurrencyName = currencyModel.CurrencyName;
+            currency.CurrencyCode = currencyModel.CurrencyCode;
+            currency.CurrencyName = currencyModel.CurrencyName;
+            currency.Denomination = currencyModel.Denomination;
 
             currencyId = await Create(currency);
 
@@ -40,7 +43,8 @@ namespace ERP.Services.Accounts
             if (null != currency)
             {
                 // assign values.
-                //currency.CurrencyName = currencyModel.CurrencyName;
+                currency.CurrencyName = currencyModel.CurrencyName;
+                currency.Denomination = currencyModel.Denomination;
 
                 isUpdated = await Update(currency);
             }
@@ -79,13 +83,6 @@ namespace ERP.Services.Accounts
             return currencyModel; // returns.
         }
 
-
-        public async Task<IList<CurrencyModel>> GetCurrencyByStateId(int stateId)
-        {
-            return await GetCurrencyList(0);
-        }
-
-
         public async Task<DataTableResultModel<CurrencyModel>> GetCurrencyList()
         {
             DataTableResultModel<CurrencyModel> resultModel = new DataTableResultModel<CurrencyModel>();
@@ -113,8 +110,6 @@ namespace ERP.Services.Accounts
             if (0 != currencyId)
                 query = query.Where(w => w.CurrencyId == currencyId);
 
-          
-
             // get records by query.
             List<Currency> currencyList = await query.ToListAsync();
             if (null != currencyList && currencyList.Count > 0)
@@ -136,11 +131,34 @@ namespace ERP.Services.Accounts
             {
                 CurrencyModel currencyModel = new CurrencyModel();
 
-                //currencyModel.CurrencyId = currency.CurrencyId;
-                //currencyModel.CurrencyName = currency.CurrencyName;
+                currencyModel.CurrencyId = currency.CurrencyId;
+                currencyModel.CurrencyCode = currency.CurrencyCode;
+                currencyModel.CurrencyName = currency.CurrencyName;
+                currencyModel.Denomination = currency.Denomination;
 
                 return currencyModel;
             });
+        }
+
+
+        public async Task<IList<SelectListModel>> GetCurrencySelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.CurrencyId != 0))
+            {
+                IQueryable<Currency> query = GetQueryByCondition(w => w.CurrencyId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.CurrencyName,
+                                        Value = s.CurrencyId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
     }
 }

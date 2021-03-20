@@ -22,13 +22,18 @@ namespace ERP.Services.Accounts
             // assign values.
             Ledgerfinancialyearbalance ledgerFinancialYearBalance = new Ledgerfinancialyearbalance();
 
-            //ledgerFinancialYearBalance.LedgerFinancialYearBalanceName = ledgerFinancialYearBalanceModel.LedgerFinancialYearBalanceName;
+            ledgerFinancialYearBalance.LedgerId = ledgerFinancialYearBalanceModel.LedgerId;
+            ledgerFinancialYearBalance.FinancialYearId = ledgerFinancialYearBalanceModel.FinancialYearId;
+            ledgerFinancialYearBalance.CompanyId = ledgerFinancialYearBalanceModel.CompanyId;
+            ledgerFinancialYearBalance.CurrencyId = ledgerFinancialYearBalanceModel.CurrencyId;
+            ledgerFinancialYearBalance.ExchangeRate = ledgerFinancialYearBalanceModel.ExchangeRate;
+            ledgerFinancialYearBalance.OpeningBalanceAmountFc = ledgerFinancialYearBalanceModel.OpeningBalanceAmountFc;
+            ledgerFinancialYearBalance.OpeningBalanceAmount = ledgerFinancialYearBalanceModel.OpeningBalanceAmount;
 
             ledgerFinancialYearBalanceId = await Create(ledgerFinancialYearBalance);
 
             return ledgerFinancialYearBalanceId; // returns.
         }
-
 
         public async Task<bool> UpdateLedgerFinancialYearBalance(LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel)
         {
@@ -40,14 +45,17 @@ namespace ERP.Services.Accounts
             if (null != ledgerFinancialYearBalance)
             {
                 // assign values.
-                //ledgerFinancialYearBalance.LedgerFinancialYearBalanceName = ledgerFinancialYearBalanceModel.LedgerFinancialYearBalanceName;
+
+                ledgerFinancialYearBalance.CurrencyId = ledgerFinancialYearBalanceModel.CurrencyId;
+                ledgerFinancialYearBalance.ExchangeRate = ledgerFinancialYearBalanceModel.ExchangeRate;
+                ledgerFinancialYearBalance.OpeningBalanceAmountFc = ledgerFinancialYearBalanceModel.OpeningBalanceAmountFc;
+                ledgerFinancialYearBalance.OpeningBalanceAmount = ledgerFinancialYearBalanceModel.OpeningBalanceAmount;
 
                 isUpdated = await Update(ledgerFinancialYearBalance);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteLedgerFinancialYearBalance(int ledgerFinancialYearBalanceId)
         {
@@ -64,7 +72,6 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<LedgerFinancialYearBalanceModel> GetLedgerFinancialYearBalanceById(int ledgerFinancialYearBalanceId)
         {
             LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel = null;
@@ -78,13 +85,6 @@ namespace ERP.Services.Accounts
 
             return ledgerFinancialYearBalanceModel; // returns.
         }
-
-
-        public async Task<IList<LedgerFinancialYearBalanceModel>> GetLedgerFinancialYearBalanceByStateId(int stateId)
-        {
-            return await GetLedgerFinancialYearBalanceList(0);
-        }
-
 
         public async Task<DataTableResultModel<LedgerFinancialYearBalanceModel>> GetLedgerFinancialYearBalanceList()
         {
@@ -107,13 +107,14 @@ namespace ERP.Services.Accounts
             IList<LedgerFinancialYearBalanceModel> ledgerFinancialYearBalanceModelList = null;
 
             // create query.
-            IQueryable<Ledgerfinancialyearbalance> query = GetQueryByCondition(w => w.LedgerBalanceId != 0);
+            IQueryable<Ledgerfinancialyearbalance> query = GetQueryByCondition(w => w.LedgerBalanceId != 0)
+                                                                .Include(w => w.Ledger).Include(w => w.FinancialYear)
+                                                                .Include(w => w.Company).Include(w => w.Currency)
+                                                                .Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != ledgerFinancialYearBalanceId)
                 query = query.Where(w => w.LedgerBalanceId == ledgerFinancialYearBalanceId);
-
-          
 
             // get records by query.
             List<Ledgerfinancialyearbalance> ledgerFinancialYearBalanceList = await query.ToListAsync();
@@ -136,8 +137,21 @@ namespace ERP.Services.Accounts
             {
                 LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel = new LedgerFinancialYearBalanceModel();
 
-                //ledgerFinancialYearBalanceModel.Id = ledgerFinancialYearBalance.Id;
-                //ledgerFinancialYearBalanceModel.LedgerFinancialYearBalanceName = ledgerFinancialYearBalance.LedgerFinancialYearBalanceName;
+                ledgerFinancialYearBalanceModel.LedgerBalanceId = ledgerFinancialYearBalance.LedgerBalanceId;
+                ledgerFinancialYearBalanceModel.LedgerId = ledgerFinancialYearBalance.LedgerId;
+                ledgerFinancialYearBalanceModel.FinancialYearId = ledgerFinancialYearBalance.FinancialYearId;
+                ledgerFinancialYearBalanceModel.CompanyId = ledgerFinancialYearBalance.CompanyId;
+                ledgerFinancialYearBalanceModel.CurrencyId = ledgerFinancialYearBalance.CurrencyId;
+                ledgerFinancialYearBalanceModel.ExchangeRate = ledgerFinancialYearBalance.ExchangeRate;
+                ledgerFinancialYearBalanceModel.OpeningBalanceAmountFc = ledgerFinancialYearBalance.OpeningBalanceAmountFc;
+                ledgerFinancialYearBalanceModel.OpeningBalanceAmount = ledgerFinancialYearBalance.OpeningBalanceAmount;
+
+                //#####
+                ledgerFinancialYearBalanceModel.LedgerName = ledgerFinancialYearBalance.Ledger.LedgerName;
+                ledgerFinancialYearBalanceModel.FinancialYearName = ledgerFinancialYearBalance.FinancialYear.FinancialYearName;
+                ledgerFinancialYearBalanceModel.CompanyName = ledgerFinancialYearBalance.Company.CompanyName;
+                ledgerFinancialYearBalanceModel.CurrencyName = ledgerFinancialYearBalance.Currency.CurrencyName;
+                ledgerFinancialYearBalanceModel.PreparedByName = ledgerFinancialYearBalance.PreparedByUser.UserName;
 
                 return ledgerFinancialYearBalanceModel;
             });

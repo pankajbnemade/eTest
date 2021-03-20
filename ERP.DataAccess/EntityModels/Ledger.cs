@@ -16,13 +16,11 @@ namespace ERP.DataAccess.EntityModels
             Ledgercompanyrelations = new HashSet<Ledgercompanyrelation>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
             PurchaseinvoiceAccountLedgers = new HashSet<Purchaseinvoice>();
-            PurchaseinvoiceBillToAddresses = new HashSet<Purchaseinvoice>();
             PurchaseinvoiceSupplierLedgers = new HashSet<Purchaseinvoice>();
             Purchaseinvoicedetailtaxes = new HashSet<Purchaseinvoicedetailtax>();
             Purchaseinvoicetaxes = new HashSet<Purchaseinvoicetax>();
             SalesinvoiceAccountLedgers = new HashSet<Salesinvoice>();
             SalesinvoiceBankLedgers = new HashSet<Salesinvoice>();
-            SalesinvoiceBillToAddresses = new HashSet<Salesinvoice>();
             SalesinvoiceCustomerLedgers = new HashSet<Salesinvoice>();
             Salesinvoicedetailtaxes = new HashSet<Salesinvoicedetailtax>();
             Salesinvoicetaxes = new HashSet<Salesinvoicetax>();
@@ -42,7 +40,7 @@ namespace ERP.DataAccess.EntityModels
         public int? ParentGroupId { get; set; }
         public sbyte? IsDeActived { get; set; }
         [Column(TypeName = "varchar(100)")]
-        public string TaxRegistredNo { get; set; }
+        public string TaxRegisteredNo { get; set; }
         public int? PreparedByUserId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? PreparedDateTime { get; set; }
@@ -69,8 +67,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.AccountLedger))]
         public virtual ICollection<Purchaseinvoice> PurchaseinvoiceAccountLedgers { get; set; }
-        [InverseProperty(nameof(Purchaseinvoice.BillToAddress))]
-        public virtual ICollection<Purchaseinvoice> PurchaseinvoiceBillToAddresses { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.SupplierLedger))]
         public virtual ICollection<Purchaseinvoice> PurchaseinvoiceSupplierLedgers { get; set; }
         [InverseProperty(nameof(Purchaseinvoicedetailtax.TaxLedger))]
@@ -81,8 +77,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Salesinvoice> SalesinvoiceAccountLedgers { get; set; }
         [InverseProperty(nameof(Salesinvoice.BankLedger))]
         public virtual ICollection<Salesinvoice> SalesinvoiceBankLedgers { get; set; }
-        [InverseProperty(nameof(Salesinvoice.BillToAddress))]
-        public virtual ICollection<Salesinvoice> SalesinvoiceBillToAddresses { get; set; }
         [InverseProperty(nameof(Salesinvoice.CustomerLedger))]
         public virtual ICollection<Salesinvoice> SalesinvoiceCustomerLedgers { get; set; }
         [InverseProperty(nameof(Salesinvoicedetailtax.TaxLedger))]

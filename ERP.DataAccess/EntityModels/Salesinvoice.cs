@@ -85,8 +85,8 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Ledger.SalesinvoiceBankLedgers))]
         public virtual Ledger BankLedger { get; set; }
         [ForeignKey(nameof(BillToAddressId))]
-        [InverseProperty(nameof(Ledger.SalesinvoiceBillToAddresses))]
-        public virtual Ledger BillToAddress { get; set; }
+        [InverseProperty(nameof(Ledgeraddress.Salesinvoices))]
+        public virtual Ledgeraddress BillToAddress { get; set; }
         [ForeignKey(nameof(CompanyId))]
         [InverseProperty("Salesinvoices")]
         public virtual Company Company { get; set; }

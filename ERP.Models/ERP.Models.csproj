@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Accounts\PurchaseInvoiceChargeModel.cs" />
+    <Compile Remove="Accounts\SalesInvoiceChargeModel.cs" />
     <Compile Remove="Accounts\_Model.cs" />
     <Compile Remove="Master\_Model.cs" />
   </ItemGroup>

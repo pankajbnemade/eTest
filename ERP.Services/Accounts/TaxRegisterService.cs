@@ -2,6 +2,7 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace ERP.Services.Accounts
             // assign values.
             Taxregister taxRegister = new Taxregister();
 
-            //taxRegister.TaxRegisterName = taxRegisterModel.TaxRegisterName;
+            taxRegister.TaxRegisterName = taxRegisterModel.TaxRegisterName;
 
             taxRegisterId = await Create(taxRegister);
 
@@ -40,14 +41,13 @@ namespace ERP.Services.Accounts
             if (null != taxRegister)
             {
                 // assign values.
-                //taxRegister.TaxRegisterName = taxRegisterModel.TaxRegisterName;
+                taxRegister.TaxRegisterName = taxRegisterModel.TaxRegisterName;
 
                 isUpdated = await Update(taxRegister);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteTaxRegister(int taxRegisterId)
         {
@@ -64,7 +64,6 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<TaxRegisterModel> GetTaxRegisterById(int taxRegisterId)
         {
             TaxRegisterModel taxRegisterModel = null;
@@ -79,12 +78,10 @@ namespace ERP.Services.Accounts
             return taxRegisterModel; // returns.
         }
 
-
         public async Task<IList<TaxRegisterModel>> GetTaxRegisterByStateId(int stateId)
         {
             return await GetTaxRegisterList(0);
         }
-
 
         public async Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList()
         {
@@ -136,11 +133,33 @@ namespace ERP.Services.Accounts
             {
                 TaxRegisterModel taxRegisterModel = new TaxRegisterModel();
 
-                //taxRegisterModel.TaxRegisterId = taxRegister.TaxRegisterId;
-                //taxRegisterModel.TaxRegisterName = taxRegister.TaxRegisterName;
+                taxRegisterModel.TaxRegisterId = taxRegister.TaxRegisterId;
+                taxRegisterModel.TaxRegisterName = taxRegister.TaxRegisterName;
+                taxRegisterModel.PreparedByName = taxRegister.PreparedByUser.UserName;
 
                 return taxRegisterModel;
             });
         }
+
+        public async Task<IList<SelectListModel>> GetTaxRegisterSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.TaxRegisterId != 0))
+            {
+                IQueryable<Taxregister> query = GetQueryByCondition(w => w.TaxRegisterId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.TaxRegisterName,
+                                        Value = s.TaxRegisterId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
     }
 }

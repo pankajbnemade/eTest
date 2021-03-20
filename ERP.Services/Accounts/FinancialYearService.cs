@@ -22,13 +22,14 @@ namespace ERP.Services.Accounts
             // assign values.
             Financialyear financialYear = new Financialyear();
 
-            //financialYear.FinancialYearName = financialYearModel.FinancialYearName;
+            financialYear.FinancialYearName = financialYearModel.FinancialYearName;
+            financialYear.FromDate = financialYearModel.FromDate;
+            financialYear.ToDate = financialYearModel.ToDate;
 
             financialYearId = await Create(financialYear);
 
             return financialYearId; // returns.
         }
-
 
         public async Task<bool> UpdateFinancialYear(FinancialYearModel financialYearModel)
         {
@@ -40,14 +41,15 @@ namespace ERP.Services.Accounts
             if (null != financialYear)
             {
                 // assign values.
-                //financialYear.FinancialYearName = financialYearModel.FinancialYearName;
+                financialYear.FinancialYearName = financialYearModel.FinancialYearName;
+                financialYear.FromDate = financialYearModel.FromDate;
+                financialYear.ToDate = financialYearModel.ToDate;
 
                 isUpdated = await Update(financialYear);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteFinancialYear(int financialYearId)
         {
@@ -64,7 +66,6 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<FinancialYearModel> GetFinancialYearById(int financialYearId)
         {
             FinancialYearModel financialYearModel = null;
@@ -78,13 +79,6 @@ namespace ERP.Services.Accounts
 
             return financialYearModel; // returns.
         }
-
-
-        public async Task<IList<FinancialYearModel>> GetFinancialYearByStateId(int stateId)
-        {
-            return await GetFinancialYearList(0);
-        }
-
 
         public async Task<DataTableResultModel<FinancialYearModel>> GetFinancialYearList()
         {
@@ -107,13 +101,12 @@ namespace ERP.Services.Accounts
             IList<FinancialYearModel> financialYearModelList = null;
 
             // create query.
-            IQueryable<Financialyear> query = GetQueryByCondition(w => w.FinancialYearId != 0);
+            IQueryable<Financialyear> query = GetQueryByCondition(w => w.FinancialYearId != 0)
+                                                   .Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != financialYearId)
                 query = query.Where(w => w.FinancialYearId == financialYearId);
-
-          
 
             // get records by query.
             List<Financialyear> financialYearList = await query.ToListAsync();
@@ -136,8 +129,12 @@ namespace ERP.Services.Accounts
             {
                 FinancialYearModel financialYearModel = new FinancialYearModel();
 
-                //financialYearModel.FinancialYearId = financialYear.FinancialYearId;
-                //financialYearModel.FinancialYearName = financialYear.FinancialYearName;
+                financialYearModel.FinancialYearId = financialYear.FinancialYearId;
+                financialYearModel.FinancialYearName = financialYear.FinancialYearName;
+                financialYearModel.FromDate = financialYear.FromDate;
+                financialYearModel.ToDate = financialYear.ToDate;
+
+                financialYearModel.PreparedByName = financialYear.PreparedByUser.UserName;
 
                 return financialYearModel;
             });

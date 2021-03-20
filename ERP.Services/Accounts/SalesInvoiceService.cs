@@ -28,6 +28,7 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Salesinvoice salesInvoice = new Salesinvoice();
+
             salesInvoice.InvoiceId = salesInvoiceModel.InvoiceId;
             salesInvoice.InvoiceNo = salesInvoiceModel.InvoiceNo;
             salesInvoice.InvoiceDate = salesInvoiceModel.InvoiceDate;
@@ -53,7 +54,7 @@ namespace ERP.Services.Accounts
             salesInvoice.NetAmountFcinWord = "";
             salesInvoice.TaxAmountFc = 0;
             salesInvoice.TaxAmount = 0;
-            
+
             salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
             salesInvoice.DiscountPercentage = salesInvoiceModel.DiscountPercentage;
             salesInvoice.DiscountAmountFc = 0;
@@ -62,11 +63,13 @@ namespace ERP.Services.Accounts
             salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
             salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
             salesInvoice.MaxNo = salesInvoiceModel.MaxNo;
+
             //salesInvoice.VoucherStyleId = salesInvoiceModel.VoucherStyleId;
             //salesInvoice.PreparedByUserId = salesInvoiceModel.PreparedByUserId;
             //salesInvoice.UpdatedByUserId = salesInvoiceModel.UpdatedByUserId;
             //salesInvoice.PreparedDateTime = salesInvoiceModel.PreparedDateTime;
             //salesInvoice.UpdatedDateTime = salesInvoiceModel.UpdatedDateTime;
+
             salesInvoiceId = await Create(salesInvoice);
 
             return salesInvoiceId; // returns.
@@ -104,6 +107,7 @@ namespace ERP.Services.Accounts
                 salesInvoice.TaxRegisterId = salesInvoiceModel.TaxRegisterId;
                 salesInvoice.CurrencyId = salesInvoiceModel.CurrencyId;
                 salesInvoice.ExchangeRate = salesInvoiceModel.ExchangeRate;
+
                 //salesInvoice.TotalLineItemAmountFc = 0;
                 //salesInvoice.TotalLineItemAmount = 0;
                 //salesInvoice.GrossAmountFc = 0;
@@ -115,14 +119,19 @@ namespace ERP.Services.Accounts
                 //salesInvoice.TaxAmount = 0;
                 //salesInvoice.ChargeAmountFc = 0;
                 //salesInvoice.ChargeAmount = 0;
+
                 salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
                 salesInvoice.DiscountPercentage = salesInvoiceModel.DiscountPercentage;
+
                 //salesInvoice.DiscountAmountFc = 0;
                 //salesInvoice.DiscountAmount = 0;
+
                 //salesInvoice.StatusId = salesInvoiceModel.StatusId;
                 salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
+
                 //salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
                 //salesInvoice.MaxNo = salesInvoiceModel.MaxNo;
+
                 isUpdated = await Update(salesInvoice);
             }
 
@@ -160,48 +169,121 @@ namespace ERP.Services.Accounts
         {
             SalesInvoiceModel salesInvoiceModel = null;
 
-            // get record.
-            Salesinvoice salesinvoice = await GetByIdAsync(w => w.InvoiceId == invoiceId);
-            if (null != salesInvoiceModel)
+            IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(invoiceId);
+
+            if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
             {
-                // assign values.
-                salesInvoiceModel.InvoiceId = salesinvoice.InvoiceId;
-                salesInvoiceModel.InvoiceNo = salesinvoice.InvoiceNo;
-                salesInvoiceModel.InvoiceDate = salesinvoice.InvoiceDate;
-                salesInvoiceModel.CustomerLedgerId = salesinvoice.CustomerLedgerId;
-                salesInvoiceModel.BillToAddressId = salesinvoice.BillToAddressId;
-                salesInvoiceModel.AccountLedgerId = salesinvoice.AccountLedgerId;
-                salesInvoiceModel.BankLedgerId = salesinvoice.BankLedgerId;
-                salesInvoiceModel.CustomerReferenceNo = salesinvoice.CustomerReferenceNo;
-                salesInvoiceModel.CustomerReferenceDate = salesinvoice.CustomerReferenceDate;
-                salesInvoiceModel.CreditLimitDays = salesinvoice.CreditLimitDays;
-                salesInvoiceModel.PaymentTerm = salesinvoice.PaymentTerm;
-                salesInvoiceModel.Remark = salesinvoice.Remark;
-                salesInvoiceModel.TaxModelType = salesinvoice.TaxModelType;
-                salesInvoiceModel.TaxRegisterId = salesinvoice.TaxRegisterId;
-                salesInvoiceModel.CurrencyId = salesinvoice.CurrencyId;
-                salesInvoiceModel.ExchangeRate = salesinvoice.ExchangeRate;
-                salesInvoiceModel.TotalLineItemAmountFc = salesinvoice.TotalLineItemAmountFc;
-                salesInvoiceModel.TotalLineItemAmount = salesinvoice.TotalLineItemAmount;
-                salesInvoiceModel.GrossAmountFc = salesinvoice.GrossAmountFc;
-                salesInvoiceModel.GrossAmount = salesinvoice.GrossAmount;
-                salesInvoiceModel.NetAmountFc = salesinvoice.NetAmountFc;
-                salesInvoiceModel.NetAmount = salesinvoice.NetAmount;
-                salesInvoiceModel.NetAmountFcinWord = salesinvoice.NetAmountFcinWord;
-                salesInvoiceModel.TaxAmountFc = salesinvoice.TaxAmountFc;
-                salesInvoiceModel.TaxAmount = salesinvoice.TaxAmount;
-                
-                salesInvoiceModel.DiscountPercentageOrAmount = salesinvoice.DiscountPercentageOrAmount;
-                salesInvoiceModel.DiscountPercentage = salesinvoice.DiscountPercentage;
-                salesInvoiceModel.DiscountAmountFc = salesinvoice.DiscountAmountFc;
-                salesInvoiceModel.DiscountAmount = salesinvoice.DiscountAmount;
-                salesInvoiceModel.StatusId = salesinvoice.StatusId;
-                salesInvoiceModel.CompanyId = salesinvoice.CompanyId;
-                salesInvoiceModel.FinancialYearId = salesinvoice.FinancialYearId;
-                salesInvoiceModel.MaxNo = salesinvoice.MaxNo;
+                salesInvoiceModel = salesInvoiceModelList.FirstOrDefault();
             }
 
             return salesInvoiceModel; // returns.
         }
+
+        public async Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList()
+        {
+            DataTableResultModel<SalesInvoiceModel> salesInvoiceModel = new DataTableResultModel<SalesInvoiceModel>();
+
+            IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(0);
+
+            if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
+            {
+                salesInvoiceModel = new DataTableResultModel<SalesInvoiceModel>();
+                salesInvoiceModel.ResultList = salesInvoiceModelList;
+                salesInvoiceModel.TotalResultCount = salesInvoiceModelList.Count();
+            }
+
+            return salesInvoiceModel; // returns.
+        }
+
+        private async Task<IList<SalesInvoiceModel>> GetSalesInvoiceList(int salesInvoiceId)
+        {
+            IList<SalesInvoiceModel> salesInvoiceModelList = null;
+
+            // create query.
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.InvoiceId != 0)
+                                            .Include(w => w.CustomerLedger).Include(w => w.BillToAddress)
+                                            .Include(w => w.AccountLedger).Include(w => w.BankLedger)
+                                            .Include(w => w.TaxRegister).Include(w => w.Currency)
+                                            .Include(w => w.Status).Include(w => w.PreparedByUser);
+
+            // apply filters.
+            if (0 != salesInvoiceId)
+                query = query.Where(w => w.InvoiceId == salesInvoiceId);
+
+            // get records by query.
+            List<Salesinvoice> salesInvoiceList = await query.ToListAsync();
+
+            if (null != salesInvoiceList && salesInvoiceList.Count > 0)
+            {
+                salesInvoiceModelList = new List<SalesInvoiceModel>();
+
+                foreach (Salesinvoice salesInvoice in salesInvoiceList)
+                {
+                    salesInvoiceModelList.Add(await AssignValueToModel(salesInvoice));
+                }
+            }
+
+            return salesInvoiceModelList; // returns.
+        }
+
+        private async Task<SalesInvoiceModel> AssignValueToModel(Salesinvoice salesInvoice)
+        {
+            return await Task.Run(() =>
+            {
+                SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
+
+                salesInvoiceModel.InvoiceId = salesInvoice.InvoiceId;
+                salesInvoiceModel.InvoiceNo = salesInvoice.InvoiceNo;
+                salesInvoiceModel.InvoiceDate = salesInvoice.InvoiceDate;
+                salesInvoiceModel.CustomerLedgerId = salesInvoice.CustomerLedgerId;
+                salesInvoiceModel.BillToAddressId = salesInvoice.BillToAddressId;
+                salesInvoiceModel.AccountLedgerId = salesInvoice.AccountLedgerId;
+                salesInvoiceModel.BankLedgerId = salesInvoice.BankLedgerId;
+                salesInvoiceModel.CustomerReferenceNo = salesInvoice.CustomerReferenceNo;
+                salesInvoiceModel.CustomerReferenceDate = salesInvoice.CustomerReferenceDate;
+                salesInvoiceModel.CreditLimitDays = salesInvoice.CreditLimitDays;
+                salesInvoiceModel.PaymentTerm = salesInvoice.PaymentTerm;
+                salesInvoiceModel.Remark = salesInvoice.Remark;
+                salesInvoiceModel.TaxModelType = salesInvoice.TaxModelType;
+                salesInvoiceModel.TaxRegisterId = salesInvoice.TaxRegisterId;
+                salesInvoiceModel.CurrencyId = salesInvoice.CurrencyId;
+                salesInvoiceModel.ExchangeRate = salesInvoice.ExchangeRate;
+                salesInvoiceModel.TotalLineItemAmountFc = salesInvoice.TotalLineItemAmountFc;
+                salesInvoiceModel.TotalLineItemAmount = salesInvoice.TotalLineItemAmount;
+                salesInvoiceModel.GrossAmountFc = salesInvoice.GrossAmountFc;
+                salesInvoiceModel.GrossAmount = salesInvoice.GrossAmount;
+                salesInvoiceModel.NetAmountFc = salesInvoice.NetAmountFc;
+                salesInvoiceModel.NetAmount = salesInvoice.NetAmount;
+                salesInvoiceModel.NetAmountFcinWord = salesInvoice.NetAmountFcinWord;
+                salesInvoiceModel.TaxAmountFc = salesInvoice.TaxAmountFc;
+                salesInvoiceModel.TaxAmount = salesInvoice.TaxAmount;
+                salesInvoiceModel.DiscountPercentageOrAmount = salesInvoice.DiscountPercentageOrAmount;
+                salesInvoiceModel.DiscountPercentage = salesInvoice.DiscountPercentage;
+                salesInvoiceModel.DiscountAmountFc = salesInvoice.DiscountAmountFc;
+                salesInvoiceModel.DiscountAmount = salesInvoice.DiscountAmount;
+                salesInvoiceModel.StatusId = salesInvoice.StatusId;
+                salesInvoiceModel.CompanyId = salesInvoice.CompanyId;
+                salesInvoiceModel.FinancialYearId = salesInvoice.FinancialYearId;
+                salesInvoiceModel.MaxNo = salesInvoice.MaxNo;
+                salesInvoiceModel.VoucherStyleId = salesInvoice.VoucherStyleId;
+                salesInvoiceModel.PreparedByUserId = salesInvoice.PreparedByUserId;
+                salesInvoiceModel.UpdatedByUserId = salesInvoice.UpdatedByUserId;
+                salesInvoiceModel.PreparedDateTime = salesInvoice.PreparedDateTime;
+                salesInvoiceModel.UpdatedDateTime = salesInvoice.UpdatedDateTime;
+
+                salesInvoiceModel.CustomerLedgerName = salesInvoice.CustomerLedger.LedgerName;
+                salesInvoiceModel.BillToAddress = salesInvoice.BillToAddress.AddressDescription;
+                salesInvoiceModel.AccountLedgerName = salesInvoice.AccountLedger.LedgerName;
+                salesInvoiceModel.BankLedgerName = salesInvoice.BankLedger.LedgerName;
+                salesInvoiceModel.TaxRegisterName = salesInvoice.TaxRegister.TaxRegisterName;
+                salesInvoiceModel.CurrencyName = salesInvoice.Currency.CurrencyName;
+                salesInvoiceModel.StatusName = salesInvoice.Status.StatusName;
+                salesInvoiceModel.PreparedByName = salesInvoice.PreparedByUser.UserName;
+
+                return salesInvoiceModel;
+            });
+
+        }
+
     }
 }

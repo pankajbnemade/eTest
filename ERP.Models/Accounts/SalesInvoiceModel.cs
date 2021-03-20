@@ -62,8 +62,6 @@ namespace ERP.Models.Accounts
         public string NetAmountFcinWord { get; set; }
         public decimal? TaxAmountFc { get; set; }
         public decimal? TaxAmount { get; set; }
-        public decimal? ChargeAmountFc { get; set; }
-        public decimal? ChargeAmount { get; set; }
 
         [Display(Name = "Discount Percentage/Amount")]
         public string DiscountPercentageOrAmount { get; set; }
@@ -76,6 +74,11 @@ namespace ERP.Models.Accounts
         public int? CompanyId { get; set; }
         public int? FinancialYearId { get; set; }
         public int? MaxNo { get; set; }
+        public int? VoucherStyleId { get; set; }
+        public int? PreparedByUserId { get; set; }
+        public int? UpdatedByUserId { get; set; }
+        public DateTime? PreparedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
 
         //#####
 
@@ -92,6 +95,8 @@ namespace ERP.Models.Accounts
         public string CurrencyName { get; set; }
 
         public string StatusName { get; set; }
+
+        public string PreparedByName { get; set; }
 
     }
 }

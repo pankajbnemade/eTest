@@ -1,6 +1,8 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -16,5 +18,8 @@ namespace ERP.Services.Accounts.Interface
         Task<TaxRegisterModel> GetTaxRegisterById(int taxRegisterId);
 
         Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList();
+
+        Task<IList<SelectListModel>> GetTaxRegisterSelectList();
+
     }
 }

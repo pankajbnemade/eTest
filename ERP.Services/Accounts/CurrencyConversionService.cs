@@ -4,6 +4,7 @@ using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,11 @@ namespace ERP.Services.Accounts
             // assign values.
             Currencyconversion currencyConversion = new Currencyconversion();
 
-            //currencyConversion.CurrencyConversionName = currencyConversionModel.CurrencyConversionName;
+            currencyConversion.ConversionId = currencyConversionModel.ConversionId;
+            currencyConversion.CompanyId = currencyConversionModel.CompanyId;
+            currencyConversion.CurrencyId = currencyConversionModel.CurrencyId;
+            currencyConversion.EffectiveDateTime = currencyConversionModel.EffectiveDateTime;
+            currencyConversion.ExchangeRate = currencyConversionModel.ExchangeRate;
 
             currencyConversionId = await Create(currencyConversion);
 
@@ -40,7 +45,8 @@ namespace ERP.Services.Accounts
             if (null != currencyConversion)
             {
                 // assign values.
-                //currencyConversion.CurrencyConversionName = currencyConversionModel.CurrencyConversionName;
+                currencyConversion.EffectiveDateTime = currencyConversionModel.EffectiveDateTime;
+                currencyConversion.ExchangeRate = currencyConversionModel.ExchangeRate;
 
                 isUpdated = await Update(currencyConversion);
             }
@@ -69,7 +75,7 @@ namespace ERP.Services.Accounts
         {
             CurrencyConversionModel currencyConversionModel = null;
 
-            IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(currencyConversionId);
+            IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(currencyConversionId, 0);
 
             if (null != currencyConversionModelList && currencyConversionModelList.Any())
             {
@@ -80,17 +86,11 @@ namespace ERP.Services.Accounts
         }
 
 
-        public async Task<IList<CurrencyConversionModel>> GetCurrencyConversionByStateId(int stateId)
-        {
-            return await GetCurrencyConversionList(0);
-        }
-
-
-        public async Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionList()
+        public async Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionByCurrencyId(int currencyId)
         {
             DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();
 
-            IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(0);
+            IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(0, currencyId);
 
             if (null != currencyConversionModelList && currencyConversionModelList.Any())
             {
@@ -102,18 +102,38 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        private async Task<IList<CurrencyConversionModel>> GetCurrencyConversionList(int currencyConversionId)
+
+        public async Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionList()
+        {
+            DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();
+
+            IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(0, 0);
+
+            if (null != currencyConversionModelList && currencyConversionModelList.Any())
+            {
+                resultModel = new DataTableResultModel<CurrencyConversionModel>();
+                resultModel.ResultList = currencyConversionModelList;
+                resultModel.TotalResultCount = currencyConversionModelList.Count();
+            }
+
+            return resultModel; // returns.
+        }
+
+        private async Task<IList<CurrencyConversionModel>> GetCurrencyConversionList(int currencyConversionId, int currencyId)
         {
             IList<CurrencyConversionModel> currencyConversionModelList = null;
 
             // create query.
-            IQueryable<Currencyconversion> query = GetQueryByCondition(w => w.ConversionId != 0);
+            IQueryable<Currencyconversion> query = GetQueryByCondition(w => w.ConversionId != 0)
+                                                        .Include(w => w.Currency)
+                                                        .Include(w => w.Company).Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != currencyConversionId)
                 query = query.Where(w => w.ConversionId == currencyConversionId);
 
-          
+            if (0 != currencyId)
+                query = query.Where(w => w.CurrencyId == currencyId);
 
             // get records by query.
             List<Currencyconversion> currencyConversionList = await query.ToListAsync();
@@ -136,8 +156,15 @@ namespace ERP.Services.Accounts
             {
                 CurrencyConversionModel currencyConversionModel = new CurrencyConversionModel();
 
-                //currencyConversionModel.ConversionId = currencyConversion.ConversionId;
-                //currencyConversionModel.CurrencyConversionName = currencyConversion.CurrencyConversionName;
+                currencyConversionModel.ConversionId = currencyConversion.ConversionId;
+                currencyConversionModel.CompanyId = currencyConversion.CompanyId;
+                currencyConversionModel.CurrencyId = currencyConversion.CurrencyId;
+                currencyConversionModel.EffectiveDateTime = currencyConversion.EffectiveDateTime;
+                currencyConversionModel.ExchangeRate = currencyConversion.ExchangeRate;
+
+                currencyConversionModel.CompanyName = currencyConversion.Company.CompanyName;
+                currencyConversionModel.CurrencyName = currencyConversion.Currency.CurrencyName;
+                currencyConversionModel.PreparedByName = currencyConversion.PreparedByUser.UserName;
 
                 return currencyConversionModel;
             });

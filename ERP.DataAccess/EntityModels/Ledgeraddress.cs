@@ -9,6 +9,12 @@ namespace ERP.DataAccess.EntityModels
     [Table("ledgeraddress")]
     public partial class Ledgeraddress
     {
+        public Ledgeraddress()
+        {
+            Purchaseinvoices = new HashSet<Purchaseinvoice>();
+            Salesinvoices = new HashSet<Salesinvoice>();
+        }
+
         [Key]
         public int AddressId { get; set; }
         public int? LedgerId { get; set; }
@@ -50,5 +56,9 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(User.LedgeraddressUpdatedByUsers))]
         public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Purchaseinvoice.BillToAddress))]
+        public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
+        [InverseProperty(nameof(Salesinvoice.BillToAddress))]
+        public virtual ICollection<Salesinvoice> Salesinvoices { get; set; }
     }
 }

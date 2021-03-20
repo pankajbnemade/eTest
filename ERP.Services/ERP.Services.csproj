@@ -10,6 +10,7 @@
     <Compile Remove="Accounts\Interface\I_.cs" />
     <Compile Remove="Accounts\PurchaseInvoiceChargeService.cs" />
     <Compile Remove="Accounts\SalesInvoiceChargeService.cs" />
+    <Compile Remove="Master\_Service.cs" />
   </ItemGroup>
 
   <ItemGroup>

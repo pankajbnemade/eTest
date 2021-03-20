@@ -2,6 +2,7 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -22,7 +23,15 @@ namespace ERP.Services.Accounts
             // assign values.
             Ledgeraddress ledgerAddress = new Ledgeraddress();
 
-            //ledgerAddress.LedgerAddressName = ledgerAddressModel.LedgerAddressName;
+            ledgerAddress.LedgerId = ledgerAddressModel.LedgerId;
+            ledgerAddress.AddressDescription = ledgerAddressModel.AddressDescription;
+            ledgerAddress.CountryId = ledgerAddressModel.CountryId;
+            ledgerAddress.StateId = ledgerAddressModel.StateId;
+            ledgerAddress.CityId = ledgerAddressModel.CityId;
+            ledgerAddress.EmailAddress = ledgerAddressModel.EmailAddress;
+            ledgerAddress.PhoneNo = ledgerAddressModel.PhoneNo;
+            ledgerAddress.PostalCode = ledgerAddressModel.PostalCode;
+            ledgerAddress.FaxNo = ledgerAddressModel.FaxNo;
 
             ledgerAddressId = await Create(ledgerAddress);
 
@@ -40,7 +49,14 @@ namespace ERP.Services.Accounts
             if (null != ledgerAddress)
             {
                 // assign values.
-                //ledgerAddress.LedgerAddressName = ledgerAddressModel.LedgerAddressName;
+                ledgerAddress.AddressDescription = ledgerAddressModel.AddressDescription;
+                ledgerAddress.CountryId = ledgerAddressModel.CountryId;
+                ledgerAddress.StateId = ledgerAddressModel.StateId;
+                ledgerAddress.CityId = ledgerAddressModel.CityId;
+                ledgerAddress.EmailAddress = ledgerAddressModel.EmailAddress;
+                ledgerAddress.PhoneNo = ledgerAddressModel.PhoneNo;
+                ledgerAddress.PostalCode = ledgerAddressModel.PostalCode;
+                ledgerAddress.FaxNo = ledgerAddressModel.FaxNo;
 
                 isUpdated = await Update(ledgerAddress);
             }
@@ -107,13 +123,13 @@ namespace ERP.Services.Accounts
             IList<LedgerAddressModel> ledgerAddressModelList = null;
 
             // create query.
-            IQueryable<Ledgeraddress> query = GetQueryByCondition(w => w.AddressId != 0);
+            IQueryable<Ledgeraddress> query = GetQueryByCondition(w => w.AddressId != 0)
+                                                .Include(w => w.Ledger).Include(w => w.Country)
+                                                .Include(w => w.State).Include(w => w.City);
 
             // apply filters.
             if (0 != ledgerAddressId)
                 query = query.Where(w => w.AddressId == ledgerAddressId);
-
-          
 
             // get records by query.
             List<Ledgeraddress> ledgerAddressList = await query.ToListAsync();
@@ -136,11 +152,49 @@ namespace ERP.Services.Accounts
             {
                 LedgerAddressModel ledgerAddressModel = new LedgerAddressModel();
 
-                //ledgerAddressModel.AddressId = ledgerAddress.AddressId;
-                //ledgerAddressModel.LedgerAddressName = ledgerAddress.LedgerAddressName;
+                ledgerAddressModel.AddressId = ledgerAddress.AddressId;
+                ledgerAddressModel.LedgerId = ledgerAddress.LedgerId;
+                ledgerAddressModel.AddressDescription = ledgerAddress.AddressDescription;
+                ledgerAddressModel.CountryId = ledgerAddress.CountryId;
+                ledgerAddressModel.StateId = ledgerAddress.StateId;
+                ledgerAddressModel.CityId = ledgerAddress.CityId;
+                ledgerAddressModel.EmailAddress = ledgerAddress.EmailAddress;
+                ledgerAddressModel.PhoneNo = ledgerAddress.PhoneNo;
+                ledgerAddressModel.PostalCode = ledgerAddress.PostalCode;
+                ledgerAddressModel.FaxNo = ledgerAddress.FaxNo;
+
+                //####
+
+                ledgerAddressModel.LedgerName = ledgerAddress.Ledger.LedgerName;
+                ledgerAddressModel.CountryName = ledgerAddress.Country.CountryName;
+                ledgerAddressModel.StateIName = ledgerAddress.State.StateName;
+                ledgerAddressModel.CityName = ledgerAddress.City.CityName;
 
                 return ledgerAddressModel;
             });
         }
+
+
+        public async Task<IList<SelectListModel>> GetLedgerAddressSelectList(int ledgerId)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.AddressId != 0))
+            {
+                IQueryable<Ledgeraddress> query = GetQueryByCondition(w => w.AddressId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.AddressDescription,
+                                        Value = s.AddressId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
+
     }
 }

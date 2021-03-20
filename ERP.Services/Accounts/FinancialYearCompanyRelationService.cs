@@ -22,32 +22,31 @@ namespace ERP.Services.Accounts
             // assign values.
             Financialyearcompanyrelation financialYearCompanyRelation = new Financialyearcompanyrelation();
 
-            //financialYearCompanyRelation.FinancialYearCompanyRelationName = financialYearCompanyRelationModel.FinancialYearCompanyRelationName;
+            financialYearCompanyRelation.CompanyId = financialYearCompanyRelationModel.CompanyId;
+            financialYearCompanyRelation.FinancialYearId = financialYearCompanyRelationModel.FinancialYearId;
 
             financialYearCompanyRelationId = await Create(financialYearCompanyRelation);
 
             return financialYearCompanyRelationId; // returns.
         }
 
+        //public async Task<bool> UpdateFinancialYearCompanyRelation(FinancialYearCompanyRelationModel financialYearCompanyRelationModel)
+        //{
+        //    bool isUpdated = false;
 
-        public async Task<bool> UpdateFinancialYearCompanyRelation(FinancialYearCompanyRelationModel financialYearCompanyRelationModel)
-        {
-            bool isUpdated = false;
+        //    // get record.
+        //    Financialyearcompanyrelation financialYearCompanyRelation = await GetByIdAsync(w => w.RelationId == financialYearCompanyRelationModel.RelationId);
 
-            // get record.
-            Financialyearcompanyrelation financialYearCompanyRelation = await GetByIdAsync(w => w.RelationId == financialYearCompanyRelationModel.RelationId);
+        //    if (null != financialYearCompanyRelation)
+        //    {
+        //        // assign values.
+        //        //financialYearCompanyRelation.FinancialYearCompanyRelationName = financialYearCompanyRelationModel.FinancialYearCompanyRelationName;
 
-            if (null != financialYearCompanyRelation)
-            {
-                // assign values.
-                //financialYearCompanyRelation.FinancialYearCompanyRelationName = financialYearCompanyRelationModel.FinancialYearCompanyRelationName;
+        //        isUpdated = await Update(financialYearCompanyRelation);
+        //    }
 
-                isUpdated = await Update(financialYearCompanyRelation);
-            }
-
-            return isUpdated; // returns.
-        }
-
+        //    return isUpdated; // returns.
+        //}
 
         public async Task<bool> DeleteFinancialYearCompanyRelation(int financialYearCompanyRelationId)
         {
@@ -64,12 +63,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<FinancialYearCompanyRelationModel> GetFinancialYearCompanyRelationById(int financialYearCompanyRelationId)
         {
             FinancialYearCompanyRelationModel financialYearCompanyRelationModel = null;
 
-            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(financialYearCompanyRelationId);
+            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(financialYearCompanyRelationId,0);
 
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
@@ -79,18 +77,11 @@ namespace ERP.Services.Accounts
             return financialYearCompanyRelationModel; // returns.
         }
 
-
-        public async Task<IList<FinancialYearCompanyRelationModel>> GetFinancialYearCompanyRelationByStateId(int stateId)
-        {
-            return await GetFinancialYearCompanyRelationList(0);
-        }
-
-
-        public async Task<DataTableResultModel<FinancialYearCompanyRelationModel>> GetFinancialYearCompanyRelationList()
+        public async Task<DataTableResultModel<FinancialYearCompanyRelationModel>> GetFinancialYearCompanyRelationByFinancialYearId(int financialYearId)
         {
             DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
 
-            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0);
+            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0, financialYearId);
 
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
@@ -102,18 +93,37 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        private async Task<IList<FinancialYearCompanyRelationModel>> GetFinancialYearCompanyRelationList(int financialYearCompanyRelationId)
+        public async Task<DataTableResultModel<FinancialYearCompanyRelationModel>> GetFinancialYearCompanyRelationList()
+        {
+            DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
+
+            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0,0);
+
+            if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
+            {
+                resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
+                resultModel.ResultList = financialYearCompanyRelationModelList;
+                resultModel.TotalResultCount = financialYearCompanyRelationModelList.Count();
+            }
+
+            return resultModel; // returns.
+        }
+
+        private async Task<IList<FinancialYearCompanyRelationModel>> GetFinancialYearCompanyRelationList(int financialYearCompanyRelationId, int financialYearId)
         {
             IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = null;
 
             // create query.
-            IQueryable<Financialyearcompanyrelation> query = GetQueryByCondition(w => w.RelationId != 0);
+            IQueryable<Financialyearcompanyrelation> query = GetQueryByCondition(w => w.RelationId != 0)
+                                                               .Include(w => w.Company).Include(w => w.FinancialYear).Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != financialYearCompanyRelationId)
                 query = query.Where(w => w.RelationId == financialYearCompanyRelationId);
 
-          
+            // apply filters.
+            if (0 != financialYearId)
+                query = query.Where(w => w.FinancialYearId == financialYearId);
 
             // get records by query.
             List<Financialyearcompanyrelation> financialYearCompanyRelationList = await query.ToListAsync();
@@ -136,8 +146,12 @@ namespace ERP.Services.Accounts
             {
                 FinancialYearCompanyRelationModel financialYearCompanyRelationModel = new FinancialYearCompanyRelationModel();
 
-                //financialYearCompanyRelationModel.RelationId = financialYearCompanyRelation.RelationId;
-                //financialYearCompanyRelationModel.FinancialYearCompanyRelationName = financialYearCompanyRelation.FinancialYearCompanyRelationName;
+                financialYearCompanyRelationModel.RelationId = financialYearCompanyRelation.RelationId;
+                financialYearCompanyRelationModel.CompanyId = financialYearCompanyRelation.CompanyId;
+                financialYearCompanyRelationModel.FinancialYearId = financialYearCompanyRelation.FinancialYearId;
+                financialYearCompanyRelationModel.CompanyName = financialYearCompanyRelation.Company.CompanyName;
+                financialYearCompanyRelationModel.FinancialYearName = financialYearCompanyRelation.FinancialYear.FinancialYearName;
+                financialYearCompanyRelationModel.PreparedByName = financialYearCompanyRelation.PreparedByUser.UserName;
 
                 return financialYearCompanyRelationModel;
             });

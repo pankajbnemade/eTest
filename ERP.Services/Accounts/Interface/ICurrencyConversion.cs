@@ -17,8 +17,8 @@ namespace ERP.Services.Accounts.Interface
         
         Task<CurrencyConversionModel> GetCurrencyConversionById(int currencyConversionId);
 
-        //Task<CurrencyConversionModel> GetCurrencyConversionByCurrencyId(int currencyId);
-        
+        Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionByCurrencyId(int currencyId);
+
         Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionList();
     }
 }
