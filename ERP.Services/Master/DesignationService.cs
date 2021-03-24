@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -102,7 +103,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Designation> query = GetQueryByCondition(w => w.DesignationId != 0);
+            IQueryable<Designation> query = GetQueryByCondition(w => w.DesignationId != 0).Include(w => w.PreparedByUser);
 
             if (0 != designationId)
                 query = query.Where(w => w.DesignationId == designationId);
@@ -129,9 +130,30 @@ namespace ERP.Services.Master
 
                 designationModel.DesignationId = designation.DesignationId;
                 designationModel.DesignationName = designation.DesignationName;
+                designationModel.PreparedByName = designation.PreparedByUser.UserName;
 
                 return designationModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetDesignationSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.DesignationId != 0))
+            {
+                IQueryable<Designation> query = GetQueryByCondition(w => w.DesignationId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.DesignationName,
+                                        Value = s.DesignationId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

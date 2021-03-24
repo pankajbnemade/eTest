@@ -103,7 +103,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Unitofmeasurement> query = GetQueryByCondition(w => w.UnitOfMeasurementId != 0);
+            IQueryable<Unitofmeasurement> query = GetQueryByCondition(w => w.UnitOfMeasurementId != 0).Include(w => w.PreparedByUser);
 
             if (0 != unitOfMeasurementId)
                 query = query.Where(w => w.UnitOfMeasurementId == unitOfMeasurementId);
@@ -130,6 +130,8 @@ namespace ERP.Services.Master
 
                 unitOfMeasurementModel.UnitOfMeasurementId = unitOfMeasurement.UnitOfMeasurementId;
                 unitOfMeasurementModel.UnitOfMeasurementName = unitOfMeasurement.UnitOfMeasurementName;
+
+                unitOfMeasurementModel.PreparedByName = unitOfMeasurement.PreparedByUser.UserName;
 
                 return unitOfMeasurementModel;
             });

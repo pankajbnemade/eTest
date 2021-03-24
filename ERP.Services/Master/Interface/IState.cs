@@ -1,5 +1,6 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace ERP.Services.Master.Interface
         Task<IList<StateModel>> GetStateByCountryId(int countryId);
 
         Task<DataTableResultModel<StateModel>> GetStateList();
+
+        Task<IList<SelectListModel>> GetStateSelectList();
 
     }
 }

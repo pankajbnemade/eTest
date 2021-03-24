@@ -3,6 +3,7 @@ using ERP.Models.Master;
 using ERP.Models.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ERP.Models.Helpers;
 
 namespace ERP.Services.Master.Interface
 {
@@ -51,6 +52,8 @@ namespace ERP.Services.Master.Interface
         /// return list.
         /// </returns>
         Task<DataTableResultModel<CompanyModel>> GetCompanyList();
+
+        Task<IList<SelectListModel>> GetCompanySelectList();
 
     }
 }

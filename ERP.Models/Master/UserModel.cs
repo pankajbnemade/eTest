@@ -12,5 +12,7 @@ namespace ERP.Models.Master
 
         //####
         public string EmployeeName { get; set; }
+
+        public string PreparedByName { get; set; }
     }
 }

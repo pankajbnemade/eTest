@@ -23,8 +23,10 @@ namespace ERP.Models.Master
 
         public int NoOfDecimals { get; set; }
 
+        //####
         public string CurrencyName { get; set; }
 
+        public string PreparedByName { get; set; }
 
         //public int? PreparedByUserId { get; set; }
         //public DateTime? PreparedDateTime { get; set; }

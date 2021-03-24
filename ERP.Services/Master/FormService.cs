@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -104,7 +105,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Form> query = GetQueryByCondition(w => w.FormId != 0);
+            IQueryable<Form> query = GetQueryByCondition(w => w.FormId != 0).Include(w => w.PreparedByUser).Include(w => w.Module);
 
             if (0 != formId)
                 query = query.Where(w => w.FormId == formId);
@@ -133,9 +134,32 @@ namespace ERP.Services.Master
                 formModel.FormName = form.FormName;
                 formModel.ModuleId = form.ModuleId;
 
+                formModel.PreparedByName = form.PreparedByUser.UserName;
+
                 return formModel;
             });
         }
+
+        public async Task<IList<SelectListModel>> GetFormSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.FormId != 0))
+            {
+                IQueryable<Form> query = GetQueryByCondition(w => w.FormId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.FormName,
+                                        Value = s.FormId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
 
     }
 }

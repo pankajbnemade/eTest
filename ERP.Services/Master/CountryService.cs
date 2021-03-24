@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -101,7 +102,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Country> query = GetQueryByCondition(w => w.CountryId != 0);
+            IQueryable<Country> query = GetQueryByCondition(w => w.CountryId != 0).Include(s => s.PreparedByUser);
 
             if (0 != countryId)
                 query = query.Where(w => w.CountryId == countryId);
@@ -129,8 +130,30 @@ namespace ERP.Services.Master
                 countryModel.CountryId = country.CountryId;
                 countryModel.CountryName = country.CountryName;
 
+                countryModel.PreparedByName = country.PreparedByUser.UserName;
+
                 return countryModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetCountrySelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.CountryId != 0))
+            {
+                IQueryable<Country> query = GetQueryByCondition(w => w.CountryId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.CountryName,
+                                        Value = s.CountryId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

@@ -22,7 +22,9 @@ namespace ERP.Services.Master
             Vouchersetup voucherSetup = new Vouchersetup();
 
             voucherSetup.VoucherSetupName = voucherSetupModel.VoucherSetupName;
-          
+            voucherSetup.ModuleId = voucherSetupModel.ModuleId;
+            voucherSetup.IsActive = voucherSetupModel.IsActive;
+
             voucherSetupId = await Create(voucherSetup);
 
             return voucherSetupId; // returns.
@@ -38,7 +40,9 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 voucherSetup.VoucherSetupName = voucherSetupModel.VoucherSetupName;
-               
+                voucherSetup.ModuleId = voucherSetupModel.ModuleId;
+                voucherSetup.IsActive = voucherSetupModel.IsActive;
+
                 isUpdated = await Update(voucherSetup);
             }
 
@@ -105,7 +109,7 @@ namespace ERP.Services.Master
             IQueryable<Vouchersetup> query = GetQueryByCondition(w => w.VoucherSetupId != 0);
 
             if (0 != voucherSetupId)
-                query = query.Where(w => w.VoucherSetupId == voucherSetupId);
+                query = query.Where(w => w.VoucherSetupId == voucherSetupId).Include(w => w.PreparedByUser).Include(w => w.Module);
 
             IList<Vouchersetup> voucherSetupList = await query.ToListAsync();
 
@@ -129,6 +133,11 @@ namespace ERP.Services.Master
 
                 voucherSetupModel.VoucherSetupId = voucherSetup.VoucherSetupId;
                 voucherSetupModel.VoucherSetupName = voucherSetup.VoucherSetupName;
+                voucherSetupModel.ModuleId = voucherSetup.ModuleId;
+                voucherSetupModel.IsActive = voucherSetup.IsActive;
+
+                voucherSetupModel.ModuleName = voucherSetup.Module.ModuleName;
+                voucherSetupModel.PreparedByName = voucherSetup.PreparedByUser.UserName;
 
                 return voucherSetupModel;
             });

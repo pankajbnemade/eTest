@@ -6,8 +6,10 @@ namespace ERP.Models.Master
     {
         public int VoucherStyleId { get; set; }
         public string VoucherStyleName { get; set; }
-       
+
+
         //####
-        //public string Name { get; set; }
+
+        public string PreparedByName { get; set; }
     }
 }

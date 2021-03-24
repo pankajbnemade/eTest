@@ -21,8 +21,16 @@ namespace ERP.Services.Master
             // assign values.
             Vouchersetupdetail voucherSetupDetail = new Vouchersetupdetail();
 
+            voucherSetupDetail.VoucherSetupId = voucherSetupDetailModel.VoucherSetupId;
             voucherSetupDetail.NoPad = voucherSetupDetailModel.NoPad;
-          
+            voucherSetupDetail.NoPreString = voucherSetupDetailModel.NoPreString;
+            voucherSetupDetail.NoPostString = voucherSetupDetailModel.NoPostString;
+            voucherSetupDetail.NoSeperator = voucherSetupDetailModel.NoSeperator;
+            voucherSetupDetail.FormatText = voucherSetupDetailModel.FormatText;
+            voucherSetupDetail.VoucherStyleId = voucherSetupDetailModel.VoucherStyleId;
+            voucherSetupDetail.CompanyId = voucherSetupDetailModel.CompanyId;
+            voucherSetupDetail.FinancialYearId = voucherSetupDetailModel.FinancialYearId;
+
             voucherSetupDetailId = await Create(voucherSetupDetail);
 
             return voucherSetupDetailId; // returns.
@@ -38,7 +46,14 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 voucherSetupDetail.NoPad = voucherSetupDetailModel.NoPad;
-               
+                voucherSetupDetail.NoPreString = voucherSetupDetailModel.NoPreString;
+                voucherSetupDetail.NoPostString = voucherSetupDetailModel.NoPostString;
+                voucherSetupDetail.NoSeperator = voucherSetupDetailModel.NoSeperator;
+                voucherSetupDetail.FormatText = voucherSetupDetailModel.FormatText;
+                voucherSetupDetail.VoucherStyleId = voucherSetupDetailModel.VoucherStyleId;
+                voucherSetupDetail.CompanyId = voucherSetupDetailModel.CompanyId;
+                voucherSetupDetail.FinancialYearId = voucherSetupDetailModel.FinancialYearId;
+
                 isUpdated = await Update(voucherSetupDetail);
             }
 
@@ -102,7 +117,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Vouchersetupdetail> query = GetQueryByCondition(w => w.VoucherSetupDetId != 0);
+            IQueryable<Vouchersetupdetail> query = GetQueryByCondition(w => w.VoucherSetupDetId != 0).Include(w => w.PreparedByUser).Include(w => w.VoucherStyle);
 
             if (0 != voucherSetupDetailId)
                 query = query.Where(w => w.VoucherSetupDetId == voucherSetupDetailId);
@@ -128,7 +143,18 @@ namespace ERP.Services.Master
                 VoucherSetupDetailModel voucherSetupDetailModel = new VoucherSetupDetailModel();
 
                 voucherSetupDetailModel.VoucherSetupDetId = voucherSetupDetail.VoucherSetupDetId;
+                voucherSetupDetailModel.VoucherSetupId = voucherSetupDetail.VoucherSetupId;
                 voucherSetupDetailModel.NoPad = voucherSetupDetail.NoPad;
+                voucherSetupDetailModel.NoPreString = voucherSetupDetail.NoPreString;
+                voucherSetupDetailModel.NoPostString = voucherSetupDetail.NoPostString;
+                voucherSetupDetailModel.NoSeperator = voucherSetupDetail.NoSeperator;
+                voucherSetupDetailModel.FormatText = voucherSetupDetail.FormatText;
+                voucherSetupDetailModel.VoucherStyleId = voucherSetupDetail.VoucherStyleId;
+                voucherSetupDetailModel.CompanyId = voucherSetupDetail.CompanyId;
+                voucherSetupDetailModel.FinancialYearId = voucherSetupDetail.FinancialYearId;
+
+                voucherSetupDetailModel.VoucherStyleName = voucherSetupDetail.VoucherStyle.VoucherStyleName;
+                voucherSetupDetailModel.PreparedByName = voucherSetupDetail.PreparedByUser.UserName;
 
                 return voucherSetupDetailModel;
             });

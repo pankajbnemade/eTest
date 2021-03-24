@@ -6,7 +6,9 @@ namespace ERP.Models.Master
     {
         public int UnitOfMeasurementId { get; set; }
         public string UnitOfMeasurementName { get; set; }
+
         //####
-        //public string Name { get; set; }
+
+        public string PreparedByName { get; set; }
     }
 }

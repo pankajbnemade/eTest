@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -137,7 +138,7 @@ namespace ERP.Services.Master
             IList<CompanyModel> companyModelList = null;
 
             // create query.
-            IQueryable<Company> query = GetQueryByCondition(w => w.CompanyId != 0).Include(s => s.Currency);
+            IQueryable<Company> query = GetQueryByCondition(w => w.CompanyId != 0).Include(s => s.Currency).Include(s => s.PreparedByUser);
 
             // apply filters.
             if (0 != companyId)
@@ -178,9 +179,31 @@ namespace ERP.Services.Master
                 companyModel.NoOfDecimals = (int)company.NoOfDecimals;
 
                 companyModel.CurrencyName = company.Currency.CurrencyName;
+                companyModel.PreparedByName = company.PreparedByUser.UserName;
 
                 return companyModel;
             });
         }
+
+        public async Task<IList<SelectListModel>> GetCompanySelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.CompanyId != 0))
+            {
+                IQueryable<Company> query = GetQueryByCondition(w => w.CompanyId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.CompanyName,
+                                        Value = s.CompanyId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
     }
 }

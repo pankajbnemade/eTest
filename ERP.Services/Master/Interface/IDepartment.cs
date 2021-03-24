@@ -1,5 +1,6 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,5 +19,8 @@ namespace ERP.Services.Master.Interface
         Task<DepartmentModel> GetDepartmentById(int departmentId);
         
         Task<DataTableResultModel<DepartmentModel>> GetDepartmentList();
+
+        Task<IList<SelectListModel>> GetDepartmentSelectList();
+
     }
 }

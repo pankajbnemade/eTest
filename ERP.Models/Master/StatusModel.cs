@@ -6,7 +6,9 @@ namespace ERP.Models.Master
     {
         public int StatusId { get; set; }
         public string StatusName { get; set; }
+
         //####
-        public string Name { get; set; }
+
+        public string PreparedByName { get; set; }
     }
 }

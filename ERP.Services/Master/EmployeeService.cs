@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,13 @@ namespace ERP.Services.Master
             // assign values.
             Employee employee = new Employee();
 
+            employee.EmployeeCode = employeeModel.EmployeeCode;
             employee.FirstName = employeeModel.FirstName;
-          
+            employee.LastName = employeeModel.LastName;
+            employee.DesignationId = employeeModel.DesignationId;
+            employee.DepartmentId = employeeModel.DepartmentId;
+            employee.EmailAddress = employeeModel.EmailAddress;
+
             employeeId = await Create(employee);
 
             return employeeId; // returns.
@@ -37,8 +43,13 @@ namespace ERP.Services.Master
             if (null != employee)
             {
                 // assign values.
+                employee.EmployeeCode = employeeModel.EmployeeCode;
                 employee.FirstName = employeeModel.FirstName;
-               
+                employee.LastName = employeeModel.LastName;
+                employee.DesignationId = employeeModel.DesignationId;
+                employee.DepartmentId = employeeModel.DepartmentId;
+                employee.EmailAddress = employeeModel.EmailAddress;
+
                 isUpdated = await Update(employee);
             }
 
@@ -102,7 +113,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0);
+            IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0).Include(w => w.PreparedByUser);
 
             if (0 != employeeId)
                 query = query.Where(w => w.EmployeeId == employeeId);
@@ -128,10 +139,39 @@ namespace ERP.Services.Master
                 EmployeeModel employeeModel = new EmployeeModel();
 
                 employeeModel.EmployeeId = employee.EmployeeId;
+                employeeModel.EmployeeCode = employee.EmployeeCode;
                 employeeModel.FirstName = employee.FirstName;
+                employeeModel.LastName = employee.LastName;
+                employeeModel.DesignationId = employee.DesignationId;
+                employeeModel.DepartmentId = employee.DepartmentId;
+                employeeModel.EmailAddress = employee.EmailAddress;
+
+                employeeModel.DesignationName = employee.Designation.DesignationName;
+                employeeModel.DepartmentName = employee.Department.DepartmentName;
+                employeeModel.PreparedByName = employee.PreparedByUser.UserName;
 
                 return employeeModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetEmployeeSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.EmployeeId != 0))
+            {
+                IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.FirstName + " " + s.LastName,
+                                        Value = s.EmployeeId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

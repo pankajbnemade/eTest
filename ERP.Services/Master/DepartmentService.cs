@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace ERP.Services.Master
             Department department = new Department();
 
             department.DepartmentName = departmentModel.DepartmentName;
-          
+
             departmentId = await Create(department);
 
             return departmentId; // returns.
@@ -38,7 +39,7 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 department.DepartmentName = departmentModel.DepartmentName;
-               
+
                 isUpdated = await Update(department);
             }
 
@@ -102,7 +103,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Department> query = GetQueryByCondition(w => w.DepartmentId != 0);
+            IQueryable<Department> query = GetQueryByCondition(w => w.DepartmentId != 0).Include(w => w.PreparedByUser);
 
             if (0 != departmentId)
                 query = query.Where(w => w.DepartmentId == departmentId);
@@ -130,8 +131,30 @@ namespace ERP.Services.Master
                 departmentModel.DepartmentId = department.DepartmentId;
                 departmentModel.DepartmentName = department.DepartmentName;
 
+                departmentModel.PreparedByName = department.PreparedByUser.UserName;
+
                 return departmentModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetDepartmentSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.DepartmentId != 0))
+            {
+                IQueryable<Department> query = GetQueryByCondition(w => w.DepartmentId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.DepartmentName,
+                                        Value = s.DepartmentId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

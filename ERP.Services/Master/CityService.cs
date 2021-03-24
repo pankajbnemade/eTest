@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -135,7 +136,7 @@ namespace ERP.Services.Master
             IList<CityModel> cityModelList = null;
 
             // create query.
-            IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0).Include(s => s.State).ThenInclude(ct => ct.Country);
+            IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0).Include(s => s.State).Include(s => s.PreparedByUser).ThenInclude(ct => ct.Country);
 
             // apply filters.
             if (0 != cityId)
@@ -173,10 +174,33 @@ namespace ERP.Services.Master
                 cityModel.StateId = city.State.StateId;
                 cityModel.StateName = city.State.StateName;
                 cityModel.CountryId = city.State.Country.CountryId;
+
                 cityModel.CountryName = city.State.Country.CountryName;
+                cityModel.PreparedByName = city.PreparedByUser.UserName;
 
                 return cityModel;
             });
         }
+
+        public async Task<IList<SelectListModel>> GetCitySelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.CityId != 0))
+            {
+                IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.CityName,
+                                        Value = s.CityId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
     }
 }

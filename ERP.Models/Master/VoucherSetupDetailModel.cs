@@ -14,7 +14,10 @@ namespace ERP.Models.Master
         public int? VoucherStyleId { get; set; }
         public int? CompanyId { get; set; }
         public int? FinancialYearId { get; set; }
+
         //####
         public string VoucherStyleName { get; set; }
+
+        public string PreparedByName { get; set; }
     }
 }

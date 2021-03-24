@@ -19,5 +19,9 @@ namespace ERP.Models.Master
         [Required(ErrorMessage = "Country is required.")]
         public int CountryId { get; set; }
         public string CountryName { get; set; }
+
+        //####
+
+        public string PreparedByName { get; set; }
     }
 }

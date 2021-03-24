@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -142,8 +143,30 @@ namespace ERP.Services.Master
                 stateModel.CountryId = Convert.ToInt32(state.CountryId);
                 stateModel.CountryName = state.Country.CountryName;
 
+                stateModel.PreparedByName = state.PreparedByUser.UserName;
+
                 return stateModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetStateSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.StateId != 0))
+            {
+                IQueryable<State> query = GetQueryByCondition(w => w.StateId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.StateName,
+                                        Value = s.StateId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

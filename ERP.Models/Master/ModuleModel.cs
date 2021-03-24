@@ -9,6 +9,6 @@ namespace ERP.Models.Master
         public sbyte? IsActive { get; set; }
 
         //####
-        //public string Name { get; set; }
+        public string PreparedByName { get; set; }
     }
 }

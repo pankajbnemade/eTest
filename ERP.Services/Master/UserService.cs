@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,10 @@ namespace ERP.Services.Master
             User user = new User();
 
             user.UserName = userModel.UserName;
-          
+            user.Email = userModel.Email;
+            user.Password = userModel.Password;
+            user.EmployeeId = userModel.EmployeeId;
+
             userId = await Create(user);
 
             return userId; // returns.
@@ -38,7 +42,10 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 user.UserName = userModel.UserName;
-               
+                user.Email = userModel.Email;
+                user.Password = userModel.Password;
+                user.EmployeeId = userModel.EmployeeId;
+
                 isUpdated = await Update(user);
             }
 
@@ -102,7 +109,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<User> query = GetQueryByCondition(w => w.UserId != 0);
+            IQueryable<User> query = GetQueryByCondition(w => w.UserId != 0).Include(w => w.PreparedByUser);
 
             if (0 != userId)
                 query = query.Where(w => w.UserId == userId);
@@ -129,9 +136,36 @@ namespace ERP.Services.Master
 
                 userModel.UserId = user.UserId;
                 userModel.UserName = user.UserName;
+                userModel.Email = user.Email;
+                userModel.Password = user.Password;
+                userModel.EmployeeId = user.EmployeeId;
+
+                //userModel.EmployeeName = user.emplo.UserName;
+                userModel.PreparedByName = user.PreparedByUser.UserName;
 
                 return userModel;
             });
+        }
+
+
+        public async Task<IList<SelectListModel>> GetUserSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.UserId != 0))
+            {
+                IQueryable<User> query = GetQueryByCondition(w => w.UserId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.UserName,
+                                        Value = s.UserId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace ERP.Services.Master.Interface
         Task<UserModel> GetUserById(int userId);
 
         //Task<IList<UserModel>> GetUserByEmployeeId(int employeeId);
+
+        Task<IList<SelectListModel>> GetUserSelectList();
 
         Task<DataTableResultModel<UserModel>> GetUserList();
     }

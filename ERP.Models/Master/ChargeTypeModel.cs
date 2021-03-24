@@ -9,5 +9,9 @@ namespace ERP.Models.Master
     {
         public int ChargeTypeId { get; set; }
         public string ChargeTypeName { get; set; }
+
+        //####
+
+        public string PreparedByName { get; set; }
     }
 }

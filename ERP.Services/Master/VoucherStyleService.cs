@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -130,8 +131,31 @@ namespace ERP.Services.Master
                 voucherStyleModel.VoucherStyleId = voucherStyle.VoucherStyleId;
                 voucherStyleModel.VoucherStyleName = voucherStyle.VoucherStyleName;
 
+                voucherStyleModel.PreparedByName = voucherStyle.PreparedByUser.UserName;
+
                 return voucherStyleModel;
             });
+        }
+
+
+        public async Task<IList<SelectListModel>> GetVoucherStyleSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.VoucherStyleId != 0))
+            {
+                IQueryable<Voucherstyle> query = GetQueryByCondition(w => w.VoucherStyleId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.VoucherStyleName,
+                                        Value = s.VoucherStyleId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

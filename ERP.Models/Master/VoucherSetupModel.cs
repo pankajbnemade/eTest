@@ -11,5 +11,7 @@ namespace ERP.Models.Master
 
         //####
         public string ModuleName { get; set; }
+
+        public string PreparedByName { get; set; }
     }
 }

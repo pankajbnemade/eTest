@@ -121,7 +121,7 @@ namespace ERP.Services.Master
             IList<ChargeTypeModel> chargeTypeModelList = null;
 
             // create query.
-            IQueryable<Chargetype> query = GetQueryByCondition(w => w.ChargeTypeId != 0);
+            IQueryable<Chargetype> query = GetQueryByCondition(w => w.ChargeTypeId != 0).Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != chargeTypeId)
@@ -151,6 +151,7 @@ namespace ERP.Services.Master
                 Chargetype chargeType = new Chargetype();
 
                 chargeTypeModel.ChargeTypeName = chargeType.ChargeTypeName;
+                chargeTypeModel.PreparedByName = chargeType.PreparedByUser.UserName;
                 
                 return chargeTypeModel;
             });

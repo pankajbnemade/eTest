@@ -1,5 +1,6 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,5 +18,8 @@ namespace ERP.Services.Master.Interface
         Task<StatusModel> GetStatusById(int statusId);
         
         Task<DataTableResultModel<StatusModel>> GetStatusList();
+
+        Task<IList<SelectListModel>> GetStatusSelectList();
+
     }
 }

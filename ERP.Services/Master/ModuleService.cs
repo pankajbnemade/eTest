@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -104,7 +105,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Module> query = GetQueryByCondition(w => w.ModuleId != 0);
+            IQueryable<Module> query = GetQueryByCondition(w => w.ModuleId != 0).Include(w => w.PreparedByUser);
 
             if (0 != moduleId)
                 query = query.Where(w => w.ModuleId == moduleId);
@@ -133,9 +134,33 @@ namespace ERP.Services.Master
                 moduleModel.ModuleName = module.ModuleName;
                 moduleModel.IsActive = module.IsActive;
 
+                moduleModel.PreparedByName = module.PreparedByUser.UserName;
+
                 return moduleModel;
             });
         }
+
+
+        public async Task<IList<SelectListModel>> GetModuleSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.ModuleId != 0))
+            {
+                IQueryable<Module> query = GetQueryByCondition(w => w.ModuleId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.ModuleName,
+                                        Value = s.ModuleId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
 
     }
 }
