@@ -4,8 +4,8 @@ namespace ERP.Models.Accounts
 {
     public class PurchaseInvoiceDetailModel
     {
-        public int InvoiceDetId { get; set; }
-        public int? InvoiceId { get; set; }
+        public int PurchaseInvoiceDetId { get; set; }
+        public int? PurchaseInvoiceId { get; set; }
         public int? SrNo { get; set; }
         public string Description { get; set; }
         public int? UnitOfMeasurementId { get; set; }

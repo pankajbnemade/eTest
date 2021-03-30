@@ -16,7 +16,7 @@ namespace ERP.DataAccess.EntityModels
         }
 
         [Key]
-        public int InvoiceId { get; set; }
+        public int PurchaseInvoiceId { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string InvoiceNo { get; set; }
         [Column(TypeName = "datetime")]
@@ -40,29 +40,29 @@ namespace ERP.DataAccess.EntityModels
         [Column(TypeName = "decimal(18,6)")]
         public decimal ExchangeRate { get; set; }
         [Column("TotalLineItemAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal TotalLineItemAmountFc { get; set; }
+        public decimal? TotalLineItemAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
-        public decimal TotalLineItemAmount { get; set; }
+        public decimal? TotalLineItemAmount { get; set; }
         [Column("GrossAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal GrossAmountFc { get; set; }
+        public decimal? GrossAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
-        public decimal GrossAmount { get; set; }
+        public decimal? GrossAmount { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string DiscountPercentageOrAmount { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal DiscountPercentage { get; set; }
+        [Column("DiscountPerOrAmount_FC", TypeName = "decimal(18,4)")]
+        public decimal? DiscountPerOrAmountFc { get; set; }
         [Column("DiscountAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal DiscountAmountFc { get; set; }
+        public decimal? DiscountAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
-        public decimal DiscountAmount { get; set; }
+        public decimal? DiscountAmount { get; set; }
         [Column("TaxAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal TaxAmountFc { get; set; }
+        public decimal? TaxAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
-        public decimal TaxAmount { get; set; }
+        public decimal? TaxAmount { get; set; }
         [Column("NetAmount_FC", TypeName = "decimal(18,4)")]
-        public decimal NetAmountFc { get; set; }
+        public decimal? NetAmountFc { get; set; }
         [Column(TypeName = "decimal(18,4)")]
-        public decimal NetAmount { get; set; }
+        public decimal? NetAmount { get; set; }
         [Column("NetAmount_FCInWord", TypeName = "varchar(2000)")]
         public string NetAmountFcinWord { get; set; }
         public int? StatusId { get; set; }
@@ -110,9 +110,9 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Purchaseinvoices))]
         public virtual Voucherstyle VoucherStyle { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicedetail.Invoice))]
+        [InverseProperty(nameof(Purchaseinvoicedetail.PurchaseInvoice))]
         public virtual ICollection<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
-        [InverseProperty(nameof(Purchaseinvoicetax.Invoice))]
+        [InverseProperty(nameof(Purchaseinvoicetax.PurchaseInvoice))]
         public virtual ICollection<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
     }
 }

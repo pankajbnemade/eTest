@@ -136,7 +136,7 @@ namespace ERP.Services.Master
             IList<CityModel> cityModelList = null;
 
             // create query.
-            IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0).Include(s => s.State).Include(s => s.PreparedByUser).ThenInclude(ct => ct.Country);
+            IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0).Include(s => s.State).ThenInclude(ct => ct.Country).Include(s => s.PreparedByUser);
 
             // apply filters.
             if (0 != cityId)

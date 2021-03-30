@@ -10,8 +10,8 @@ namespace ERP.DataAccess.EntityModels
     public partial class Purchaseinvoicedetailtax
     {
         [Key]
-        public int InvoiceDetTaxId { get; set; }
-        public int? InvoiceDetId { get; set; }
+        public int PurchaseInvoiceDetTaxId { get; set; }
+        public int? PurchaseInvoiceDetId { get; set; }
         public int? SrNo { get; set; }
         public int? TaxLedgerId { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -33,12 +33,12 @@ namespace ERP.DataAccess.EntityModels
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDateTime { get; set; }
 
-        [ForeignKey(nameof(InvoiceDetId))]
-        [InverseProperty(nameof(Purchaseinvoicedetail.Purchaseinvoicedetailtaxes))]
-        public virtual Purchaseinvoicedetail InvoiceDet { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
         [InverseProperty(nameof(User.PurchaseinvoicedetailtaxPreparedByUsers))]
         public virtual User PreparedByUser { get; set; }
+        [ForeignKey(nameof(PurchaseInvoiceDetId))]
+        [InverseProperty(nameof(Purchaseinvoicedetail.Purchaseinvoicedetailtaxes))]
+        public virtual Purchaseinvoicedetail PurchaseInvoiceDet { get; set; }
         [ForeignKey(nameof(TaxLedgerId))]
         [InverseProperty(nameof(Ledger.Purchaseinvoicedetailtaxes))]
         public virtual Ledger TaxLedger { get; set; }

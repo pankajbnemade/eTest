@@ -12,26 +12,56 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceTaxService : Repository<Purchaseinvoicetax>, IPurchaseInvoiceTax
     {
-        public PurchaseInvoiceTaxService(ErpDbContext dbContext) : base(dbContext) { }
+        IPurchaseInvoice purchaseInvoice;
+
+        public PurchaseInvoiceTaxService(ErpDbContext dbContext, IPurchaseInvoice _purchaseInvoice) : base(dbContext)
+        {
+            purchaseInvoice = _purchaseInvoice;
+        }
 
         public async Task<int> CreatePurchaseInvoiceTax(PurchaseInvoiceTaxModel purchaseInvoiceTaxModel)
         {
             int purchaseInvoiceTaxId = 0;
+            int multiplier = 1;
 
             // assign values.
+            PurchaseInvoiceModel purchaseInvoiceModel = null;
+
+            purchaseInvoiceModel = await purchaseInvoice.GetPurchaseInvoiceById((int)purchaseInvoiceTaxModel.PurchaseInvoiceId);
+
             Purchaseinvoicetax purchaseInvoiceTax = new Purchaseinvoicetax();
 
-            purchaseInvoiceTax.InvoiceId = purchaseInvoiceTaxModel.InvoiceId;
+            purchaseInvoiceTax.PurchaseInvoiceId = purchaseInvoiceTaxModel.PurchaseInvoiceId;
             purchaseInvoiceTax.SrNo = purchaseInvoiceTaxModel.SrNo;
             purchaseInvoiceTax.TaxLedgerId = purchaseInvoiceTaxModel.TaxLedgerId;
             purchaseInvoiceTax.TaxPercentageOrAmount = purchaseInvoiceTaxModel.TaxPercentageOrAmount;
             purchaseInvoiceTax.TaxPerOrAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
+
+            if (purchaseInvoiceTax.TaxPercentageOrAmount == "Percentage")
+            {
+                purchaseInvoiceTaxModel.TaxAmountFc = (purchaseInvoiceModel.GrossAmountFc * purchaseInvoiceTaxModel.TaxPerOrAmountFc) / 100;
+            }
+            else
+            {
+                purchaseInvoiceTaxModel.TaxAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
+            }
+
+            if (purchaseInvoiceTaxModel.TaxAddOrDeduct == "Deduct")
+            {
+                multiplier = -1;
+            }
+
             purchaseInvoiceTax.TaxAddOrDeduct = purchaseInvoiceTaxModel.TaxAddOrDeduct;
-            purchaseInvoiceTax.TaxAmountFc = purchaseInvoiceTaxModel.TaxAmountFc;
-            purchaseInvoiceTax.TaxAmount = purchaseInvoiceTaxModel.TaxAmount;
+            purchaseInvoiceTax.TaxAmountFc = multiplier * purchaseInvoiceTaxModel.TaxAmountFc;
+            purchaseInvoiceTax.TaxAmount = multiplier * purchaseInvoiceTaxModel.TaxAmount;
             purchaseInvoiceTax.Remark = purchaseInvoiceTaxModel.Remark;
 
             purchaseInvoiceTaxId = await Create(purchaseInvoiceTax);
+
+            if (purchaseInvoiceTaxId != 0)
+            {
+                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTaxId);
+            }
 
             return purchaseInvoiceTaxId; // returns.
         }
@@ -39,44 +69,70 @@ namespace ERP.Services.Accounts
         public async Task<bool> UpdatePurchaseInvoiceTax(PurchaseInvoiceTaxModel purchaseInvoiceTaxModel)
         {
             bool isUpdated = false;
+            int multiplier = 1;
 
             // get record.
-            Purchaseinvoicetax purchaseInvoiceTax = await GetByIdAsync(w => w.InvoiceTaxId == purchaseInvoiceTaxModel.InvoiceTaxId);
+            Purchaseinvoicetax purchaseInvoiceTax = await GetByIdAsync(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxModel.PurchaseInvoiceTaxId);
 
             if (null != purchaseInvoiceTax)
             {
                 // assign values.
+
+                purchaseInvoiceTax.PurchaseInvoiceId = purchaseInvoiceTaxModel.PurchaseInvoiceId;
                 purchaseInvoiceTax.SrNo = purchaseInvoiceTaxModel.SrNo;
                 purchaseInvoiceTax.TaxLedgerId = purchaseInvoiceTaxModel.TaxLedgerId;
                 purchaseInvoiceTax.TaxPercentageOrAmount = purchaseInvoiceTaxModel.TaxPercentageOrAmount;
                 purchaseInvoiceTax.TaxPerOrAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
+
+                if (purchaseInvoiceTax.TaxPercentageOrAmount == "Percentage")
+                {
+                    purchaseInvoiceTaxModel.TaxAmountFc = (purchaseInvoiceTax.PurchaseInvoice.GrossAmountFc * purchaseInvoiceTaxModel.TaxPerOrAmountFc) / 100;
+                }
+                else
+                {
+                    purchaseInvoiceTaxModel.TaxAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
+                }
+
+                if (purchaseInvoiceTaxModel.TaxAddOrDeduct == "Deduct")
+                {
+                    multiplier = -1;
+                }
+
                 purchaseInvoiceTax.TaxAddOrDeduct = purchaseInvoiceTaxModel.TaxAddOrDeduct;
-                purchaseInvoiceTax.TaxAmountFc = purchaseInvoiceTaxModel.TaxAmountFc;
-                purchaseInvoiceTax.TaxAmount = purchaseInvoiceTaxModel.TaxAmount;
+                purchaseInvoiceTax.TaxAmountFc = multiplier * purchaseInvoiceTaxModel.TaxAmountFc;
+                purchaseInvoiceTax.TaxAmount = multiplier * purchaseInvoiceTaxModel.TaxAmount;
                 purchaseInvoiceTax.Remark = purchaseInvoiceTaxModel.Remark;
 
                 isUpdated = await Update(purchaseInvoiceTax);
             }
 
+            if (isUpdated != false)
+            {
+                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTax.PurchaseInvoiceId);
+            }
+
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeletePurchaseInvoiceTax(int purchaseInvoiceTaxId)
         {
             bool isDeleted = false;
 
             // get record.
-            Purchaseinvoicetax purchaseInvoiceTax = await GetByIdAsync(w => w.InvoiceTaxId == purchaseInvoiceTaxId);
+            Purchaseinvoicetax purchaseInvoiceTax = await GetByIdAsync(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxId);
 
             if (null != purchaseInvoiceTax)
             {
                 isDeleted = await Delete(purchaseInvoiceTax);
             }
 
+            if (isDeleted != false)
+            {
+                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTax.PurchaseInvoiceId);
+            }
+
             return isDeleted; // returns.
         }
-
 
         public async Task<PurchaseInvoiceTaxModel> GetPurchaseInvoiceTaxById(int purchaseInvoiceTaxId)
         {
@@ -92,7 +148,7 @@ namespace ERP.Services.Accounts
             return purchaseInvoiceTaxModel; // returns.
         }
 
-        public async Task<DataTableResultModel<PurchaseInvoiceTaxModel>> GetPurchaseInvoiceTaxListByPurchaseInvoiceId(int purchaseInvoiceId)
+        public async Task<DataTableResultModel<PurchaseInvoiceTaxModel>> GetPurchaseInvoiceTaxByPurchaseInvoiceId(int purchaseInvoiceId)
         {
             DataTableResultModel<PurchaseInvoiceTaxModel> resultModel = new DataTableResultModel<PurchaseInvoiceTaxModel>();
 
@@ -129,15 +185,15 @@ namespace ERP.Services.Accounts
             IList<PurchaseInvoiceTaxModel> purchaseInvoiceTaxModelList = null;
 
             // create query.
-            IQueryable<Purchaseinvoicetax> query = GetQueryByCondition(w => w.InvoiceTaxId != 0);
+            IQueryable<Purchaseinvoicetax> query = GetQueryByCondition(w => w.PurchaseInvoiceTaxId != 0);
 
             // apply filters.
             if (0 != purchaseInvoiceTaxId)
-                query = query.Where(w => w.InvoiceTaxId == purchaseInvoiceTaxId);
+                query = query.Where(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxId);
 
             // apply filters.
             if (0 != purchaseInvoiceId)
-                query = query.Where(w => w.InvoiceId == purchaseInvoiceId);
+                query = query.Where(w => w.PurchaseInvoiceId == purchaseInvoiceId);
 
             // get records by query.
             List<Purchaseinvoicetax> purchaseInvoiceTaxList = await query.ToListAsync();
@@ -160,8 +216,8 @@ namespace ERP.Services.Accounts
             {
                 PurchaseInvoiceTaxModel purchaseInvoiceTaxModel = new PurchaseInvoiceTaxModel();
 
-                purchaseInvoiceTaxModel.InvoiceTaxId = purchaseInvoiceTax.InvoiceTaxId;
-                purchaseInvoiceTaxModel.InvoiceId = purchaseInvoiceTax.InvoiceId;
+                purchaseInvoiceTaxModel.PurchaseInvoiceTaxId = purchaseInvoiceTax.PurchaseInvoiceTaxId;
+                purchaseInvoiceTaxModel.PurchaseInvoiceId = purchaseInvoiceTax.PurchaseInvoiceId;
                 purchaseInvoiceTaxModel.SrNo = purchaseInvoiceTax.SrNo;
                 purchaseInvoiceTaxModel.TaxLedgerId = purchaseInvoiceTax.TaxLedgerId;
                 purchaseInvoiceTaxModel.TaxPercentageOrAmount = purchaseInvoiceTax.TaxPercentageOrAmount;

@@ -4,8 +4,8 @@ namespace ERP.Models.Accounts
 {
     public class PurchaseInvoiceTaxModel
     {
-        public int InvoiceTaxId { get; set; }
-        public int? InvoiceId { get; set; }
+        public int PurchaseInvoiceTaxId { get; set; }
+        public int? PurchaseInvoiceId { get; set; }
         public int? SrNo { get; set; }
         public int? TaxLedgerId { get; set; }
         public string TaxPercentageOrAmount { get; set; }

@@ -9,7 +9,7 @@ namespace ERP.Models.Master
         public string NoPad { get; set; }
         public string NoPreString { get; set; }
         public string NoPostString { get; set; }
-        public string NoSeperator { get; set; }
+        public string NoSeparator { get; set; }
         public string FormatText { get; set; }
         public int? VoucherStyleId { get; set; }
         public int? CompanyId { get; set; }

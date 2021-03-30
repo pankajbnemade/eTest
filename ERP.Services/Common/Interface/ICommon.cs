@@ -1,4 +1,5 @@
-﻿using ERP.Models.Helpers;
+﻿using ERP.Models.Common;
+using ERP.Models.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,16 @@ namespace ERP.Services.Common.Interface
 {
     public interface ICommon
     {
-        IList<SelectListModel> GetTaxModelTypeSelectList();
-        
-        IList<SelectListModel> GetDiscountTypeSelectList();
-        
-        IList<SelectListModel> GetTaxPercentageOrAmountSelectList();
+        Task<GenerateNoModel> GenerateVoucherNo(int maxNo, int voucherSetupId, int companyId, int financialYearId);
 
-        IList<SelectListModel> GetTaxAddOrDeductSelectList();
+        Task<IList<SelectListModel>> GetTaxModelTypeSelectList();
+
+        Task<IList<SelectListModel>> GetDiscountTypeSelectList();
+
+        Task<IList<SelectListModel>> GetTaxPercentageOrAmountSelectList();
+
+        Task<IList<SelectListModel>> GetTaxAddOrDeductSelectList();
+
+        Task<string> AmountInWord_Million(string amount, string currencyCode, string denomination);
     }
 }

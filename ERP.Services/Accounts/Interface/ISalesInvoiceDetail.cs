@@ -13,11 +13,11 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdateSalesInvoiceDetail(SalesInvoiceDetailModel salesInvoiceDetailModel);
 
+        Task<bool> UpdateSalesInvoiceDetailAmount(int? salesInvoiceDetailId);
+
         Task<bool> DeleteSalesInvoiceDetail(int salesInvoiceDetailId);
 
         Task<SalesInvoiceDetailModel> GetSalesInvoiceDetailById(int salesInvoiceDetailId);
-
-        //Task<SalesInvoiceDetailModel> GetSalesInvoiceDetailBySalesInvoiceId(int salesInvoiceId);
 
         Task<DataTableResultModel<SalesInvoiceDetailModel>> GetSalesInvoiceDetailList();
     }

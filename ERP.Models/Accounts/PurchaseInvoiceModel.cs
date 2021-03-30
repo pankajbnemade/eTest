@@ -5,7 +5,7 @@ namespace ERP.Models.Accounts
 {
     public class PurchaseInvoiceModel
     {
-        public int InvoiceId { get; set; }
+        public int PurchaseInvoiceId { get; set; }
         public string InvoiceNo { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public int? SupplierLedgerId { get; set; }
@@ -20,18 +20,18 @@ namespace ERP.Models.Accounts
         public int? TaxRegisterId { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
-        public decimal TotalLineItemAmountFc { get; set; }
-        public decimal TotalLineItemAmount { get; set; }
-        public decimal GrossAmountFc { get; set; }
-        public decimal GrossAmount { get; set; }
+        public decimal? TotalLineItemAmountFc { get; set; }
+        public decimal? TotalLineItemAmount { get; set; }
+        public decimal? GrossAmountFc { get; set; }
+        public decimal? GrossAmount { get; set; }
         public string DiscountPercentageOrAmount { get; set; }
-        public decimal DiscountPercentage { get; set; }
-        public decimal DiscountAmountFc { get; set; }
-        public decimal DiscountAmount { get; set; }
-        public decimal TaxAmountFc { get; set; }
-        public decimal TaxAmount { get; set; }
-        public decimal NetAmountFc { get; set; }
-        public decimal NetAmount { get; set; }
+        public decimal? DiscountPerOrAmountFc { get; set; }
+        public decimal? DiscountAmountFc { get; set; }
+        public decimal? DiscountAmount { get; set; }
+        public decimal? TaxAmountFc { get; set; }
+        public decimal? TaxAmount { get; set; }
+        public decimal? NetAmountFc { get; set; }
+        public decimal? NetAmount { get; set; }
         public string NetAmountFcinWord { get; set; }
         public int? StatusId { get; set; }
         public int? CompanyId { get; set; }

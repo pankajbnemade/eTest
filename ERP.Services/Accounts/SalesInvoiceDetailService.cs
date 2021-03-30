@@ -12,7 +12,11 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceDetailService : Repository<Salesinvoicedetail>, ISalesInvoiceDetail
     {
-        public SalesInvoiceDetailService(ErpDbContext dbContext) : base(dbContext) { }
+        ISalesInvoice salesInvoice;
+        public SalesInvoiceDetailService(ErpDbContext dbContext, ISalesInvoice _salesInvoice) : base(dbContext)
+        {
+            salesInvoice = _salesInvoice;
+        }
 
         public async Task<int> CreateSalesInvoiceDetail(SalesInvoiceDetailModel salesInvoiceDetailModel)
         {
@@ -20,7 +24,7 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Salesinvoicedetail salesInvoiceDetail = new Salesinvoicedetail();
-            
+
             salesInvoiceDetail.InvoiceId = salesInvoiceDetailModel.InvoiceId;
             salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
             salesInvoiceDetail.Description = salesInvoiceDetailModel.Description;
@@ -28,12 +32,18 @@ namespace ERP.Services.Accounts
             salesInvoiceDetail.Quantity = salesInvoiceDetailModel.Quantity;
             salesInvoiceDetail.PerUnit = salesInvoiceDetailModel.PerUnit;
             salesInvoiceDetail.UnitPrice = salesInvoiceDetailModel.UnitPrice;
-            salesInvoiceDetail.GrossAmountFc = salesInvoiceDetailModel.GrossAmountFc;
-            salesInvoiceDetail.GrossAmount = salesInvoiceDetailModel.GrossAmount;
+            salesInvoiceDetail.GrossAmountFc = 0;
+            salesInvoiceDetail.GrossAmount = 0;
             salesInvoiceDetail.TaxAmountFc = 0;
             salesInvoiceDetail.TaxAmount = 0;
             salesInvoiceDetail.NetAmountFc = 0;
             salesInvoiceDetail.NetAmount = 0;
+
+            if (salesInvoiceDetailId != 0)
+            {
+                await UpdateSalesInvoiceDetailAmount(salesInvoiceDetailId);
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
+            }
 
             salesInvoiceDetailId = await Create(salesInvoiceDetail);
 
@@ -49,6 +59,7 @@ namespace ERP.Services.Accounts
 
             if (null != salesInvoiceDetail)
             {
+
                 // assign values.
                 salesInvoiceDetail.InvoiceId = salesInvoiceDetailModel.InvoiceId;
                 salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
@@ -57,14 +68,47 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetail.Quantity = salesInvoiceDetailModel.Quantity;
                 salesInvoiceDetail.PerUnit = salesInvoiceDetailModel.PerUnit;
                 salesInvoiceDetail.UnitPrice = salesInvoiceDetailModel.UnitPrice;
-                salesInvoiceDetail.GrossAmountFc = salesInvoiceDetailModel.GrossAmountFc;
-                salesInvoiceDetail.GrossAmount = salesInvoiceDetailModel.GrossAmount;
+                salesInvoiceDetail.GrossAmountFc = 0;
+                salesInvoiceDetail.GrossAmount = 0;
                 salesInvoiceDetail.TaxAmountFc = 0;
                 salesInvoiceDetail.TaxAmount = 0;
                 salesInvoiceDetail.NetAmountFc = 0;
                 salesInvoiceDetail.NetAmount = 0;
 
                 isUpdated = await Update(salesInvoiceDetail);
+            }
+
+            if (isUpdated != false)
+            {
+                await UpdateSalesInvoiceDetailAmount(salesInvoiceDetailModel.InvoiceDetId);
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateSalesInvoiceDetailAmount(int? salesInvoiceDetailId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.InvoiceDetId == salesInvoiceDetailId);
+
+            if (null != salesInvoiceDetail)
+            {
+                salesInvoiceDetail.GrossAmountFc = salesInvoiceDetail.Quantity * salesInvoiceDetail.PerUnit * salesInvoiceDetail.UnitPrice;
+                salesInvoiceDetail.GrossAmount = salesInvoiceDetail.GrossAmountFc * salesInvoiceDetail.Invoice.ExchangeRate;
+                salesInvoiceDetail.TaxAmountFc = salesInvoiceDetail.Salesinvoicedetailtaxes.Sum(s => s.TaxAmountFc);
+                salesInvoiceDetail.TaxAmount = salesInvoiceDetail.Invoice.ExchangeRate * salesInvoiceDetail.TaxAmountFc;
+                salesInvoiceDetail.NetAmountFc = salesInvoiceDetail.TaxAmountFc + salesInvoiceDetail.GrossAmountFc;
+                salesInvoiceDetail.NetAmount = salesInvoiceDetail.Invoice.ExchangeRate * salesInvoiceDetail.NetAmountFc;
+
+                isUpdated = await Update(salesInvoiceDetail);
+            }
+
+            if (isUpdated != false)
+            {
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
             }
 
             return isUpdated; // returns.
@@ -80,6 +124,11 @@ namespace ERP.Services.Accounts
             if (null != salesInvoiceDetail)
             {
                 isDeleted = await Delete(salesInvoiceDetail);
+            }
+
+            if (isDeleted != false)
+            {
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
             }
 
             return isDeleted; // returns.

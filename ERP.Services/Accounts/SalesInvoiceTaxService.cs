@@ -12,13 +12,23 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceTaxService : Repository<Salesinvoicetax>, ISalesInvoiceTax
     {
-        public SalesInvoiceTaxService(ErpDbContext dbContext) : base(dbContext) { }
+        ISalesInvoice salesInvoice;
+
+        public SalesInvoiceTaxService(ErpDbContext dbContext, ISalesInvoice _salesInvoice) : base(dbContext)
+        {
+            salesInvoice = _salesInvoice;
+        }
 
         public async Task<int> CreateSalesInvoiceTax(SalesInvoiceTaxModel salesInvoiceTaxModel)
         {
             int salesInvoiceTaxId = 0;
+            int multiplier = 1;
 
             // assign values.
+            SalesInvoiceModel salesInvoiceModel = null;
+
+            salesInvoiceModel = await salesInvoice.GetSalesInvoiceById((int)salesInvoiceTaxModel.InvoiceId);
+
             Salesinvoicetax salesInvoiceTax = new Salesinvoicetax();
 
             salesInvoiceTax.InvoiceId = salesInvoiceTaxModel.InvoiceId;
@@ -26,20 +36,40 @@ namespace ERP.Services.Accounts
             salesInvoiceTax.TaxLedgerId = salesInvoiceTaxModel.TaxLedgerId;
             salesInvoiceTax.TaxPercentageOrAmount = salesInvoiceTaxModel.TaxPercentageOrAmount;
             salesInvoiceTax.TaxPerOrAmountFc = salesInvoiceTaxModel.TaxPerOrAmountFc;
+
+            if (salesInvoiceTax.TaxPercentageOrAmount == "Percentage")
+            {
+                salesInvoiceTaxModel.TaxAmountFc = (salesInvoiceModel.GrossAmountFc * salesInvoiceTaxModel.TaxPerOrAmountFc) / 100;
+            }
+            else
+            {
+                salesInvoiceTaxModel.TaxAmountFc = salesInvoiceTaxModel.TaxPerOrAmountFc;
+            }
+
+            if (salesInvoiceTaxModel.TaxAddOrDeduct == "Deduct")
+            {
+                multiplier = -1;
+            }
+
             salesInvoiceTax.TaxAddOrDeduct = salesInvoiceTaxModel.TaxAddOrDeduct;
-            salesInvoiceTax.TaxAmountFc = salesInvoiceTaxModel.TaxAmountFc;
-            salesInvoiceTax.TaxAmount = salesInvoiceTaxModel.TaxAmount;
+            salesInvoiceTax.TaxAmountFc = multiplier * salesInvoiceTaxModel.TaxAmountFc;
+            salesInvoiceTax.TaxAmount = multiplier * salesInvoiceTaxModel.TaxAmount;
             salesInvoiceTax.Remark = salesInvoiceTaxModel.Remark;
 
             salesInvoiceTaxId = await Create(salesInvoiceTax);
 
+            if (salesInvoiceTaxId != 0)
+            {
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTaxId);
+            }
+
             return salesInvoiceTaxId; // returns.
         }
-
 
         public async Task<bool> UpdateSalesInvoiceTax(SalesInvoiceTaxModel salesInvoiceTaxModel)
         {
             bool isUpdated = false;
+            int multiplier = 1;
 
             // get record.
             Salesinvoicetax salesInvoiceTax = await GetByIdAsync(w => w.InvoiceTaxId == salesInvoiceTaxModel.InvoiceTaxId);
@@ -53,12 +83,32 @@ namespace ERP.Services.Accounts
                 salesInvoiceTax.TaxLedgerId = salesInvoiceTaxModel.TaxLedgerId;
                 salesInvoiceTax.TaxPercentageOrAmount = salesInvoiceTaxModel.TaxPercentageOrAmount;
                 salesInvoiceTax.TaxPerOrAmountFc = salesInvoiceTaxModel.TaxPerOrAmountFc;
+
+                if (salesInvoiceTax.TaxPercentageOrAmount == "Percentage")
+                {
+                    salesInvoiceTaxModel.TaxAmountFc = (salesInvoiceTax.Invoice.GrossAmountFc * salesInvoiceTaxModel.TaxPerOrAmountFc) / 100;
+                }
+                else
+                {
+                    salesInvoiceTaxModel.TaxAmountFc = salesInvoiceTaxModel.TaxPerOrAmountFc;
+                }
+
+                if (salesInvoiceTaxModel.TaxAddOrDeduct == "Deduct")
+                {
+                    multiplier = -1;
+                }
+
                 salesInvoiceTax.TaxAddOrDeduct = salesInvoiceTaxModel.TaxAddOrDeduct;
-                salesInvoiceTax.TaxAmountFc = salesInvoiceTaxModel.TaxAmountFc;
-                salesInvoiceTax.TaxAmount = salesInvoiceTaxModel.TaxAmount;
+                salesInvoiceTax.TaxAmountFc = multiplier * salesInvoiceTaxModel.TaxAmountFc;
+                salesInvoiceTax.TaxAmount = multiplier * salesInvoiceTaxModel.TaxAmount;
                 salesInvoiceTax.Remark = salesInvoiceTaxModel.Remark;
 
                 isUpdated = await Update(salesInvoiceTax);
+            }
+
+            if (isUpdated != false)
+            {
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTax.InvoiceId);
             }
 
             return isUpdated; // returns.
@@ -74,6 +124,11 @@ namespace ERP.Services.Accounts
             if (null != salesInvoiceTax)
             {
                 isDeleted = await Delete(salesInvoiceTax);
+            }
+
+            if (isDeleted != false)
+            {
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTax.InvoiceId);
             }
 
             return isDeleted; // returns.

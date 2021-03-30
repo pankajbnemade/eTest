@@ -12,14 +12,14 @@ namespace ERP.DataAccess.EntityModels
         [Key]
         public int VoucherSetupDetId { get; set; }
         public int? VoucherSetupId { get; set; }
-        [Column(TypeName = "varchar(100)")]
+        [Column(TypeName = "char(1)")]
         public string NoPad { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string NoPreString { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string NoPostString { get; set; }
         [Column(TypeName = "varchar(100)")]
-        public string NoSeperator { get; set; }
+        public string NoSeparator { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string FormatText { get; set; }
         public int? VoucherStyleId { get; set; }

@@ -4,6 +4,7 @@ using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
+using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,22 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceService : Repository<Purchaseinvoice>, IPurchaseInvoice
     {
-        public PurchaseInvoiceService(ErpDbContext dbContext) : base(dbContext) { }
+        ICommon common;
+        public PurchaseInvoiceService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        {
+            common = _common;
+        }
+        
+        public async Task<GenerateNoModel> GenerateInvoiceNo(int? companyId, int? financialYearId)
+        {
+            IList<PurchaseInvoiceModel> purchaseInvoiceModelList = await GetPurchaseInvoiceList(0);
+
+            int voucherSetupId = 3;
+
+            int? maxNo = purchaseInvoiceModelList.Where(w => (w.CompanyId == companyId && w.FinancialYearId == financialYearId)).Max(w => w.MaxNo);
+
+            return await common.GenerateVoucherNo((int)maxNo, voucherSetupId, (int)companyId, (int)financialYearId);
+        }
 
         /// <summary>
         /// create new purchase invoice.
@@ -26,9 +42,16 @@ namespace ERP.Services.Accounts
         {
             int purchaseInvoiceId = 0;
 
+            GenerateNoModel generateNoModel = await GenerateInvoiceNo(purchaseInvoiceModel.CompanyId, purchaseInvoiceModel.FinancialYearId);
+
+            purchaseInvoiceModel.InvoiceNo = generateNoModel.VoucherNo;
+            purchaseInvoiceModel.MaxNo = generateNoModel.MaxNo;
+            purchaseInvoiceModel.VoucherStyleId = generateNoModel.VoucherStyleId;
+
             // assign values.
             Purchaseinvoice purchaseInvoice = new Purchaseinvoice();
 
+            purchaseInvoice.PurchaseInvoiceId = purchaseInvoiceModel.PurchaseInvoiceId;
             purchaseInvoice.InvoiceNo = purchaseInvoiceModel.InvoiceNo;
             purchaseInvoice.InvoiceDate = purchaseInvoiceModel.InvoiceDate;
             purchaseInvoice.SupplierLedgerId = purchaseInvoiceModel.SupplierLedgerId;
@@ -47,23 +70,34 @@ namespace ERP.Services.Accounts
             purchaseInvoice.TotalLineItemAmount = 0;
             purchaseInvoice.GrossAmountFc = 0;
             purchaseInvoice.GrossAmount = 0;
-            purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
-            purchaseInvoice.DiscountPercentage = purchaseInvoiceModel.DiscountPercentage;
-            purchaseInvoice.DiscountAmountFc = purchaseInvoiceModel.DiscountAmountFc;
-            purchaseInvoice.DiscountAmount = 0;
-            purchaseInvoice.TaxAmountFc = 0;
-            purchaseInvoice.TaxAmount = 0;
             purchaseInvoice.NetAmountFc = 0;
             purchaseInvoice.NetAmount = 0;
             purchaseInvoice.NetAmountFcinWord = "";
+            purchaseInvoice.TaxAmountFc = 0;
+            purchaseInvoice.TaxAmount = 0;
 
-            purchaseInvoice.StatusId = purchaseInvoiceModel.StatusId;
+            purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
+            purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc;
+            purchaseInvoice.DiscountAmountFc = 0;
+            purchaseInvoice.DiscountAmount = 0;
+
+            purchaseInvoice.StatusId = 1;//purchaseInvoiceModel.StatusId;
             purchaseInvoice.CompanyId = purchaseInvoiceModel.CompanyId;
             purchaseInvoice.FinancialYearId = purchaseInvoiceModel.FinancialYearId;
             purchaseInvoice.MaxNo = purchaseInvoiceModel.MaxNo;
             purchaseInvoice.VoucherStyleId = purchaseInvoiceModel.VoucherStyleId;
 
+            //purchaseInvoice.PreparedByUserId = purchaseInvoiceModel.PreparedByUserId;
+            //purchaseInvoice.UpdatedByUserId = purchaseInvoiceModel.UpdatedByUserId;
+            //purchaseInvoice.PreparedDateTime = purchaseInvoiceModel.PreparedDateTime;
+            //purchaseInvoice.UpdatedDateTime = purchaseInvoiceModel.UpdatedDateTime;
+
             purchaseInvoiceId = await Create(purchaseInvoice);
+
+            if (purchaseInvoiceId != 0)
+            {
+                await UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceId);
+            }
 
             return purchaseInvoiceId; // returns.
         }
@@ -80,16 +114,17 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.InvoiceId == purchaseInvoiceModel.InvoiceId);
+            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceModel.PurchaseInvoiceId);
             if (null != purchaseInvoice)
             {
                 // assign values.
-
+                purchaseInvoice.PurchaseInvoiceId = purchaseInvoiceModel.PurchaseInvoiceId;
+                purchaseInvoice.InvoiceNo = purchaseInvoiceModel.InvoiceNo;
                 purchaseInvoice.InvoiceDate = purchaseInvoiceModel.InvoiceDate;
                 purchaseInvoice.SupplierLedgerId = purchaseInvoiceModel.SupplierLedgerId;
                 purchaseInvoice.BillToAddressId = purchaseInvoiceModel.BillToAddressId;
                 purchaseInvoice.AccountLedgerId = purchaseInvoiceModel.AccountLedgerId;
-                purchaseInvoice.SupplierReferenceNo = purchaseInvoiceModel.SupplierReferenceNo;
+                                purchaseInvoice.SupplierReferenceNo = purchaseInvoiceModel.SupplierReferenceNo;
                 purchaseInvoice.SupplierReferenceDate = purchaseInvoiceModel.SupplierReferenceDate;
                 purchaseInvoice.CreditLimitDays = purchaseInvoiceModel.CreditLimitDays;
                 purchaseInvoice.PaymentTerm = purchaseInvoiceModel.PaymentTerm;
@@ -98,27 +133,35 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.TaxRegisterId = purchaseInvoiceModel.TaxRegisterId;
                 purchaseInvoice.CurrencyId = purchaseInvoiceModel.CurrencyId;
                 purchaseInvoice.ExchangeRate = purchaseInvoiceModel.ExchangeRate;
-                //purchaseInvoice.TotalLineItemAmountFc = 0;
-                //purchaseInvoice.TotalLineItemAmount = 0;
-                //purchaseInvoice.GrossAmountFc = 0;
-                //purchaseInvoice.GrossAmount = 0;
+
+                purchaseInvoice.TotalLineItemAmountFc = 0;
+                purchaseInvoice.TotalLineItemAmount = 0;
+                purchaseInvoice.GrossAmountFc = 0;
+                purchaseInvoice.GrossAmount = 0;
+                purchaseInvoice.NetAmountFc = 0;
+                purchaseInvoice.NetAmount = 0;
+                purchaseInvoice.NetAmountFcinWord = "";
+                purchaseInvoice.TaxAmountFc = 0;
+                purchaseInvoice.TaxAmount = 0;
+
                 purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
-                purchaseInvoice.DiscountPercentage = purchaseInvoiceModel.DiscountPercentage;
-                purchaseInvoice.DiscountAmountFc = purchaseInvoiceModel.DiscountAmountFc;
-                //purchaseInvoice.DiscountAmount = 0;
-                //purchaseInvoice.TaxAmountFc = 0;
-                //purchaseInvoice.TaxAmount = 0;
-                //purchaseInvoice.NetAmountFc = 0;
-                //purchaseInvoice.NetAmount = 0;
-                //purchaseInvoice.NetAmountFcinWord = "";
+                purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc;
+
+                purchaseInvoice.DiscountAmountFc = 0;
+                purchaseInvoice.DiscountAmount = 0;
 
                 //purchaseInvoice.StatusId = purchaseInvoiceModel.StatusId;
                 //purchaseInvoice.CompanyId = purchaseInvoiceModel.CompanyId;
+
                 //purchaseInvoice.FinancialYearId = purchaseInvoiceModel.FinancialYearId;
                 //purchaseInvoice.MaxNo = purchaseInvoiceModel.MaxNo;
-                //purchaseInvoice.VoucherStyleId = purchaseInvoiceModel.VoucherStyleId;
 
                 isUpdated = await Update(purchaseInvoice);
+            }
+
+            if (isUpdated != false)
+            {
+                await UpdatePurchaseInvoiceMasterAmount(purchaseInvoice.PurchaseInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -136,7 +179,7 @@ namespace ERP.Services.Accounts
             bool isDeleted = false;
 
             // get record.
-            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.InvoiceId == invoiceId);
+            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == invoiceId);
             if (null != purchaseInvoice)
             {
                 isDeleted = await Delete(purchaseInvoice);
@@ -144,6 +187,55 @@ namespace ERP.Services.Accounts
 
             return isDeleted; // returns.
         }
+
+        public async Task<bool> UpdatePurchaseInvoiceMasterAmount(int? purchaseInvoiceId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceId);
+
+            if (null != purchaseInvoice)
+            {
+                purchaseInvoice.TotalLineItemAmountFc = purchaseInvoice.Purchaseinvoicedetails.Sum(w => w.GrossAmountFc);
+                purchaseInvoice.TotalLineItemAmount = purchaseInvoice.TotalLineItemAmountFc * purchaseInvoice.ExchangeRate;
+
+                if (purchaseInvoice.DiscountPercentageOrAmount == "Percentage")
+                {
+                    purchaseInvoice.DiscountAmountFc = (purchaseInvoice.TotalLineItemAmountFc * purchaseInvoice.DiscountPerOrAmountFc) / 100;
+                }
+                else
+                {
+                    purchaseInvoice.DiscountAmountFc = purchaseInvoice.DiscountPerOrAmountFc;
+                }
+
+                purchaseInvoice.DiscountAmount = purchaseInvoice.DiscountAmountFc * purchaseInvoice.ExchangeRate;
+
+                purchaseInvoice.GrossAmountFc = purchaseInvoice.TotalLineItemAmountFc + purchaseInvoice.DiscountAmountFc;
+                purchaseInvoice.GrossAmount = purchaseInvoice.GrossAmountFc * purchaseInvoice.ExchangeRate;
+
+                if (purchaseInvoice.TaxModelType == "Line Wise")
+                {
+                    purchaseInvoice.TaxAmountFc = purchaseInvoice.Purchaseinvoicedetails.Sum(w => w.TaxAmountFc);
+                }
+                else
+                {
+                    purchaseInvoice.TaxAmountFc = purchaseInvoice.Purchaseinvoicetaxes.Sum(w => w.TaxAmountFc);
+                }
+
+                purchaseInvoice.TaxAmount = purchaseInvoice.TaxAmountFc * purchaseInvoice.ExchangeRate;
+
+                purchaseInvoice.NetAmountFc = purchaseInvoice.GrossAmountFc + purchaseInvoice.DiscountAmountFc;
+                purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc * purchaseInvoice.ExchangeRate;
+
+                purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
+
+                isUpdated = await Update(purchaseInvoice);
+            }
+
+            return isUpdated; // returns.
+        }
+
 
         /// <summary>
         /// get purchase invoice based on invoiceId
@@ -155,13 +247,11 @@ namespace ERP.Services.Accounts
         {
             PurchaseInvoiceModel purchaseInvoiceModel = null;
 
-            // get record.
-            Purchaseinvoice purchaseinvoice = await GetByIdAsync(w => w.InvoiceId == invoiceId);
-            if (null != purchaseInvoiceModel)
-            {
-                // assign values.
-                purchaseInvoiceModel.InvoiceId = purchaseinvoice.InvoiceId;
+            IList<PurchaseInvoiceModel> purchaseInvoiceModelList = await GetPurchaseInvoiceList(invoiceId);
 
+            if (null != purchaseInvoiceModelList && purchaseInvoiceModelList.Any())
+            {
+                purchaseInvoiceModel = purchaseInvoiceModelList.FirstOrDefault();
             }
 
             return purchaseInvoiceModel; // returns.
@@ -188,15 +278,14 @@ namespace ERP.Services.Accounts
             IList<PurchaseInvoiceModel> purchaseInvoiceModelList = null;
 
             // create query.
-            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.InvoiceId != 0)
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0)
                                             .Include(w => w.SupplierLedger).Include(w => w.BillToAddress)
-                                            .Include(w => w.AccountLedger)
                                             .Include(w => w.TaxRegister).Include(w => w.Currency)
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
 
             // apply filters.
             if (0 != purchaseInvoiceId)
-                query = query.Where(w => w.InvoiceId == purchaseInvoiceId);
+                query = query.Where(w => w.PurchaseInvoiceId == purchaseInvoiceId);
 
             // get records by query.
             List<Purchaseinvoice> purchaseInvoiceList = await query.ToListAsync();
@@ -220,7 +309,7 @@ namespace ERP.Services.Accounts
             {
                 PurchaseInvoiceModel purchaseInvoiceModel = new PurchaseInvoiceModel();
 
-                purchaseInvoiceModel.InvoiceId = purchaseInvoice.InvoiceId;
+                purchaseInvoiceModel.PurchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId;
                 purchaseInvoiceModel.InvoiceNo = purchaseInvoice.InvoiceNo;
                 purchaseInvoiceModel.InvoiceDate = purchaseInvoice.InvoiceDate;
                 purchaseInvoiceModel.SupplierLedgerId = purchaseInvoice.SupplierLedgerId;
@@ -245,7 +334,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceModel.TaxAmountFc = purchaseInvoice.TaxAmountFc;
                 purchaseInvoiceModel.TaxAmount = purchaseInvoice.TaxAmount;
                 purchaseInvoiceModel.DiscountPercentageOrAmount = purchaseInvoice.DiscountPercentageOrAmount;
-                purchaseInvoiceModel.DiscountPercentage = purchaseInvoice.DiscountPercentage;
+                purchaseInvoiceModel.DiscountPerOrAmountFc = purchaseInvoice.DiscountPerOrAmountFc;
                 purchaseInvoiceModel.DiscountAmountFc = purchaseInvoice.DiscountAmountFc;
                 purchaseInvoiceModel.DiscountAmount = purchaseInvoice.DiscountAmount;
                 purchaseInvoiceModel.StatusId = purchaseInvoice.StatusId;

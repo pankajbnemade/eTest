@@ -16,8 +16,10 @@ namespace ERP.Services.Master.Interface
         Task<bool> DeleteVoucherSetupDetail(int voucherSetupDetailId);
        
         Task<VoucherSetupDetailModel> GetVoucherSetupDetailById(int voucherSetupDetailId);
-        
+
         //Task<IList<VoucherSetupDetailModel>> GetVoucherSetupDetailByVoucherSetupId(int voucherSetupId);
+
+        Task<VoucherSetupDetailModel> GetVoucherSetupDetailForNoGeneration(int voucherStyleId, int companyId, int financialYearId);
 
         Task<DataTableResultModel<VoucherSetupDetailModel>> GetVoucherSetupDetailList();
     }

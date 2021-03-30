@@ -28,6 +28,8 @@ namespace ERP.UI
         {
             string mySqlConnectionStr = Configuration.GetConnectionString("ErplanConnString");
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
+
+
             services.AddControllers();
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);

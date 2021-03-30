@@ -25,7 +25,7 @@ namespace ERP.Services.Master
             voucherSetupDetail.NoPad = voucherSetupDetailModel.NoPad;
             voucherSetupDetail.NoPreString = voucherSetupDetailModel.NoPreString;
             voucherSetupDetail.NoPostString = voucherSetupDetailModel.NoPostString;
-            voucherSetupDetail.NoSeperator = voucherSetupDetailModel.NoSeperator;
+            voucherSetupDetail.NoSeparator = voucherSetupDetailModel.NoSeparator;
             voucherSetupDetail.FormatText = voucherSetupDetailModel.FormatText;
             voucherSetupDetail.VoucherStyleId = voucherSetupDetailModel.VoucherStyleId;
             voucherSetupDetail.CompanyId = voucherSetupDetailModel.CompanyId;
@@ -48,7 +48,7 @@ namespace ERP.Services.Master
                 voucherSetupDetail.NoPad = voucherSetupDetailModel.NoPad;
                 voucherSetupDetail.NoPreString = voucherSetupDetailModel.NoPreString;
                 voucherSetupDetail.NoPostString = voucherSetupDetailModel.NoPostString;
-                voucherSetupDetail.NoSeperator = voucherSetupDetailModel.NoSeperator;
+                voucherSetupDetail.NoSeparator = voucherSetupDetailModel.NoSeparator;
                 voucherSetupDetail.FormatText = voucherSetupDetailModel.FormatText;
                 voucherSetupDetail.VoucherStyleId = voucherSetupDetailModel.VoucherStyleId;
                 voucherSetupDetail.CompanyId = voucherSetupDetailModel.CompanyId;
@@ -60,13 +60,13 @@ namespace ERP.Services.Master
             return isUpdated; // returns.
         }
 
-
         public async Task<bool> DeleteVoucherSetupDetail(int voucherSetupDetailId)
         {
             bool isDeleted = false;
 
             // get record.
             Vouchersetupdetail voucherSetupDetail = await GetByIdAsync(w => w.VoucherSetupDetId == voucherSetupDetailId);
+
             if (null != voucherSetupDetail)
             {
                 isDeleted = await Delete(voucherSetupDetail);
@@ -80,7 +80,22 @@ namespace ERP.Services.Master
         {
             VoucherSetupDetailModel voucherSetupDetailModel = null;
 
-            IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(voucherSetupDetailId);
+            IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(voucherSetupDetailId, 0, 0, 0);
+
+            if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
+            {
+                voucherSetupDetailModel = voucherSetupDetailModelList.FirstOrDefault();
+            }
+
+            return voucherSetupDetailModel; // returns.
+        }
+
+        public async Task<VoucherSetupDetailModel> GetVoucherSetupDetailForNoGeneration(int voucherSetupId, int companyId, int financialYearId)
+        {
+            VoucherSetupDetailModel voucherSetupDetailModel = null;
+
+            IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(0, voucherSetupId, companyId, financialYearId);
+
             if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
             {
                 voucherSetupDetailModel = voucherSetupDetailModelList.FirstOrDefault();
@@ -93,7 +108,7 @@ namespace ERP.Services.Master
         {
             DataTableResultModel<VoucherSetupDetailModel> resultModel = new DataTableResultModel<VoucherSetupDetailModel>();
 
-            IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(0);
+            IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(0, 0, 0, 0);
             if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
             {
                 resultModel = new DataTableResultModel<VoucherSetupDetailModel>();
@@ -111,7 +126,7 @@ namespace ERP.Services.Master
         /// <returns>
         /// return list.
         /// </returns>
-        public async Task<IList<VoucherSetupDetailModel>> GetVoucherSetupDetailList(int voucherSetupDetailId)
+        public async Task<IList<VoucherSetupDetailModel>> GetVoucherSetupDetailList(int voucherSetupDetailId, int voucherSetupId, int companyId, int financialYearId)
         {
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = null;
 
@@ -121,6 +136,16 @@ namespace ERP.Services.Master
 
             if (0 != voucherSetupDetailId)
                 query = query.Where(w => w.VoucherSetupDetId == voucherSetupDetailId);
+
+            if (0 != voucherSetupId)
+                query = query.Where(w => w.VoucherSetupId == voucherSetupId);
+
+            if (0 != companyId)
+                query = query.Where(w => w.CompanyId == companyId);
+
+            if (0 != financialYearId)
+                query = query.Where(w => w.FinancialYearId == financialYearId);
+
 
             IList<Vouchersetupdetail> voucherSetupDetailList = await query.ToListAsync();
 
@@ -147,7 +172,7 @@ namespace ERP.Services.Master
                 voucherSetupDetailModel.NoPad = voucherSetupDetail.NoPad;
                 voucherSetupDetailModel.NoPreString = voucherSetupDetail.NoPreString;
                 voucherSetupDetailModel.NoPostString = voucherSetupDetail.NoPostString;
-                voucherSetupDetailModel.NoSeperator = voucherSetupDetail.NoSeperator;
+                voucherSetupDetailModel.NoSeparator = voucherSetupDetail.NoSeparator;
                 voucherSetupDetailModel.FormatText = voucherSetupDetail.FormatText;
                 voucherSetupDetailModel.VoucherStyleId = voucherSetupDetail.VoucherStyleId;
                 voucherSetupDetailModel.CompanyId = voucherSetupDetail.CompanyId;
