@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP.UI
 {
@@ -29,6 +30,13 @@ namespace ERP.UI
             string mySqlConnectionStr = Configuration.GetConnectionString("ErplanConnString");
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ErpDbContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Admin/Account/Login";
+
+            });
 
             services.AddControllers();
             // registering dependency injection(application services).
@@ -62,12 +70,15 @@ namespace ERP.UI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=Master}/{controller=MasterDashboard}/{action=Index}");
+                    pattern: "{area=Common}/{controller=Home}/{action=Index}");
             });
         }
     }
