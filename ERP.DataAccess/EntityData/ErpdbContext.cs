@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using ERP.DataAccess.EntityModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ERP.DataAccess.Entity;
 
 namespace ERP.DataAccess.EntityData
 {
-    public partial class ErpDbContext : IdentityDbContext
+    public partial class ErpDbContext : IdentityDbContext<ApplicationIdentityUser, ApplicationRole, int>
     {
         public ErpDbContext()
         {

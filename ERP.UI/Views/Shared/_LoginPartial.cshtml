@@ -57,6 +57,11 @@
         </li>
     </ul>}*@
 
+@using Microsoft.AspNetCore.Identity
+@using ERP.DataAccess.Entity
+
+@inject SignInManager<ApplicationIdentityUser> SignInManager
+@inject UserManager<ApplicationIdentityUser> UserManager
 
 <ul class="navbar-nav flex-grow-1">
     <li class="nav-item dropdown">
@@ -74,15 +79,13 @@
     <a class="dropdown-item" asp-area="Common" asp-controller="Home" asp-action="ChangeYear">Year</a>
 
     <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Logout">Logout</a>
-</div>
-        }
+</div> }
 else
 {
 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
     <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Login">Login</a>
     <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Register">Register</a>
-</div>
-    }
+</div>}
 
 
 

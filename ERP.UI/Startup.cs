@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
+using ERP.DataAccess.Entity;
 
 namespace ERP.UI
 {
@@ -28,9 +29,12 @@ namespace ERP.UI
         public void ConfigureServices(IServiceCollection services)
         {
             string mySqlConnectionStr = Configuration.GetConnectionString("ErplanConnString");
+
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ErpDbContext>();
+            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().
+                AddEntityFrameworkStores<ErpDbContext>();
+            
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -41,7 +45,7 @@ namespace ERP.UI
             services.AddControllers();
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);
-           
+
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation()
                     .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
