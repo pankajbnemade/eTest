@@ -17,6 +17,7 @@ namespace ERP.Services.Accounts
         public SalesInvoiceDetailTaxService(ErpDbContext dbContext, ISalesInvoice _salesInvoice, ISalesInvoiceDetail _salesInvoiceDetail) : base(dbContext)
         {
             salesInvoice = _salesInvoice;
+            salesInvoiceDetail = _salesInvoiceDetail;
         }
 
         public async Task<int> CreateSalesInvoiceDetailTax(SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel)
@@ -166,6 +167,12 @@ namespace ERP.Services.Accounts
                 resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
                 resultModel.ResultList = salesInvoiceDetailTaxModelList;
                 resultModel.TotalResultCount = salesInvoiceDetailTaxModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
+                resultModel.ResultList = new List<SalesInvoiceDetailTaxModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

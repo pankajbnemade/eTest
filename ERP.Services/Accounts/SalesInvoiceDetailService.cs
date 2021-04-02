@@ -87,6 +87,7 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
+
         public async Task<bool> UpdateSalesInvoiceDetailAmount(int? salesInvoiceDetailId)
         {
             bool isUpdated = false;
@@ -113,6 +114,7 @@ namespace ERP.Services.Accounts
 
             return isUpdated; // returns.
         }
+
 
         public async Task<bool> DeleteSalesInvoiceDetail(int salesInvoiceDetailId)
         {
@@ -148,17 +150,21 @@ namespace ERP.Services.Accounts
             return salesInvoiceDetailModel; // returns.
         }
 
-        public async Task<DataTableResultModel<SalesInvoiceDetailModel>> GetSalesInvoiceDetailBySalesInvoiceId(int SalesInvoiceId)
+        public async Task<DataTableResultModel<SalesInvoiceDetailModel>> GetSalesInvoiceDetailBySalesInvoiceId(int salesInvoiceId)
         {
             DataTableResultModel<SalesInvoiceDetailModel> resultModel = new DataTableResultModel<SalesInvoiceDetailModel>();
 
-            IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = await GetSalesInvoiceDetailList(0, SalesInvoiceId);
+            IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = await GetSalesInvoiceDetailList(0, salesInvoiceId);
 
             if (null != salesInvoiceDetailModelList && salesInvoiceDetailModelList.Any())
             {
-                resultModel = new DataTableResultModel<SalesInvoiceDetailModel>();
                 resultModel.ResultList = salesInvoiceDetailModelList;
                 resultModel.TotalResultCount = salesInvoiceDetailModelList.Count();
+            }
+            else
+            {
+                salesInvoiceDetailModelList = new List<SalesInvoiceDetailModel>();
+                resultModel.ResultList = salesInvoiceDetailModelList;
             }
 
             return resultModel; // returns.

@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Master\Views\**" />
+    <Content Remove="Areas\Master\Views\**" />
+    <EmbeddedResource Remove="Areas\Master\Views\**" />
+    <None Remove="Areas\Master\Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
@@ -19,7 +26,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="MySql.Data" Version="8.0.23" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
   </ItemGroup>
 
@@ -30,11 +37,57 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Accounts\Controllers\" />
-    <Folder Include="Areas\Accounts\Data\" />
-    <Folder Include="Areas\Accounts\Models\" />
-    <Folder Include="Areas\Accounts\Views\" />
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_AddInvoiceDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_ConfirmDeleteInvoiceDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_InvoiceDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_AddInvoiceTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_ConfirmDeleteInvoiceTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_InvoiceTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_ViewInvoiceTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_AddInvoiceTaxMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_ConfirmDeleteInvoiceTaxMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_InvoiceTaxMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoice\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoice\ManageInvoice.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceMaster.cshtml" />
+    <None Include="wwwroot\js\custom-js\custom-common.js" />
+    <None Include="wwwroot\js\custom-js\custom-general.js" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\lib\bootstrap-datetimepicker\js\bootstrap-datetimepicker.js" />
+    <None Include="wwwroot\lib\bootstrap-datetimepicker\js\bootstrap-datetimepicker.min.js" />
+    <None Include="wwwroot\lib\bootstrap-multiselect\js\bootstrap-multiselect.js" />
+    <None Include="wwwroot\lib\bootstrap-multiselect\js\bootstrap-multiselect.min.js" />
+    <None Include="wwwroot\lib\bootstrap-notify\js\bootstrap-notify.js" />
+    <None Include="wwwroot\lib\bootstrap-notify\js\bootstrap-notify.min.js" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\datatable\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\lib\datatable\js\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\lib\datatable\js\jquery.dataTables.js" />
+    <None Include="wwwroot\lib\datatable\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\lib\jquery-block-ui\jquery.blockUI.js" />
+    <None Include="wwwroot\lib\jquery-block-ui\jquery.blockUI.min.js" />
+    <None Include="wwwroot\lib\jquery-block-ui\web.mvc.ajax.js" />
+    <None Include="wwwroot\lib\jquery-block-ui\web.mvc.ajax.min.js" />
+    <None Include="wwwroot\lib\jquery-unobtrusive.ajax\jquery.unobtrusive-ajax.js" />
+    <None Include="wwwroot\lib\jquery-unobtrusive.ajax\jquery.unobtrusive-ajax.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\jquery.content.validation.js" />
+    <None Include="wwwroot\lib\jquery-validation\jquery.validate-vsdoc.js" />
+    <None Include="wwwroot\lib\jquery-validation\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery.unobtrusive.validation\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery.unobtrusive.validation\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery\jquery-3.4.1.js" />
+    <None Include="wwwroot\lib\jquery\jquery-3.4.1.min.js" />
+    <None Include="wwwroot\lib\moment\moment.js" />
+    <None Include="wwwroot\lib\moment\moment.min.js" />
   </ItemGroup>
 
 </Project>

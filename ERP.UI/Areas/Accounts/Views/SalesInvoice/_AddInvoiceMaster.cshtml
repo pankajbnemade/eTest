@@ -1,0 +1,262 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using ERP.Models.Accounts;
+@model SalesInvoiceModel
+
+<style>
+    .field-validation-error {
+        color: #dc3545 !important;
+    }
+
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>
+
+<div class="modal-dialog  modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.InvoiceId > 0)
+            {
+                <div class="modal-title">Edit Invoice</div>
+            }
+            else
+            {
+                <div class="modal-title">Add Invoice</div>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmInvoiceMaster" class="width100" method="post"
+              asp-action="SaveInvoiceMaster" asp-controller="SalesInvoice" asp-area="Accounts"
+              data-ajax-begin="return BeginInvoiceMaster();" data-ajax-success="SuccessInvoiceMaster"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.InvoiceId)
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.InvoiceNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.InvoiceNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.InvoiceDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.InvoiceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.InvoiceDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CustomerLedgerId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CustomerReferenceNo)
+                                @Html.TextBoxFor(model => model.CustomerReferenceNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CustomerReferenceNo)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BillToAddressId)
+                                @Html.DropDownListFor(model => model.BillToAddressId, new SelectList(ViewBag.BillToAddressList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.BillToAddressId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CustomerReferenceDate)
+                                @Html.TextBoxFor(model => model.CustomerReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.CustomerReferenceDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AccountLedgerId)
+                                @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AccountLedgerId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PaymentTerm)
+                                @Html.TextBoxFor(model => model.PaymentTerm, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PaymentTerm)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BankLedgerId)
+                                @Html.DropDownListFor(model => model.BankLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.BankLedgerId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CreditLimitDays)
+                                @Html.TextBoxFor(model => model.CreditLimitDays, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CreditLimitDays)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxModelType)
+                                @Html.DropDownListFor(model => model.TaxModelType, new SelectList(ViewBag.TaxModelTypeList, "Value", "Description"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxModelType)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxRegisterId)
+                                @Html.DropDownListFor(model => model.TaxRegisterId, new SelectList(ViewBag.TaxRegisterList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxRegisterId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CurrencyId)
+                                @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CurrencyId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExchangeRate)
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ExchangeRate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DiscountPercentage)
+                                @Html.DropDownListFor(model => model.DiscountPercentage, new SelectList(ViewBag.DiscountTypeList, "Value", "Description"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DiscountPercentage)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DiscountPercentageOrAmount)
+                                @Html.TextBoxFor(model => model.DiscountPercentageOrAmount, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DiscountPercentageOrAmount)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Remark)
+                                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Remark)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-right">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#InvoiceDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('#CustomerReferenceDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+
+    // begin form
+    function BeginInvoiceMaster() {
+        var form = $("#frmInvoiceMaster");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessInvoiceMaster(data) {
+        $('#modal-invoice-master').modal('hide');
+        if (data.Result.Status) {
+            fnSuccessNotify('Record saved sucessfully.');
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

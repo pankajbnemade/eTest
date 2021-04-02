@@ -1,0 +1,202 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sales Invoice List";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using ERP.Models.Accounts;
+@model SearchFilterSalesInvoiceModel
+
+@*<form>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text fa fa-edit"></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Username">
+        </div>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Your Email">
+            <div class="input-group-append">
+                <span class="input-group-text fa fa-calendar-alt"></span>
+            </div>
+        </div>
+    </form>*@
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="searchFilterCriteria">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
+                        @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.InvoiceNo)
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
+                        @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CustomerLedgerId)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FromDate)
+                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                        @Html.ValidationMessageFor(model => model.FromDate)
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ToDate)
+                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                        @Html.ValidationMessageFor(model => model.ToDate)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <button class="btn btn-primary" id="search-invoice">Search</button>
+                <button class="btn btn-secondary" onclick="javascript: fnResetSearch();">Reset</button>
+                <button class="btn btn-primary" id="add-new-invoice">New</button>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="salesInvoiceGrid" class="table table-striped table-bordered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="no-sort">Action</th>
+                            <th>InvoiceId</th>
+                            <th>InvoiceNo</th>
+                            <th>InvoiceDate</th>
+                            <th>NetAmount</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-invoice-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+<style>
+    .no-sort::after {
+        display: none !important;
+    }
+
+    .no-sort::before {
+        display: none !important;
+    }
+
+    .no-sort {
+        pointer-events: none !important;
+        cursor: default !important;
+    }
+</style>
+<script type="text/javascript">
+    const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+    const TO_PATTERN = 'DD/MM/YYYY HH:mm';
+    $(document).ready(function () {
+        $("#salesInvoiceGrid").DataTable({
+            "processing": true,
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",//'lrtip',
+            "serverSide": true,
+            "ajax": {
+                "url": "@Url.Action("GetSalesInvoiceList", "SalesInvoice")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: function () {
+                        var searchFilterModel = {
+                            InvoiceNo: $('#InvoiceNo').val(),
+                            CustomerLedgerId: $('#CustomerLedgerId').val(),
+                            FromDate: $('#FromDate').val(),
+                            ToDate: $('#ToDate').val(),
+                        };
+
+                        return JSON.stringify(searchFilterModel);
+                    }
+                },
+            },
+            "columns": [
+                {
+                    "orderable": false ,
+                    "width": "1%",
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceMaster(' + full.InvoiceId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteInvoiceMaster(this, ' + full.InvoiceId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "InvoiceId", "name": "InvoiceId", "visible": false },
+                { "data": "InvoiceNo", "name": "InvoiceNo" },
+                {
+                    "data": "InvoiceDate", "name": "InvoiceDate",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                { "data": "NetAmount", "name": "NetAmount" }
+            ],
+        });
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+
+    // edit invoice.
+    function fnEditInvoiceMaster(invoiceId) {
+        window.location.href = '@Url.Action("ManageInvoice", "SalesInvoice")?invoiceId=' + invoiceId;
+    }
+
+    // delete invoice.
+    function fnDeleteInvoiceMaster(invoiceId) {
+
+    }
+
+    // reset filter.
+    function fnResetSearch() {
+        $('#searchFilterCriteria :input[type=text]').each(function (index) {
+            $(this).val('');
+        });
+        $('#searchFilterCriteria select').each(function (index) {
+            $(this).val('');
+        });
+    }
+
+    // new button click.
+    $('#add-new-invoice').click(function () {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceMaster", "SalesInvoice")', 'html', '',
+        function (data) {
+            $('#modal-invoice-master').empty();
+            $('#modal-invoice-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteCity"); }

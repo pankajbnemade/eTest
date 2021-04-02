@@ -1,5 +1,9 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.Services;
+using ERP.Services.Accounts;
+using ERP.Services.Accounts.Interface;
+using ERP.Services.Common;
+using ERP.Services.Common.Interface;
 using ERP.Services.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Http;
@@ -33,8 +37,26 @@ namespace ERP.UI
             services.AddTransient<ICity, CityService>();
             services.AddTransient<IState, StateService>();
             services.AddTransient<ICountry, CountryService>();
+            services.AddTransient<IUnitOfMeasurement, UnitOfMeasurementService>();
 
             #endregion // Master
+
+            #region Accounts
+            services.AddTransient<ILedger, LedgerService>();
+            services.AddTransient<ILedgerAddress, LedgerAddressService>();
+            services.AddTransient<ITaxRegister, TaxRegisterService>();
+            services.AddTransient<ICurrency, CurrencyService>();
+
+            services.AddTransient<ISalesInvoice, SalesInvoiceService>();
+            services.AddTransient<ISalesInvoiceDetail, SalesInvoiceDetailService>();
+            services.AddTransient<ISalesInvoiceTax, SalesInvoiceTaxService>();
+            services.AddTransient<ISalesInvoiceDetailTax, SalesInvoiceDetailTaxService>();
+            services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
+
+
+            #endregion // Accounts
+
+            services.AddTransient<ICommon, CommonService>();
         }
     }
 }

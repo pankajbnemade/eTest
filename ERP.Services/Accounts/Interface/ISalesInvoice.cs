@@ -15,11 +15,18 @@ namespace ERP.Services.Accounts.Interface
         Task<bool> UpdateSalesInvoice(SalesInvoiceModel salesInvoiceModel);
 
         Task<bool> DeleteSalesInvoice(int salesInvoiceId);
-
         Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId);
 
         Task<SalesInvoiceModel> GetSalesInvoiceById(int salesInvoiceId);
 
-        Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList();
+        /// <summary>
+        /// get search sales invoice result list.
+        /// </summary>
+        /// <param name="dataTableAjaxPostModel"></param>
+        /// <param name="searchFilterModel"></param>
+        /// <returns>
+        /// return list.
+        /// </returns>
+        Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterSalesInvoiceModel searchFilterModel);
     }
 }

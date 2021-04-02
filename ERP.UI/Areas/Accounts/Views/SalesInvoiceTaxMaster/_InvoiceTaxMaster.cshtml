@@ -1,0 +1,86 @@
+﻿<div class="row py-md-4">
+    <div class="col px-md-3">
+        <h4>Invoice Tax Master</h4>
+    </div>
+    <div class="px-md-3">
+        <button class="btn btn-primary" id="add-new-tax-master">Add</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table id="salesInvoiceTaxMasterGrid" class="table table-striped table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>InvoiceTaxId</th>
+                    <th>InvoiceId</th>
+                    <th>SrNo</th>
+                    <th>TaxLedgerName</th>
+                    <th>TaxPercentageOrAmount</th>
+                    <th>TaxPerOrAmountFc</th>
+                    <th>TaxAddOrDeduct</th>
+                    <th>TaxAmountFc</th>
+                    <th>Remark</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#salesInvoiceTaxMasterGrid").DataTable({
+            "pageLength": 20,
+            "dom": "<'row'<'col-sm-6'><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetSalesInvoiceTaxMasterList", "SalesInvoiceTaxMaster", new { invoiceId = ViewBag.InvoiceId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" onclick="javascript: fnEditInvoiceTaxMaster(' + full.InvoiceTaxId + ')">Edit</button>' +
+                            '<button type="button" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.InvoiceTaxId + ')">Delete</button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "InvoiceTaxId", "name": "InvoiceTaxId", "visible": false },
+                { "data": "InvoiceId", "name": "InvoiceId", "visible": false  },
+                { "data": "SrNo", "name": "SrNo" },
+                { "data": "TaxLedgerName", "name": "TaxLedgerName" },
+                { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
+                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc" },
+                { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" },
+                { "data": "TaxAmountFc", "name": "TaxAmountFc" },
+                { "data": "Remark", "name": "Remark" },
+            ],
+        });
+    });
+
+     // add new invoice detail.
+    $('#add-new-tax-master').click(function () {
+        var model = { invoiceId: '@ViewBag.InvoiceId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceTaxMaster", "SalesInvoiceTaxMaster")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit invoice detail.
+    function fnEditInvoiceTaxMaster(invoiceTaxId) {
+
+    }
+
+    // delete invoice detail.
+    function fnDeleteInvoiceTaxMaster(invoiceTaxId) {
+
+    }
+</script>

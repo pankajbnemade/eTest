@@ -2,14 +2,13 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
-using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace ERP.Services.Accounts
 {
@@ -20,7 +19,6 @@ namespace ERP.Services.Accounts
         {
             common = _common;
         }
-
         public async Task<GenerateNoModel> GenerateInvoiceNo(int? companyId, int? financialYearId)
         {
             IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(0);
@@ -31,7 +29,6 @@ namespace ERP.Services.Accounts
 
             return await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, Convert.ToInt32(companyId), Convert.ToInt32(financialYearId));
         }
-
         /// <summary>
         /// create new sales invoice.
         /// </summary>
@@ -42,7 +39,6 @@ namespace ERP.Services.Accounts
         public async Task<int> CreateSalesInvoice(SalesInvoiceModel salesInvoiceModel)
         {
             int salesInvoiceId = 0;
-
             GenerateNoModel generateNoModel = await GenerateInvoiceNo(salesInvoiceModel.CompanyId, salesInvoiceModel.FinancialYearId);
 
             salesInvoiceModel.InvoiceNo = generateNoModel.VoucherNo;
@@ -51,7 +47,6 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Salesinvoice salesInvoice = new Salesinvoice();
-
             salesInvoice.InvoiceId = salesInvoiceModel.InvoiceId;
             salesInvoice.InvoiceNo = salesInvoiceModel.InvoiceNo;
             salesInvoice.InvoiceDate = salesInvoiceModel.InvoiceDate;
@@ -82,25 +77,21 @@ namespace ERP.Services.Accounts
             salesInvoice.DiscountPercentage = salesInvoiceModel.DiscountPercentage;
             salesInvoice.DiscountAmountFc = 0;
             salesInvoice.DiscountAmount = 0;
-
-            salesInvoice.StatusId = 1;//salesInvoiceModel.StatusId;
+            salesInvoice.StatusId = salesInvoiceModel.StatusId;
             salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
             salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
             salesInvoice.MaxNo = salesInvoiceModel.MaxNo;
             salesInvoice.VoucherStyleId = salesInvoiceModel.VoucherStyleId;
-
             //salesInvoice.PreparedByUserId = salesInvoiceModel.PreparedByUserId;
             //salesInvoice.UpdatedByUserId = salesInvoiceModel.UpdatedByUserId;
             //salesInvoice.PreparedDateTime = salesInvoiceModel.PreparedDateTime;
             //salesInvoice.UpdatedDateTime = salesInvoiceModel.UpdatedDateTime;
 
             salesInvoiceId = await Create(salesInvoice);
-
             if (salesInvoiceId != 0)
             {
                 await UpdateSalesInvoiceMasterAmount(salesInvoiceId);
             }
-
             return salesInvoiceId; // returns.
         }
 
@@ -166,7 +157,6 @@ namespace ERP.Services.Accounts
             {
                 await UpdateSalesInvoiceMasterAmount(salesInvoice.InvoiceId);
             }
-
             return isUpdated; // returns.
         }
 
@@ -190,6 +180,7 @@ namespace ERP.Services.Accounts
 
             return isDeleted; // returns.
         }
+
 
         public async Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId)
         {
@@ -239,7 +230,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-
         /// <summary>
         /// get sales invoice based on invoiceId
         /// </summary>
@@ -260,20 +250,88 @@ namespace ERP.Services.Accounts
             return salesInvoiceModel; // returns.
         }
 
-        public async Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList()
+        /// <summary>
+        /// get search sales invoice result list.
+        /// </summary>
+        /// <param name="dataTableAjaxPostModel"></param>
+        /// <param name="searchFilterModel"></param>
+        /// <returns>
+        /// return list.
+        /// </returns>
+        public async Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterSalesInvoiceModel searchFilterModel)
         {
-            DataTableResultModel<SalesInvoiceModel> salesInvoiceModel = new DataTableResultModel<SalesInvoiceModel>();
+            string searchBy = dataTableAjaxPostModel.search?.value;
+            int take = dataTableAjaxPostModel.length;
+            int skip = dataTableAjaxPostModel.start;
 
-            IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(0);
+            string sortBy = string.Empty;
+            string sortDir = string.Empty;
 
-            if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
+            if (dataTableAjaxPostModel.order != null)
             {
-                salesInvoiceModel = new DataTableResultModel<SalesInvoiceModel>();
-                salesInvoiceModel.ResultList = salesInvoiceModelList;
-                salesInvoiceModel.TotalResultCount = salesInvoiceModelList.Count();
+                sortBy = dataTableAjaxPostModel.columns[dataTableAjaxPostModel.order[0].column].data;
+                sortDir = dataTableAjaxPostModel.order[0].dir.ToLower();
             }
 
-            return salesInvoiceModel; // returns.
+            // search the dbase taking into consideration table sorting and paging
+            DataTableResultModel<SalesInvoiceModel> resultModel = await GetDataFromDbase(searchFilterModel, searchBy, take, skip, sortBy, sortDir);
+
+            return resultModel; // returns.
+        }
+
+        #region Private Methods
+
+        /// <summary>
+        /// get records from database.
+        /// </summary>
+        /// <param name="searchBy"></param>
+        /// <param name="take"></param>
+        /// <param name="skip"></param>
+        /// <param name="sortBy"></param>
+        /// <param name="sortDir"></param>
+        /// <returns></returns>
+        private async Task<DataTableResultModel<SalesInvoiceModel>> GetDataFromDbase(SearchFilterSalesInvoiceModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
+        {
+            DataTableResultModel<SalesInvoiceModel> resultModel = new DataTableResultModel<SalesInvoiceModel>();
+
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.InvoiceId != 0);
+
+            if (!string.IsNullOrEmpty(searchFilterModel.InvoiceNo))
+            {
+                query = query.Where(w => w.InvoiceNo.Contains(searchFilterModel.InvoiceNo));
+            }
+
+            if (null != searchFilterModel.CustomerLedgerId)
+            {
+                query = query.Where(w => w.CustomerLedgerId == searchFilterModel.CustomerLedgerId);
+            }
+
+            if (null != searchFilterModel.FromDate)
+            {
+                query = query.Where(w => w.InvoiceDate >= searchFilterModel.FromDate);
+            }
+
+            if (null != searchFilterModel.ToDate)
+            {
+                query = query.Where(w => w.InvoiceDate <= searchFilterModel.ToDate);
+            }
+
+            // get total count.
+            resultModel.TotalResultCount = await query.CountAsync();
+
+            // get records based on pagesize.
+            query = query.Skip(skip).Take(take);
+            resultModel.ResultList = await query.Select(s => new SalesInvoiceModel
+            {
+                InvoiceId = s.InvoiceId,
+                InvoiceNo = s.InvoiceNo,
+                InvoiceDate = s.InvoiceDate,
+                NetAmount = s.NetAmount,
+            }).ToListAsync();
+            // get filter record count.
+            resultModel.FilterResultCount = await query.CountAsync();
+
+            return resultModel; // returns.
         }
 
         private async Task<IList<SalesInvoiceModel>> GetSalesInvoiceList(int salesInvoiceId)
@@ -352,19 +410,51 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.PreparedDateTime = salesInvoice.PreparedDateTime;
                 salesInvoiceModel.UpdatedDateTime = salesInvoice.UpdatedDateTime;
 
-                salesInvoiceModel.CustomerLedgerName = salesInvoice.CustomerLedger.LedgerName;
-                salesInvoiceModel.BillToAddress = salesInvoice.BillToAddress.AddressDescription;
-                salesInvoiceModel.AccountLedgerName = salesInvoice.AccountLedger.LedgerName;
-                salesInvoiceModel.BankLedgerName = salesInvoice.BankLedger.LedgerName;
-                salesInvoiceModel.TaxRegisterName = salesInvoice.TaxRegister.TaxRegisterName;
-                salesInvoiceModel.CurrencyName = salesInvoice.Currency.CurrencyName;
-                salesInvoiceModel.StatusName = salesInvoice.Status.StatusName;
-                salesInvoiceModel.PreparedByName = salesInvoice.PreparedByUser.UserName;
+                if (null != salesInvoice.CustomerLedger)
+                {
+                    salesInvoiceModel.CustomerLedgerName = salesInvoice.CustomerLedger.LedgerName;
+                }
+
+                if (null != salesInvoice.BillToAddress)
+                {
+                    salesInvoiceModel.BillToAddress = salesInvoice.BillToAddress.AddressDescription;
+                }
+
+                if (null != salesInvoice.AccountLedger)
+                {
+                    salesInvoiceModel.AccountLedgerName = salesInvoice.AccountLedger.LedgerName;
+                }
+
+                if (null != salesInvoice.BankLedger)
+                {
+                    salesInvoiceModel.BankLedgerName = salesInvoice.BankLedger.LedgerName;
+                }
+
+                if (null != salesInvoice.TaxRegister)
+                {
+                    salesInvoiceModel.TaxRegisterName = salesInvoice.TaxRegister.TaxRegisterName;
+                }
+
+                if (null != salesInvoice.Currency)
+                {
+                    salesInvoiceModel.CurrencyName = salesInvoice.Currency.CurrencyName;
+                }
+
+                if (null != salesInvoice.Status)
+                {
+                    salesInvoiceModel.StatusName = salesInvoice.Status.StatusName;
+                }
+
+                if (null != salesInvoice.PreparedByUser)
+                {
+                    salesInvoiceModel.PreparedByName = salesInvoice.PreparedByUser.UserName;
+                }
 
                 return salesInvoiceModel;
             });
 
         }
 
+        #endregion Private Methods
     }
 }

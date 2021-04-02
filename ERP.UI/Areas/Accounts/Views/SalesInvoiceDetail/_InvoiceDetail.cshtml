@@ -1,0 +1,101 @@
+﻿<div class="row py-md-4">
+    <div class="col px-md-3">
+        <h4>Invoice Detail</h4>
+    </div>
+    <div class="px-md-3">
+        <button class="btn btn-primary" id="add-new-invoice-dtl">Add</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table id="salesInvoiceDetailGrid" class="table table-striped table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>InvoiceDetId</th>
+                    <th>SrNo</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>UOM</th>
+                    <th>Per Unit</th>
+                    <th>Unit Price</th>
+                    <th>GrossAmount_FC</th>
+                    <th>TaxAmount_FC</th>
+                    <th>NetAmount_FC</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#salesInvoiceDetailGrid").DataTable({
+            "pageLength": 20,
+            "dom": "<'row'<'col-sm-6'><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetSalesInvoiceDetailList", "SalesInvoiceDetail", new { invoiceId = ViewBag.InvoiceId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceDetail(' + full.InvoiceDetId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteInvoiceDetail(this, ' + full.InvoiceDetId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnInvoiceTaxDetail(' + full.InvoiceDetId + ')"><span class="fa fa-info-circle"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "InvoiceDetId", "name": "InvoiceDetId", "visible": false  },
+                { "data": "SrNo", "name": "SrNo" },
+                { "data": "Description", "name": "Description" },
+                { "data": "Quantity", "name": "Quantity" },
+                { "data": "UnitOfMeasurementName", "name": "UOM" },
+                { "data": "PerUnit", "name": "Per Unit" },
+                { "data": "UnitPrice", "name": "Unit Price" },
+                { "data": "GrossAmountFc", "name": "GrossAmount_FC" },
+                { "data": "TaxAmountFc", "name": "TaxAmount_FC" },
+                { "data": "NetAmountFc", "name": "NetAmount_FC" }
+            ],
+        });
+    });
+
+    // add new invoice detail.
+    $('#add-new-invoice-dtl').click(function () {
+        var model = { invoiceId: '@ViewBag.InvoiceId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceDetail", "SalesInvoiceDetail")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit invoice detail.
+    function fnEditInvoiceDetail(invoiceDetId) {
+        var model = { invoiceDetId: invoiceDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceDetail", "SalesInvoiceDetail")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+    // invoice tax deatil.
+    function fnInvoiceTaxDetail(invoiceDetId) {
+        var model = { invoiceDetId: invoiceDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("InvoiceTaxDetail", "SalesInvoiceTaxDetail")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>

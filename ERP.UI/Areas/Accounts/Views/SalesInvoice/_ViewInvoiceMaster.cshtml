@@ -1,0 +1,168 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using ERP.Models.Accounts;
+@model SalesInvoiceModel
+
+<div class="row py-md-4">
+    <div class="col px-md-3">
+        <h4>Invoice Master</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.InvoiceNo)
+                    @Html.DisplayFor(model => model.InvoiceNo)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.InvoiceDate)
+                    @Html.DisplayFor(model => model.InvoiceDate)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.CustomerLedgerId)
+                    @Html.DisplayFor(model => model.CustomerLedgerName)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.CustomerReferenceNo)
+                    @Html.DisplayFor(model => model.CustomerReferenceNo)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.BillToAddressId)
+                    @Html.DisplayFor(model => model.BillToAddress)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.CustomerReferenceDate)
+                    @Html.DisplayFor(model => model.CustomerReferenceDate)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.AccountLedgerId)
+                    @Html.DisplayFor(model => model.AccountLedgerName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.PaymentTerm)
+                    @Html.DisplayFor(model => model.PaymentTerm)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.BankLedgerId)
+                    @Html.DisplayFor(model => model.BankLedgerName)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.CreditLimitDays)
+                    @Html.DisplayFor(model => model.CreditLimitDays)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.Remark)
+                    @Html.DisplayFor(model => model.Remark)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.TaxModelType)
+                    @Html.DisplayFor(model => model.TaxModelType)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.TaxRegisterId)
+                    @Html.DisplayFor(model => model.TaxRegisterName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.CurrencyId)
+                    @Html.DisplayFor(model => model.CurrencyName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.ExchangeRate)
+                    @Html.DisplayFor(model => model.ExchangeRate)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.DiscountPercentage)
+                    @Html.DisplayFor(model => model.DiscountPercentage)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.DisplayNameFor(model => model.DiscountPercentageOrAmount)
+                    @Html.DisplayFor(model => model.DiscountPercentageOrAmount)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditInvoiceMaster('@Model.InvoiceId');">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    // edit invoice master.
+    function fnEditInvoiceMaster(invoiceId) {
+        var model = { invoiceId: invoiceId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceMaster", "SalesInvoice")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>

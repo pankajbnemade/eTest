@@ -160,6 +160,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = salesInvoiceTaxModelList;
                 resultModel.TotalResultCount = salesInvoiceTaxModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<SalesInvoiceTaxModel>();
+                resultModel.ResultList = new List<SalesInvoiceTaxModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

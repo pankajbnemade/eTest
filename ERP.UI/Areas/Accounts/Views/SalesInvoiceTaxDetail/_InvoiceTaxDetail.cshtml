@@ -1,0 +1,81 @@
+﻿<style>
+    .field-validation-error {
+        color: #dc3545 !important;
+    }
+
+    .modal-dialog {
+        height: 90%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+    }
+
+    .modal-content {
+        height: 100%; /* = 100% of the .modal-dialog block */
+    }
+
+    .modal-body {
+        height: 300px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>
+
+<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Invoice Tax Detail</div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs" id="taxdtl-tab-list" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="view-taxdtl-tab" data-toggle="tab" href="#viewtaxdetail" role="tab" aria-controls="viewtaxdetail" aria-selected="true">View</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="add-taxdtl-tab" data-toggle="tab" href="#addtaxdetail" role="tab" aria-controls="addtaxdetail" aria-selected="false">Add</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="viewtaxdetail" role="tabpanel" aria-labelledby="view-taxdtl-tab"></div>
+                        <div class="tab-pane fade" id="addtaxdetail" role="tabpanel" aria-labelledby="add-taxdtl-tab"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#taxdtl-tab-list li:first-child a').tab('show');
+    });
+
+    $('#taxdtl-tab-list > li > a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        //console.log(e.target.id);// newly activated tab
+        //console.log(e.relatedTarget); // previous active tab
+        var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+        switch ($(e.target).attr('aria-controls')) {
+            case 'addtaxdetail':
+                tabUrl = '@Url.Action("AddInvoiceTaxDetail", "SalesInvoiceTaxDetail", new { invoiceDetId = ViewBag.InvoiceDetId })';
+                break;
+            default:
+                tabUrl = '@Url.Action("ViewInvoiceTaxDetail", "SalesInvoiceTaxDetail", new { invoiceDetId = ViewBag.InvoiceDetId })';
+                break;
+        }
+        $('#' + tabPanel).empty();
+        $('#' + tabPanel).load(tabUrl);
+    });
+</script>

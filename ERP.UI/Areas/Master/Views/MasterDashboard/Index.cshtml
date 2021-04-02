@@ -1,8 +1,7 @@
-﻿
-
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Dashboard";
 }
 
-@Html.ActionLink("City List", "Index", "City", new { area = "Master" }, null)
+@Html.ActionLink("City List", "Index", "City")
+@Html.ActionLink("Account Dashboard", "Index", "AccountDashboard", new { @area = "Accounts" }, null)

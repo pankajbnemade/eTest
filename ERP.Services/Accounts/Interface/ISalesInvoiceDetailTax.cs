@@ -15,7 +15,7 @@ namespace ERP.Services.Accounts.Interface
         
         Task<SalesInvoiceDetailTaxModel> GetSalesInvoiceDetailTaxById(int salesInvoiceDetailTaxId);
 
-        //Task<SalesInvoiceDetailTaxModel> GetSalesInvoiceDetailTaxBySalesInvoiceId(int salesInvoiceId);
+        Task<DataTableResultModel<SalesInvoiceDetailTaxModel>> GetSalesInvoiceDetailTaxBySalesInvoiceDetailId(int salesInvoiceDetailId);
 
         Task<DataTableResultModel<SalesInvoiceDetailTaxModel>> GetSalesInvoiceDetailTaxList();
     }

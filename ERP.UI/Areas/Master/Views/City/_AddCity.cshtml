@@ -5,7 +5,14 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title">City</div>
+            @if (Model.CityId > 0)
+            {
+                <div class="modal-title">Edit City</div>
+            }
+            else
+            {
+                <div class="modal-title">Add City</div>
+            }
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -87,11 +94,11 @@
 
     // begin form
     function BeginSaveCity() {
-        //$("#frmSaveCity").removeData("validator").removeData("unobtrusiveValidation");
-        $.validator.unobtrusive.parse($('form[id="frmSaveCity"]'));
-        //$.validator.unobtrusive.parse($('#frmSaveCity'));
-        var validator = $("#frmSaveCity").validate();
-        var isModelValid = $('#frmSaveCity').valid();
+        var form = $("#frmSaveCity");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
         if (false == isModelValid) {
             validator.focusInvalid();
             return false;

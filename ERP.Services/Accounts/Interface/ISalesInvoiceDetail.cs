@@ -1,8 +1,6 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
-using ERP.Models.Master;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -18,7 +16,7 @@ namespace ERP.Services.Accounts.Interface
         Task<bool> DeleteSalesInvoiceDetail(int salesInvoiceDetailId);
 
         Task<SalesInvoiceDetailModel> GetSalesInvoiceDetailById(int salesInvoiceDetailId);
-
+        Task<DataTableResultModel<SalesInvoiceDetailModel>> GetSalesInvoiceDetailBySalesInvoiceId(int salesInvoiceId);
         Task<DataTableResultModel<SalesInvoiceDetailModel>> GetSalesInvoiceDetailList();
     }
 }
