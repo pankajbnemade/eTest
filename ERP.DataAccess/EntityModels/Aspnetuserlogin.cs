@@ -17,9 +17,7 @@ namespace ERP.DataAccess.EntityModels
         public string ProviderKey { get; set; }
         [Column(TypeName = "longtext")]
         public string ProviderDisplayName { get; set; }
-        [Required]
-        [Column(TypeName = "varchar(255)")]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         [InverseProperty(nameof(Aspnetuser.Aspnetuserlogins))]

@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.UI.Areas.Admin.Controllers
 {
-    public class AccountController : Controller
+    public class UserController : Controller
     {
         private readonly UserManager<ApplicationIdentityUser> _userManager;
         private readonly SignInManager<ApplicationIdentityUser> _signInManager;
 
-        public AccountController(UserManager<ApplicationIdentityUser> userManager,
+        public UserController(UserManager<ApplicationIdentityUser> userManager,
                               SignInManager<ApplicationIdentityUser> signInManager)
         {
             _userManager = userManager;

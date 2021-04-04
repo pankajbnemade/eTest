@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Master\Views\**" />
-    <Content Remove="Areas\Master\Views\**" />
-    <EmbeddedResource Remove="Areas\Master\Views\**" />
-    <None Remove="Areas\Master\Views\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
@@ -57,6 +50,10 @@
     <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceMaster.cshtml" />
+    <None Include="Areas\Master\Views\City\Index.cshtml" />
+    <None Include="Areas\Master\Views\City\_AddCity.cshtml" />
+    <None Include="Areas\Master\Views\City\_ConfirmDeleteCity.cshtml" />
+    <None Include="Areas\Master\Views\MasterDashboard\Index.cshtml" />
     <None Include="wwwroot\js\custom-js\custom-common.js" />
     <None Include="wwwroot\js\custom-js\custom-general.js" />
     <None Include="wwwroot\js\site.js" />

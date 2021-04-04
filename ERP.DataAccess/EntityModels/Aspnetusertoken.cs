@@ -10,8 +10,7 @@ namespace ERP.DataAccess.EntityModels
     public partial class Aspnetusertoken
     {
         [Key]
-        [Column(TypeName = "varchar(255)")]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         [Key]
         [Column(TypeName = "varchar(255)")]
         public string LoginProvider { get; set; }

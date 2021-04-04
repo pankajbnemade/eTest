@@ -16,8 +16,7 @@ namespace ERP.DataAccess.EntityModels
         }
 
         [Key]
-        [Column(TypeName = "varchar(255)")]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [Column(TypeName = "varchar(256)")]
         public string Name { get; set; }
         [Column(TypeName = "varchar(256)")]

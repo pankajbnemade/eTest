@@ -3,8 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using ERP.DataAccess.EntityModels;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.DataAccess.Entity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ERP.DataAccess.EntityData
 {
@@ -71,10 +71,6 @@ namespace ERP.DataAccess.EntityData
                     .HasName("RoleNameIndex")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
                 entity.Property(e => e.ConcurrencyStamp)
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -101,10 +97,6 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.RoleId)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Aspnetroleclaims)
                     .HasForeignKey(d => d.RoleId)
@@ -119,10 +111,6 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.NormalizedUserName)
                     .HasName("UserNameIndex")
                     .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.ConcurrencyStamp)
                     .HasCharSet("utf8mb4")
@@ -170,10 +158,6 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.UserId)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Aspnetuserclaims)
                     .HasForeignKey(d => d.UserId)
@@ -201,10 +185,6 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.UserId)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Aspnetuserlogins)
                     .HasForeignKey(d => d.UserId)
@@ -219,14 +199,6 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.RoleId)
                     .HasName("IX_AspNetUserRoles_RoleId");
-
-                entity.Property(e => e.UserId)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.RoleId)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Aspnetuserroles)
@@ -244,10 +216,6 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
-
-                entity.Property(e => e.UserId)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.LoginProvider)
                     .HasCharSet("utf8mb4")

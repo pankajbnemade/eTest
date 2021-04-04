@@ -11,9 +11,7 @@ namespace ERP.DataAccess.EntityModels
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [Column(TypeName = "varchar(255)")]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         [Column(TypeName = "longtext")]
         public string ClaimType { get; set; }
         [Column(TypeName = "longtext")]

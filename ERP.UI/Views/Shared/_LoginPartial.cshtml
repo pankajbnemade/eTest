@@ -74,17 +74,17 @@
         @if (User.Identity.IsAuthenticated)
         {
 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="UserInformation">@User.Identity.Name</a>
+    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="UserInformation">@User.Identity.Name</a>
     <a class="dropdown-item" asp-area="Common" asp-controller="Home" asp-action="ChangeCompany">Company</a>
     <a class="dropdown-item" asp-area="Common" asp-controller="Home" asp-action="ChangeYear">Year</a>
 
-    <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Logout">Logout</a>
+    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Logout">Logout</a>
 </div> }
 else
 {
 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Login">Login</a>
-    <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Register">Register</a>
+    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Login">Login</a>
+    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Register">Register</a>
 </div>}
 
 

@@ -10,11 +10,9 @@ namespace ERP.DataAccess.EntityModels
     public partial class Aspnetuserrole
     {
         [Key]
-        [Column(TypeName = "varchar(255)")]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         [Key]
-        [Column(TypeName = "varchar(255)")]
-        public string RoleId { get; set; }
+        public int RoleId { get; set; }
 
         [ForeignKey(nameof(RoleId))]
         [InverseProperty(nameof(Aspnetrole.Aspnetuserroles))]
