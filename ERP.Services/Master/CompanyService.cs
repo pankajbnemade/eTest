@@ -5,6 +5,7 @@ using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -165,8 +166,8 @@ namespace ERP.Services.Master
                 CompanyModel companyModel = new CompanyModel();
 
                 // assign values.
-                Company company = new Company();
 
+                companyModel.CompanyId = company.CompanyId;
                 companyModel.CompanyName = company.CompanyName;
                 companyModel.Address = company.Address;
                 companyModel.EmailAddress = company.EmailAddress;
@@ -175,11 +176,11 @@ namespace ERP.Services.Master
                 companyModel.AlternatePhoneNo = company.AlternatePhoneNo;
                 companyModel.FaxNo = company.FaxNo;
                 companyModel.PostalCode = company.PostalCode;
-                companyModel.CurrencyId = (int)company.CurrencyId;
-                companyModel.NoOfDecimals = (int)company.NoOfDecimals;
+                companyModel.CurrencyId = Convert.ToInt32 (company.CurrencyId);
+                companyModel.NoOfDecimals = Convert.ToInt32(company.NoOfDecimals);
 
-                companyModel.CurrencyName = company.Currency.CurrencyName;
-                companyModel.PreparedByName = company.PreparedByUser.UserName;
+                //companyModel.CurrencyName = company.Currency.CurrencyName;
+                //companyModel.PreparedByName = company.PreparedByUser.UserName;
 
                 return companyModel;
             });

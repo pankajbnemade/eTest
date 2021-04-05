@@ -36,6 +36,7 @@ namespace ERP.UI
 
             #region Master
 
+            services.AddTransient<ICompany, CompanyService>();
             services.AddTransient<ICity, CityService>();
             services.AddTransient<IState, StateService>();
             services.AddTransient<ICountry, CountryService>();
@@ -48,6 +49,7 @@ namespace ERP.UI
             services.AddTransient<ILedgerAddress, LedgerAddressService>();
             services.AddTransient<ITaxRegister, TaxRegisterService>();
             services.AddTransient<ICurrency, CurrencyService>();
+            services.AddTransient<IFinancialYear, FinancialYearService>();
 
             services.AddTransient<ISalesInvoice, SalesInvoiceService>();
             services.AddTransient<ISalesInvoiceDetail, SalesInvoiceDetailService>();
