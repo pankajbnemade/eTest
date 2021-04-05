@@ -2,6 +2,8 @@
 using ERP.Services;
 using ERP.Services.Accounts;
 using ERP.Services.Accounts.Interface;
+using ERP.Services.Admin;
+using ERP.Services.Admin.Interface;
 using ERP.Services.Common;
 using ERP.Services.Common.Interface;
 using ERP.Services.Master;
@@ -55,6 +57,13 @@ namespace ERP.UI
 
 
             #endregion // Accounts
+
+            #region Admin
+
+            services.AddTransient<IApplicationIdentityUser, ApplicationIdentityUserService>();
+
+            
+            #endregion
 
             services.AddTransient<ICommon, CommonService>();
         }

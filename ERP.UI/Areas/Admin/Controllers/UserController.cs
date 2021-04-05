@@ -7,7 +7,8 @@ using ERP.Models.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
+using ERP.Services.Admin.Interface;
 
 namespace ERP.UI.Areas.Admin.Controllers
 {
@@ -15,12 +16,15 @@ namespace ERP.UI.Areas.Admin.Controllers
     {
         private readonly UserManager<ApplicationIdentityUser> _userManager;
         private readonly SignInManager<ApplicationIdentityUser> _signInManager;
+        private readonly IApplicationIdentityUser _aplicationIdentityUser;
 
         public UserController(UserManager<ApplicationIdentityUser> userManager,
-                              SignInManager<ApplicationIdentityUser> signInManager)
+                              SignInManager<ApplicationIdentityUser> signInManager,
+                              IApplicationIdentityUser aplicationIdentityUser)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _aplicationIdentityUser = aplicationIdentityUser;
         }
 
         public IActionResult Register()
@@ -64,16 +68,6 @@ namespace ERP.UI.Areas.Admin.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
-
-            //var branch = new Branch
-            //{
-            //    branchName = "Regie",
-            //    address = "Naval"
-
-            //};
-            //branchContext.Branch.Add(branch);
-            //branchContext.SaveChanges();
-
             return View();
         }
         [HttpPost]
@@ -86,11 +80,14 @@ namespace ERP.UI.Areas.Admin.Controllers
 
                 if (result.Succeeded)
                 {
+                    ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserListByEmail(user.Email);
+
+                    var userid = applicationUser.Id;
+
                     return RedirectToAction("Index", "Home", new { area = "Common" });
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-
             }
             return View(user);
         }

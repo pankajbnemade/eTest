@@ -34,12 +34,19 @@ namespace ERP.UI
 
             services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().
                 AddEntityFrameworkStores<ErpDbContext>();
-            
+
 
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Admin/Account/Login";
 
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Admin/Account/Login";
+                options.LogoutPath = "/Admin/Account/Logout";
+                options.AccessDeniedPath = "/Admin/Account/AccessDenied";
             });
 
             services.AddControllers();
@@ -75,6 +82,7 @@ namespace ERP.UI
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
