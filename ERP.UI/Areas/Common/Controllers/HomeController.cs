@@ -1,15 +1,15 @@
 ﻿using ERP.Models.Accounts;
+using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
+using ERP.UI.Extension;
 using ERP.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Common.Controllers
@@ -30,6 +30,9 @@ namespace ERP.UI.Areas.Common.Controllers
 
         public IActionResult Index()
         {
+
+            UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+           
             return View();
         }
 
@@ -54,6 +57,26 @@ namespace ERP.UI.Areas.Common.Controllers
             });
         }
 
+        /// <summary>
+        /// choose company.
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ChooseCommpany(int companyId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            return await Task.Run(() =>
+            {
+                UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+                userSessionModel.CompanyId = companyId;
+                SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+
+                return Json(data);
+            });
+        }
+
         public IActionResult ChangeYear()
         {
             return View();
@@ -67,6 +90,26 @@ namespace ERP.UI.Areas.Common.Controllers
             return await Task.Run(() =>
             {
                 return Json(new { draw = 1, data = resultModel.ResultList });
+            });
+        }
+
+        /// <summary>
+        /// choose financial year.
+        /// </summary>
+        /// <param name="financialYearId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ChooseFinancialYear(int financialYearId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            return await Task.Run(() =>
+            {
+                UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+                userSessionModel.FinancialYearId = financialYearId;
+                SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+
+                return Json(data);
             });
         }
 

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ERP.DataAccess.Entity;
+﻿using ERP.DataAccess.Entity;
 using ERP.Models.Admin;
+using ERP.Services.Admin.Interface;
+using ERP.UI.Extension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using ERP.Services.Admin.Interface;
+using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Admin.Controllers
 {
@@ -81,8 +78,10 @@ namespace ERP.UI.Areas.Admin.Controllers
                 if (result.Succeeded)
                 {
                     ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserListByEmail(user.Email);
-
-                    var userid = applicationUser.Id;
+                    UserSessionModel userSessionModel = new UserSessionModel();
+                    userSessionModel.UserId = applicationUser.Id;
+                    userSessionModel.Username = applicationUser.UserName;
+                    SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
                     return RedirectToAction("Index", "Home", new { area = "Common" });
                 }

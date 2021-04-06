@@ -34,12 +34,6 @@ namespace ERP.UI
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Admin/Account/Login";
-
-            });
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Admin/Account/Login";
                 options.LogoutPath = "/Admin/Account/Logout";
                 options.AccessDeniedPath = "/Admin/Account/AccessDenied";
             });
