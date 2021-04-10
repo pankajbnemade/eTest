@@ -24,12 +24,9 @@ namespace ERP.UI
         public void ConfigureServices(IServiceCollection services)
         {
             string mySqlConnectionStr = Configuration.GetConnectionString("ErplanConnString");
-
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
-
             services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().
                 AddEntityFrameworkStores<ErpDbContext>();
-
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -70,11 +67,9 @@ namespace ERP.UI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

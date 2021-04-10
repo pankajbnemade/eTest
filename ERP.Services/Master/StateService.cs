@@ -137,13 +137,15 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 StateModel stateModel = new StateModel();
-
                 stateModel.StateId = state.StateId;
                 stateModel.StateName = state.StateName;
                 stateModel.CountryId = Convert.ToInt32(state.CountryId);
                 stateModel.CountryName = state.Country.CountryName;
 
-                stateModel.PreparedByName = state.PreparedByUser.UserName;
+                if (null != state.PreparedByUser)
+                {
+                    stateModel.PreparedByName = state.PreparedByUser.UserName;
+                }
 
                 return stateModel;
             });

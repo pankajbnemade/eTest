@@ -1,6 +1,5 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
-using ERP.Models.Helpers;
 using ERP.Models.Master;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -59,8 +58,5 @@ namespace ERP.Services.Master.Interface
         /// return list.
         /// </returns>
         Task<DataTableResultModel<CityModel>> GetCityList();
-
-        Task<IList<SelectListModel>> GetCitySelectList();
-
     }
 }
