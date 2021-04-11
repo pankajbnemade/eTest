@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace ERP.UI.Extension
+namespace ERP.Models.Extension
 {
     public static class SessionExtension
     {

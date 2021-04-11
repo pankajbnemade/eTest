@@ -122,6 +122,19 @@ namespace ERP.Services
         {
             return await _dbContext.Set<T>().AnyAsync(expression);
         }
+
+       /// <summary>
+       /// get max number based on condition
+       /// </summary>
+       /// <param name="expression"></param>
+       /// <param name="columnSelector"></param>
+       /// <returns>
+       /// return max number from entity.
+       /// </returns>
+        public async Task<int> Max(Expression<Func<T, bool>> expression, Expression<Func<T, int>> columnSelector)
+        {
+            return await _dbContext.Set<T>().Where(expression).MaxAsync(columnSelector);
+        }
     }
 }
 

@@ -1,12 +1,5 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using ERP.Models.Accounts;
-@model SalesInvoiceTaxModel
+﻿@model SalesInvoiceTaxModel
 
-<style>
-    .field-validation-error {
-        color: #dc3545 !important;
-    }
-</style>
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
@@ -52,13 +45,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxPercentageOrAmount, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.TaxPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Value", "Description"), "Select", new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.TaxPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Name", "Description"), "Select", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.TaxPercentageOrAmount)
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.TaxPerOrAmountFc)
+                                @Html.LabelFor(model => model.TaxPerOrAmountFc, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.TaxPerOrAmountFc)
                             </div>
@@ -70,7 +63,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxAddOrDeduct, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.TaxAddOrDeduct, new SelectList(ViewBag.TaxAddOrDeductList, "Value", "Description"), "Select", new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.TaxAddOrDeduct, new SelectList(ViewBag.TaxAddOrDeductList, "Name", "Description"), "Select", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.TaxAddOrDeduct)
                             </div>
                         </div>
@@ -133,7 +126,9 @@
     // success form
     function SuccessInvoiceTaxMaster(data) {
         if (data.Result.Status) {
+            $('#modal-invoice').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
+            $("#salesInvoiceTaxMasterGrid").DataTable().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
@@ -43,7 +44,6 @@
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_AddInvoiceTaxDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_ConfirmDeleteInvoiceTaxDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_InvoiceTaxDetail.cshtml" />
-    <None Include="Areas\Accounts\Views\SalesInvoiceTaxDetail\_ViewInvoiceTaxDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_AddInvoiceTaxMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_ConfirmDeleteInvoiceTaxMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_InvoiceTaxMaster.cshtml" />

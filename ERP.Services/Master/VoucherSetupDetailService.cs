@@ -75,7 +75,6 @@ namespace ERP.Services.Master
             return isDeleted; // returns.
         }
 
-
         public async Task<VoucherSetupDetailModel> GetVoucherSetupDetailById(int voucherSetupDetailId)
         {
             VoucherSetupDetailModel voucherSetupDetailModel = null;
@@ -119,7 +118,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all voucherSetupDetail list.
         /// </summary>
@@ -130,8 +128,7 @@ namespace ERP.Services.Master
         {
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = null;
 
-            // get records by query.
-
+            // create query.
             IQueryable<Vouchersetupdetail> query = GetQueryByCondition(w => w.VoucherSetupDetId != 0).Include(w => w.PreparedByUser).Include(w => w.VoucherStyle);
 
             if (0 != voucherSetupDetailId)
@@ -145,10 +142,8 @@ namespace ERP.Services.Master
 
             if (0 != financialYearId)
                 query = query.Where(w => w.FinancialYearId == financialYearId);
-
-
+            // get record.
             IList<Vouchersetupdetail> voucherSetupDetailList = await query.ToListAsync();
-
             if (null != voucherSetupDetailList && voucherSetupDetailList.Count > 0)
             {
                 voucherSetupDetailModelList = new List<VoucherSetupDetailModel>();
@@ -166,7 +161,6 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 VoucherSetupDetailModel voucherSetupDetailModel = new VoucherSetupDetailModel();
-
                 voucherSetupDetailModel.VoucherSetupDetId = voucherSetupDetail.VoucherSetupDetId;
                 voucherSetupDetailModel.VoucherSetupId = voucherSetupDetail.VoucherSetupId;
                 voucherSetupDetailModel.NoPad = voucherSetupDetail.NoPad;
@@ -178,8 +172,15 @@ namespace ERP.Services.Master
                 voucherSetupDetailModel.CompanyId = voucherSetupDetail.CompanyId;
                 voucherSetupDetailModel.FinancialYearId = voucherSetupDetail.FinancialYearId;
 
-                voucherSetupDetailModel.VoucherStyleName = voucherSetupDetail.VoucherStyle.VoucherStyleName;
-                voucherSetupDetailModel.PreparedByName = voucherSetupDetail.PreparedByUser.UserName;
+                if (null != voucherSetupDetail.VoucherStyle)
+                {
+                    voucherSetupDetailModel.VoucherStyleName = voucherSetupDetail.VoucherStyle.VoucherStyleName;
+                }
+
+                if (null != voucherSetupDetail.PreparedByUser)
+                {
+                    voucherSetupDetailModel.PreparedByName = voucherSetupDetail.PreparedByUser.UserName;
+                }
 
                 return voucherSetupDetailModel;
             });

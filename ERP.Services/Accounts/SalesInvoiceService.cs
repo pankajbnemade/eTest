@@ -1,7 +1,9 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +21,25 @@ namespace ERP.Services.Accounts
         {
             common = _common;
         }
-        public async Task<GenerateNoModel> GenerateInvoiceNo(int? companyId, int? financialYearId)
+
+        /// <summary>
+        /// generate invoice no.
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="financialYearId"></param>
+        /// <returns>
+        /// return invoice no.
+        /// </returns>
+        public async Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId)
         {
-            IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(0);
-
             int voucherSetupId = 2;
+            // get maxno.
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
 
-            int? maxNo = salesInvoiceModelList.Where(w => (w.CompanyId == companyId && w.FinancialYearId == financialYearId)).Max(w => w.MaxNo);
-
-            return await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, Convert.ToInt32(companyId), Convert.ToInt32(financialYearId));
+            return generateNoModel; // returns.
         }
+
         /// <summary>
         /// create new sales invoice.
         /// </summary>
@@ -39,16 +50,14 @@ namespace ERP.Services.Accounts
         public async Task<int> CreateSalesInvoice(SalesInvoiceModel salesInvoiceModel)
         {
             int salesInvoiceId = 0;
+
+            // generate no.
             GenerateNoModel generateNoModel = await GenerateInvoiceNo(salesInvoiceModel.CompanyId, salesInvoiceModel.FinancialYearId);
-
-            salesInvoiceModel.InvoiceNo = generateNoModel.VoucherNo;
-            salesInvoiceModel.MaxNo = generateNoModel.MaxNo;
-            salesInvoiceModel.VoucherStyleId = generateNoModel.VoucherStyleId;
-
             // assign values.
             Salesinvoice salesInvoice = new Salesinvoice();
-            salesInvoice.InvoiceId = salesInvoiceModel.InvoiceId;
-            salesInvoice.InvoiceNo = salesInvoiceModel.InvoiceNo;
+            salesInvoice.MaxNo = generateNoModel.MaxNo;
+            salesInvoice.VoucherStyleId = generateNoModel.VoucherStyleId;
+            salesInvoice.InvoiceNo = generateNoModel.VoucherNo;
             salesInvoice.InvoiceDate = salesInvoiceModel.InvoiceDate;
             salesInvoice.CustomerLedgerId = salesInvoiceModel.CustomerLedgerId;
             salesInvoice.BillToAddressId = salesInvoiceModel.BillToAddressId;
@@ -72,7 +81,6 @@ namespace ERP.Services.Accounts
             salesInvoice.NetAmountFcinWord = "";
             salesInvoice.TaxAmountFc = 0;
             salesInvoice.TaxAmount = 0;
-
             salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
             salesInvoice.DiscountPercentage = salesInvoiceModel.DiscountPercentage;
             salesInvoice.DiscountAmountFc = 0;
@@ -80,18 +88,13 @@ namespace ERP.Services.Accounts
             salesInvoice.StatusId = salesInvoiceModel.StatusId;
             salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
             salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
-            salesInvoice.MaxNo = salesInvoiceModel.MaxNo;
-            salesInvoice.VoucherStyleId = salesInvoiceModel.VoucherStyleId;
-            //salesInvoice.PreparedByUserId = salesInvoiceModel.PreparedByUserId;
-            //salesInvoice.UpdatedByUserId = salesInvoiceModel.UpdatedByUserId;
-            //salesInvoice.PreparedDateTime = salesInvoiceModel.PreparedDateTime;
-            //salesInvoice.UpdatedDateTime = salesInvoiceModel.UpdatedDateTime;
-
             salesInvoiceId = await Create(salesInvoice);
-            if (salesInvoiceId != 0)
+
+            if (salesInvoiceId > 0)
             {
                 await UpdateSalesInvoiceMasterAmount(salesInvoiceId);
             }
+
             return salesInvoiceId; // returns.
         }
 
@@ -112,7 +115,7 @@ namespace ERP.Services.Accounts
             {
                 // assign values.
                 salesInvoice.InvoiceId = salesInvoiceModel.InvoiceId;
-                salesInvoice.InvoiceNo = salesInvoiceModel.InvoiceNo;
+                //salesInvoice.InvoiceNo = salesInvoiceModel.InvoiceNo;
                 salesInvoice.InvoiceDate = salesInvoiceModel.InvoiceDate;
                 salesInvoice.CustomerLedgerId = salesInvoiceModel.CustomerLedgerId;
                 salesInvoice.BillToAddressId = salesInvoiceModel.BillToAddressId;
@@ -181,20 +184,18 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId)
         {
             bool isUpdated = false;
 
             // get record.
             Salesinvoice salesInvoice = await GetByIdAsync(w => w.InvoiceId == salesInvoiceId);
-
             if (null != salesInvoice)
             {
                 salesInvoice.TotalLineItemAmountFc = salesInvoice.Salesinvoicedetails.Sum(w => w.GrossAmountFc);
                 salesInvoice.TotalLineItemAmount = salesInvoice.TotalLineItemAmountFc * salesInvoice.ExchangeRate;
 
-                if (salesInvoice.DiscountPercentageOrAmount == "Percentage")
+                if (DiscountType.Percentage.ToString() == salesInvoice.DiscountPercentageOrAmount)
                 {
                     salesInvoice.DiscountAmountFc = (salesInvoice.TotalLineItemAmountFc * salesInvoice.DiscountPercentage) / 100;
                 }
@@ -208,7 +209,7 @@ namespace ERP.Services.Accounts
                 salesInvoice.GrossAmountFc = salesInvoice.TotalLineItemAmountFc + salesInvoice.DiscountAmountFc;
                 salesInvoice.GrossAmount = salesInvoice.GrossAmountFc * salesInvoice.ExchangeRate;
 
-                if (salesInvoice.TaxModelType == "Line Wise")
+                if (TaxModelType.LineWise.ToString() == salesInvoice.TaxModelType)
                 {
                     salesInvoice.TaxAmountFc = salesInvoice.Salesinvoicedetails.Sum(w => w.TaxAmountFc);
                 }
@@ -222,7 +223,10 @@ namespace ERP.Services.Accounts
                 salesInvoice.NetAmountFc = salesInvoice.GrossAmountFc + salesInvoice.DiscountAmountFc;
                 salesInvoice.NetAmount = salesInvoice.NetAmountFc * salesInvoice.ExchangeRate;
 
-                salesInvoice.NetAmountFcinWord = await common.AmountInWord_Million(salesInvoice.NetAmountFc.ToString(), salesInvoice.Currency.CurrencyCode, salesInvoice.Currency.Denomination);
+                if (null != salesInvoice.Currency)
+                {
+                    salesInvoice.NetAmountFcinWord = await common.AmountInWord_Million(salesInvoice.NetAmountFc.ToString(), salesInvoice.Currency.CurrencyCode, salesInvoice.Currency.Denomination);
+                }
 
                 isUpdated = await Update(salesInvoice);
             }
@@ -241,7 +245,6 @@ namespace ERP.Services.Accounts
             SalesInvoiceModel salesInvoiceModel = null;
 
             IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(invoiceId);
-
             if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
             {
                 salesInvoiceModel = salesInvoiceModelList.FirstOrDefault();
@@ -401,14 +404,14 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.DiscountAmountFc = salesInvoice.DiscountAmountFc;
                 salesInvoiceModel.DiscountAmount = salesInvoice.DiscountAmount;
                 salesInvoiceModel.StatusId = salesInvoice.StatusId;
-                salesInvoiceModel.CompanyId = salesInvoice.CompanyId;
-                salesInvoiceModel.FinancialYearId = salesInvoice.FinancialYearId;
-                salesInvoiceModel.MaxNo = salesInvoice.MaxNo;
-                salesInvoiceModel.VoucherStyleId = salesInvoice.VoucherStyleId;
-                salesInvoiceModel.PreparedByUserId = salesInvoice.PreparedByUserId;
-                salesInvoiceModel.UpdatedByUserId = salesInvoice.UpdatedByUserId;
-                salesInvoiceModel.PreparedDateTime = salesInvoice.PreparedDateTime;
-                salesInvoiceModel.UpdatedDateTime = salesInvoice.UpdatedDateTime;
+                salesInvoiceModel.CompanyId = Convert.ToInt32(salesInvoice.CompanyId);
+                salesInvoiceModel.FinancialYearId = Convert.ToInt32(salesInvoice.FinancialYearId);
+                salesInvoiceModel.MaxNo = Convert.ToInt32(salesInvoice.MaxNo);
+                salesInvoiceModel.VoucherStyleId = Convert.ToInt32(salesInvoice.VoucherStyleId);
+                //salesInvoiceModel.PreparedByUserId = salesInvoice.PreparedByUserId;
+                //salesInvoiceModel.UpdatedByUserId = salesInvoice.UpdatedByUserId;
+                //salesInvoiceModel.PreparedDateTime = salesInvoice.PreparedDateTime;
+                //salesInvoiceModel.UpdatedDateTime = salesInvoice.UpdatedDateTime;
 
                 if (null != salesInvoice.CustomerLedger)
                 {

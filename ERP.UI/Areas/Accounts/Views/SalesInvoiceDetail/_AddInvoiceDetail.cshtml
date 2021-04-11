@@ -1,12 +1,4 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using ERP.Models.Accounts;
-@model SalesInvoiceDetailModel
-
-<style>
-    .field-validation-error {
-        color: #dc3545 !important;
-    }
-</style>
+﻿@model SalesInvoiceDetailModel
 
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -52,7 +44,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Quantity)
+                                @Html.LabelFor(model => model.Quantity, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.Quantity)
                             </div>
@@ -70,14 +62,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.PerUnit)
+                                @Html.LabelFor(model => model.PerUnit, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.PerUnit, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.PerUnit)
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.UnitPrice)
+                                @Html.LabelFor(model => model.UnitPrice, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.UnitPrice)
                             </div>
@@ -138,7 +130,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <div class="text-right">
@@ -149,9 +140,6 @@
         </form>
     </div>
 </div>
-
-
-
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -173,7 +161,9 @@
     // success form
     function SuccessInvoiceDetail(data) {
         if (data.Result.Status) {
+            $('#modal-invoice').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
+            $("#salesInvoiceDetailGrid").DataTable().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

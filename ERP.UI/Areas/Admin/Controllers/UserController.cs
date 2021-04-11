@@ -1,7 +1,7 @@
 ﻿using ERP.DataAccess.Entity;
 using ERP.Models.Admin;
+using ERP.Models.Extension;
 using ERP.Services.Admin.Interface;
-using ERP.UI.Extension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

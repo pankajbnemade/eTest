@@ -3,7 +3,6 @@ using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -115,6 +114,13 @@ namespace ERP.UI.Areas.Master.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// get state list based on countryId
+        /// </summary>
+        /// <param name="countryId"></param>
+        /// <returns>
+        /// return json.
+        /// </returns>
         [HttpPost]
         public async Task<JsonResult> GetStateByCountryId(int countryId)
         {

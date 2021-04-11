@@ -69,6 +69,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             SalesInvoiceDetailModel salesInvoiceDetailModel = new SalesInvoiceDetailModel();
             salesInvoiceDetailModel.InvoiceId = invoiceId;
+            salesInvoiceDetailModel.SrNo = await _salesInvoiceDetail.GenerateSrNo(invoiceId);
 
             return await Task.Run(() =>
             {

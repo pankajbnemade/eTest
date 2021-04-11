@@ -36,13 +36,13 @@ namespace ERP.UI
             });
 
             services.AddControllers();
-            // registering dependency injection(application services).
-            ApplicationServices.Register(ref services);
-
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation()
                     .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
+            // registering dependency injection(application services).
+            ApplicationServices.Register(ref services);
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -67,6 +67,7 @@ namespace ERP.UI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();

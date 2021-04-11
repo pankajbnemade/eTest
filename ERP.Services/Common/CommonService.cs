@@ -1,13 +1,10 @@
-﻿using ERP.DataAccess.EntityModels;
-using ERP.Models.Common;
+﻿using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Common.Interface;
 using ERP.Services.Master.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Common
@@ -81,21 +78,14 @@ namespace ERP.Services.Common
 
             return await Task.Run(() =>
             {
-                string voucherNo = "";
+                string voucherNo = string.Empty;
                 int voucherStyleId = (int)voucherSetupDetailModel.VoucherStyleId;
-
                 maxNo = maxNo + 1;
-
-                voucherNo = voucherSetupDetailModel.NoPreString
-                            + voucherSetupDetailModel.NoSeparator
-                            + Convert.ToString(maxNo).PadLeft(5, char.Parse(voucherSetupDetailModel.NoPad))
-                            + voucherSetupDetailModel.NoSeparator
-                            + voucherSetupDetailModel.NoPostString;
+                voucherNo = $"{voucherSetupDetailModel.NoPreString}{voucherSetupDetailModel.NoSeparator}{Convert.ToString(maxNo).PadLeft(5, char.Parse(voucherSetupDetailModel.NoPad))}{voucherSetupDetailModel.NoSeparator}{voucherSetupDetailModel.NoPostString}";
 
                 return new GenerateNoModel { MaxNo = maxNo, VoucherStyleId = voucherStyleId, VoucherNo = voucherNo };
             });
         }
-
 
         #region "Amount To Word Million"
 
@@ -355,6 +345,5 @@ namespace ERP.Services.Common
         }
 
         #endregion
-
     }
 }

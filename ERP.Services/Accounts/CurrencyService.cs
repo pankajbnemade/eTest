@@ -15,7 +15,6 @@ namespace ERP.Services.Accounts
     {
         public CurrencyService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateCurrency(CurrencyModel currencyModel)
         {
             int currencyId = 0;
@@ -31,7 +30,6 @@ namespace ERP.Services.Accounts
 
             return currencyId; // returns.
         }
-
 
         public async Task<bool> UpdateCurrency(CurrencyModel currencyModel)
         {
@@ -52,7 +50,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-
         public async Task<bool> DeleteCurrency(int currencyId)
         {
             bool isDeleted = false;
@@ -68,13 +65,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<CurrencyModel> GetCurrencyById(int currencyId)
         {
             CurrencyModel currencyModel = null;
 
             IList<CurrencyModel> currencyModelList = await GetCurrencyList(currencyId);
-
             if (null != currencyModelList && currencyModelList.Any())
             {
                 currencyModel = currencyModelList.FirstOrDefault();
@@ -139,7 +134,6 @@ namespace ERP.Services.Accounts
                 return currencyModel;
             });
         }
-
 
         public async Task<IList<SelectListModel>> GetCurrencySelectList()
         {
