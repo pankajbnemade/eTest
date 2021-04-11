@@ -8,37 +8,38 @@
    "ModelNamespace": null,
    "OutputContextPath": "EntityData",
    "OutputPath": "EntityModels",
+   "ProceduresReturnList": false,
    "ProjectRootNamespace": "ERP.DataAccess",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "aspnetroleclaims",
+         "Name": "aspnetrole",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetroles",
+         "Name": "aspnetroleclaim",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuserclaims",
+         "Name": "aspnetuser",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuserlogins",
+         "Name": "aspnetuserclaim",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuserroles",
+         "Name": "aspnetuserlogin",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetusers",
+         "Name": "aspnetuserrole",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetusertokens",
+         "Name": "aspnetusertoken",
          "ObjectType": 0
       },
       {

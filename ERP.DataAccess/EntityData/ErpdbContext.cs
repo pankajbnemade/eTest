@@ -3,8 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using ERP.DataAccess.EntityModels;
-using ERP.DataAccess.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ERP.DataAccess.Entity;
 
 namespace ERP.DataAccess.EntityData
 {

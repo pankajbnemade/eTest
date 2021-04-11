@@ -55,8 +55,8 @@ $(document).ready(function () {
             {
                 "render": function (data, type, full, meta) {
                     return '<div class="action_button">' +
-                        '<button type="button" onclick="javascript: fnEditCity(' + full.CityId + ')">Edit</button>' +
-                        '<button type="button" data-toggle="modal" onclick="javascript: fnDeleteCity(this, ' + full.CityId + ')">Delete</button>' +
+                        '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditCity(' + full.CityId + ')"><span class="fa fa-pencil-alt"></button>' +
+                        '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteCity(this, ' + full.CityId + ')"><span class="fa fa-trash-alt"></span></button>' +
                         '</div>';
                 }
             }
