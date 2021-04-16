@@ -4,6 +4,7 @@ using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +14,22 @@ namespace ERP.Services.Accounts
     public class PurchaseInvoiceDetailService : Repository<Purchaseinvoicedetail>, IPurchaseInvoiceDetail
     {
         IPurchaseInvoice purchaseInvoice;
+
         public PurchaseInvoiceDetailService(ErpDbContext dbContext, IPurchaseInvoice _purchaseInvoice) : base(dbContext)
         {
             purchaseInvoice = _purchaseInvoice;
+        }
+
+        public async Task<int> GenerateSrNo(int purchaseInvoiceId)
+        {
+            int srNo = 0;
+
+            if (await Any(w => w.PurchaseInvoiceDetId != 0 && w.PurchaseInvoiceId == purchaseInvoiceId))
+            {
+                srNo = await GetQueryByCondition(w => w.PurchaseInvoiceDetId != 0 && w.PurchaseInvoiceId == purchaseInvoiceId).MaxAsync(m => Convert.ToInt32(m.SrNo));
+            }
+
+            return (srNo + 1);
         }
 
         public async Task<int> CreatePurchaseInvoiceDetail(PurchaseInvoiceDetailModel purchaseInvoiceDetailModel)
@@ -92,7 +106,8 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Purchaseinvoicedetail purchaseInvoiceDetail = await GetByIdAsync(w => w.PurchaseInvoiceDetId == purchaseInvoiceDetailId);
+            Purchaseinvoicedetail purchaseInvoiceDetail = await GetQueryByCondition(w => w.PurchaseInvoiceDetId == purchaseInvoiceDetailId)
+                                                        .Include(w => w.PurchaseInvoice).FirstOrDefaultAsync();
 
             if (null != purchaseInvoiceDetail)
             {
@@ -148,11 +163,11 @@ namespace ERP.Services.Accounts
             return purchaseInvoiceDetailModel; // returns.
         }
 
-        public async Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailByPurchaseInvoiceId(int PurchaseInvoiceId)
+        public async Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailByPurchaseInvoiceId(int purchaseInvoiceId)
         {
             DataTableResultModel<PurchaseInvoiceDetailModel> resultModel = new DataTableResultModel<PurchaseInvoiceDetailModel>();
 
-            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(0, PurchaseInvoiceId);
+            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(0, purchaseInvoiceId);
 
             if (null != purchaseInvoiceDetailModelList && purchaseInvoiceDetailModelList.Any())
             {

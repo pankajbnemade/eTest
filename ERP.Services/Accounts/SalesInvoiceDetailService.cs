@@ -111,11 +111,9 @@ namespace ERP.Services.Accounts
         {
             bool isUpdated = false;
 
-           
-     // get record.
+            // get record.
             Salesinvoicedetail salesInvoiceDetail = await GetQueryByCondition(w => w.InvoiceDetId == salesInvoiceDetailId)
                         .Include(w => w.Invoice).FirstOrDefaultAsync();
-
 
             if (null != salesInvoiceDetail)
             {
@@ -162,6 +160,7 @@ namespace ERP.Services.Accounts
             SalesInvoiceDetailModel salesInvoiceDetailModel = null;
 
             IList<SalesInvoiceDetailModel> salesInvoiceModelDetailList = await GetSalesInvoiceDetailList(salesInvoiceDetailId, 0);
+
             if (null != salesInvoiceModelDetailList && salesInvoiceModelDetailList.Any())
             {
                 salesInvoiceDetailModel = salesInvoiceModelDetailList.FirstOrDefault();
@@ -257,7 +256,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailModel.NetAmount = salesInvoiceDetail.NetAmount;
 
                 //--####
-                if(null != salesInvoiceDetail.UnitOfMeasurement)
+                if (null != salesInvoiceDetail.UnitOfMeasurement)
                 {
                     salesInvoiceDetailModel.UnitOfMeasurementName = salesInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName;
                 }

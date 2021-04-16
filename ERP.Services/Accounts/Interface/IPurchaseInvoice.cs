@@ -7,7 +7,7 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface IPurchaseInvoice : IRepository<Purchaseinvoice>
     {
-        Task<GenerateNoModel> GenerateInvoiceNo(int? companyId, int? financialYearId);
+        Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId);
 
         Task<int> CreatePurchaseInvoice(PurchaseInvoiceModel purchaseInvoiceModel);
 
@@ -18,7 +18,17 @@ namespace ERP.Services.Accounts.Interface
         Task<bool> UpdatePurchaseInvoiceMasterAmount(int? purchaseInvoiceId);
 
         Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int purchaseInvoiceId);
-
-        Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList();
+        
+        /// <summary>
+        /// get search sales invoice result list.
+        /// </summary>
+        /// <param name="dataTableAjaxPostModel"></param>
+        /// <param name="searchFilterModel"></param>
+        /// <returns>
+        /// return list.
+        /// </returns>
+        Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterPurchaseInvoiceModel searchFilterModel);
+   
+        //Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList();
     }
 }

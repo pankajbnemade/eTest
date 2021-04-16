@@ -1,9 +1,11 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +19,25 @@ namespace ERP.Services.Accounts
         public PurchaseInvoiceDetailTaxService(ErpDbContext dbContext, IPurchaseInvoice _purchaseInvoice, IPurchaseInvoiceDetail _purchaseInvoiceDetail) : base(dbContext)
         {
             purchaseInvoice = _purchaseInvoice;
+        }
+        
+        /// <summary>
+        /// generate sr no based on purchaseInvoiceDetId
+        /// </summary>
+        /// <param name="purchaseInvoiceDetId"></param>
+        /// <returns>
+        /// return sr no.
+        /// </returns>
+        public async Task<int> GenerateSrNo(int purchaseInvoiceDetId)
+        {
+            int srNo = 0;
+
+            if (await Any(w => w.PurchaseInvoiceDetTaxId != 0 && w.PurchaseInvoiceDetId == purchaseInvoiceDetId))
+            {
+                srNo = await GetQueryByCondition(w => w.PurchaseInvoiceDetTaxId != 0 && w.PurchaseInvoiceDetId == purchaseInvoiceDetId).MaxAsync(m => Convert.ToInt32(m.SrNo));
+            }
+
+            return (srNo + 1);
         }
 
         public async Task<int> CreatePurchaseInvoiceDetailTax(PurchaseInvoiceDetailTaxModel purchaseInvoiceDetailTaxModel)
@@ -37,7 +58,7 @@ namespace ERP.Services.Accounts
             purchaseInvoiceDetailTax.TaxPercentageOrAmount = purchaseInvoiceDetailTaxModel.TaxPercentageOrAmount;
             purchaseInvoiceDetailTax.TaxPerOrAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;
 
-            if (purchaseInvoiceDetailTax.TaxPercentageOrAmount == "Percentage")
+            if (DiscountType.Percentage.ToString() == purchaseInvoiceDetailTax.TaxPercentageOrAmount )
             {
                 purchaseInvoiceDetailTaxModel.TaxAmountFc = (purchaseInvoiceDetailModel.GrossAmountFc * purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc) / 100;
             }
@@ -46,7 +67,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailTaxModel.TaxAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;
             }
 
-            if (purchaseInvoiceDetailTaxModel.TaxAddOrDeduct == "Deduct")
+            if (TaxAddOrDeduct.Deduct.ToString() == purchaseInvoiceDetailTaxModel.TaxAddOrDeduct)
             {
                 multiplier = -1;
             }
@@ -87,7 +108,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailTax.TaxPercentageOrAmount = purchaseInvoiceDetailTaxModel.TaxPercentageOrAmount;
                 purchaseInvoiceDetailTax.TaxPerOrAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;
 
-                if (purchaseInvoiceDetailTax.TaxPercentageOrAmount == "Percentage")
+                 if (DiscountType.Percentage.ToString() == purchaseInvoiceDetailTax.TaxPercentageOrAmount )
                 {
                     purchaseInvoiceDetailTaxModel.TaxAmountFc = (purchaseInvoiceDetailTax.PurchaseInvoiceDet.GrossAmountFc * purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc) / 100;
                 }
@@ -96,7 +117,7 @@ namespace ERP.Services.Accounts
                     purchaseInvoiceDetailTaxModel.TaxAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;
                 }
 
-                if (purchaseInvoiceDetailTaxModel.TaxAddOrDeduct == "Deduct")
+                if (TaxAddOrDeduct.Deduct.ToString() == purchaseInvoiceDetailTaxModel.TaxAddOrDeduct)
                 {
                     multiplier = -1;
                 }
@@ -209,6 +230,7 @@ namespace ERP.Services.Accounts
 
             // get records by query.
             List<Purchaseinvoicedetailtax> purchaseInvoiceDetailTaxList = await query.ToListAsync();
+
             if (null != purchaseInvoiceDetailTaxList && purchaseInvoiceDetailTaxList.Count > 0)
             {
                 purchaseInvoiceDetailTaxModelList = new List<PurchaseInvoiceDetailTaxModel>();

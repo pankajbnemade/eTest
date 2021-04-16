@@ -1,9 +1,11 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +14,30 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceTaxService : Repository<Purchaseinvoicetax>, IPurchaseInvoiceTax
     {
-        IPurchaseInvoice purchaseInvoice;
+        private readonly IPurchaseInvoice purchaseInvoice;
 
         public PurchaseInvoiceTaxService(ErpDbContext dbContext, IPurchaseInvoice _purchaseInvoice) : base(dbContext)
         {
             purchaseInvoice = _purchaseInvoice;
+        }
+
+        /// <summary>
+        /// generate sr no based on purchaseInvoiceId
+        /// </summary>
+        /// <param name="purchaseInvoiceId"></param>
+        /// <returns>
+        /// return sr no.
+        /// </returns>
+        public async Task<int> GenerateSrNo(int purchaseInvoiceId)
+        {
+            int srNo = 0;
+
+            if (await Any(w => w.PurchaseInvoiceTaxId != 0 && w.PurchaseInvoiceId == purchaseInvoiceId))
+            {
+                srNo = await GetQueryByCondition(w => w.PurchaseInvoiceTaxId != 0 && w.PurchaseInvoiceId == purchaseInvoiceId).MaxAsync(m => Convert.ToInt32(m.SrNo));
+            }
+
+            return (srNo + 1);
         }
 
         public async Task<int> CreatePurchaseInvoiceTax(PurchaseInvoiceTaxModel purchaseInvoiceTaxModel)
@@ -30,14 +51,13 @@ namespace ERP.Services.Accounts
             purchaseInvoiceModel = await purchaseInvoice.GetPurchaseInvoiceById((int)purchaseInvoiceTaxModel.PurchaseInvoiceId);
 
             Purchaseinvoicetax purchaseInvoiceTax = new Purchaseinvoicetax();
-
             purchaseInvoiceTax.PurchaseInvoiceId = purchaseInvoiceTaxModel.PurchaseInvoiceId;
             purchaseInvoiceTax.SrNo = purchaseInvoiceTaxModel.SrNo;
             purchaseInvoiceTax.TaxLedgerId = purchaseInvoiceTaxModel.TaxLedgerId;
             purchaseInvoiceTax.TaxPercentageOrAmount = purchaseInvoiceTaxModel.TaxPercentageOrAmount;
             purchaseInvoiceTax.TaxPerOrAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
 
-            if (purchaseInvoiceTax.TaxPercentageOrAmount == "Percentage")
+            if (DiscountType.Percentage.ToString() == purchaseInvoiceTax.TaxPercentageOrAmount)
             {
                 purchaseInvoiceTaxModel.TaxAmountFc = (purchaseInvoiceModel.GrossAmountFc * purchaseInvoiceTaxModel.TaxPerOrAmountFc) / 100;
             }
@@ -46,7 +66,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceTaxModel.TaxAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
             }
 
-            if (purchaseInvoiceTaxModel.TaxAddOrDeduct == "Deduct")
+            if (TaxAddOrDeduct.Deduct.ToString() == purchaseInvoiceTaxModel.TaxAddOrDeduct)
             {
                 multiplier = -1;
             }
@@ -84,7 +104,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceTax.TaxPercentageOrAmount = purchaseInvoiceTaxModel.TaxPercentageOrAmount;
                 purchaseInvoiceTax.TaxPerOrAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
 
-                if (purchaseInvoiceTax.TaxPercentageOrAmount == "Percentage")
+                if (DiscountType.Percentage.ToString() == purchaseInvoiceTax.TaxPercentageOrAmount)
                 {
                     purchaseInvoiceTaxModel.TaxAmountFc = (purchaseInvoiceTax.PurchaseInvoice.GrossAmountFc * purchaseInvoiceTaxModel.TaxPerOrAmountFc) / 100;
                 }
@@ -93,7 +113,7 @@ namespace ERP.Services.Accounts
                     purchaseInvoiceTaxModel.TaxAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc;
                 }
 
-                if (purchaseInvoiceTaxModel.TaxAddOrDeduct == "Deduct")
+                if (TaxAddOrDeduct.Deduct.ToString() == purchaseInvoiceTaxModel.TaxAddOrDeduct)
                 {
                     multiplier = -1;
                 }
@@ -160,6 +180,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = purchaseInvoiceTaxModelList;
                 resultModel.TotalResultCount = purchaseInvoiceTaxModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<PurchaseInvoiceTaxModel>();
+                resultModel.ResultList = new List<PurchaseInvoiceTaxModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }
@@ -185,7 +211,7 @@ namespace ERP.Services.Accounts
             IList<PurchaseInvoiceTaxModel> purchaseInvoiceTaxModelList = null;
 
             // create query.
-            IQueryable<Purchaseinvoicetax> query = GetQueryByCondition(w => w.PurchaseInvoiceTaxId != 0);
+            IQueryable<Purchaseinvoicetax> query = GetQueryByCondition(w => w.PurchaseInvoiceTaxId != 0).Include(t => t.TaxLedger);
 
             // apply filters.
             if (0 != purchaseInvoiceTaxId)
@@ -215,7 +241,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 PurchaseInvoiceTaxModel purchaseInvoiceTaxModel = new PurchaseInvoiceTaxModel();
-
                 purchaseInvoiceTaxModel.PurchaseInvoiceTaxId = purchaseInvoiceTax.PurchaseInvoiceTaxId;
                 purchaseInvoiceTaxModel.PurchaseInvoiceId = purchaseInvoiceTax.PurchaseInvoiceId;
                 purchaseInvoiceTaxModel.SrNo = purchaseInvoiceTax.SrNo;
@@ -227,7 +252,10 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceTaxModel.TaxAmount = purchaseInvoiceTax.TaxAmount;
                 purchaseInvoiceTaxModel.Remark = purchaseInvoiceTax.Remark;
 
-                purchaseInvoiceTaxModel.TaxLedgerName = purchaseInvoiceTax.TaxLedger.LedgerName;
+                if (null != purchaseInvoiceTax.TaxLedger)
+                {
+                    purchaseInvoiceTaxModel.TaxLedgerName = purchaseInvoiceTax.TaxLedger.LedgerName;
+                }
 
                 return purchaseInvoiceTaxModel;
             });

@@ -1,11 +1,13 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,16 +21,24 @@ namespace ERP.Services.Accounts
         {
             common = _common;
         }
-        
-        public async Task<GenerateNoModel> GenerateInvoiceNo(int? companyId, int? financialYearId)
+
+        /// <summary>
+        /// generate invoice no.
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="financialYearId"></param>
+        /// <returns>
+        /// return invoice no.
+        /// </returns>
+        public async Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId)
         {
-            IList<PurchaseInvoiceModel> purchaseInvoiceModelList = await GetPurchaseInvoiceList(0);
+            int voucherSetupId = 2;
+            // get maxno.
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
 
-            int voucherSetupId = 3;
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
 
-            int? maxNo = purchaseInvoiceModelList.Where(w => (w.CompanyId == companyId && w.FinancialYearId == financialYearId)).Max(w => w.MaxNo);
-
-            return await common.GenerateVoucherNo((int)maxNo, voucherSetupId, (int)companyId, (int)financialYearId);
+            return generateNoModel; // returns.
         }
 
         /// <summary>
@@ -44,15 +54,13 @@ namespace ERP.Services.Accounts
 
             GenerateNoModel generateNoModel = await GenerateInvoiceNo(purchaseInvoiceModel.CompanyId, purchaseInvoiceModel.FinancialYearId);
 
-            purchaseInvoiceModel.InvoiceNo = generateNoModel.VoucherNo;
-            purchaseInvoiceModel.MaxNo = generateNoModel.MaxNo;
-            purchaseInvoiceModel.VoucherStyleId = generateNoModel.VoucherStyleId;
-
             // assign values.
             Purchaseinvoice purchaseInvoice = new Purchaseinvoice();
 
-            purchaseInvoice.PurchaseInvoiceId = purchaseInvoiceModel.PurchaseInvoiceId;
-            purchaseInvoice.InvoiceNo = purchaseInvoiceModel.InvoiceNo;
+            purchaseInvoice.InvoiceNo = generateNoModel.VoucherNo;
+            purchaseInvoice.MaxNo = generateNoModel.MaxNo;
+            purchaseInvoice.VoucherStyleId = generateNoModel.VoucherStyleId;
+
             purchaseInvoice.InvoiceDate = purchaseInvoiceModel.InvoiceDate;
             purchaseInvoice.SupplierLedgerId = purchaseInvoiceModel.SupplierLedgerId;
             purchaseInvoice.BillToAddressId = purchaseInvoiceModel.BillToAddressId;
@@ -84,13 +92,6 @@ namespace ERP.Services.Accounts
             purchaseInvoice.StatusId = 1;//purchaseInvoiceModel.StatusId;
             purchaseInvoice.CompanyId = purchaseInvoiceModel.CompanyId;
             purchaseInvoice.FinancialYearId = purchaseInvoiceModel.FinancialYearId;
-            purchaseInvoice.MaxNo = purchaseInvoiceModel.MaxNo;
-            purchaseInvoice.VoucherStyleId = purchaseInvoiceModel.VoucherStyleId;
-
-            //purchaseInvoice.PreparedByUserId = purchaseInvoiceModel.PreparedByUserId;
-            //purchaseInvoice.UpdatedByUserId = purchaseInvoiceModel.UpdatedByUserId;
-            //purchaseInvoice.PreparedDateTime = purchaseInvoiceModel.PreparedDateTime;
-            //purchaseInvoice.UpdatedDateTime = purchaseInvoiceModel.UpdatedDateTime;
 
             purchaseInvoiceId = await Create(purchaseInvoice);
 
@@ -115,16 +116,17 @@ namespace ERP.Services.Accounts
 
             // get record.
             Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceModel.PurchaseInvoiceId);
+
             if (null != purchaseInvoice)
             {
                 // assign values.
-                purchaseInvoice.PurchaseInvoiceId = purchaseInvoiceModel.PurchaseInvoiceId;
-                purchaseInvoice.InvoiceNo = purchaseInvoiceModel.InvoiceNo;
+                //purchaseInvoice.PurchaseInvoiceId = purchaseInvoiceModel.PurchaseInvoiceId;
+                //purchaseInvoice.InvoiceNo = purchaseInvoiceModel.InvoiceNo;
                 purchaseInvoice.InvoiceDate = purchaseInvoiceModel.InvoiceDate;
                 purchaseInvoice.SupplierLedgerId = purchaseInvoiceModel.SupplierLedgerId;
                 purchaseInvoice.BillToAddressId = purchaseInvoiceModel.BillToAddressId;
                 purchaseInvoice.AccountLedgerId = purchaseInvoiceModel.AccountLedgerId;
-                                purchaseInvoice.SupplierReferenceNo = purchaseInvoiceModel.SupplierReferenceNo;
+                purchaseInvoice.SupplierReferenceNo = purchaseInvoiceModel.SupplierReferenceNo;
                 purchaseInvoice.SupplierReferenceDate = purchaseInvoiceModel.SupplierReferenceDate;
                 purchaseInvoice.CreditLimitDays = purchaseInvoiceModel.CreditLimitDays;
                 purchaseInvoice.PaymentTerm = purchaseInvoiceModel.PaymentTerm;
@@ -149,12 +151,6 @@ namespace ERP.Services.Accounts
 
                 purchaseInvoice.DiscountAmountFc = 0;
                 purchaseInvoice.DiscountAmount = 0;
-
-                //purchaseInvoice.StatusId = purchaseInvoiceModel.StatusId;
-                //purchaseInvoice.CompanyId = purchaseInvoiceModel.CompanyId;
-
-                //purchaseInvoice.FinancialYearId = purchaseInvoiceModel.FinancialYearId;
-                //purchaseInvoice.MaxNo = purchaseInvoiceModel.MaxNo;
 
                 isUpdated = await Update(purchaseInvoice);
             }
@@ -200,7 +196,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.TotalLineItemAmountFc = purchaseInvoice.Purchaseinvoicedetails.Sum(w => w.GrossAmountFc);
                 purchaseInvoice.TotalLineItemAmount = purchaseInvoice.TotalLineItemAmountFc * purchaseInvoice.ExchangeRate;
 
-                if (purchaseInvoice.DiscountPercentageOrAmount == "Percentage")
+                if (DiscountType.Percentage.ToString() == purchaseInvoice.DiscountPercentageOrAmount)
                 {
                     purchaseInvoice.DiscountAmountFc = (purchaseInvoice.TotalLineItemAmountFc * purchaseInvoice.DiscountPerOrAmountFc) / 100;
                 }
@@ -214,7 +210,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.GrossAmountFc = purchaseInvoice.TotalLineItemAmountFc + purchaseInvoice.DiscountAmountFc;
                 purchaseInvoice.GrossAmount = purchaseInvoice.GrossAmountFc * purchaseInvoice.ExchangeRate;
 
-                if (purchaseInvoice.TaxModelType == "Line Wise")
+                if (TaxModelType.LineWise.ToString() == purchaseInvoice.TaxModelType)
                 {
                     purchaseInvoice.TaxAmountFc = purchaseInvoice.Purchaseinvoicedetails.Sum(w => w.TaxAmountFc);
                 }
@@ -236,7 +232,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-
         /// <summary>
         /// get purchase invoice based on invoiceId
         /// </summary>
@@ -256,21 +251,89 @@ namespace ERP.Services.Accounts
 
             return purchaseInvoiceModel; // returns.
         }
-
-        public async Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList()
+                
+        /// <summary>
+        /// get search purchase invoice result list.
+        /// </summary>
+        /// <param name="dataTableAjaxPostModel"></param>
+        /// <param name="searchFilterModel"></param>
+        /// <returns>
+        /// return list.
+        /// </returns>
+        public async Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterPurchaseInvoiceModel searchFilterModel)
         {
-            DataTableResultModel<PurchaseInvoiceModel> purchaseInvoiceModel = new DataTableResultModel<PurchaseInvoiceModel>();
+            string searchBy = dataTableAjaxPostModel.search?.value;
+            int take = dataTableAjaxPostModel.length;
+            int skip = dataTableAjaxPostModel.start;
 
-            IList<PurchaseInvoiceModel> purchaseInvoiceModelList = await GetPurchaseInvoiceList(0);
+            string sortBy = string.Empty;
+            string sortDir = string.Empty;
 
-            if (null != purchaseInvoiceModelList && purchaseInvoiceModelList.Any())
+            if (dataTableAjaxPostModel.order != null)
             {
-                purchaseInvoiceModel = new DataTableResultModel<PurchaseInvoiceModel>();
-                purchaseInvoiceModel.ResultList = purchaseInvoiceModelList;
-                purchaseInvoiceModel.TotalResultCount = purchaseInvoiceModelList.Count();
+                sortBy = dataTableAjaxPostModel.columns[dataTableAjaxPostModel.order[0].column].data;
+                sortDir = dataTableAjaxPostModel.order[0].dir.ToLower();
             }
 
-            return purchaseInvoiceModel; // returns.
+            // search the dbase taking into consideration table sorting and paging
+            DataTableResultModel<PurchaseInvoiceModel> resultModel = await GetDataFromDbase(searchFilterModel, searchBy, take, skip, sortBy, sortDir);
+
+            return resultModel; // returns.
+        }
+
+        #region Private Methods
+        
+        /// <summary>
+        /// get records from database.
+        /// </summary>
+        /// <param name="searchBy"></param>
+        /// <param name="take"></param>
+        /// <param name="skip"></param>
+        /// <param name="sortBy"></param>
+        /// <param name="sortDir"></param>
+        /// <returns></returns>
+        private async Task<DataTableResultModel<PurchaseInvoiceModel>> GetDataFromDbase(SearchFilterPurchaseInvoiceModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
+        {
+            DataTableResultModel<PurchaseInvoiceModel> resultModel = new DataTableResultModel<PurchaseInvoiceModel>();
+
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0);
+
+            if (!string.IsNullOrEmpty(searchFilterModel.InvoiceNo))
+            {
+                query = query.Where(w => w.InvoiceNo.Contains(searchFilterModel.InvoiceNo));
+            }
+
+            if (null != searchFilterModel.SupplierLedgerId)
+            {
+                query = query.Where(w => w.SupplierLedgerId == searchFilterModel.SupplierLedgerId);
+            }
+
+            if (null != searchFilterModel.FromDate)
+            {
+                query = query.Where(w => w.InvoiceDate >= searchFilterModel.FromDate);
+            }
+
+            if (null != searchFilterModel.ToDate)
+            {
+                query = query.Where(w => w.InvoiceDate <= searchFilterModel.ToDate);
+            }
+
+            // get total count.
+            resultModel.TotalResultCount = await query.CountAsync();
+
+            // get records based on pagesize.
+            query = query.Skip(skip).Take(take);
+            resultModel.ResultList = await query.Select(s => new PurchaseInvoiceModel
+            {
+                PurchaseInvoiceId = s.PurchaseInvoiceId,
+                InvoiceNo = s.InvoiceNo,
+                InvoiceDate = s.InvoiceDate,
+                NetAmount = s.NetAmount,
+            }).ToListAsync();
+            // get filter record count.
+            resultModel.FilterResultCount = await query.CountAsync();
+
+            return resultModel; // returns.
         }
 
         private async Task<IList<PurchaseInvoiceModel>> GetPurchaseInvoiceList(int purchaseInvoiceId)
@@ -338,8 +401,8 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceModel.DiscountAmountFc = purchaseInvoice.DiscountAmountFc;
                 purchaseInvoiceModel.DiscountAmount = purchaseInvoice.DiscountAmount;
                 purchaseInvoiceModel.StatusId = purchaseInvoice.StatusId;
-                purchaseInvoiceModel.CompanyId = purchaseInvoice.CompanyId;
-                purchaseInvoiceModel.FinancialYearId = purchaseInvoice.FinancialYearId;
+                purchaseInvoiceModel.CompanyId = Convert.ToInt32(purchaseInvoice.CompanyId);
+                purchaseInvoiceModel.FinancialYearId = Convert.ToInt32(purchaseInvoice.FinancialYearId);
                 purchaseInvoiceModel.MaxNo = purchaseInvoice.MaxNo;
                 purchaseInvoiceModel.VoucherStyleId = purchaseInvoice.VoucherStyleId;
                 purchaseInvoiceModel.PreparedByUserId = purchaseInvoice.PreparedByUserId;
@@ -360,5 +423,6 @@ namespace ERP.Services.Accounts
 
         }
 
+        #endregion Private Methods
     }
 }

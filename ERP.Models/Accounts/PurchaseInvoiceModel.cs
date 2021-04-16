@@ -34,8 +34,8 @@ namespace ERP.Models.Accounts
         public decimal? NetAmount { get; set; }
         public string NetAmountFcinWord { get; set; }
         public int? StatusId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
         public int? MaxNo { get; set; }
         public int? VoucherStyleId { get; set; }
 

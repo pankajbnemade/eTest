@@ -161,6 +161,7 @@ namespace ERP.Services.Accounts
             SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = null;
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(salesInvoiceDetailTaxId, 0, 0);
+
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 salesInvoiceDetailTaxModel = salesInvoiceDetailTaxModelList.FirstOrDefault();
@@ -174,6 +175,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(0, salesInvoiceDetailId, 0);
+
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
@@ -195,6 +197,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(0, 0, 0);
+
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();

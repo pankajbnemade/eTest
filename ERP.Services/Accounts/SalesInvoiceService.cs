@@ -115,7 +115,7 @@ namespace ERP.Services.Accounts
             if (null != salesInvoice)
             {
                 // assign values.
-                salesInvoice.InvoiceId = salesInvoiceModel.InvoiceId;
+                //salesInvoice.InvoiceId = salesInvoiceModel.InvoiceId;
                 //salesInvoice.InvoiceNo = salesInvoiceModel.InvoiceNo;
                 salesInvoice.InvoiceDate = salesInvoiceModel.InvoiceDate;
                 salesInvoice.CustomerLedgerId = salesInvoiceModel.CustomerLedgerId;
@@ -248,6 +248,7 @@ namespace ERP.Services.Accounts
             SalesInvoiceModel salesInvoiceModel = null;
 
             IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(invoiceId);
+
             if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
             {
                 salesInvoiceModel = salesInvoiceModelList.FirstOrDefault();
