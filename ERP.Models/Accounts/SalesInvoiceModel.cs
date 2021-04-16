@@ -69,6 +69,7 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Currency is required.")]
         public int? CurrencyId { get; set; }
 
+        [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
         public decimal? ExchangeRate { get; set; }

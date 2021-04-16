@@ -96,12 +96,6 @@ namespace ERP.Services.Accounts
         }
 
 
-        public async Task<IList<LedgerAddressModel>> GetLedgerAddressByStateId(int stateId)
-        {
-            return await GetLedgerAddressList(0);
-        }
-
-
         public async Task<DataTableResultModel<LedgerAddressModel>> GetLedgerAddressList()
         {
             DataTableResultModel<LedgerAddressModel> resultModel = new DataTableResultModel<LedgerAddressModel>();
@@ -182,6 +176,10 @@ namespace ERP.Services.Accounts
             if (await Any(w => w.AddressId != 0))
             {
                 IQueryable<Ledgeraddress> query = GetQueryByCondition(w => w.AddressId != 0);
+
+                // apply filters.
+                if (0 != ledgerId)
+                    query = query.Where(w => w.LedgerId == ledgerId);
 
                 resultModel = await query
                                     .Select(s => new SelectListModel

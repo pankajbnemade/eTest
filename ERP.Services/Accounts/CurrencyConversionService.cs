@@ -86,6 +86,24 @@ namespace ERP.Services.Accounts
         }
 
 
+        public async Task<CurrencyConversionModel> GetExchangeRateByCurrencyId(int currencyId, DateTime invoiceDate)
+        {
+            CurrencyConversionModel currencyConversionModel = null;
+
+            // create query.
+            if (await Any(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate))
+            {
+
+                Currencyconversion currencyConversion = await GetQueryByCondition(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate)
+                                                            .OrderByDescending(w => w.EffectiveDateTime).FirstOrDefaultAsync();
+
+                currencyConversionModel = await AssignValueToModel(currencyConversion);
+            }
+
+            return currencyConversionModel; // returns.
+        }
+
+
         public async Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionByCurrencyId(int currencyId)
         {
             DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();

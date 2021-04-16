@@ -35,6 +35,7 @@ namespace ERP.Services.Accounts
             int voucherSetupId = 2;
             // get maxno.
             int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+
             GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
@@ -190,8 +191,10 @@ namespace ERP.Services.Accounts
 
             // get record.
             Salesinvoice salesInvoice = await GetByIdAsync(w => w.InvoiceId == salesInvoiceId);
+
             if (null != salesInvoice)
             {
+
                 salesInvoice.TotalLineItemAmountFc = salesInvoice.Salesinvoicedetails.Sum(w => w.GrossAmountFc);
                 salesInvoice.TotalLineItemAmount = salesInvoice.TotalLineItemAmountFc * salesInvoice.ExchangeRate;
 

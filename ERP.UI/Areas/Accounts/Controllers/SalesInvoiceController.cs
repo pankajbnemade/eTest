@@ -22,6 +22,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         private readonly ILedgerAddress _ledgerAddress;
         private readonly ITaxRegister _taxRegister;
         private readonly ICurrency _currency;
+        private readonly ICurrencyConversion _currencyConversion;
 
         /// <summary>
         /// constractor.
@@ -31,18 +32,20 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ILedger ledger,
             ILedgerAddress ledgerAddress,
             ITaxRegister taxRegister,
-            ICurrency currency)
+            ICurrency currency,
+            ICurrencyConversion currencyConversion)
         {
             this._salesInvoice = salesInvoice;
             this._ledger = ledger;
             this._ledgerAddress = ledgerAddress;
             this._taxRegister = taxRegister;
             this._currency = currency;
+            this._currencyConversion = currencyConversion;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.CustomerList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
 
             return await Task.Run(() =>
             {
@@ -92,6 +95,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
             SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
+
             salesInvoiceModel.CompanyId = userSession.CompanyId;
             salesInvoiceModel.FinancialYearId = userSession.FinancialYearId;
             // generate no.
@@ -148,6 +152,27 @@ namespace ERP.UI.Areas.Accounts.Controllers
             else
             {
                 data.Result.Message = "NoItems";
+            }
+
+            return Json(data); // returns.
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetExchangeRateByCurrencyId(int currencyId, DateTime invoiceDate)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            CurrencyConversionModel currencyConversionModel = await
+                _currencyConversion.GetExchangeRateByCurrencyId(currencyId, invoiceDate);
+
+            if (null != currencyConversionModel)
+            {
+                data.Result.Status = true;
+                data.Result.Data = currencyConversionModel.ExchangeRate;
+            }
+            else
+            {
+                data.Result.Data = "0";
             }
 
             return Json(data); // returns.

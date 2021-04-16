@@ -142,6 +142,8 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditInvoiceMaster('@Model.InvoiceId');">Edit</button>
+               
+                    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">Back</button>
                 </div>
             </div>
         </div>
@@ -162,5 +164,10 @@
             $('#modal-invoice').html(data).modal('show');
             return false;
         }, null, true, null, false);
+    }
+
+    // edit invoice.
+    function fnBackToIndex() {
+        window.location.href = '@Url.Action("Index", "SalesInvoice")';
     }
 </script>

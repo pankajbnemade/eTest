@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP.DataAccess.EntityModels
 {
-    [Table("aspnetuserrole")]
+    [Table("aspnetuserroles")]
     public partial class Aspnetuserrole
     {
         [Key]

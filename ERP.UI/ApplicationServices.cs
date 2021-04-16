@@ -49,6 +49,7 @@ namespace ERP.UI
             services.AddTransient<ILedgerAddress, LedgerAddressService>();
             services.AddTransient<ITaxRegister, TaxRegisterService>();
             services.AddTransient<ICurrency, CurrencyService>();
+            services.AddTransient<ICurrencyConversion, CurrencyConversionService>();
             services.AddTransient<IFinancialYear, FinancialYearService>();
 
             services.AddTransient<ISalesInvoice, SalesInvoiceService>();

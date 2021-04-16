@@ -111,8 +111,11 @@ namespace ERP.Services.Accounts
         {
             bool isUpdated = false;
 
-            // get record.
-            Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.InvoiceDetId == salesInvoiceDetailId);
+           
+     // get record.
+            Salesinvoicedetail salesInvoiceDetail = await GetQueryByCondition(w => w.InvoiceDetId == salesInvoiceDetailId)
+                        .Include(w => w.Invoice).FirstOrDefaultAsync();
+
 
             if (null != salesInvoiceDetail)
             {

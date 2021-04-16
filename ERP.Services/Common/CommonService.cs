@@ -81,7 +81,8 @@ namespace ERP.Services.Common
                 string voucherNo = string.Empty;
                 int voucherStyleId = (int)voucherSetupDetailModel.VoucherStyleId;
                 maxNo = maxNo + 1;
-                voucherNo = $"{voucherSetupDetailModel.NoPreString}{voucherSetupDetailModel.NoSeparator}{Convert.ToString(maxNo).PadLeft(5, char.Parse(voucherSetupDetailModel.NoPad))}{voucherSetupDetailModel.NoSeparator}{voucherSetupDetailModel.NoPostString}";
+
+                voucherNo = $"{voucherSetupDetailModel.NoPreString}{voucherSetupDetailModel.NoSeparator}{Convert.ToString(maxNo).PadLeft(5, char.Parse(voucherSetupDetailModel.NoPad))}{voucherSetupDetailModel.NoPostString}";
 
                 return new GenerateNoModel { MaxNo = maxNo, VoucherStyleId = voucherStyleId, VoucherNo = voucherNo };
             });

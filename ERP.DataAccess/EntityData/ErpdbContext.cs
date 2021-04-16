@@ -62,7 +62,7 @@ namespace ERP.DataAccess.EntityData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Aspnetrole>(entity =>
             {

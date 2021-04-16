@@ -2,6 +2,7 @@
 using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Models.Master;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,5 +21,7 @@ namespace ERP.Services.Accounts.Interface
         Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionByCurrencyId(int currencyId);
 
         Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionList();
+
+        Task<CurrencyConversionModel> GetExchangeRateByCurrencyId(int currencyId, DateTime invoiceDate);
     }
 }

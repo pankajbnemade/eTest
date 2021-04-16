@@ -15,31 +15,31 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "aspnetrole",
+         "Name": "aspnetroleclaims",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetroleclaim",
+         "Name": "aspnetroles",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuser",
+         "Name": "aspnetuserclaims",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuserclaim",
+         "Name": "aspnetuserlogins",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuserlogin",
+         "Name": "aspnetuserroles",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetuserrole",
+         "Name": "aspnetusers",
          "ObjectType": 0
       },
       {
-         "Name": "aspnetusertoken",
+         "Name": "aspnetusertokens",
          "ObjectType": 0
       },
       {
