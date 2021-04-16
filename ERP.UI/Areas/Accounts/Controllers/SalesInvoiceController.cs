@@ -1,8 +1,11 @@
 ﻿using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
+using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -79,14 +82,22 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddInvoiceMaster()
         {
-            ViewBag.CustomerList = await _ledger.GetLedgerSelectList(0);
-            ViewBag.BillToAddressList = await _ledgerAddress.GetLedgerAddressSelectList(0);
+            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
 
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
             SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
+            salesInvoiceModel.CompanyId = userSession.CompanyId;
+            salesInvoiceModel.FinancialYearId = userSession.FinancialYearId;
+            // generate no.
+            GenerateNoModel generateNoModel = await _salesInvoice.GenerateInvoiceNo(userSession.CompanyId, userSession.FinancialYearId);
+            salesInvoiceModel.InvoiceNo = generateNoModel.VoucherNo;
+            salesInvoiceModel.InvoiceDate = DateTime.Now;
 
             return await Task.Run(() =>
             {
@@ -100,8 +111,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditInvoiceMaster(int invoiceId)
         {
-            ViewBag.CustomerList = await _ledger.GetLedgerSelectList(0);
-            ViewBag.BillToAddressList = await _ledgerAddress.GetLedgerAddressSelectList(0);
+            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -113,6 +125,32 @@ namespace ERP.UI.Areas.Accounts.Controllers
             {
                 return PartialView("_AddInvoiceMaster", salesInvoiceModel);
             });
+        }
+
+        /// <summary>
+        /// get bill to address based on ledgerId
+        /// </summary>
+        /// <param name="ledgerId"></param>
+        /// <returns>
+        /// return json.
+        /// </returns>
+        [HttpPost]
+        public async Task<JsonResult> GetBillToAddressByLedgerId(int ledgerId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            IList<SelectListModel> selectList = await _ledgerAddress.GetLedgerAddressSelectList(ledgerId);
+            if (null != selectList && selectList.Any())
+            {
+                data.Result.Status = true;
+                data.Result.Data = selectList;
+            }
+            else
+            {
+                data.Result.Message = "NoItems";
+            }
+
+            return Json(data); // returns.
         }
 
         /// <summary>

@@ -7,6 +7,15 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ISalesInvoiceDetailTax : IRepository<Salesinvoicedetailtax>
     {
+        /// <summary>
+        /// generate sr no based on salesInvoiceDetId
+        /// </summary>
+        /// <param name="salesInvoiceDetId"></param>
+        /// <returns>
+        /// return sr no.
+        /// </returns>
+        Task<int> GenerateSrNo(int salesInvoiceDetId);
+
         Task<int> CreateSalesInvoiceDetailTax(SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel);
        
         Task<bool> UpdateSalesInvoiceDetailTax(SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel);

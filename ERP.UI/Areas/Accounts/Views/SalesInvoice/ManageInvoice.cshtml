@@ -1,5 +1,4 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Manage Invoice";
 }
 
@@ -29,6 +28,8 @@
     </div>
 </div>
 <div id="modal-invoice" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+<div id="modal-invoice-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+@{ await Html.RenderPartialAsync("~/Areas/Accounts/Views/SalesInvoiceTaxDetail/_ConfirmDeleteInvoiceTaxDetail.cshtml"); }
 
 <script type="text/javascript">
     $(document).ready(function () {

@@ -32,9 +32,24 @@ namespace ERP.Models.Accounts.Enums
     public enum TaxAddOrDeduct
     {
         [Description("Add")]
-        Percentage = 1,
+        Add = 1,
 
         [Description("Deduct")]
-        Amount = 2,
+        Deduct = 2,
+    }
+
+    /// <summary>
+    /// tax add or deduct
+    /// </summary>
+    public enum LedgerName
+    {
+        [Description("Duties and Taxes")]
+        DutiesAndTaxes = 17,
+
+        [Description("Sundry Debtor")]
+        SundryDebtor = 26,
+
+        [Description("Bank A/C")]
+        BankAccount = 27,
     }
 }

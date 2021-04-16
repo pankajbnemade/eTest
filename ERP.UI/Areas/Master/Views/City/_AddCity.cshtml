@@ -1,6 +1,4 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using ERP.Models.Master;
-@model CityModel
+﻿@model CityModel
 
 <div class="modal-dialog">
     <div class="modal-content">
@@ -36,6 +34,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.StateId, new { @class = "required" })
                     <select class="form-control" asp-for="StateId">
+                        <option value="">Select</option>
                     </select>
                     @Html.ValidationMessageFor(model => model.StateId)
                 </div>
@@ -50,11 +49,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        if (0 == '@Model.CityId') {
-            $('#StateId').empty();
-            $('#StateId').append("<option value=''>Select</option>");
-        }
-
         if ('@Model.CityId' > 0 && '@Model.CountryId' > 0) {
             fnGetStateByCountryId('@Model.CountryId');
         }

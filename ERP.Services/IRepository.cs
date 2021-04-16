@@ -78,5 +78,15 @@ namespace ERP.Services
         /// return true if record exists.
         /// </returns>
         Task<bool> Any(Expression<Func<T, bool>> expression);
+
+        /// <summary>
+        /// get max number based on condition
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="columnSelector"></param>
+        /// <returns>
+        /// return max number from entity.
+        /// </returns>
+        Task<int> Max(Expression<Func<T, bool>> expression, Expression<Func<T, int>> columnSelector);
     }
 }

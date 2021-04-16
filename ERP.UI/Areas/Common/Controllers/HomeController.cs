@@ -1,11 +1,11 @@
 ﻿using ERP.Models.Accounts;
 using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
-using ERP.UI.Extension;
 using ERP.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

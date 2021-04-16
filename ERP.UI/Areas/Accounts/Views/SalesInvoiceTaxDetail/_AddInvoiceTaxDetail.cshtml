@@ -1,94 +1,102 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using ERP.Models.Accounts;
-@model SalesInvoiceDetailTaxModel
+﻿@model SalesInvoiceDetailTaxModel
 
-<style>
-    .field-validation-error {
-        color: #dc3545 !important;
-    }
-</style>
-<div class="row py-md-4">
-    <div class="col-sm-12">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.InvoiceDetTaxId > 0)
+            {
+                <div class="modal-title">Edit Invoice Tax Detail</div>
+            }
+            else
+            {
+                <div class="modal-title">Add Invoice Tax Detail</div>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <form id="frmInvoiceTaxDetail" class="width100" method="post"
               asp-action="SaveInvoiceTaxDetail" asp-controller="SalesInvoiceTaxDetail" asp-area="Accounts"
               data-ajax-begin="return BeginInvoiceTaxDetail();" data-ajax-success="SuccessInvoiceTaxDetail"
               data-ajax="true" data-ajax-method="post">
-            @Html.HiddenFor(model => model.InvoiceDetTaxId)
-            @Html.HiddenFor(model => model.InvoiceDetId)
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SrNo, new { @class = "required" })
-                            @Html.TextBoxFor(model => model.SrNo, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.SrNo)
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.InvoiceDetTaxId)
+                @Html.HiddenFor(model => model.InvoiceDetId)
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SrNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.SrNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SrNo)
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TaxLedgerId, new { @class = "required" })
-                            @Html.DropDownListFor(model => model.TaxLedgerId, new SelectList(ViewBag.TaxLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TaxLedgerId)
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TaxPercentageOrAmount, new { @class = "required" })
-                            @Html.DropDownListFor(model => model.TaxPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Value", "Description"), "Select", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TaxPercentageOrAmount)
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TaxPerOrAmountFc)
-                            @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TaxPerOrAmountFc)
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxLedgerId, new SelectList(ViewBag.TaxLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxLedgerId)
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TaxAddOrDeduct, new { @class = "required" })
-                            @Html.DropDownListFor(model => model.TaxAddOrDeduct, new SelectList(ViewBag.TaxAddOrDeductList, "Value", "Description"), "Select", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TaxAddOrDeduct)
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxPercentageOrAmount, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Name", "Description"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxPercentageOrAmount)
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TaxAmountFc)
-                            @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TaxAmountFc)
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxPerOrAmountFc, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxPerOrAmountFc)
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxAddOrDeduct, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxAddOrDeduct, new SelectList(ViewBag.TaxAddOrDeductList, "Name", "Description"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxAddOrDeduct)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxAmountFc)
+                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxAmountFc)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
 
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TaxAmount)
-                            @Html.TextBoxFor(model => model.TaxAmount, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TaxAmount)
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxAmount)
+                                @Html.TextBoxFor(model => model.TaxAmount, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TaxAmount)
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Remark)
-                            @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.Remark)
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Remark)
+                                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Remark)
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 py-md-4">
+            <div class="modal-footer">
                 <div class="text-right">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
                     <button type="submit" class="btn btn-primary" title="Submit">Save</button>
@@ -118,7 +126,9 @@
     // success form
     function SuccessInvoiceTaxDetail(data) {
         if (data.Result.Status) {
+            $('#modal-invoice-detail').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
+            $("#salesInvoiceTaxDetailGrid").DataTable().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

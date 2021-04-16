@@ -4,6 +4,7 @@ using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +13,30 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceDetailService : Repository<Salesinvoicedetail>, ISalesInvoiceDetail
     {
-        ISalesInvoice salesInvoice;
+        private readonly ISalesInvoice salesInvoice;
+
         public SalesInvoiceDetailService(ErpDbContext dbContext, ISalesInvoice _salesInvoice) : base(dbContext)
         {
             salesInvoice = _salesInvoice;
+        }
+
+        /// <summary>
+        /// generate sr no based on salesInvoiceId
+        /// </summary>
+        /// <param name="salesInvoiceId"></param>
+        /// <returns>
+        /// return sr no.
+        /// </returns>
+        public async Task<int> GenerateSrNo(int salesInvoiceId)
+        {
+            int srNo = 0;
+
+            if (await Any(w => w.InvoiceDetId != 0 && w.InvoiceId == salesInvoiceId))
+            {
+                srNo = await GetQueryByCondition(w => w.InvoiceDetId != 0 && w.InvoiceId == salesInvoiceId).MaxAsync(m => Convert.ToInt32(m.SrNo));
+            }
+
+            return (srNo + 1);
         }
 
         public async Task<int> CreateSalesInvoiceDetail(SalesInvoiceDetailModel salesInvoiceDetailModel)
@@ -24,7 +45,6 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Salesinvoicedetail salesInvoiceDetail = new Salesinvoicedetail();
-
             salesInvoiceDetail.InvoiceId = salesInvoiceDetailModel.InvoiceId;
             salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
             salesInvoiceDetail.Description = salesInvoiceDetailModel.Description;
@@ -87,7 +107,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-
         public async Task<bool> UpdateSalesInvoiceDetailAmount(int? salesInvoiceDetailId)
         {
             bool isUpdated = false;
@@ -115,7 +134,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-
         public async Task<bool> DeleteSalesInvoiceDetail(int salesInvoiceDetailId)
         {
             bool isDeleted = false;
@@ -141,7 +159,6 @@ namespace ERP.Services.Accounts
             SalesInvoiceDetailModel salesInvoiceDetailModel = null;
 
             IList<SalesInvoiceDetailModel> salesInvoiceModelDetailList = await GetSalesInvoiceDetailList(salesInvoiceDetailId, 0);
-
             if (null != salesInvoiceModelDetailList && salesInvoiceModelDetailList.Any())
             {
                 salesInvoiceDetailModel = salesInvoiceModelDetailList.FirstOrDefault();
@@ -193,7 +210,6 @@ namespace ERP.Services.Accounts
             // create query.
             IQueryable<Salesinvoicedetail> query = GetQueryByCondition(w => w.InvoiceDetId != 0)
                                                         .Include(w => w.UnitOfMeasurement);
-
             // apply filters.
             if (0 != salesInvoiceDetailId)
                 query = query.Where(w => w.InvoiceDetId == salesInvoiceDetailId);
@@ -222,7 +238,7 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 SalesInvoiceDetailModel salesInvoiceDetailModel = new SalesInvoiceDetailModel();
-
+                salesInvoiceDetailModel.InvoiceDetId = salesInvoiceDetail.InvoiceDetId;
                 salesInvoiceDetailModel.InvoiceId = salesInvoiceDetail.InvoiceId;
                 salesInvoiceDetailModel.SrNo = salesInvoiceDetail.SrNo;
                 salesInvoiceDetailModel.Description = salesInvoiceDetail.Description;
@@ -232,18 +248,19 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailModel.UnitPrice = salesInvoiceDetail.UnitPrice;
                 salesInvoiceDetailModel.GrossAmountFc = salesInvoiceDetail.GrossAmountFc;
                 salesInvoiceDetailModel.GrossAmount = salesInvoiceDetail.GrossAmount;
-                salesInvoiceDetailModel.UnitPrice = salesInvoiceDetail.UnitPrice;
                 salesInvoiceDetailModel.TaxAmountFc = salesInvoiceDetail.TaxAmountFc;
                 salesInvoiceDetailModel.TaxAmount = salesInvoiceDetail.TaxAmount;
                 salesInvoiceDetailModel.NetAmountFc = salesInvoiceDetail.NetAmountFc;
                 salesInvoiceDetailModel.NetAmount = salesInvoiceDetail.NetAmount;
 
                 //--####
-                salesInvoiceDetailModel.UnitOfMeasurementName = salesInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName;
+                if(null != salesInvoiceDetail.UnitOfMeasurement)
+                {
+                    salesInvoiceDetailModel.UnitOfMeasurementName = salesInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName;
+                }
 
                 return salesInvoiceDetailModel;
             });
         }
-
     }
 }

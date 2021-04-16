@@ -14,12 +14,12 @@
                     <th>Action</th>
                     <th>InvoiceTaxId</th>
                     <th>InvoiceId</th>
-                    <th>SrNo</th>
-                    <th>TaxLedgerName</th>
-                    <th>TaxPercentageOrAmount</th>
-                    <th>TaxPerOrAmountFc</th>
-                    <th>TaxAddOrDeduct</th>
-                    <th>TaxAmountFc</th>
+                    <th>Sr No</th>
+                    <th>Tax Ledger Name</th>
+                    <th>Tax Percentage or Amount</th>
+                    <th>Tax Per or AmountFc</th>
+                    <th>Tax Add or Deduct</th>
+                    <th>Tax AmountFc</th>
                     <th>Remark</th>
                 </tr>
             </thead>
@@ -45,8 +45,8 @@
                 {
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" onclick="javascript: fnEditInvoiceTaxMaster(' + full.InvoiceTaxId + ')">Edit</button>' +
-                            '<button type="button" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.InvoiceTaxId + ')">Delete</button>' +
+                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceTaxMaster(' + full.InvoiceTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.InvoiceTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },
@@ -63,7 +63,7 @@
         });
     });
 
-     // add new invoice detail.
+     // add new invoice tax master.
     $('#add-new-tax-master').click(function () {
         var model = { invoiceId: '@ViewBag.InvoiceId' };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceTaxMaster", "SalesInvoiceTaxMaster")', 'html', model,
@@ -74,13 +74,14 @@
         }, null, true, null, false);
     });
 
-    // edit invoice detail.
+    // edit invoice tax master.
     function fnEditInvoiceTaxMaster(invoiceTaxId) {
-
-    }
-
-    // delete invoice detail.
-    function fnDeleteInvoiceTaxMaster(invoiceTaxId) {
-
+        var model = { invoiceTaxId: invoiceTaxId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceTaxMaster", "SalesInvoiceTaxMaster")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
     }
 </script>

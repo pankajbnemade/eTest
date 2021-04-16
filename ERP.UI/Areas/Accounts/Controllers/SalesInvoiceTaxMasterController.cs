@@ -70,6 +70,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = new SalesInvoiceTaxModel();
             salesInvoiceTaxModel.InvoiceId = invoiceId;
+            salesInvoiceTaxModel.SrNo = await _salesInvoiceTax.GenerateSrNo(invoiceId);
+
+            return await Task.Run(() =>
+            {
+                return PartialView("_AddInvoiceTaxMaster", salesInvoiceTaxModel);
+            });
+        }
+
+        /// <summary>
+        /// edit invoice tax master.
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> EditInvoiceTaxMaster(int invoiceTaxId)
+        {
+            ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
+            ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+
+            SalesInvoiceTaxModel salesInvoiceTaxModel = await _salesInvoiceTax.GetSalesInvoiceTaxById(invoiceTaxId);
 
             return await Task.Run(() =>
             {
