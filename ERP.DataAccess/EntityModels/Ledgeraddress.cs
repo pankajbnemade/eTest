@@ -48,14 +48,14 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty("Ledgeraddresses")]
         public virtual Ledger Ledger { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.LedgeraddressPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.LedgeraddressPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(StateId))]
         [InverseProperty("Ledgeraddresses")]
         public virtual State State { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.LedgeraddressUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.LedgeraddressUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.BillToAddress))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
         [InverseProperty(nameof(Salesinvoice.BillToAddress))]

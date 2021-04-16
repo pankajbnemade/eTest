@@ -35,11 +35,11 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.CurrencyPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.CurrencyPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.CurrencyUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.CurrencyUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Company.Currency))]
         public virtual ICollection<Company> Companies { get; set; }
         [InverseProperty(nameof(Currencyconversion.Currency))]

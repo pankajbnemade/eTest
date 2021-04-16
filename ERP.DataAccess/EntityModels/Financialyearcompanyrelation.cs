@@ -27,10 +27,10 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Financialyear.Financialyearcompanyrelations))]
         public virtual Financialyear FinancialYear { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.FinancialyearcompanyrelationPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.FinancialyearcompanyrelationPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.FinancialyearcompanyrelationUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.FinancialyearcompanyrelationUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

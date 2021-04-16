@@ -26,10 +26,10 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty("Forms")]
         public virtual Module Module { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.FormPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.FormPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.FormUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.FormUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

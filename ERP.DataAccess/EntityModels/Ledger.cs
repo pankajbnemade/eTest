@@ -52,11 +52,11 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Ledger.InverseParentGroup))]
         public virtual Ledger ParentGroup { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.LedgerPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.LedgerPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.LedgerUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.LedgerUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Ledger.ParentGroup))]
         public virtual ICollection<Ledger> InverseParentGroup { get; set; }
         [InverseProperty(nameof(Ledgeraddress.Ledger))]

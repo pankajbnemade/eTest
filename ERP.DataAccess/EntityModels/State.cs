@@ -31,11 +31,11 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty("States")]
         public virtual Country Country { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.StatePreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.StatePreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.StateUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.StateUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(City.State))]
         public virtual ICollection<City> Cities { get; set; }
         [InverseProperty(nameof(Ledgeraddress.State))]

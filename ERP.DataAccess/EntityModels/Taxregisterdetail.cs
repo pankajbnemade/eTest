@@ -28,8 +28,8 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.TaxregisterdetailPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.TaxregisterdetailPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(TaxLedgerId))]
         [InverseProperty(nameof(Ledger.Taxregisterdetails))]
         public virtual Ledger TaxLedger { get; set; }
@@ -37,7 +37,7 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Taxregister.Taxregisterdetails))]
         public virtual Taxregister TaxRegister { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.TaxregisterdetailUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.TaxregisterdetailUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

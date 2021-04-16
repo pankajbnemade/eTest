@@ -52,11 +52,11 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty("Companies")]
         public virtual Currency Currency { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.CompanyPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.CompanyPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.CompanyUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.CompanyUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Currencyconversion.Company))]
         public virtual ICollection<Currencyconversion> Currencyconversions { get; set; }
         [InverseProperty(nameof(Financialyearcompanyrelation.Company))]

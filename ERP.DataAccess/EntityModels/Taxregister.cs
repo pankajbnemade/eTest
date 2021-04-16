@@ -28,11 +28,11 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.TaxregisterPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.TaxregisterPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.TaxregisterUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.TaxregisterUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.TaxRegister))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
         [InverseProperty(nameof(Salesinvoice.TaxRegister))]

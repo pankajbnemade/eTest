@@ -100,8 +100,8 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Financialyear.Salesinvoices))]
         public virtual Financialyear FinancialYear { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.SalesinvoicePreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.SalesinvoicePreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(StatusId))]
         [InverseProperty("Salesinvoices")]
         public virtual Status Status { get; set; }
@@ -109,8 +109,8 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Taxregister.Salesinvoices))]
         public virtual Taxregister TaxRegister { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.SalesinvoiceUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.SalesinvoiceUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Salesinvoices))]
         public virtual Voucherstyle VoucherStyle { get; set; }

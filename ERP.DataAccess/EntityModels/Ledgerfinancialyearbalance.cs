@@ -41,10 +41,10 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty("Ledgerfinancialyearbalances")]
         public virtual Ledger Ledger { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.LedgerfinancialyearbalancePreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.LedgerfinancialyearbalancePreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.LedgerfinancialyearbalanceUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.LedgerfinancialyearbalanceUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

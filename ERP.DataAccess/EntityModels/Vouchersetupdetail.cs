@@ -39,11 +39,11 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Financialyear.Vouchersetupdetails))]
         public virtual Financialyear FinancialYear { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.VouchersetupdetailPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.VouchersetupdetailPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.VouchersetupdetailUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.VouchersetupdetailUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [ForeignKey(nameof(VoucherSetupId))]
         [InverseProperty(nameof(Vouchersetup.Vouchersetupdetails))]
         public virtual Vouchersetup VoucherSetup { get; set; }

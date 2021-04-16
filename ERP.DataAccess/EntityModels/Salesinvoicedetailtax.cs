@@ -37,13 +37,13 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Salesinvoicedetail.Salesinvoicedetailtaxes))]
         public virtual Salesinvoicedetail InvoiceDet { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.SalesinvoicedetailtaxPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailtaxPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(TaxLedgerId))]
         [InverseProperty(nameof(Ledger.Salesinvoicedetailtaxes))]
         public virtual Ledger TaxLedger { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.SalesinvoicedetailtaxUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailtaxUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

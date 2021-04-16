@@ -49,14 +49,14 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Salesinvoice.Salesinvoicedetails))]
         public virtual Salesinvoice Invoice { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.SalesinvoicedetailPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UnitOfMeasurementId))]
         [InverseProperty(nameof(Unitofmeasurement.Salesinvoicedetails))]
         public virtual Unitofmeasurement UnitOfMeasurement { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.SalesinvoicedetailUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Salesinvoicedetailtax.InvoiceDet))]
         public virtual ICollection<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
     }

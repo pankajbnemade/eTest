@@ -32,11 +32,11 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty("Vouchersetups")]
         public virtual Module Module { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.VouchersetupPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.VouchersetupPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.VouchersetupUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.VouchersetupUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Vouchersetupdetail.VoucherSetup))]
         public virtual ICollection<Vouchersetupdetail> Vouchersetupdetails { get; set; }
     }

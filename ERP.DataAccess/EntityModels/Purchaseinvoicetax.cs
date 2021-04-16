@@ -34,8 +34,8 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.PurchaseinvoicetaxPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.PurchaseinvoicetaxPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(PurchaseInvoiceId))]
         [InverseProperty(nameof(Purchaseinvoice.Purchaseinvoicetaxes))]
         public virtual Purchaseinvoice PurchaseInvoice { get; set; }
@@ -43,7 +43,7 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Ledger.Purchaseinvoicetaxes))]
         public virtual Ledger TaxLedger { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.PurchaseinvoicetaxUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.PurchaseinvoicetaxUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

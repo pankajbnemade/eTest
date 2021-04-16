@@ -56,14 +56,13 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Taxregister> Taxregisters { get; set; }
         public virtual DbSet<Taxregisterdetail> Taxregisterdetails { get; set; }
         public virtual DbSet<Unitofmeasurement> Unitofmeasurements { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Vouchersetup> Vouchersetups { get; set; }
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Aspnetrole>(entity =>
             {
@@ -238,10 +237,10 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<Chargetype>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_ChargeType_User_PreparedByUserId");
+                    .HasName("FK_ChargeType_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_ChargeType_User_UpdatedByUserId");
+                    .HasName("FK_ChargeType_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.ChargeTypeName)
                     .HasCharSet("utf8mb4")
@@ -261,13 +260,13 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<City>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_City_User_PreparedByUserId");
+                    .HasName("FK_City_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.StateId)
                     .HasName("IX_City_StateId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_City_User_UpdatedByUserId");
+                    .HasName("FK_City_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.CityName)
                     .HasCharSet("utf8mb4")
@@ -295,10 +294,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_Company_CurrencyId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Company_User_PreparedByUserId");
+                    .HasName("FK_Company_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Company_User_UpdatedByUserId");
+                    .HasName("FK_Company_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Address)
                     .HasCharSet("utf8mb4")
@@ -355,10 +354,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Country_User_PreparedByUserId");
+                    .HasName("FK_Country_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Country_User_UpdatedByUserId");
+                    .HasName("FK_Country_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.CountryName)
                     .HasCharSet("utf8mb4")
@@ -382,10 +381,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Currency_User_PreparedByUserId");
+                    .HasName("FK_Currency_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Currency_User_UpdatedByUserId");
+                    .HasName("FK_Currency_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.CurrencyCode)
                     .HasCharSet("utf8mb4")
@@ -422,10 +421,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_CurrencyConversion_CurrencyId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_CurrencyConversion_User_PreparedByUserId");
+                    .HasName("FK_CurrencyConversion_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_CurrencyConversion_UpdatedByUserId");
+                    .HasName("FK_CurrencyConversion_User_UpdatedByUserId_idx");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Currencyconversions)
@@ -455,10 +454,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Department_User_PreparedByUserId");
+                    .HasName("FK_Department_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Department_User_UpdatedByUserId");
+                    .HasName("FK_Department_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.DepartmentName)
                     .HasCharSet("utf8mb4")
@@ -482,10 +481,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Designation_User_PreparedByUserId");
+                    .HasName("FK_Designation_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Designation_User_UpdatedByUserId");
+                    .HasName("FK_Designation_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.DesignationName)
                     .HasCharSet("utf8mb4")
@@ -515,10 +514,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Employee_User_PreparedByUserId");
+                    .HasName("FK_Employee_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Employee_User_UpdatedByUserId");
+                    .HasName("FK_Employee_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.EmailAddress)
                     .HasCharSet("utf8mb4")
@@ -564,10 +563,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_FinancialYear_User_PreparedByUserId");
+                    .HasName("FK_FinancialYear_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_FinancialYear_UpdatedByUserId");
+                    .HasName("FK_FinancialYear_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.FinancialYearName)
                     .HasCharSet("utf8mb4")
@@ -596,10 +595,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_FinancialYearCompanyRelation_FinancialYearId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_FinancialYearCompanyRelation_User_PreparedByUserId");
+                    .HasName("FK_FinancialYearCompanyRelation_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_FinancialYearCompanyRelation_UpdatedByUserId");
+                    .HasName("FK_FinancialYearCompanyRelation_User_UpdatedByUserId_idx");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Financialyearcompanyrelations)
@@ -632,10 +631,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_Form_Module_ModuleId_idx");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Form_User_PreparedByUserId");
+                    .HasName("FK_Form_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Form_User_UpdatedByUserId");
+                    .HasName("FK_Form_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.FormName)
                     .HasCharSet("utf8mb4")
@@ -667,10 +666,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_Ledger_ParentGroupId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Ledger_User_PreparedByUserId");
+                    .HasName("FK_Ledger_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Ledger_User_UpdatedByUserId");
+                    .HasName("FK_Ledger_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.LedgerCode)
                     .HasCharSet("utf8mb4")
@@ -715,13 +714,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_LedgerAddress_LedgerId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_LedgerAddress_User_PreparedByUserId");
+                    .HasName("FK_LedgerAddress_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.StateId)
                     .HasName("IX_LedgerAddress_StateId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_LedgerAddress_User_UpdatedByUserId");
+                    .HasName("FK_LedgerAddress_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.AddressDescription)
                     .HasCharSet("utf8mb4")
@@ -786,10 +785,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_LedgerCompanyRelation_LedgerId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_LedgerCompanyRelation_User_PreparedByUserId");
+                    .HasName("FK_LedgerCompanyRelation_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_LedgerCompanyRelation_UpdatedByUserId");
+                    .HasName("FK_LedgerCompanyRelation_User_UpdatedByUserId_idx");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Ledgercompanyrelations)
@@ -830,10 +829,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_LedgerFinancialYearBalance_LedgerId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_LedgerFinancialYearBalance_User_PreparedByUserId");
+                    .HasName("FK_LedgerFinancialYearBalance_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_LedgerFinancialYearBalance_UpdatedByUserId");
+                    .HasName("FK_LedgerFinancialYearBalance_User_UpdatedByUserId_idx");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Ledgerfinancialyearbalances)
@@ -874,10 +873,10 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Module_User_PreparedByUserId");
+                    .HasName("FK_Module_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Module_User_UpdatedByUserId");
+                    .HasName("FK_Module_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.ModuleName)
                     .HasCharSet("utf8mb4")
@@ -916,7 +915,7 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_PurchaseInvoice_PreparedByUserId");
+                    .HasName("FK_PurchaseInvoice_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("IX_PurchaseInvoice_StatusId");
@@ -928,7 +927,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_PurchaseInvoice_TaxRegisterId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_PurchaseInvoice_UpdatedByUserId");
+                    .HasName("FK_PurchaseInvoice_User_UpdatedByUserId_idx");
 
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf_idx");
@@ -1024,7 +1023,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("PRIMARY");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_PurchaseInvoiceDetails_User_PreparedByUserId");
+                    .HasName("FK_PurchaseInvoiceDetails_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.PurchaseInvoiceId)
                     .HasName("IX_PurchaseInvoiceDetails_PurchaseInvoiceId");
@@ -1033,7 +1032,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_PurchaseInvoiceDetails_UnitOfMeasurementId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_PurchaseInvoiceDetails_UpdatedByUserId");
+                    .HasName("FK_PurchaseInvoiceDetails_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Description)
                     .HasCharSet("utf8mb4")
@@ -1066,7 +1065,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("PRIMARY");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_PurchaseInvoiceDetailTax_User_PreparedByUserId");
+                    .HasName("FK_PurchaseInvoiceDetailTax_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.PurchaseInvoiceDetId)
                     .HasName("IX_PurchaseInvoiceDetailTax_PurchaseInvoiceDetId");
@@ -1075,7 +1074,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_PurchaseInvoiceDetailTax_TaxLedgerId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_PurchaseInvoiceDetailTax_UpdatedByUserId");
+                    .HasName("FK_PurchaseInvoiceDetailTax_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Remark)
                     .HasCharSet("utf8mb4")
@@ -1113,7 +1112,7 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<Purchaseinvoicetax>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_PurchaseInvoiceTax_User_PreparedByUserId");
+                    .HasName("FK_PurchaseInvoiceTax_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.PurchaseInvoiceId)
                     .HasName("IX_PurchaseInvoiceTax_PurchaseInvoiceId");
@@ -1122,7 +1121,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_PurchaseInvoiceTax_TaxLedgerId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_PurchaseInvoiceTax_UpdatedByUserId");
+                    .HasName("FK_PurchaseInvoiceTax_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Remark)
                     .HasCharSet("utf8mb4")
@@ -1188,7 +1187,7 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_SalesInvoice_PreparedByUserId");
+                    .HasName("FK_SalesInvoice_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("IX_SalesInvoice_StatusId");
@@ -1197,7 +1196,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_SalesInvoice_TaxRegisterId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_SalesInvoice_UpdatedByUserId");
+                    .HasName("FK_SalesInvoice_User_UpdatedByUserId_idx");
 
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_SalesInvoice_VoucherStyle_VoucherStyleId_idx");
@@ -1300,13 +1299,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_SalesInvoiceDetails_InvoiceId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_SalesInvoiceDetails_User_PreparedByUserId");
+                    .HasName("FK_SalesInvoiceDetails_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UnitOfMeasurementId)
                     .HasName("IX_SalesInvoiceDetails_UnitOfMeasurementId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_SalesInvoiceDetails_UpdatedByUserId");
+                    .HasName("FK_SalesInvoiceDetails_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Description)
                     .HasCharSet("utf8mb4")
@@ -1346,13 +1345,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_SalesInvoiceDetailsTax_InvoiceDetId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_SalesInvoiceDetailsTax_User_PreparedByUserId");
+                    .HasName("FK_SalesInvoiceDetailsTax_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.TaxLedgerId)
                     .HasName("IX_SalesInvoiceDetailsTax_TaxLedgerId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_SalesInvoiceDetailsTax_UpdatedByUserId");
+                    .HasName("FK_SalesInvoiceDetailsTax_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Remark)
                     .HasCharSet("utf8mb4")
@@ -1396,13 +1395,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_SalesInvoiceTax_InvoiceId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_SalesInvoiceTax_User_PreparedByUserId");
+                    .HasName("FK_SalesInvoiceTax_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.TaxLedgerId)
                     .HasName("IX_SalesInvoiceTax_TaxLedgerId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_SalesInvoiceTax_UpdatedByUserId");
+                    .HasName("FK_SalesInvoiceTax_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Remark)
                     .HasCharSet("utf8mb4")
@@ -1443,10 +1442,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_State_CountryId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_State_User_PreparedByUserId");
+                    .HasName("FK_State_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_State_User_UpdatedByUserId");
+                    .HasName("FK_State_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.StateName)
                     .HasCharSet("utf8mb4")
@@ -1471,14 +1470,14 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<Status>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_Status_User_PreparedByUserId");
+                    .HasName("FK_Status_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.StatusName)
                     .HasName("Description_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_Status_User_UpdatedByUserId");
+                    .HasName("FK_Status_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.StatusName)
                     .HasCharSet("utf8mb4")
@@ -1498,14 +1497,14 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<Taxregister>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_TaxRegister_PreparedByUserId");
+                    .HasName("FK_TaxRegister_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.TaxRegisterName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_TaxRegister_UpdatedByUserId");
+                    .HasName("FK_TaxRegister_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.TaxRegisterName)
                     .HasCharSet("utf8mb4")
@@ -1528,7 +1527,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("PRIMARY");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_TaxRegisterDetails_User_PreparedByUserId");
+                    .HasName("FK_TaxRegisterDetails_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.TaxLedgerId)
                     .HasName("IX_TaxRegisterDetails_TaxLedgerId");
@@ -1537,7 +1536,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_TaxRegisterDetails_TaxRegisterId");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_TaxRegisterDetails_UpdatedByUserId");
+                    .HasName("FK_TaxRegisterDetails_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.TaxAddOrDeduct)
                     .HasCharSet("utf8mb4")
@@ -1571,14 +1570,14 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<Unitofmeasurement>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_UnitOfMeasurement_User_PreparedByUserId");
+                    .HasName("FK_UnitOfMeasurement_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UnitOfMeasurementName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_UnitOfMeasurement_User_UpdatedByUserId");
+                    .HasName("FK_UnitOfMeasurement_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.UnitOfMeasurementName)
                     .HasCharSet("utf8mb4")
@@ -1595,47 +1594,16 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_UnitOfMeasurement_User_UpdatedByUserId");
             });
 
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_User_User_PreparedByUserId");
-
-                entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_User_User_UpdatedByUserId");
-
-                entity.Property(e => e.Email)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.Password)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.UserName)
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.InversePreparedByUser)
-                    .HasForeignKey(d => d.PreparedByUserId)
-                    .HasConstraintName("FK_User_User_PreparedByUserId");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.InverseUpdatedByUser)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .HasConstraintName("FK_User_User_UpdatedByUserId");
-            });
-
             modelBuilder.Entity<Vouchersetup>(entity =>
             {
                 entity.HasIndex(e => e.ModuleId)
                     .HasName("IX_VoucherSetup_Module_ModuleId_idx");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_VoucherSetup_User_PreparedByUserId");
+                    .HasName("FK_VoucherSetup_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_VoucherSetup_User_UpdatedByUserId");
+                    .HasName("FK_VoucherSetup_User_UpdatedByUserId_idx");
 
                 entity.HasIndex(e => e.VoucherSetupName)
                     .HasName("Name_UNIQUE")
@@ -1673,10 +1641,10 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_VoucherSetupDetails_FinancialYear_FinancialYearId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_VoucherSetupDetails_User_PreparedByUserId");
+                    .HasName("FK_VoucherSetupDetails_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_VoucherSetupDetails_User_UpdatedByUserId");
+                    .HasName("FK_VoucherSetupDetails_User_UpdatedByUserId_idx");
 
                 entity.HasIndex(e => e.VoucherSetupId)
                     .HasName("IX_VoucherSetupDetails_VoucherSetup_VoucherSetupId");
@@ -1738,10 +1706,10 @@ namespace ERP.DataAccess.EntityData
             modelBuilder.Entity<Voucherstyle>(entity =>
             {
                 entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("IX_VoucherStyle_User_PreparedByUserId");
+                    .HasName("FK_VoucherStyle_User_PreparedByUserId_idx");
 
                 entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("IX_VoucherStyle_User_UpdatedByUserId");
+                    .HasName("FK_VoucherStyle_User_UpdatedByUserId_idx");
 
                 entity.HasIndex(e => e.VoucherStyleName)
                     .HasName("Name_UNIQUE")

@@ -46,8 +46,8 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         [ForeignKey(nameof(PreparedByUserId))]
-        [InverseProperty(nameof(User.PurchaseinvoicedetailPreparedByUsers))]
-        public virtual User PreparedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.PurchaseinvoicedetailPreparedByUsers))]
+        public virtual Aspnetuser PreparedByUser { get; set; }
         [ForeignKey(nameof(PurchaseInvoiceId))]
         [InverseProperty(nameof(Purchaseinvoice.Purchaseinvoicedetails))]
         public virtual Purchaseinvoice PurchaseInvoice { get; set; }
@@ -55,8 +55,8 @@ namespace ERP.DataAccess.EntityModels
         [InverseProperty(nameof(Unitofmeasurement.Purchaseinvoicedetails))]
         public virtual Unitofmeasurement UnitOfMeasurement { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
-        [InverseProperty(nameof(User.PurchaseinvoicedetailUpdatedByUsers))]
-        public virtual User UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Aspnetuser.PurchaseinvoicedetailUpdatedByUsers))]
+        public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Purchaseinvoicedetailtax.PurchaseInvoiceDet))]
         public virtual ICollection<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
     }

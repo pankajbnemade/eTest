@@ -9,6 +9,7 @@
     <Compile Remove="Accounts\SalesInvoiceChargeModel.cs" />
     <Compile Remove="Accounts\_Model.cs" />
     <Compile Remove="Common\DataTableResultModel.cs" />
+    <Compile Remove="Master\UserModel.cs" />
     <Compile Remove="Master\_Model.cs" />
   </ItemGroup>
 
