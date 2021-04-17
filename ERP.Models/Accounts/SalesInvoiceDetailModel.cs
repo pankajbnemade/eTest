@@ -29,7 +29,6 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity is required.")]
-        [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
         public decimal? Quantity { get; set; }
 
         [Display(Name = "Per Unit")]
@@ -39,7 +38,6 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Unit Price")]
         [Required(ErrorMessage = "Unit Price is required.")]
-        [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
         public decimal? UnitPrice { get; set; }
         public decimal? GrossAmountFc { get; set; }
         public decimal? GrossAmount { get; set; }

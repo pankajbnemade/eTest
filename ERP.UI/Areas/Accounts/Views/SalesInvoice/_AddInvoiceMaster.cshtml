@@ -147,7 +147,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control decimal-two-scale" })
                                 @Html.ValidationMessageFor(model => model.ExchangeRate)
                             </div>
                         </div>
@@ -165,7 +165,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DiscountPercentage)
-                                @Html.TextBoxFor(model => model.DiscountPercentage, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.DiscountPercentage, new { @class = "form-control decimal-two-scale" })
                                 @Html.ValidationMessageFor(model => model.DiscountPercentage)
                             </div>
                         </div>
@@ -215,6 +215,8 @@
             }
         });
 
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
+
         if ('@Model.InvoiceId' > 0 && '@Model.CustomerLedgerId' > 0) {
             GetBillToAddressByLedgerId('@Model.CustomerLedgerId');
         }
@@ -227,28 +229,32 @@
 
     // get bill to address by ledgerId.
     function GetBillToAddressByLedgerId(ledgerId) {
-        $('#BillToAddressId').empty();
-        $('#BillToAddressId').append("<option value=''>Select</option>");
-
         if ('' != ledgerId) {
             var model = { ledgerId: ledgerId };
             AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetBillToAddressByLedgerId", "SalesInvoice")', '', model,
-            function (response) {
-                if (true == response.Result.Status) {
-                    $.each(response.Result.Data, function (i, item) {
-                        $('#BillToAddressId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
-                    });
-                    if ('@Model.CustomerLedgerId' > 0) {
-                        $('#BillToAddressId').val('@Model.BillToAddressId');
+                function (response) {
+                    $('#BillToAddressId').empty();
+                    $('#BillToAddressId').append("<option value=''>Select</option>");
+
+                    if (true == response.Result.Status) {
+                        $.each(response.Result.Data, function (i, item) {
+                            $('#BillToAddressId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                        });
+                        if ('@Model.CustomerLedgerId' > 0) {
+                            $('#BillToAddressId').val('@Model.BillToAddressId');
+                        }
                     }
-                }
-                else {
-                    if ('NoItems' == response.Result.Message) {
-                        $("span[data-valmsg-for='BillToAddressId']").removeClass('field-validation-valid').addClass('field-validation-error');
-                        $("span[data-valmsg-for='BillToAddressId']").html('<span for="BillToAddressId" class="">No data found.</span>');
+                    else {
+                        if ('NoItems' == response.Result.Message) {
+                            $("span[data-valmsg-for='BillToAddressId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                            $("span[data-valmsg-for='BillToAddressId']").html('<span for="BillToAddressId" class="">No data found.</span>');
+                        }
                     }
-                }
-            }, null, true, null, false);
+                }, null, true, null, false);
+        }
+        else {
+            $('#BillToAddressId').empty();
+            $('#BillToAddressId').append("<option value=''>Select</option>");
         }
     }
 
@@ -257,22 +263,19 @@
         GetExchangeRateByCurrencyId(this.value);
     });
 
-    // get bill to address by ledgerId.
+    // get exchange rate by currencyId.
     function GetExchangeRateByCurrencyId(currencyId) {
-        //$('#BillToAddressId').empty();
-        //$('#BillToAddressId').append("<option value=''>Select</option>");
-
         if ('' != currencyId) {
-            var model = { ledgerId: ledgerId };
+            var model = { currencyId: currencyId, invoiceDate: $('#InvoiceDate').val()  };
             AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "SalesInvoice")', '', model,
-                function (response) {
-                    if (true == response.Result.Status) {
-                        $('#ExchangeRate').val(response.Result.Data);
-                    }
-                    else {
-                        $('#ExchangeRate').val(0);
-                    }
-                }, null, true, null, false);
+            function (response) {
+                if (true == response.Result.Status) {
+                    $('#ExchangeRate').val(response.Result.Data);
+                }
+                else {
+                    $('#ExchangeRate').val(0);
+                }
+            }, null, true, null, false);
         }
         else {
             $('#ExchangeRate').val(0);

@@ -52,7 +52,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxPerOrAmountFc, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control decimal-two-scale" })
                                 @Html.ValidationMessageFor(model => model.TaxPerOrAmountFc)
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxAmountFc)
-                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control decimal-two-scale" })
                                 @Html.ValidationMessageFor(model => model.TaxAmountFc)
                             </div>
                         </div>
@@ -108,7 +108,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
     });
 
     // begin form

@@ -334,7 +334,7 @@ namespace ERP.Services.Accounts
                 InvoiceNo = s.InvoiceNo,
                 InvoiceDate = s.InvoiceDate,
                 NetAmount = s.NetAmount,
-            }).ToListAsync();
+            }).OrderByDescending(o => o.InvoiceDate).ToListAsync();
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
 

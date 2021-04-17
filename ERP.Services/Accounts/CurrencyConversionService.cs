@@ -93,9 +93,10 @@ namespace ERP.Services.Accounts
             // create query.
             if (await Any(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate))
             {
-
-                Currencyconversion currencyConversion = await GetQueryByCondition(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate)
-                                                            .OrderByDescending(w => w.EffectiveDateTime).FirstOrDefaultAsync();
+                Currencyconversion currencyConversion = 
+                    await GetQueryByCondition(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate)
+                    .Include(w => w.Currency).Include(w => w.Company).Include(w => w.PreparedByUser)                                     
+                    .OrderByDescending(w => w.EffectiveDateTime).FirstOrDefaultAsync();
 
                 currencyConversionModel = await AssignValueToModel(currencyConversion);
             }
@@ -179,7 +180,7 @@ namespace ERP.Services.Accounts
                 currencyConversionModel.CurrencyId = currencyConversion.CurrencyId;
                 currencyConversionModel.EffectiveDateTime = currencyConversion.EffectiveDateTime;
                 currencyConversionModel.ExchangeRate = currencyConversion.ExchangeRate;
-
+                
                 currencyConversionModel.CompanyName = currencyConversion.Company.CompanyName;
                 currencyConversionModel.CurrencyName = currencyConversion.Currency.CurrencyName;
                 currencyConversionModel.PreparedByName = currencyConversion.PreparedByUser.UserName;

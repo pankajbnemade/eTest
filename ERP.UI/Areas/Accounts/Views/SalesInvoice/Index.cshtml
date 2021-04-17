@@ -60,7 +60,7 @@
             <div class="col-sm-12 text-right">
                 <button class="btn btn-primary" id="search-invoice">Search</button>
                 <button class="btn btn-secondary" onclick="javascript: fnResetSearch();">Reset</button>
-                <button class="btn btn-primary" id="add-new-invoice">New</button>
+                <button class="btn btn-primary" onclick="javascript: fnAddSalesInvoice();">New</button>
             </div>
         </div>
         <br />
@@ -187,13 +187,12 @@
     }
 
     // new button click.
-    $('#add-new-invoice').click(function () {
+    function fnAddSalesInvoice() {
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceMaster", "SalesInvoice")', 'html', '',
         function (data) {
             $('#modal-invoice-master').empty();
             $('#modal-invoice-master').html(data).modal('show');
             return false;
         }, null, true, null, false);
-    });
-</script>
-@*@{ await Html.RenderPartialAsync("_ConfirmDeleteCity"); }*@
+    }
+  </script>
