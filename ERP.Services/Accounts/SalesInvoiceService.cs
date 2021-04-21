@@ -89,6 +89,7 @@ namespace ERP.Services.Accounts
             salesInvoice.StatusId = salesInvoiceModel.StatusId;
             salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
             salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
+
             salesInvoiceId = await Create(salesInvoice);
 
             if (salesInvoiceId > 0)

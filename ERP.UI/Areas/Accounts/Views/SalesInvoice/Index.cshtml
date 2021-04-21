@@ -22,53 +22,54 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div id="searchFilterCriteria">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
-                        @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.InvoiceNo)
+        <div class="container">
+            <div id="searchFilterCriteria">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
+                            @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.InvoiceNo)
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
+                            @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CustomerLedgerId)
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
-                        @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.CustomerLedgerId)
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FromDate)
+                            @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                            @Html.ValidationMessageFor(model => model.FromDate)
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ToDate)
+                            @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                            @Html.ValidationMessageFor(model => model.ToDate)
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FromDate)
-                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
-                        @Html.ValidationMessageFor(model => model.FromDate)
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ToDate)
-                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
-                        @Html.ValidationMessageFor(model => model.ToDate)
-                    </div>
+                <div class="col-sm-12 text-right">
+                    <button class="btn btn-primary btn-sm" id="search-invoice"><i class="fas fa-search"></i> Search</button>
+                    <button class="btn btn-secondary btn-sm" onclick="javascript: fnResetSearch();"><i class="fas fa-trash-restore-alt"></i> Reset</button>
+                    <button class="btn btn-primary btn-sm" onclick="javascript: fnAddSalesInvoice();"><i class="fas fa-plus-square"></i> New</button>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 text-right">
-                <button class="btn btn-primary" id="search-invoice">Search</button>
-                <button class="btn btn-secondary" onclick="javascript: fnResetSearch();">Reset</button>
-                <button class="btn btn-primary" onclick="javascript: fnAddSalesInvoice();">New</button>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-sm-12">
-                <table id="salesInvoiceGrid" class="table table-striped table-bordered" style="width: 100%;">
+            <div class="col-sm-12 table-responsive">
+                <table id="salesInvoiceGrid" class="table table-sm table-striped table-bordered table-hover" style="width: 100%;">
                     <thead>
-                        <tr>
+                        <tr class="bg-navbar text-white text-sm-center">
                             <th class="no-sort">Action</th>
                             <th>InvoiceId</th>
                             <th>Invoice No</th>
@@ -153,6 +154,7 @@
                 horizontal: 'left',
                 vertical: 'bottom'
             }
+            
         });
 
         $('#ToDate').datetimepicker({

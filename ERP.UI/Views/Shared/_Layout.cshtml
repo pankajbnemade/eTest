@@ -33,17 +33,17 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar text-dark border-bottom box-shadow mb-2">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-navbar border-bottom box-shadow mb-1">
             <div class="container">
-                <a class="navbar-brand" asp-area="Common" asp-controller="Home" asp-action="Index">eTest</a>
+                <a class="navbar-brand" asp-area="Common" asp-controller="Home" asp-action="Index"><i class="fas fa-briefcase"></i> eTest</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse">
+
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
                     <partial name="_Menu" />
-                </div>
-                <div class="collapse navbar-collapse">
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -86,15 +86,16 @@
                 </div>
             </nav>*@
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-white-50 bg-navbar">
         <div class="container">
-            &copy; 2021 - <a asp-area="Common" asp-controller="Home" asp-action="Index">eTest</a>
+            @*&copy; 2021 - eTest*@
+            &copy; 2021 - <a asp-area="Common" asp-controller="Home" asp-action="Index" class="text-white-50">eTest</a>
         </div>
     </footer>
 

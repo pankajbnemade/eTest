@@ -17,6 +17,6 @@ namespace ERP.Models.Admin
         public string Password { get; set; }
 
         [Display(Name = "Remember Me")]
-        public bool RememberMe { get; set; }
+        public bool RememberMe { get; set; }         
     }
 }

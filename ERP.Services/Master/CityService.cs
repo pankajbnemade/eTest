@@ -1,10 +1,14 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
+using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +34,15 @@ namespace ERP.Services.Master
             City city = new City();
             city.CityName = cityModel.CityName;
             city.StateId = cityModel.StateId;
+
+
+            city.PreparedByUserId = 1;
+            city.PreparedDateTime = DateTime.Now;
+            city.UpdatedByUserId = 1;
+            city.UpdatedDateTime = DateTime.Now;
+
+
+
             cityId = await Create(city);
 
             return cityId; // returns.
@@ -53,6 +66,9 @@ namespace ERP.Services.Master
                 // assign values.
                 city.CityName = cityModel.CityName;
                 city.StateId = cityModel.StateId;
+                city.UpdatedByUserId = 1;
+                city.UpdatedDateTime = DateTime.Now;
+
                 isUpdated = await Update(city);
             }
 
@@ -154,6 +170,7 @@ namespace ERP.Services.Master
             if (null != cityList && cityList.Count > 0)
             {
                 cityModelList = new List<CityModel>();
+
                 foreach (City city in cityList)
                 {
                     cityModelList.Add(await AssignValueToModel(city));

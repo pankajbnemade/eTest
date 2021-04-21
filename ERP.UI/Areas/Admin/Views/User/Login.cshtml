@@ -1,36 +1,31 @@
 ﻿@model ERP.Models.Admin.LoginViewModel
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Login";
-}
+@{ Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Login"; }
 
-<h1>Login</h1>
+<div id="logreg-forms">
+    <form form id="account" method="post">
+        <h1 class="h3 mb-3 font-weight-normal text-info" style="text-align:center;">Login</h1>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
 
-<div class="row">
-    <div class="col-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
+        @*<div class="form-group">
                 <div class="custom-control custom-checkbox">
                     <input asp-for="RememberMe" type="checkbox" class="custom-control-input">
                     <label class="custom-control-label" asp-for="RememberMe">@Html.DisplayNameFor(m => m.RememberMe)</label>
                 </div>
 
-            </div>
-            <button type="submit" class="form-control btn btn-primary">Login</button>
-        </form>
-
-    </div>
+            </div>*@
+        <button type="submit" class="form-control btn btn-success"><i class="fas fa-sign-in-alt"></i> Login</button>
+    </form>
+    
 </div>

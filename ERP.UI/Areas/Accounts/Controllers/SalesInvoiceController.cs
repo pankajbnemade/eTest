@@ -98,6 +98,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             salesInvoiceModel.CompanyId = userSession.CompanyId;
             salesInvoiceModel.FinancialYearId = userSession.FinancialYearId;
+
+
             // generate no.
             GenerateNoModel generateNoModel = await _salesInvoice.GenerateInvoiceNo(userSession.CompanyId, userSession.FinancialYearId);
             salesInvoiceModel.InvoiceNo = generateNoModel.VoucherNo;
