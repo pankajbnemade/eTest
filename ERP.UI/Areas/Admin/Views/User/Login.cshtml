@@ -4,7 +4,9 @@
 
 <div id="logreg-forms">
     <form form id="account" method="post">
-        <h1 class="h3 mb-3 font-weight-normal text-info" style="text-align:center;">Login</h1>
+        <div class="text-center">
+            <span class="navbar-brand text-info"><i class="fas fa-briefcase"></i></span>
+        </div>
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="Email"></label>
@@ -27,5 +29,5 @@
             </div>*@
         <button type="submit" class="form-control btn btn-success"><i class="fas fa-sign-in-alt"></i> Login</button>
     </form>
-    
+
 </div>

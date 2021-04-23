@@ -3,33 +3,33 @@
 <div class="container">
     <div class="row  mb-2">
         <div class="col-sm-6">
-            <a class="h4 text-primary" asp-area="Master" asp-controller="City" asp-action="Index">City List</a>
+            <a class="h5 text-info" asp-area="Master" asp-controller="City" asp-action="Index">City List</a>
         </div>
         <div class="col-sm-6 text-right">
-            <button class="btn btn-primary btn-sm" type="button" id="add-new-city"><i class="fas fa-plus-square"></i> New</button>
+            <button class="btn btn-success btn-sm" type="button" id="add-new-city"><i class="fas fa-plus-square"></i> New</button>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-12 table-responsive">
-        <table id="citylistgrid" class="table table-sm table-striped table-bordered table-hover" style="width: 100%;">
+        <table id="cityGrid" class="table table-sm table-striped table-bordered table-hover" style="width: 100%;">
             <thead>
-                <tr class="bg-navbar text-white text-sm-center">
+                <tr class="table-header">
                     @*<th>City Id</th>*@
                     <th>Action</th>
                     <th>City Name</th>
                     <th>State Name</th>
                     <th>Country Name</th>
-
                 </tr>
             </thead>
         </table>
     </div>
 </div>
-
+<div id="modal-city-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
 <script>
 $(document).ready(function () {
-    $("#citylistgrid").DataTable({
+    $("#cityGrid").DataTable({
+       
         //dom: 'lftip',
         "pageLength": 10,
         "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
@@ -43,6 +43,7 @@ $(document).ready(function () {
         //"order": [],
         //scrollY: "50vh",
         //scrollCollapse: true,
+       
         "ajax": {
             "url": "@Url.Action("GetCityList", "City")",
             "type": "POST",
@@ -54,8 +55,8 @@ $(document).ready(function () {
             {
                 "render": function (data, type, full, meta) {
                     return '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditCity(' + full.CityId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                        '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteCity(this, ' + full.CityId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCity(' + full.CityId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCity(this, ' + full.CityId + ')"><span class="fa fa-trash-alt"></span></button>' +
                         '</div>';
                 }, "orderable": false
             },
@@ -87,5 +88,5 @@ $('#add-new-city').click(function () {
         }, null, true, null, false);
     }
 </script>
-<div id="modal-city-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
 @{ await Html.RenderPartialAsync("_ConfirmDeleteCity"); }

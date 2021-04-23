@@ -79,8 +79,18 @@ namespace ERP.UI.Areas.Admin.Controllers
                 {
                     ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserListByEmail(user.Email);
                     UserSessionModel userSessionModel = new UserSessionModel();
+
                     userSessionModel.UserId = applicationUser.Id;
-                    userSessionModel.Username = applicationUser.UserName;
+                    userSessionModel.UserName = applicationUser.UserName;
+
+                    //start temporary avoid branch/financial year  selection
+
+                    userSessionModel.CompanyId = 1;
+                    userSessionModel.FinancialYearId = 1;
+
+                    //temporary avoid branch/financial year  selection
+
+
                     SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
                     return RedirectToAction("Index", "Home", new { area = "Common" });
