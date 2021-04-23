@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_AddInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_ConfirmDeleteInvoiceDetail.cshtml" />
