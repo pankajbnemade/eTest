@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - eTest</title>
+    @* CSS *@
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link href="@Url.Content("~/lib/font-awesont-icons/css/all.css")" rel="stylesheet" />
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/content-temp/css/adminlte.min.css" rel="stylesheet" />
+    @*<link href="~/css/site.css" rel="stylesheet" />*@
+    @* JS *@
+    <script src="~/lib/jquery/jquery-3.4.1.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/lib/jquery-block-ui/jquery.blockUI.min.js"></script>
+    <script src="~/lib/jquery-block-ui/web.mvc.ajax.min.js"></script>
+    <script src="~/lib/jquery-unobtrusive.ajax/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery.unobtrusive.validation/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/content-temp/js/adminlte.min.js"></script>
+    <script src="~/js/custom-js/custom-common.js"></script>
+</head>
+<body class="hold-transition login-page">
+    @RenderBody()
+</body>
+</html>

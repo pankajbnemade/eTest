@@ -5,11 +5,11 @@
         <div class="modal-header">
             @if (Model.CityId > 0)
             {
-                <div class="modal-title">Edit City</div>
+                <h4 class="modal-title">Edit City</h4>
             }
             else
             {
-                <div class="modal-title">Add City</div>
+                <h4 class="modal-title">Add City</h4>
             }
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span class="modal-header-close" aria-hidden="true">&times;</span>
@@ -41,7 +41,7 @@
                 </div>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
                 <button type="submit" class="btn btn-primary" title="Submit">Save</button>
             </div>
@@ -113,6 +113,4 @@
             return false;
         }
     }
-
-   
 </script>

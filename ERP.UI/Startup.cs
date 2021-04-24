@@ -76,7 +76,7 @@ namespace ERP.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=Common}/{controller=Home}/{action=Index}");
+                    pattern: "{area=Admin}/{controller=User}/{action=Login}");
             });
         }
     }

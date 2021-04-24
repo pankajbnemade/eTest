@@ -60,11 +60,11 @@ namespace ERP.UI.Areas.Master.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> AddCity()
+        public async Task<PartialViewResult> AddCity()
         {
             ViewBag.CountryList = await _country.GetCountrySelectList();
 
-            return View("_AddCity", new CityModel());
+            return PartialView("_AddCity", new CityModel());
         }
 
         /// <summary>
@@ -72,13 +72,13 @@ namespace ERP.UI.Areas.Master.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> EditCity(int cityId)
+        public async Task<PartialViewResult> EditCity(int cityId)
         {
             ViewBag.CountryList = await _country.GetCountrySelectList();
 
             CityModel cityModel = await _city.GetCityById(cityId);
 
-            return View("_AddCity", cityModel);
+            return PartialView("_AddCity", cityModel);
         }
 
         /// <summary>
@@ -140,6 +140,13 @@ namespace ERP.UI.Areas.Master.Controllers
             return Json(data); // returns.
         }
 
+        /// <summary>
+        /// delete city by cityid.
+        /// </summary>
+        /// <param name="cityId"></param>
+        /// <returns>
+        /// return json.
+        /// </returns>
         [HttpPost]
         public async Task<JsonResult> DeleteCity(int cityId)
         {
@@ -151,6 +158,5 @@ namespace ERP.UI.Areas.Master.Controllers
 
             return Json(data); // returns.
         }
-
     }
 }
