@@ -1,31 +1,38 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Change Company";
 }
 
-<div class="container">
-    <div class="row  mb-2">
-        <div class="col-sm-6">
-            <a class="h5 text-info" asp-area="Common" asp-controller="Home" asp-action="ChangeCompany">Change Company</a>
-        </div>
-        
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 table-responsive">
-        <table id="companylistgrid" class="table table-sm table-striped table-bordered table-hover">
-            <thead>
-                <tr class="table-header">
-                    <th>Select</th>
-                    @*<th>Company Id</th>*@
-                    <th>Company Name</th>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Change Company</h1>
+            </div>
+            <div class="col-sm-6">
 
-                </tr>
-            </thead>
-        </table>
+            </div>
+        </div>
     </div>
-</div>
-<script>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <table id="companylistgrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th>Select</th>
+                            @*<th>Company Id</th>*@
+                            <th>Company Name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
     $(document).ready(function () {
         $("#companylistgrid").DataTable({
             "pageLength": 10,

@@ -1,31 +1,39 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Change Financial Year";
 }
 
-<div class="container">
-    <div class="row  mb-2">
-        <div class="col-sm-6">
-            <a class="h5 text-info" asp-area="Common" asp-controller="Home" asp-action="ChangeYear">Change Financial Year</a>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Change Financial Year</h1>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
         </div>
-
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 table-responsive">
-        <table id="financialYearlistgrid" class="table table-sm table-striped table-bordered table-hover">
-            <thead>
-                <tr class="table-header">
-                    <th></th>
-                    @*<th>Financial Year Id</th>*@
-                    <th>Financial Year Name</th>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <table id="financialYearlistgrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th></th>
+                            @*<th>Financial Year Id</th>*@
+                            <th>Financial Year Name</th>
 
-                </tr>
-            </thead>
-        </table>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-<script>
+</section>
+
+<script type="text/javascript">
     $(document).ready(function () {
         $("#financialYearlistgrid").DataTable({
             "pageLength": 10,
