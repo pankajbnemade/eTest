@@ -151,7 +151,11 @@ namespace ERP.Services.Master
                 Chargetype chargeType = new Chargetype();
 
                 chargeTypeModel.ChargeTypeName = chargeType.ChargeTypeName;
-                chargeTypeModel.PreparedByName = chargeType.PreparedByUser.UserName;
+                
+                if (null != chargeType.PreparedByUser)
+                {
+                    chargeTypeModel.PreparedByName = chargeType.PreparedByUser.UserName;
+                }
                 
                 return chargeTypeModel;
             });

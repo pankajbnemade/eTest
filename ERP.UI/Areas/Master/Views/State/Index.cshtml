@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "State List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>State List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-state">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="stateGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    @*<th>State Id</th>*@
+                                    <th>Action</th>
+                                    <th>State Name</th>
+                                    <th>Country Name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#stateGrid").DataTable({
+
+        //dom: 'lftip',
+        "pageLength": 10,
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+
+        "ajax": {
+            "url": "@Url.Action("GetStateList", "State")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+        /*{ "data": "StateId", "name": "State Id" },*/
+
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditState(' + full.StateId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteState(this, ' + full.StateId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '</div>';
+                }, "orderable": false
+            },
+            { "data": "StateName", "name": "State Name" },
+            { "data": "CountryName", "name": "Country Name" }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-state').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddState", "State")', 'html', '',
+    function (data) {
+        $('#modal-state-master').empty();
+        $('#modal-state-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit state
+    function fnEditState(stateId) {
+        var model = { stateId: stateId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditState", "State")', 'html', model,
+        function (data) {
+            $('#modal-state-master').empty();
+            $('#modal-state-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteState"); }
+<div id="modal-state-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

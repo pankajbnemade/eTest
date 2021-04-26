@@ -193,7 +193,11 @@ namespace ERP.Services.Master
                 cityModel.CountryId = city.State.Country.CountryId;
 
                 cityModel.CountryName = city.State.Country.CountryName;
-                cityModel.PreparedByName = city.PreparedByUser.UserName;
+                
+                if (null != city.PreparedByUser)
+                {
+                    cityModel.PreparedByName = city.PreparedByUser.UserName;
+                }
 
                 return cityModel;
             });

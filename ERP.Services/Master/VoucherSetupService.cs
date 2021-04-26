@@ -137,7 +137,11 @@ namespace ERP.Services.Master
                 voucherSetupModel.IsActive = voucherSetup.IsActive;
 
                 voucherSetupModel.ModuleName = voucherSetup.Module.ModuleName;
-                voucherSetupModel.PreparedByName = voucherSetup.PreparedByUser.UserName;
+                
+                if (null != voucherSetup.PreparedByUser)
+                {
+                    voucherSetupModel.PreparedByName = voucherSetup.PreparedByUser.UserName;
+                }
 
                 return voucherSetupModel;
             });

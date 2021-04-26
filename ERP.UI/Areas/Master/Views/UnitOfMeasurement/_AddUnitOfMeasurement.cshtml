@@ -1,0 +1,67 @@
+﻿@model UnitOfMeasurementModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.UnitOfMeasurementId > 0)
+            {
+                <h4 class="modal-title">Edit Unit Of Measurement</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Unit Of Measurement</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveUnitOfMeasurement" class="width100" method="post"
+              asp-action="SaveUnitOfMeasurement" asp-controller="UnitOfMeasurement" asp-area="Master"
+              data-ajax-begin="return BeginSaveUnitOfMeasurement();" data-ajax-success="SuccessSaveUnitOfMeasurement"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.UnitOfMeasurementId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.UnitOfMeasurementName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.UnitOfMeasurementName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.UnitOfMeasurementName)
+                </div>
+               
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveUnitOfMeasurement() {
+        var form = $("#frmSaveUnitOfMeasurement");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveUnitOfMeasurement(data) {
+        if (data.Result.Status) {
+            $('#modal-unitOfMeasurement-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#unitOfMeasurementGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

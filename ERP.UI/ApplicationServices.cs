@@ -40,7 +40,15 @@ namespace ERP.UI
             services.AddTransient<ICity, CityService>();
             services.AddTransient<IState, StateService>();
             services.AddTransient<ICountry, CountryService>();
+            services.AddTransient<IDepartment, DepartmentService>();
+            services.AddTransient<IDesignation, DesignationService>();
+            services.AddTransient<IForm, FormService>();
+            services.AddTransient<IModule, ModuleService>();
+            services.AddTransient<IStatus, StatusService>();
             services.AddTransient<IUnitOfMeasurement, UnitOfMeasurementService>();
+            services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
+            services.AddTransient<IVoucherSetup, VoucherSetupService>();
+            services.AddTransient<IVoucherStyle, VoucherStyleService>();
 
             #endregion // Master
 

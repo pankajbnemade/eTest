@@ -131,7 +131,10 @@ namespace ERP.Services.Master
                 departmentModel.DepartmentId = department.DepartmentId;
                 departmentModel.DepartmentName = department.DepartmentName;
 
-                departmentModel.PreparedByName = department.PreparedByUser.UserName;
+                if (null != department.PreparedByUser)
+                {
+                    departmentModel.PreparedByName = department.PreparedByUser.UserName;
+                }
 
                 return departmentModel;
             });

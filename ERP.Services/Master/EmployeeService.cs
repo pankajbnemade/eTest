@@ -148,7 +148,11 @@ namespace ERP.Services.Master
 
                 employeeModel.DesignationName = employee.Designation.DesignationName;
                 employeeModel.DepartmentName = employee.Department.DepartmentName;
-                employeeModel.PreparedByName = employee.PreparedByUser.UserName;
+
+                if (null != employee.PreparedByUser)
+                {
+                    employeeModel.PreparedByName = employee.PreparedByUser.UserName;
+                }
 
                 return employeeModel;
             });

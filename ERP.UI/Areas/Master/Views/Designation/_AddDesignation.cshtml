@@ -1,0 +1,67 @@
+﻿@model DesignationModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.DesignationId > 0)
+            {
+                <h4 class="modal-title">Edit Designation</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Designation</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveDesignation" class="width100" method="post"
+              asp-action="SaveDesignation" asp-controller="Designation" asp-area="Master"
+              data-ajax-begin="return BeginSaveDesignation();" data-ajax-success="SuccessSaveDesignation"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.DesignationId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DesignationName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.DesignationName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.DesignationName)
+                </div>
+               
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveDesignation() {
+        var form = $("#frmSaveDesignation");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveDesignation(data) {
+        if (data.Result.Status) {
+            $('#modal-designation-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#designationGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

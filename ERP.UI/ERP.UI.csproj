@@ -5,6 +5,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Master\Views\UnitOfMeasurement\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\UnitOfMeasurement\_AddUnitOfMeasurement.cshtml" />
+    <Content Remove="Areas\Master\Views\Country\_AddCountry.cshtml" />
+    <Content Remove="Areas\Master\Views\Designation\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\Designation\_AddDesignation.cshtml" />
+    <Content Remove="Areas\Master\Views\Department\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\Department\_AddDepartment.cshtml" />
+    <Content Remove="Areas\Master\Views\Country\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\Country\_ConfirmDeleteCountry.cshtml" />
+    <Content Remove="Areas\Master\Views\Department\_ConfirmDeleteDepartment.cshtml" />
+    <Content Remove="Areas\Master\Views\Designation\_ConfirmDeleteDesignation.cshtml" />
+    <Content Remove="Areas\Master\Views\Form\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\Form\_AddForm.cshtml" />
+    <Content Remove="Areas\Master\Views\Form\_ConfirmDeleteForm.cshtml" />
+    <Content Remove="Areas\Master\Views\State\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\State\_AddState.cshtml" />
+    <Content Remove="Areas\Master\Views\State\_ConfirmDeleteState.cshtml" />
+    <Content Remove="Areas\Master\Views\UnitOfMeasurement\_ConfirmDeleteUnitOfMeasurement.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.5" />
@@ -48,6 +69,24 @@
     <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceMaster.cshtml" />
+    <None Include="Areas\Master\Views\UnitOfMeasurement\Index.cshtml" />
+    <None Include="Areas\Master\Views\UnitOfMeasurement\_AddUnitOfMeasurement.cshtml" />
+    <None Include="Areas\Master\Views\UnitOfMeasurement\_ConfirmDeleteUnitOfMeasurement.cshtml" />
+    <None Include="Areas\Master\Views\Designation\Index.cshtml" />
+    <None Include="Areas\Master\Views\Designation\_AddDesignation.cshtml" />
+    <None Include="Areas\Master\Views\Designation\_ConfirmDeleteDesignation.cshtml" />
+    <None Include="Areas\Master\Views\Department\Index.cshtml" />
+    <None Include="Areas\Master\Views\Department\_AddDepartment.cshtml" />
+    <None Include="Areas\Master\Views\Department\_ConfirmDeleteDepartment.cshtml" />
+    <None Include="Areas\Master\Views\Country\Index.cshtml" />
+    <None Include="Areas\Master\Views\Country\_AddCountry.cshtml" />
+    <None Include="Areas\Master\Views\Country\_ConfirmDeleteCountry.cshtml" />
+    <None Include="Areas\Master\Views\Form\Index.cshtml" />
+    <None Include="Areas\Master\Views\Form\_AddForm.cshtml" />
+    <None Include="Areas\Master\Views\Form\_ConfirmDeleteForm.cshtml" />
+    <None Include="Areas\Master\Views\State\Index.cshtml" />
+    <None Include="Areas\Master\Views\State\_AddState.cshtml" />
+    <None Include="Areas\Master\Views\State\_ConfirmDeleteState.cshtml" />
     <None Include="Areas\Master\Views\City\Index.cshtml" />
     <None Include="Areas\Master\Views\City\_AddCity.cshtml" />
     <None Include="Areas\Master\Views\City\_ConfirmDeleteCity.cshtml" />

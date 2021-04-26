@@ -131,7 +131,10 @@ namespace ERP.Services.Master
                 unitOfMeasurementModel.UnitOfMeasurementId = unitOfMeasurement.UnitOfMeasurementId;
                 unitOfMeasurementModel.UnitOfMeasurementName = unitOfMeasurement.UnitOfMeasurementName;
 
-                unitOfMeasurementModel.PreparedByName = unitOfMeasurement.PreparedByUser.UserName;
+                if (null != unitOfMeasurement.PreparedByUser)
+                {
+                    unitOfMeasurementModel.PreparedByName = unitOfMeasurement.PreparedByUser.UserName;
+                }
 
                 return unitOfMeasurementModel;
             });

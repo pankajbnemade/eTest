@@ -130,7 +130,10 @@ namespace ERP.Services.Master
                 countryModel.CountryId = country.CountryId;
                 countryModel.CountryName = country.CountryName;
 
-                countryModel.PreparedByName = country.PreparedByUser.UserName;
+                if (null != country.PreparedByUser)
+                {
+                    countryModel.PreparedByName = country.PreparedByUser.UserName;
+                }
 
                 return countryModel;
             });

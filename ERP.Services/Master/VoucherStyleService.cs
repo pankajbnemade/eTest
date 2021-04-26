@@ -131,7 +131,10 @@ namespace ERP.Services.Master
                 voucherStyleModel.VoucherStyleId = voucherStyle.VoucherStyleId;
                 voucherStyleModel.VoucherStyleName = voucherStyle.VoucherStyleName;
 
-                voucherStyleModel.PreparedByName = voucherStyle.PreparedByUser.UserName;
+                if (null != voucherStyle.PreparedByUser)
+                {
+                    voucherStyleModel.PreparedByName = voucherStyle.PreparedByUser.UserName;
+                }
 
                 return voucherStyleModel;
             });

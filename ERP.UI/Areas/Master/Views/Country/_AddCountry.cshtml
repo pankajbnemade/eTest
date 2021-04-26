@@ -1,0 +1,67 @@
+﻿@model CountryModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.CountryId > 0)
+            {
+                <h4 class="modal-title">Edit Country</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Country</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveCountry" class="width100" method="post"
+              asp-action="SaveCountry" asp-controller="Country" asp-area="Master"
+              data-ajax-begin="return BeginSaveCountry();" data-ajax-success="SuccessSaveCountry"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.CountryId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CountryName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.CountryName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.CountryName)
+                </div>
+               
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveCountry() {
+        var form = $("#frmSaveCountry");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveCountry(data) {
+        if (data.Result.Status) {
+            $('#modal-country-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#countryGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

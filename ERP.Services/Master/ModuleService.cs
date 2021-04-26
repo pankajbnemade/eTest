@@ -133,8 +133,11 @@ namespace ERP.Services.Master
                 moduleModel.ModuleId = module.ModuleId;
                 moduleModel.ModuleName = module.ModuleName;
                 moduleModel.IsActive = module.IsActive;
-
-                moduleModel.PreparedByName = module.PreparedByUser.UserName;
+                
+                if (null != module.PreparedByUser)
+                {
+                    moduleModel.PreparedByName = module.PreparedByUser.UserName;
+                }
 
                 return moduleModel;
             });

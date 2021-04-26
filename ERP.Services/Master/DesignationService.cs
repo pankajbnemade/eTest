@@ -130,7 +130,11 @@ namespace ERP.Services.Master
 
                 designationModel.DesignationId = designation.DesignationId;
                 designationModel.DesignationName = designation.DesignationName;
-                designationModel.PreparedByName = designation.PreparedByUser.UserName;
+
+                if (null != designation.PreparedByUser)
+                {
+                    designationModel.PreparedByName = designation.PreparedByUser.UserName;
+                }
 
                 return designationModel;
             });

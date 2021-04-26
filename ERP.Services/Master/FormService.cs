@@ -133,8 +133,12 @@ namespace ERP.Services.Master
                 formModel.FormId = form.FormId;
                 formModel.FormName = form.FormName;
                 formModel.ModuleId = form.ModuleId;
+                formModel.ModuleName = form.Module.ModuleName;
 
-                formModel.PreparedByName = form.PreparedByUser.UserName;
+                if (null != form.PreparedByUser)
+                {
+                    formModel.PreparedByName = form.PreparedByUser.UserName;
+                }
 
                 return formModel;
             });

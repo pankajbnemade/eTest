@@ -131,7 +131,10 @@ namespace ERP.Services.Master
                 statusModel.StatusId = status.StatusId;
                 statusModel.StatusName = status.StatusName;
 
-                statusModel.PreparedByName = status.PreparedByUser.UserName;
+                if (null != status.PreparedByUser)
+                {
+                    statusModel.PreparedByName = status.PreparedByUser.UserName;
+                }
 
                 return statusModel;
             });
