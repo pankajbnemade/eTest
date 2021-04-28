@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Master\Views\Company\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\Company\_AddCompany.cshtml" />
+    <Content Remove="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />
+    <Content Remove="Areas\Master\Views\Employee\Index.cshtml" />
+    <Content Remove="Areas\Master\Views\Employee\_AddEmployee.cshtml" />
+    <Content Remove="Areas\Master\Views\Employee\_ConfirmDeleteEmployee.cshtml" />
+    <Content Remove="Areas\Master\Views\VoucherSetupDetail\Index.cshtml" />
     <Content Remove="Areas\Master\Views\UnitOfMeasurement\Index.cshtml" />
     <Content Remove="Areas\Master\Views\UnitOfMeasurement\_AddUnitOfMeasurement.cshtml" />
     <Content Remove="Areas\Master\Views\Country\_AddCountry.cshtml" />
@@ -23,6 +30,8 @@
     <Content Remove="Areas\Master\Views\State\_AddState.cshtml" />
     <Content Remove="Areas\Master\Views\State\_ConfirmDeleteState.cshtml" />
     <Content Remove="Areas\Master\Views\UnitOfMeasurement\_ConfirmDeleteUnitOfMeasurement.cshtml" />
+    <Content Remove="Areas\Master\Views\VoucherSetupDetail\_AddVoucherSetupDetail.cshtml" />
+    <Content Remove="Areas\Master\Views\VoucherSetupDetail\_ConfirmDeleteVoucherSetupDetail.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,6 +78,15 @@
     <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceMaster.cshtml" />
+    <None Include="Areas\Master\Views\Company\Index.cshtml" />
+    <None Include="Areas\Master\Views\Company\_AddCompany.cshtml" />
+    <None Include="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />
+    <None Include="Areas\Master\Views\Employee\Index.cshtml" />
+    <None Include="Areas\Master\Views\Employee\_AddEmployee.cshtml" />
+    <None Include="Areas\Master\Views\Employee\_ConfirmDeleteEmployee.cshtml" />
+    <None Include="Areas\Master\Views\VoucherSetupDetail\Index.cshtml" />
+    <None Include="Areas\Master\Views\VoucherSetupDetail\_AddVoucherSetupDetail.cshtml" />
+    <None Include="Areas\Master\Views\VoucherSetupDetail\_ConfirmDeleteVoucherSetupDetail.cshtml" />
     <None Include="Areas\Master\Views\UnitOfMeasurement\Index.cshtml" />
     <None Include="Areas\Master\Views\UnitOfMeasurement\_AddUnitOfMeasurement.cshtml" />
     <None Include="Areas\Master\Views\UnitOfMeasurement\_ConfirmDeleteUnitOfMeasurement.cshtml" />

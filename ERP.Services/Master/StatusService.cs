@@ -140,7 +140,6 @@ namespace ERP.Services.Master
             });
         }
 
-
         public async Task<IList<SelectListModel>> GetStatusSelectList()
         {
             IList<SelectListModel> resultModel = null;

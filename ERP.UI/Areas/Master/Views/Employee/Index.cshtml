@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Employee List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Employee List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-employee">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="employeeGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    @*<th>Employee Id</th>*@
+                                    <th>Action</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Designation Name</th>
+                                    <th>Department Name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#employeeGrid").DataTable({
+        //dom: 'lftip',
+        "pageLength": 10,
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+
+        "ajax": {
+            "url": "@Url.Action("GetEmployeeList", "Employee")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+        /*{ "data": "EmployeeId", "name": "Employee Id" },*/
+
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditEmployee(' + full.EmployeeId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteEmployee(this, ' + full.EmployeeId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '</div>';
+                }, "orderable": false
+            },
+            { "data": "FirstName", "name": "First Name" },
+            { "data": "LastName", "name": "Last Name" },
+            { "data": "DesignationName", "name": "Designation Name" },
+            { "data": "DepartmentName", "name": "Department Name" }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-employee').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddEmployee", "Employee")', 'html', '',
+    function (data) {
+        $('#modal-employee-master').empty();
+        $('#modal-employee-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit employee
+    function fnEditEmployee(employeeId) {
+        var model = { employeeId: employeeId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditEmployee", "Employee")', 'html', model,
+        function (data) {
+            $('#modal-employee-master').empty();
+            $('#modal-employee-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteEmployee"); }
+<div id="modal-employee-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

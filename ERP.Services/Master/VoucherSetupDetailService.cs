@@ -129,7 +129,9 @@ namespace ERP.Services.Master
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = null;
 
             // create query.
-            IQueryable<Vouchersetupdetail> query = GetQueryByCondition(w => w.VoucherSetupDetId != 0).Include(w => w.PreparedByUser).Include(w => w.VoucherStyle);
+            IQueryable<Vouchersetupdetail> query = GetQueryByCondition(w => w.VoucherSetupDetId != 0)
+                                                .Include(w => w.VoucherSetup).ThenInclude(w => w.Module)
+                                                .Include(w => w.PreparedByUser).Include(w => w.VoucherStyle);
 
             if (0 != voucherSetupDetailId)
                 query = query.Where(w => w.VoucherSetupDetId == voucherSetupDetailId);
@@ -172,9 +174,19 @@ namespace ERP.Services.Master
                 voucherSetupDetailModel.CompanyId = voucherSetupDetail.CompanyId;
                 voucherSetupDetailModel.FinancialYearId = voucherSetupDetail.FinancialYearId;
 
+                if (null != voucherSetupDetail.VoucherSetup)
+                {
+                    voucherSetupDetailModel.VoucherSetupName = voucherSetupDetail.VoucherSetup.VoucherSetupName;
+                }
+
                 if (null != voucherSetupDetail.VoucherStyle)
                 {
                     voucherSetupDetailModel.VoucherStyleName = voucherSetupDetail.VoucherStyle.VoucherStyleName;
+                }
+
+                if (null != voucherSetupDetail.VoucherSetup.Module)
+                {
+                    voucherSetupDetailModel.ModuleName = voucherSetupDetail.VoucherSetup.Module.ModuleName;
                 }
 
                 if (null != voucherSetupDetail.PreparedByUser)

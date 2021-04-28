@@ -179,8 +179,15 @@ namespace ERP.Services.Master
                 companyModel.CurrencyId = Convert.ToInt32 (company.CurrencyId);
                 companyModel.NoOfDecimals = Convert.ToInt32(company.NoOfDecimals);
 
-                //companyModel.CurrencyName = company.Currency.CurrencyName;
-                //companyModel.PreparedByName = company.PreparedByUser.UserName;
+                if (null != company.Currency)
+                {
+                    companyModel.CurrencyName = company.Currency.CurrencyName;
+                }
+
+                 if (null != company.PreparedByUser)
+                {
+                    companyModel.PreparedByName = company.PreparedByUser.UserName;
+                }
 
                 return companyModel;
             });

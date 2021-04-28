@@ -42,6 +42,7 @@ namespace ERP.UI
             services.AddTransient<ICountry, CountryService>();
             services.AddTransient<IDepartment, DepartmentService>();
             services.AddTransient<IDesignation, DesignationService>();
+            services.AddTransient<IEmployee, EmployeeService>();
             services.AddTransient<IForm, FormService>();
             services.AddTransient<IModule, ModuleService>();
             services.AddTransient<IStatus, StatusService>();

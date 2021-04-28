@@ -1,0 +1,98 @@
+﻿@model EmployeeModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.EmployeeId > 0)
+            {
+                <h4 class="modal-title">Edit Employee</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Employee</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveEmployee" class="width100" method="post"
+              asp-action="SaveEmployee" asp-controller="Employee" asp-area="Master"
+              data-ajax-begin="return BeginSaveEmployee();" data-ajax-success="SuccessSaveEmployee"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.EmployeeId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EmployeeCode, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.EmployeeCode, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.EmployeeCode)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.LastName)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DesignationId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.DesignationId, new SelectList(ViewBag.DesignationList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DesignationId)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DepartmentId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.DepartmentId, new SelectList(ViewBag.DepartmentList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DepartmentId)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EmailAddress, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.EmailAddress)
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveEmployee() {
+        var form = $("#frmSaveEmployee");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveEmployee(data) {
+        if (data.Result.Status) {
+            $('#modal-employee-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#employeeGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

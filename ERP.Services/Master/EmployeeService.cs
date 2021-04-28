@@ -113,7 +113,7 @@ namespace ERP.Services.Master
 
             // get records by query.
 
-            IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0).Include(w => w.PreparedByUser);
+            IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0).Include(w => w.PreparedByUser).Include(w => w.Designation).Include(w => w.Department);
 
             if (0 != employeeId)
                 query = query.Where(w => w.EmployeeId == employeeId);
@@ -146,8 +146,15 @@ namespace ERP.Services.Master
                 employeeModel.DepartmentId = employee.DepartmentId;
                 employeeModel.EmailAddress = employee.EmailAddress;
 
-                employeeModel.DesignationName = employee.Designation.DesignationName;
-                employeeModel.DepartmentName = employee.Department.DepartmentName;
+                if (null != employee.Designation)
+                {
+                    employeeModel.DesignationName = employee.Designation.DesignationName;
+                }
+
+                if (null != employee.Department)
+                {
+                    employeeModel.DepartmentName = employee.Department.DepartmentName;
+                }
 
                 if (null != employee.PreparedByUser)
                 {

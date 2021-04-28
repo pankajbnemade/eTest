@@ -1,0 +1,107 @@
+﻿@model VoucherSetupDetailModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.VoucherSetupDetId > 0)
+            {
+                <h4 class="modal-title">Edit Voucher Setup Detail</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Voucher Setup Detail</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveVoucherSetupDetail" class="width100" method="post"
+              asp-action="SaveVoucherSetupDetail" asp-controller="VoucherSetupDetail" asp-area="Master"
+              data-ajax-begin="return BeginSaveVoucherSetupDetail();" data-ajax-success="SuccessSaveVoucherSetupDetail"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+
+                @Html.HiddenFor(model => model.VoucherSetupDetId)
+                @Html.HiddenFor(model => model.CompanyId)
+                @Html.HiddenFor(model => model.FinancialYearId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.VoucherSetupId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.VoucherSetupId, new SelectList(ViewBag.VoucherSetupList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.VoucherSetupId)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.VoucherStyleId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.VoucherStyleId, new SelectList(ViewBag.VoucherStyleList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.VoucherStyleId)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NoPad, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.NoPad, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.NoPad)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NoPreString, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.NoPreString, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.NoPreString)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NoPostString, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.NoPostString, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.NoPostString)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NoSeparator, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.NoSeparator, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.NoSeparator)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FormatText, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.FormatText, new { @class = "form-control", @readonly = "@readonly", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.FormatText)
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveVoucherSetupDetail() {
+        var form = $("#frmSaveVoucherSetupDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveVoucherSetupDetail(data) {
+        if (data.Result.Status) {
+            $('#modal-voucherSetupDetail-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#voucherSetupDetailGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
