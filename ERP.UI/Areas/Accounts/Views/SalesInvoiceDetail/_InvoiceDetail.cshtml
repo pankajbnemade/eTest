@@ -1,16 +1,15 @@
-﻿<div class="row py-md-4">
-    <div class="col px-md-3">
-        <h4>Invoice Detail</h4>
-    </div>
-    <div class="px-md-3">
-        <button class="btn btn-primary" id="add-new-invoice-dtl">Add</button>
+﻿<div class="row mb-3">
+    <div class="col-12 text-right">
+        <button class="btn btn-primary" type="button" id="add-new-invoice-dtl">
+            <i class="fas fa-plus"></i>  Add
+        </button>
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-12">
-        <table id="salesInvoiceDetailGrid" class="table table-striped table-bordered" style="width: 100%;">
+    <div class="col-12">
+        <table id="salesInvoiceDetailGrid" class="table table-bordered table-striped w-100">
             <thead>
-                <tr>
+                <tr class="table-header">
                     <th>Action</th>
                     <th>InvoiceDetId</th>
                     <th>Sr No</th>
@@ -32,9 +31,9 @@
     $(document).ready(function () {
         $("#salesInvoiceDetailGrid").DataTable({
             "pageLength": 20,
-            "dom": "<'row'<'col-sm-6'><'col-sm-6'f>>" +
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
             "scrollX": true,
             "ajax": {

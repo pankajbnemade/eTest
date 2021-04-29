@@ -1,150 +1,137 @@
 ﻿@model SalesInvoiceModel
 
-<div class="row py-md-4">
-    <div class="col px-md-3">
-        <h4>Invoice Master</h4>
-    </div>
-</div>
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.InvoiceNo)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.InvoiceNo):</span>
+
                     @Html.DisplayFor(model => model.InvoiceNo)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.InvoiceDate)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.InvoiceDate):</span>
                     @Html.DisplayFor(model => model.InvoiceDate)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.CustomerLedgerId)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CustomerLedgerId):</span>
                     @Html.DisplayFor(model => model.CustomerLedgerName)
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.CustomerReferenceNo)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CustomerReferenceNo):</span>
                     @Html.DisplayFor(model => model.CustomerReferenceNo)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.BillToAddressId)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.BillToAddressId):</span>
                     @Html.DisplayFor(model => model.BillToAddress)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.CustomerReferenceDate)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CustomerReferenceDate):</span>
                     @Html.DisplayFor(model => model.CustomerReferenceDate)
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.AccountLedgerId)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.AccountLedgerId):</span>
                     @Html.DisplayFor(model => model.AccountLedgerName)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.PaymentTerm)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.PaymentTerm):</span>
                     @Html.DisplayFor(model => model.PaymentTerm)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.BankLedgerId)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.BankLedgerId):</span>
                     @Html.DisplayFor(model => model.BankLedgerName)
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.CreditLimitDays)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CreditLimitDays):</span>
                     @Html.DisplayFor(model => model.CreditLimitDays)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.Remark)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.Remark):</span>
                     @Html.DisplayFor(model => model.Remark)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.TaxModelType)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.TaxModelType):</span>
                     @Html.DisplayFor(model => model.TaxModelType)
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.TaxRegisterId)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.TaxRegisterId):</span>
                     @Html.DisplayFor(model => model.TaxRegisterName)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.CurrencyId)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CurrencyId):</span>
                     @Html.DisplayFor(model => model.CurrencyName)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.ExchangeRate)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ExchangeRate):</span>
                     @Html.DisplayFor(model => model.ExchangeRate)
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.DiscountPercentage)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPercentage):</span>
                     @Html.DisplayFor(model => model.DiscountPercentage)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.DiscountPercentageOrAmount)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPercentageOrAmount):</span>
                     @Html.DisplayFor(model => model.DiscountPercentageOrAmount)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    @Html.DisplayNameFor(model => model.GrossAmountFc)
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.GrossAmountFc):</span>
                     @Html.DisplayFor(model => model.GrossAmountFc)
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditInvoiceMaster('@Model.InvoiceId');">Edit</button>
-               
-                    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">Back</button>
+                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditInvoiceMaster('@Model.InvoiceId');">
+                        <i class="far fa-edit"></i>  Edit
+                    </button>
+                    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">
+                        <i class="fas fa-arrow-left"></i>  Back
+                    </button>
                 </div>
             </div>
         </div>
