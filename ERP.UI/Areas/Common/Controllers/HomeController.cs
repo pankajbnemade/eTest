@@ -32,7 +32,14 @@ namespace ERP.UI.Areas.Common.Controllers
         {
 
             UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
-           
+
+            return View();
+        }
+
+        public IActionResult FAQ()
+        {
+            //UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             return View();
         }
 
