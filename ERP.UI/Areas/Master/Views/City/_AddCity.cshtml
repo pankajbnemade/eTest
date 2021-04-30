@@ -24,17 +24,17 @@
                 @Html.HiddenFor(model => model.CityId)
                 <div class="form-group">
                     @Html.LabelFor(model => model.CityName, new { @class = "required" })
-                    @Html.TextBoxFor(model => model.CityName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.TextBoxFor(model => model.CityName, new { @class = "form-control form-control-sm", @maxlength = "100" })
                     @Html.ValidationMessageFor(model => model.CityName)
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.CountryId, new { @class = "required" })
-                    @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
                     @Html.ValidationMessageFor(model => model.CountryId)
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.StateId, new { @class = "required" })
-                    <select class="form-control" asp-for="StateId">
+                    <select class="form-control form-control-sm" asp-for="StateId">
                         <option value="">Select</option>
                     </select>
                     @Html.ValidationMessageFor(model => model.StateId)

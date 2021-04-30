@@ -1,87 +1,103 @@
-﻿@{
+﻿@model SearchFilterSalesInvoiceModel
+@{
     ViewBag.Title = "Sales Invoice List";
 }
-@model SearchFilterSalesInvoiceModel
 
-@*<form>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text fa fa-edit"></span>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Sales Invoice List</h1>
             </div>
-            <input type="text" class="form-control" placeholder="Username">
-        </div>
-
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Your Email">
-            <div class="input-group-append">
-                <span class="input-group-text fa fa-calendar-alt"></span>
+            <div class="col-sm-6">
             </div>
         </div>
-    </form>*@
+    </div>
+</section>
 
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="container">
-            <div id="searchFilterCriteria">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
-                            @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.InvoiceNo)
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body" id="searchFilterCriteria">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.InvoiceNo)
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
+                                        @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(model => model.CustomerLedgerId)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FromDate)
+                                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                        @Html.ValidationMessageFor(model => model.FromDate)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ToDate)
+                                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                        @Html.ValidationMessageFor(model => model.ToDate)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button class="btn btn-primary" type="button" id="search-invoice">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddSalesInvoice();">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
-                            @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.CustomerLedgerId)
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.FromDate)
-                            @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
-                            @Html.ValidationMessageFor(model => model.FromDate)
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ToDate)
-                            @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
-                            @Html.ValidationMessageFor(model => model.ToDate)
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 text-right">
-                    <button class="btn btn-primary btn-sm" id="search-invoice"><i class="fas fa-search"></i> Search</button>
-                    <button class="btn btn-secondary btn-sm" onclick="javascript: fnResetSearch();"><i class="fas fa-trash-restore-alt"></i> Reset</button>
-                    <button class="btn btn-primary btn-sm" onclick="javascript: fnAddSalesInvoice();"><i class="fas fa-plus-square"></i> New</button>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 table-responsive">
-                <table id="salesInvoiceGrid" class="table table-sm table-striped table-bordered table-hover" style="width: 100%;">
-                    <thead>
-                        <tr class="bg-navbar text-white text-sm-center">
-                            <th class="no-sort">Action</th>
-                            <th>InvoiceId</th>
-                            <th>Invoice No</th>
-                            <th>Invoice Date</th>
-                            <th>Net Amount</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Search Result</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="salesInvoiceGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    <th class="no-sort">Action</th>
+                                    <th>InvoiceId</th>
+                                    <th>Invoice No</th>
+                                    <th>Invoice Date</th>
+                                    <th>Net Amount</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 <div id="modal-invoice-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
 <style>
     .no-sort::after {
@@ -126,7 +142,7 @@
             "columns": [
                 {
                     "orderable": false ,
-                    "width": "1%",
+                    "width": "8%",
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
                             '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceMaster(' + full.InvoiceId + ')"><span class="fa fa-pencil-alt"></span></button>' +
@@ -154,7 +170,7 @@
                 horizontal: 'left',
                 vertical: 'bottom'
             }
-            
+
         });
 
         $('#ToDate').datetimepicker({
@@ -197,4 +213,4 @@
             return false;
         }, null, true, null, false);
     }
-  </script>
+</script>
