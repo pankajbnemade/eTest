@@ -2,6 +2,7 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -134,10 +135,34 @@ namespace ERP.Services.Accounts
                 financialYearModel.FromDate = financialYear.FromDate;
                 financialYearModel.ToDate = financialYear.ToDate;
 
-                financialYearModel.PreparedByName = financialYear.PreparedByUser.UserName;
+                if (null != financialYear.PreparedByUser)
+                {
+                     financialYearModel.PreparedByName = financialYear.PreparedByUser.UserName;
+                }
 
                 return financialYearModel;
             });
         }
+        
+        public async Task<IList<SelectListModel>> GetFinancialYearSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.FinancialYearId != 0))
+            {
+                IQueryable<Financialyear> query = GetQueryByCondition(w => w.FinancialYearId != 0);
+
+                resultModel = await query
+                                    .Select(s => new SelectListModel
+                                    {
+                                        DisplayText = s.FinancialYearName,
+                                        Value = s.FinancialYearId.ToString()
+                                    })
+                                    .ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
     }
 }

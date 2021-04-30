@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "Currency List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Currency List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-currency">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="currencyGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    <th>Action</th>
+                                    <th>Currency Name</th>
+                                    <th>Currency Code</th>
+                                    <th>Denomination</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#currencyGrid").DataTable({
+
+        //dom: 'lftip',
+        "pageLength": 10,
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+
+        "ajax": {
+            "url": "@Url.Action("GetCurrencyList", "Currency")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCurrency(' + full.CurrencyId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCurrency(this, ' + full.CurrencyId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '</div>';
+                }, "orderable": false
+            },
+            { "data": "CurrencyName", "name": "Currency Name" },
+            { "data": "CurrencyCode", "name": "Currency Code" },
+            { "data": "Denomination", "name": "Denomination" }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-currency').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddCurrency", "Currency")', 'html', '',
+    function (data) {
+        $('#modal-currency-master').empty();
+        $('#modal-currency-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit currency
+    function fnEditCurrency(currencyId) {
+        var model = { currencyId: currencyId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCurrency", "Currency")', 'html', model,
+        function (data) {
+            $('#modal-currency-master').empty();
+            $('#modal-currency-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteCurrency"); }
+
+<div id="modal-currency-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

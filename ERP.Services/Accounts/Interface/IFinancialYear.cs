@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,5 +19,7 @@ namespace ERP.Services.Accounts.Interface
         Task<FinancialYearModel> GetFinancialYearById(int financialYearId);
 
         Task<DataTableResultModel<FinancialYearModel>> GetFinancialYearList();
+
+        Task<IList<SelectListModel>> GetFinancialYearSelectList();
     }
 }

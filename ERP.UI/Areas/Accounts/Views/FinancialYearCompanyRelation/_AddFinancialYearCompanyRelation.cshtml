@@ -1,0 +1,74 @@
+﻿@model FinancialYearCompanyRelationModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.FinancialYearCompanyRelationId > 0)
+            {
+                <h4 class="modal-title">Edit Financial Year Company Relation</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Financial Year Company Relation</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveFinancialYearCompanyRelation" class="width100" method="post"
+              asp-action="SaveFinancialYearCompanyRelation" asp-controller="FinancialYearCompanyRelation" asp-area="Master"
+              data-ajax-begin="return BeginSaveFinancialYearCompanyRelation();" data-ajax-success="SuccessSaveFinancialYearCompanyRelation"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.RelationId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CompanyId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(ViewBag.CompanyList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CompanyId)
+                </div>
+               
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FinancialYearId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.FinancialYearId, new SelectList(ViewBag.FinancialYearList, "Value", "DisplayText"), "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.FinancialYearId)
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveFinancialYearCompanyRelation() {
+        var form = $("#frmSaveFinancialYearCompanyRelation");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveFinancialYearCompanyRelation(data) {
+        if (data.Result.Status) {
+            $('#modal-financialYearCompanyRelation-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#financialYearCompanyRelationGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

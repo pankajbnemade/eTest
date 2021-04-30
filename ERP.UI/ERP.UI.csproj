@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
+    <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
+    <Content Remove="Areas\Accounts\Views\FinancialYear\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\FinancialYear\_AddFinancialYear.cshtml" />
+    <Content Remove="Areas\Accounts\Views\Currency\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\Currency\_AddCurrency.cshtml" />
+    <Content Remove="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
+    <Content Remove="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />
+    <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
     <Content Remove="Areas\Master\Views\Company\Index.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_AddCompany.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />
@@ -64,6 +73,12 @@
 
   <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\FinancialYear\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\FinancialYear\_AddFinancialYear.cshtml" />
+    <None Include="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />
+    <None Include="Areas\Accounts\Views\Currency\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\Currency\_AddCurrency.cshtml" />
+    <None Include="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_AddInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_ConfirmDeleteInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_InvoiceDetail.cshtml" />
@@ -78,6 +93,9 @@
     <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
+    <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
     <None Include="Areas\Master\Views\Company\Index.cshtml" />
     <None Include="Areas\Master\Views\Company\_AddCompany.cshtml" />
     <None Include="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />

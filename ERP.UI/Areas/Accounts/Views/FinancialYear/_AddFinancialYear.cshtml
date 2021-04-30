@@ -1,0 +1,108 @@
+﻿@model FinancialYearModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.FinancialYearId > 0)
+            {
+                <h4 class="modal-title">Edit Financial Year</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Financial Year</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveFinancialYear" class="width100" method="post"
+              asp-action="SaveFinancialYear" asp-controller="FinancialYear" asp-area="Master"
+              data-ajax-begin="return BeginSaveFinancialYear();" data-ajax-success="SuccessSaveFinancialYear"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.FinancialYearId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FinancialYearName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.FinancialYearName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.FinancialYearName)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FromDate, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.FromDate, "{0:dd/MMM/yyyy}", new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                    @Html.ValidationMessageFor(model => model.FromDate)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ToDate, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.ToDate, "{0:dd/MMM/yyyy}", new { @class = "form-control", @placeholder = "DD/MMM/YYYY" })
+                    @Html.ValidationMessageFor(model => model.ToDate)
+                </div>
+
+            </div>
+
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    // begin form
+    function BeginSaveFinancialYear() {
+        var form = $("#frmSaveFinancialYear");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveFinancialYear(data) {
+        if (data.Result.Status) {
+            $('#modal-financialYear-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#financialYearGrid').DataTable().ajax.reload();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    $(document).ready(function () {
+
+        const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+        const TO_PATTERN = 'DD/MM/YYYY HH:mm';
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+    });
+</script>

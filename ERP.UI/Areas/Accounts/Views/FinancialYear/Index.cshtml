@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Financial Year List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>FinancialYear List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-financialYear">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="financialYearGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    <th>Action</th>
+                                    <th>Financial Year Name</th>
+                                    <th>From Date</th>
+                                    <th>To Date</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+   
+
+    $(document).ready(function () {
+
+        $("#financialYearGrid").DataTable({
+
+            //dom: 'lftip',
+            "pageLength": 10,
+            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "bPaginate": true,
+            //"bInfo": true,
+            //"bRetrieve": true,
+            //"bFilter": true,
+            //"iDisplayLength": 5,
+            //"bSort": true,
+            //"aaSorting": [],
+            //"order": [],
+            //scrollY: "50vh",
+            //scrollCollapse: true,
+
+            "ajax": {
+                "url": "@Url.Action("GetFinancialYearList", "FinancialYear")",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditFinancialYear(' + full.FinancialYearId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteFinancialYear(this, ' + full.FinancialYearId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '</div>';
+                    }, "orderable": false
+                },
+                { "data": "FinancialYearName", "name": "Financial Year Name" },
+                {
+                    "data": "FromDate", "name": "From Date",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                {
+                    "data": "ToDate", "name": "To Date",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                }
+            ],
+        });
+
+        
+
+    });
+
+// add new record.
+$('#add-new-financialYear').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddFinancialYear", "FinancialYear")', 'html', '',
+    function (data) {
+        $('#modal-financialYear-master').empty();
+        $('#modal-financialYear-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit financialYear
+    function fnEditFinancialYear(financialYearId) {
+        var model = { financialYearId: financialYearId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditFinancialYear", "FinancialYear")', 'html', model,
+        function (data) {
+            $('#modal-financialYear-master').empty();
+            $('#modal-financialYear-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteFinancialYear"); }
+
+<div id="modal-financialYear-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

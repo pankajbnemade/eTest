@@ -1,0 +1,80 @@
+﻿@model CurrencyModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.CurrencyId > 0)
+            {
+                <h4 class="modal-title">Edit Currency</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Currency</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="modal-header-close" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmSaveCurrency" class="width100" method="post"
+              asp-action="SaveCurrency" asp-controller="Currency" asp-area="Master"
+              data-ajax-begin="return BeginSaveCurrency();" data-ajax-success="SuccessSaveCurrency"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.CurrencyId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyName, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.CurrencyName, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.CurrencyName)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyCode, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.CurrencyCode, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.CurrencyCode)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Denomination, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.Denomination, new { @class = "form-control", @maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.Denomination)
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    // begin form
+    function BeginSaveCurrency() {
+        var form = $("#frmSaveCurrency");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveCurrency(data) {
+        if (data.Result.Status) {
+            $('#modal-currency-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#currencyGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
