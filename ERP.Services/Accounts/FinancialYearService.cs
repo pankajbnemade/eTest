@@ -15,7 +15,6 @@ namespace ERP.Services.Accounts
     {
         public FinancialYearService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateFinancialYear(FinancialYearModel financialYearModel)
         {
             int financialYearId = 0;
@@ -26,8 +25,8 @@ namespace ERP.Services.Accounts
             financialYear.FinancialYearName = financialYearModel.FinancialYearName;
             financialYear.FromDate = financialYearModel.FromDate;
             financialYear.ToDate = financialYearModel.ToDate;
-
-            financialYearId = await Create(financialYear);
+            await Create(financialYear);
+            financialYearId = financialYear.FinancialYearId;
 
             return financialYearId; // returns.
         }
@@ -38,14 +37,12 @@ namespace ERP.Services.Accounts
 
             // get record.
             Financialyear financialYear = await GetByIdAsync(w => w.FinancialYearId == financialYearModel.FinancialYearId);
-
             if (null != financialYear)
             {
                 // assign values.
                 financialYear.FinancialYearName = financialYearModel.FinancialYearName;
                 financialYear.FromDate = financialYearModel.FromDate;
                 financialYear.ToDate = financialYearModel.ToDate;
-
                 isUpdated = await Update(financialYear);
             }
 
@@ -58,7 +55,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Financialyear financialYear = await GetByIdAsync(w => w.FinancialYearId == financialYearId);
-
             if (null != financialYear)
             {
                 isDeleted = await Delete(financialYear);
@@ -72,7 +68,6 @@ namespace ERP.Services.Accounts
             FinancialYearModel financialYearModel = null;
 
             IList<FinancialYearModel> financialYearModelList = await GetFinancialYearList(financialYearId);
-
             if (null != financialYearModelList && financialYearModelList.Any())
             {
                 financialYearModel = financialYearModelList.FirstOrDefault();
@@ -86,7 +81,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<FinancialYearModel> resultModel = new DataTableResultModel<FinancialYearModel>();
 
             IList<FinancialYearModel> financialYearModelList = await GetFinancialYearList(0);
-
             if (null != financialYearModelList && financialYearModelList.Any())
             {
                 resultModel = new DataTableResultModel<FinancialYearModel>();
@@ -129,21 +123,16 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 FinancialYearModel financialYearModel = new FinancialYearModel();
-
                 financialYearModel.FinancialYearId = financialYear.FinancialYearId;
                 financialYearModel.FinancialYearName = financialYear.FinancialYearName;
                 financialYearModel.FromDate = financialYear.FromDate;
                 financialYearModel.ToDate = financialYear.ToDate;
-
-                if (null != financialYear.PreparedByUser)
-                {
-                     financialYearModel.PreparedByName = financialYear.PreparedByUser.UserName;
-                }
+                financialYearModel.PreparedByName = null != financialYear.PreparedByUser ? financialYear.PreparedByUser.UserName : null;
 
                 return financialYearModel;
             });
         }
-        
+
         public async Task<IList<SelectListModel>> GetFinancialYearSelectList()
         {
             IList<SelectListModel> resultModel = null;
@@ -151,18 +140,14 @@ namespace ERP.Services.Accounts
             if (await Any(w => w.FinancialYearId != 0))
             {
                 IQueryable<Financialyear> query = GetQueryByCondition(w => w.FinancialYearId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.FinancialYearName,
-                                        Value = s.FinancialYearId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.FinancialYearName,
+                    Value = s.FinancialYearId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

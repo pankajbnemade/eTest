@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Master
@@ -25,8 +24,8 @@ namespace ERP.Services.Master
             State state = new State();
             state.StateName = stateModel.StateName;
             state.CountryId = stateModel.CountryId;
-
-            stateId = await Create(state);
+            await Create(state);
+            stateId = state.StateId;
 
             return stateId; // returns.
         }
@@ -42,13 +41,11 @@ namespace ERP.Services.Master
                 // assign values.
                 state.StateName = stateModel.StateName;
                 state.CountryId = stateModel.CountryId;
-
                 isUpdated = await Update(state);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteState(int stateId)
         {
@@ -63,7 +60,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<StateModel> GetStateById(int stateId)
         {
@@ -141,11 +137,7 @@ namespace ERP.Services.Master
                 stateModel.StateName = state.StateName;
                 stateModel.CountryId = Convert.ToInt32(state.CountryId);
                 stateModel.CountryName = state.Country.CountryName;
-
-                if (null != state.PreparedByUser)
-                {
-                    stateModel.PreparedByName = state.PreparedByUser.UserName;
-                }
+                stateModel.PreparedByName = null != state.PreparedByUser ? state.PreparedByUser.UserName : null;
 
                 return stateModel;
             });
@@ -158,18 +150,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.StateId != 0))
             {
                 IQueryable<State> query = GetQueryByCondition(w => w.StateId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.StateName,
-                                        Value = s.StateId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.StateName,
+                    Value = s.StateId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

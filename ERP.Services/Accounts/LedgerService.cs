@@ -29,8 +29,8 @@ namespace ERP.Services.Accounts
             ledger.ParentGroupId = ledgerModel.ParentGroupId;
             ledger.IsDeActived = ledgerModel.IsDeActived;
             ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
-
-            ledgerId = await Create(ledger);
+            await Create(ledger);
+            ledgerId = ledger.LedgerId;
 
             return ledgerId; // returns.
         }
@@ -41,7 +41,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledger ledger = await GetByIdAsync(w => w.LedgerId == ledgerModel.LedgerId);
-
             if (null != ledger)
             {
                 // assign values.
@@ -52,7 +51,6 @@ namespace ERP.Services.Accounts
                 ledger.ParentGroupId = ledgerModel.ParentGroupId;
                 ledger.IsDeActived = ledgerModel.IsDeActived;
                 ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
-
                 isUpdated = await Update(ledger);
             }
 
@@ -65,7 +63,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledger ledger = await GetByIdAsync(w => w.LedgerId == ledgerId);
-
             if (null != ledger)
             {
                 isDeleted = await Delete(ledger);
@@ -79,7 +76,6 @@ namespace ERP.Services.Accounts
             LedgerModel ledgerModel = null;
 
             IList<LedgerModel> ledgerModelList = await GetLedgerList(ledgerId, 0);
-
             if (null != ledgerModelList && ledgerModelList.Any())
             {
                 ledgerModel = ledgerModelList.FirstOrDefault();
@@ -93,7 +89,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
             IList<LedgerModel> ledgerModelList = await GetLedgerList(0, parentGroupId);
-
             if (null != ledgerModelList && ledgerModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerModel>();
@@ -109,7 +104,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
             IList<LedgerModel> ledgerModelList = await GetLedgerList(0, 0);
-
             if (null != ledgerModelList && ledgerModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerModel>();
@@ -157,7 +151,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 LedgerModel ledgerModel = new LedgerModel();
-
                 ledgerModel.LedgerId = ledger.LedgerId;
                 ledgerModel.LedgerCode = ledger.LedgerCode;
                 ledgerModel.LedgerName = ledger.LedgerName;
@@ -166,11 +159,9 @@ namespace ERP.Services.Accounts
                 ledgerModel.ParentGroupId = ledger.ParentGroupId;
                 ledgerModel.IsDeActived = ledger.IsDeActived;
                 ledgerModel.TaxRegisteredNo = ledger.TaxRegisteredNo;
-
                 //######
-
-                ledgerModel.ParentGroupName = ledger.ParentGroup.LedgerName;
-                ledgerModel.PreparedByName = ledger.PreparedByUser.UserName;
+                ledgerModel.ParentGroupName = null != ledger.ParentGroup ? ledger.ParentGroup.LedgerName : null;
+                ledgerModel.PreparedByName = null != ledger.PreparedByUser ? ledger.PreparedByUser.UserName : null;
 
                 return ledgerModel;
             });
@@ -188,17 +179,14 @@ namespace ERP.Services.Accounts
                 if (0 != parentGroupId)
                     query = query.Where(w => w.ParentGroupId == parentGroupId);
 
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.LedgerName,
-                                        Value = s.LedgerId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.LedgerName,
+                    Value = s.LedgerId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

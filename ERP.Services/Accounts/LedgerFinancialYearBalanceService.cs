@@ -14,14 +14,12 @@ namespace ERP.Services.Accounts
     {
         public LedgerFinancialYearBalanceService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateLedgerFinancialYearBalance(LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel)
         {
             int ledgerFinancialYearBalanceId = 0;
 
             // assign values.
             Ledgerfinancialyearbalance ledgerFinancialYearBalance = new Ledgerfinancialyearbalance();
-
             ledgerFinancialYearBalance.LedgerId = ledgerFinancialYearBalanceModel.LedgerId;
             ledgerFinancialYearBalance.FinancialYearId = ledgerFinancialYearBalanceModel.FinancialYearId;
             ledgerFinancialYearBalance.CompanyId = ledgerFinancialYearBalanceModel.CompanyId;
@@ -29,8 +27,8 @@ namespace ERP.Services.Accounts
             ledgerFinancialYearBalance.ExchangeRate = ledgerFinancialYearBalanceModel.ExchangeRate;
             ledgerFinancialYearBalance.OpeningBalanceAmountFc = ledgerFinancialYearBalanceModel.OpeningBalanceAmountFc;
             ledgerFinancialYearBalance.OpeningBalanceAmount = ledgerFinancialYearBalanceModel.OpeningBalanceAmount;
-
-            ledgerFinancialYearBalanceId = await Create(ledgerFinancialYearBalance);
+            await Create(ledgerFinancialYearBalance);
+            ledgerFinancialYearBalanceId = ledgerFinancialYearBalance.LedgerBalanceId;
 
             return ledgerFinancialYearBalanceId; // returns.
         }
@@ -41,16 +39,13 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledgerfinancialyearbalance ledgerFinancialYearBalance = await GetByIdAsync(w => w.LedgerBalanceId == ledgerFinancialYearBalanceModel.LedgerBalanceId);
-
             if (null != ledgerFinancialYearBalance)
             {
                 // assign values.
-
                 ledgerFinancialYearBalance.CurrencyId = ledgerFinancialYearBalanceModel.CurrencyId;
                 ledgerFinancialYearBalance.ExchangeRate = ledgerFinancialYearBalanceModel.ExchangeRate;
                 ledgerFinancialYearBalance.OpeningBalanceAmountFc = ledgerFinancialYearBalanceModel.OpeningBalanceAmountFc;
                 ledgerFinancialYearBalance.OpeningBalanceAmount = ledgerFinancialYearBalanceModel.OpeningBalanceAmount;
-
                 isUpdated = await Update(ledgerFinancialYearBalance);
             }
 
@@ -63,7 +58,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledgerfinancialyearbalance ledgerFinancialYearBalance = await GetByIdAsync(w => w.LedgerBalanceId == ledgerFinancialYearBalanceId);
-
             if (null != ledgerFinancialYearBalance)
             {
                 isDeleted = await Delete(ledgerFinancialYearBalance);
@@ -77,7 +71,6 @@ namespace ERP.Services.Accounts
             LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel = null;
 
             IList<LedgerFinancialYearBalanceModel> ledgerFinancialYearBalanceModelList = await GetLedgerFinancialYearBalanceList(ledgerFinancialYearBalanceId);
-
             if (null != ledgerFinancialYearBalanceModelList && ledgerFinancialYearBalanceModelList.Any())
             {
                 ledgerFinancialYearBalanceModel = ledgerFinancialYearBalanceModelList.FirstOrDefault();
@@ -91,7 +84,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerFinancialYearBalanceModel> resultModel = new DataTableResultModel<LedgerFinancialYearBalanceModel>();
 
             IList<LedgerFinancialYearBalanceModel> ledgerFinancialYearBalanceModelList = await GetLedgerFinancialYearBalanceList(0);
-
             if (null != ledgerFinancialYearBalanceModelList && ledgerFinancialYearBalanceModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerFinancialYearBalanceModel>();
@@ -121,7 +113,6 @@ namespace ERP.Services.Accounts
             if (null != ledgerFinancialYearBalanceList && ledgerFinancialYearBalanceList.Count > 0)
             {
                 ledgerFinancialYearBalanceModelList = new List<LedgerFinancialYearBalanceModel>();
-
                 foreach (Ledgerfinancialyearbalance ledgerFinancialYearBalance in ledgerFinancialYearBalanceList)
                 {
                     ledgerFinancialYearBalanceModelList.Add(await AssignValueToModel(ledgerFinancialYearBalance));
@@ -136,7 +127,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel = new LedgerFinancialYearBalanceModel();
-
                 ledgerFinancialYearBalanceModel.LedgerBalanceId = ledgerFinancialYearBalance.LedgerBalanceId;
                 ledgerFinancialYearBalanceModel.LedgerId = ledgerFinancialYearBalance.LedgerId;
                 ledgerFinancialYearBalanceModel.FinancialYearId = ledgerFinancialYearBalance.FinancialYearId;

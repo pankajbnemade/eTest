@@ -20,7 +20,6 @@ namespace ERP.Services.Master
 
             // assign values.
             Vouchersetupdetail voucherSetupDetail = new Vouchersetupdetail();
-
             voucherSetupDetail.VoucherSetupId = voucherSetupDetailModel.VoucherSetupId;
             voucherSetupDetail.NoPad = voucherSetupDetailModel.NoPad;
             voucherSetupDetail.NoPreString = voucherSetupDetailModel.NoPreString;
@@ -30,8 +29,8 @@ namespace ERP.Services.Master
             voucherSetupDetail.VoucherStyleId = voucherSetupDetailModel.VoucherStyleId;
             voucherSetupDetail.CompanyId = voucherSetupDetailModel.CompanyId;
             voucherSetupDetail.FinancialYearId = voucherSetupDetailModel.FinancialYearId;
-
-            voucherSetupDetailId = await Create(voucherSetupDetail);
+            await Create(voucherSetupDetail);
+            voucherSetupDetailId = voucherSetupDetail.VoucherSetupDetId;
 
             return voucherSetupDetailId; // returns.
         }
@@ -53,7 +52,6 @@ namespace ERP.Services.Master
                 voucherSetupDetail.VoucherStyleId = voucherSetupDetailModel.VoucherStyleId;
                 voucherSetupDetail.CompanyId = voucherSetupDetailModel.CompanyId;
                 voucherSetupDetail.FinancialYearId = voucherSetupDetailModel.FinancialYearId;
-
                 isUpdated = await Update(voucherSetupDetail);
             }
 
@@ -66,7 +64,6 @@ namespace ERP.Services.Master
 
             // get record.
             Vouchersetupdetail voucherSetupDetail = await GetByIdAsync(w => w.VoucherSetupDetId == voucherSetupDetailId);
-
             if (null != voucherSetupDetail)
             {
                 isDeleted = await Delete(voucherSetupDetail);
@@ -80,7 +77,6 @@ namespace ERP.Services.Master
             VoucherSetupDetailModel voucherSetupDetailModel = null;
 
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(voucherSetupDetailId, 0, 0, 0);
-
             if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
             {
                 voucherSetupDetailModel = voucherSetupDetailModelList.FirstOrDefault();
@@ -94,7 +90,6 @@ namespace ERP.Services.Master
             VoucherSetupDetailModel voucherSetupDetailModel = null;
 
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(0, voucherSetupId, companyId, financialYearId);
-
             if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
             {
                 voucherSetupDetailModel = voucherSetupDetailModelList.FirstOrDefault();
@@ -173,30 +168,18 @@ namespace ERP.Services.Master
                 voucherSetupDetailModel.VoucherStyleId = voucherSetupDetail.VoucherStyleId;
                 voucherSetupDetailModel.CompanyId = voucherSetupDetail.CompanyId;
                 voucherSetupDetailModel.FinancialYearId = voucherSetupDetail.FinancialYearId;
+                voucherSetupDetailModel.VoucherStyleName = null != voucherSetupDetail.VoucherStyle ? voucherSetupDetail.VoucherStyle.VoucherStyleName : null;
 
                 if (null != voucherSetupDetail.VoucherSetup)
                 {
                     voucherSetupDetailModel.VoucherSetupName = voucherSetupDetail.VoucherSetup.VoucherSetupName;
+                    voucherSetupDetailModel.ModuleName = null != voucherSetupDetail.VoucherSetup.Module ? voucherSetupDetail.VoucherSetup.Module.ModuleName : null;
                 }
 
-                if (null != voucherSetupDetail.VoucherStyle)
-                {
-                    voucherSetupDetailModel.VoucherStyleName = voucherSetupDetail.VoucherStyle.VoucherStyleName;
-                }
-
-                if (null != voucherSetupDetail.VoucherSetup.Module)
-                {
-                    voucherSetupDetailModel.ModuleName = voucherSetupDetail.VoucherSetup.Module.ModuleName;
-                }
-
-                if (null != voucherSetupDetail.PreparedByUser)
-                {
-                    voucherSetupDetailModel.PreparedByName = voucherSetupDetail.PreparedByUser.UserName;
-                }
+                voucherSetupDetailModel.PreparedByName = null != voucherSetupDetail.PreparedByUser ? voucherSetupDetail.PreparedByUser.UserName : null; ;
 
                 return voucherSetupDetailModel;
             });
         }
-
     }
 }

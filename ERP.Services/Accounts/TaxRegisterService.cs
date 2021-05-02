@@ -15,21 +15,17 @@ namespace ERP.Services.Accounts
     {
         public TaxRegisterService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateTaxRegister(TaxRegisterModel taxRegisterModel)
         {
             int taxRegisterId = 0;
 
             // assign values.
             Taxregister taxRegister = new Taxregister();
-
             taxRegister.TaxRegisterName = taxRegisterModel.TaxRegisterName;
-
-            taxRegisterId = await Create(taxRegister);
-
+            await Create(taxRegister);
+            taxRegisterId = taxRegister.TaxRegisterId;
             return taxRegisterId; // returns.
         }
-
 
         public async Task<bool> UpdateTaxRegister(TaxRegisterModel taxRegisterModel)
         {
@@ -37,7 +33,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Taxregister taxRegister = await GetByIdAsync(w => w.TaxRegisterId == taxRegisterModel.TaxRegisterId);
-
             if (null != taxRegister)
             {
                 // assign values.
@@ -55,7 +50,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Taxregister taxRegister = await GetByIdAsync(w => w.TaxRegisterId == taxRegisterId);
-
             if (null != taxRegister)
             {
                 isDeleted = await Delete(taxRegister);
@@ -69,7 +63,6 @@ namespace ERP.Services.Accounts
             TaxRegisterModel taxRegisterModel = null;
 
             IList<TaxRegisterModel> taxRegisterModelList = await GetTaxRegisterList(taxRegisterId);
-
             if (null != taxRegisterModelList && taxRegisterModelList.Any())
             {
                 taxRegisterModel = taxRegisterModelList.FirstOrDefault();
@@ -88,7 +81,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<TaxRegisterModel> resultModel = new DataTableResultModel<TaxRegisterModel>();
 
             IList<TaxRegisterModel> taxRegisterModelList = await GetTaxRegisterList(0);
-
             if (null != taxRegisterModelList && taxRegisterModelList.Any())
             {
                 resultModel = new DataTableResultModel<TaxRegisterModel>();
@@ -110,14 +102,11 @@ namespace ERP.Services.Accounts
             if (0 != taxRegisterId)
                 query = query.Where(w => w.TaxRegisterId == taxRegisterId);
 
-
-
             // get records by query.
             List<Taxregister> taxRegisterList = await query.ToListAsync();
             if (null != taxRegisterList && taxRegisterList.Count > 0)
             {
                 taxRegisterModelList = new List<TaxRegisterModel>();
-
                 foreach (Taxregister taxRegister in taxRegisterList)
                 {
                     taxRegisterModelList.Add(await AssignValueToModel(taxRegister));
@@ -132,10 +121,9 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 TaxRegisterModel taxRegisterModel = new TaxRegisterModel();
-
                 taxRegisterModel.TaxRegisterId = taxRegister.TaxRegisterId;
                 taxRegisterModel.TaxRegisterName = taxRegister.TaxRegisterName;
-                taxRegisterModel.PreparedByName = taxRegister.PreparedByUser.UserName;
+                taxRegisterModel.PreparedByName = null != taxRegister.PreparedByUser ? taxRegister.PreparedByUser.UserName : null;
 
                 return taxRegisterModel;
             });
@@ -148,18 +136,14 @@ namespace ERP.Services.Accounts
             if (await Any(w => w.TaxRegisterId != 0))
             {
                 IQueryable<Taxregister> query = GetQueryByCondition(w => w.TaxRegisterId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.TaxRegisterName,
-                                        Value = s.TaxRegisterId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.TaxRegisterName,
+                    Value = s.TaxRegisterId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

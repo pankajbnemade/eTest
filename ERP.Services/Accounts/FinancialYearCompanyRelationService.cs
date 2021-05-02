@@ -14,18 +14,16 @@ namespace ERP.Services.Accounts
     {
         public FinancialYearCompanyRelationService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateFinancialYearCompanyRelation(FinancialYearCompanyRelationModel financialYearCompanyRelationModel)
         {
             int financialYearCompanyRelationId = 0;
 
             // assign values.
             Financialyearcompanyrelation financialYearCompanyRelation = new Financialyearcompanyrelation();
-
             financialYearCompanyRelation.CompanyId = financialYearCompanyRelationModel.CompanyId;
             financialYearCompanyRelation.FinancialYearId = financialYearCompanyRelationModel.FinancialYearId;
-
-            financialYearCompanyRelationId = await Create(financialYearCompanyRelation);
+            await Create(financialYearCompanyRelation);
+            financialYearCompanyRelationId = financialYearCompanyRelation.RelationId;
 
             return financialYearCompanyRelationId; // returns.
         }
@@ -54,7 +52,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Financialyearcompanyrelation financialYearCompanyRelation = await GetByIdAsync(w => w.RelationId == financialYearCompanyRelationId);
-
             if (null != financialYearCompanyRelation)
             {
                 isDeleted = await Delete(financialYearCompanyRelation);
@@ -67,8 +64,7 @@ namespace ERP.Services.Accounts
         {
             FinancialYearCompanyRelationModel financialYearCompanyRelationModel = null;
 
-            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(financialYearCompanyRelationId,0);
-
+            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(financialYearCompanyRelationId, 0);
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
                 financialYearCompanyRelationModel = financialYearCompanyRelationModelList.FirstOrDefault();
@@ -82,7 +78,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
 
             IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0, financialYearId);
-
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
                 resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
@@ -97,8 +92,7 @@ namespace ERP.Services.Accounts
         {
             DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
 
-            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0,0);
-
+            IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0, 0);
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
                 resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
@@ -130,7 +124,6 @@ namespace ERP.Services.Accounts
             if (null != financialYearCompanyRelationList && financialYearCompanyRelationList.Count > 0)
             {
                 financialYearCompanyRelationModelList = new List<FinancialYearCompanyRelationModel>();
-
                 foreach (Financialyearcompanyrelation financialYearCompanyRelation in financialYearCompanyRelationList)
                 {
                     financialYearCompanyRelationModelList.Add(await AssignValueToModel(financialYearCompanyRelation));
@@ -145,7 +138,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 FinancialYearCompanyRelationModel financialYearCompanyRelationModel = new FinancialYearCompanyRelationModel();
-
                 financialYearCompanyRelationModel.RelationId = financialYearCompanyRelation.RelationId;
                 financialYearCompanyRelationModel.CompanyId = financialYearCompanyRelation.CompanyId;
                 financialYearCompanyRelationModel.FinancialYearId = financialYearCompanyRelation.FinancialYearId;

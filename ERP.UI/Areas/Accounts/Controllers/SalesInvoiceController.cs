@@ -95,10 +95,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
             SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
-
             salesInvoiceModel.CompanyId = userSession.CompanyId;
             salesInvoiceModel.FinancialYearId = userSession.FinancialYearId;
-
 
             // generate no.
             GenerateNoModel generateNoModel = await _salesInvoice.GenerateInvoiceNo(userSession.CompanyId, userSession.FinancialYearId);

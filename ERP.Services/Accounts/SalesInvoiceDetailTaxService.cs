@@ -47,12 +47,10 @@ namespace ERP.Services.Accounts
             int multiplier = 1;
 
             SalesInvoiceDetailModel salesInvoiceDetailModel = null;
-
             salesInvoiceDetailModel = await salesInvoiceDetail.GetSalesInvoiceDetailById((int)salesInvoiceDetailTaxModel.InvoiceDetId);
 
             // assign values.
             Salesinvoicedetailtax salesInvoiceDetailTax = new Salesinvoicedetailtax();
-
             salesInvoiceDetailTax.InvoiceDetId = salesInvoiceDetailTaxModel.InvoiceDetId;
             salesInvoiceDetailTax.SrNo = salesInvoiceDetailTaxModel.SrNo;
             salesInvoiceDetailTax.TaxLedgerId = salesInvoiceDetailTaxModel.TaxLedgerId;
@@ -77,8 +75,8 @@ namespace ERP.Services.Accounts
             salesInvoiceDetailTax.TaxAmountFc = multiplier * salesInvoiceDetailTaxModel.TaxAmountFc;
             salesInvoiceDetailTax.TaxAmount = multiplier * salesInvoiceDetailTaxModel.TaxAmount;
             salesInvoiceDetailTax.Remark = salesInvoiceDetailTaxModel.Remark;
-            salesInvoiceDetailTaxId = await Create(salesInvoiceDetailTax);
-
+            await Create(salesInvoiceDetailTax);
+            salesInvoiceDetailTaxId = salesInvoiceDetailTax.InvoiceDetTaxId;
             if (salesInvoiceDetailTaxId != 0)
             {
                 await salesInvoiceDetail.UpdateSalesInvoiceDetailAmount(salesInvoiceDetailTax.InvoiceDetId);
@@ -123,7 +121,6 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailTax.TaxAmountFc = multiplier * salesInvoiceDetailTaxModel.TaxAmountFc;
                 salesInvoiceDetailTax.TaxAmount = multiplier * salesInvoiceDetailTaxModel.TaxAmount;
                 salesInvoiceDetailTax.Remark = salesInvoiceDetailTaxModel.Remark;
-
                 isUpdated = await Update(salesInvoiceDetailTax);
             }
 
@@ -161,7 +158,6 @@ namespace ERP.Services.Accounts
             SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = null;
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(salesInvoiceDetailTaxId, 0, 0);
-
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 salesInvoiceDetailTaxModel = salesInvoiceDetailTaxModelList.FirstOrDefault();
@@ -175,7 +171,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(0, salesInvoiceDetailId, 0);
-
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
@@ -197,7 +192,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(0, 0, 0);
-
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
@@ -255,11 +249,8 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailTaxModel.TaxAmountFc = salesInvoiceDetailTax.TaxAmountFc;
                 salesInvoiceDetailTaxModel.TaxAmount = salesInvoiceDetailTax.TaxAmount;
                 salesInvoiceDetailTaxModel.Remark = salesInvoiceDetailTax.Remark;
-
-                if (null != salesInvoiceDetailTax.TaxLedger)
-                {
-                    salesInvoiceDetailTaxModel.TaxLedgerName = salesInvoiceDetailTax.TaxLedger.LedgerName;
-                }
+                // ###
+                salesInvoiceDetailTaxModel.TaxLedgerName = null != salesInvoiceDetailTax.TaxLedger ? salesInvoiceDetailTax.TaxLedger.LedgerName : null;
 
                 return salesInvoiceDetailTaxModel;
             });

@@ -65,7 +65,8 @@ namespace ERP.Services.Accounts
                 await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
             }
 
-            salesInvoiceDetailId = await Create(salesInvoiceDetail);
+            await Create(salesInvoiceDetail);
+            salesInvoiceDetailId = salesInvoiceDetail.InvoiceDetId;
 
             return salesInvoiceDetailId; // returns.
         }
@@ -76,10 +77,8 @@ namespace ERP.Services.Accounts
 
             // get record.
             Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.InvoiceDetId == salesInvoiceDetailModel.InvoiceDetId);
-
             if (null != salesInvoiceDetail)
             {
-
                 // assign values.
                 salesInvoiceDetail.InvoiceId = salesInvoiceDetailModel.InvoiceId;
                 salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
@@ -94,7 +93,6 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetail.TaxAmount = 0;
                 salesInvoiceDetail.NetAmountFc = 0;
                 salesInvoiceDetail.NetAmount = 0;
-
                 isUpdated = await Update(salesInvoiceDetail);
             }
 
@@ -114,7 +112,6 @@ namespace ERP.Services.Accounts
             // get record.
             Salesinvoicedetail salesInvoiceDetail = await GetQueryByCondition(w => w.InvoiceDetId == salesInvoiceDetailId)
                         .Include(w => w.Invoice).FirstOrDefaultAsync();
-
             if (null != salesInvoiceDetail)
             {
                 salesInvoiceDetail.GrossAmountFc = salesInvoiceDetail.Quantity * salesInvoiceDetail.PerUnit * salesInvoiceDetail.UnitPrice;
@@ -123,7 +120,6 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetail.TaxAmount = salesInvoiceDetail.Invoice.ExchangeRate * salesInvoiceDetail.TaxAmountFc;
                 salesInvoiceDetail.NetAmountFc = salesInvoiceDetail.TaxAmountFc + salesInvoiceDetail.GrossAmountFc;
                 salesInvoiceDetail.NetAmount = salesInvoiceDetail.Invoice.ExchangeRate * salesInvoiceDetail.NetAmountFc;
-
                 isUpdated = await Update(salesInvoiceDetail);
             }
 
@@ -141,7 +137,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.InvoiceDetId == salesInvoiceDetailId);
-
             if (null != salesInvoiceDetail)
             {
                 isDeleted = await Delete(salesInvoiceDetail);
@@ -160,7 +155,6 @@ namespace ERP.Services.Accounts
             SalesInvoiceDetailModel salesInvoiceDetailModel = null;
 
             IList<SalesInvoiceDetailModel> salesInvoiceModelDetailList = await GetSalesInvoiceDetailList(salesInvoiceDetailId, 0);
-
             if (null != salesInvoiceModelDetailList && salesInvoiceModelDetailList.Any())
             {
                 salesInvoiceDetailModel = salesInvoiceModelDetailList.FirstOrDefault();
@@ -174,7 +168,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailModel> resultModel = new DataTableResultModel<SalesInvoiceDetailModel>();
 
             IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = await GetSalesInvoiceDetailList(0, salesInvoiceId);
-
             if (null != salesInvoiceDetailModelList && salesInvoiceDetailModelList.Any())
             {
                 resultModel.ResultList = salesInvoiceDetailModelList;
@@ -194,7 +187,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailModel> resultModel = new DataTableResultModel<SalesInvoiceDetailModel>();
 
             IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = await GetSalesInvoiceDetailList(0, 0);
-
             if (null != salesInvoiceDetailModelList && salesInvoiceDetailModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceDetailModel>();
@@ -254,12 +246,8 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailModel.TaxAmount = salesInvoiceDetail.TaxAmount;
                 salesInvoiceDetailModel.NetAmountFc = salesInvoiceDetail.NetAmountFc;
                 salesInvoiceDetailModel.NetAmount = salesInvoiceDetail.NetAmount;
-
                 //--####
-                if (null != salesInvoiceDetail.UnitOfMeasurement)
-                {
-                    salesInvoiceDetailModel.UnitOfMeasurementName = salesInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName;
-                }
+                salesInvoiceDetailModel.UnitOfMeasurementName = null != salesInvoiceDetail.UnitOfMeasurement ? salesInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
 
                 return salesInvoiceDetailModel;
             });

@@ -21,10 +21,9 @@ namespace ERP.Services.Master
 
             // assign values.
             Designation designation = new Designation();
-
             designation.DesignationName = designationModel.DesignationName;
-            
-            designationId = await Create(designation);
+            await Create(designation);
+            designationId = designation.DesignationId;
 
             return designationId; // returns.
         }
@@ -39,13 +38,11 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 designation.DesignationName = designationModel.DesignationName;
-                
                 isUpdated = await Update(designation);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteDesignation(int designationId)
         {
@@ -60,7 +57,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<DesignationModel> GetDesignationById(int designationId)
         {
@@ -90,7 +86,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all designation list.
         /// </summary>
@@ -102,14 +97,11 @@ namespace ERP.Services.Master
             IList<DesignationModel> designationModelList = null;
 
             // get records by query.
-
             IQueryable<Designation> query = GetQueryByCondition(w => w.DesignationId != 0).Include(w => w.PreparedByUser);
-
             if (0 != designationId)
                 query = query.Where(w => w.DesignationId == designationId);
 
             IList<Designation> designationList = await query.ToListAsync();
-
             if (null != designationList && designationList.Count > 0)
             {
                 designationModelList = new List<DesignationModel>();
@@ -127,14 +119,9 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 DesignationModel designationModel = new DesignationModel();
-
                 designationModel.DesignationId = designation.DesignationId;
                 designationModel.DesignationName = designation.DesignationName;
-
-                if (null != designation.PreparedByUser)
-                {
-                    designationModel.PreparedByName = designation.PreparedByUser.UserName;
-                }
+                designationModel.PreparedByName = null != designation.PreparedByUser ? designation.PreparedByUser.UserName : null;
 
                 return designationModel;
             });
@@ -147,18 +134,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.DesignationId != 0))
             {
                 IQueryable<Designation> query = GetQueryByCondition(w => w.DesignationId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.DesignationName,
-                                        Value = s.DesignationId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.DesignationName,
+                    Value = s.DesignationId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

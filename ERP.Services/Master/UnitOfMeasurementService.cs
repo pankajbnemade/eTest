@@ -21,10 +21,9 @@ namespace ERP.Services.Master
 
             // assign values.
             Unitofmeasurement unitOfMeasurement = new Unitofmeasurement();
-
             unitOfMeasurement.UnitOfMeasurementName = unitOfMeasurementModel.UnitOfMeasurementName;
-          
-            unitOfMeasurementId = await Create(unitOfMeasurement);
+            await Create(unitOfMeasurement);
+            unitOfMeasurementId = unitOfMeasurement.UnitOfMeasurementId;
 
             return unitOfMeasurementId; // returns.
         }
@@ -39,13 +38,11 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 unitOfMeasurement.UnitOfMeasurementName = unitOfMeasurementModel.UnitOfMeasurementName;
-               
                 isUpdated = await Update(unitOfMeasurement);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteUnitOfMeasurement(int unitOfMeasurementId)
         {
@@ -60,7 +57,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<UnitOfMeasurementModel> GetUnitOfMeasurementById(int unitOfMeasurementId)
         {
@@ -90,7 +86,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all unitOfMeasurement list.
         /// </summary>
@@ -104,12 +99,10 @@ namespace ERP.Services.Master
             // get records by query.
 
             IQueryable<Unitofmeasurement> query = GetQueryByCondition(w => w.UnitOfMeasurementId != 0).Include(w => w.PreparedByUser);
-
             if (0 != unitOfMeasurementId)
                 query = query.Where(w => w.UnitOfMeasurementId == unitOfMeasurementId);
 
             IList<Unitofmeasurement> unitOfMeasurementList = await query.ToListAsync();
-
             if (null != unitOfMeasurementList && unitOfMeasurementList.Count > 0)
             {
                 unitOfMeasurementModelList = new List<UnitOfMeasurementModel>();
@@ -127,14 +120,9 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 UnitOfMeasurementModel unitOfMeasurementModel = new UnitOfMeasurementModel();
-
                 unitOfMeasurementModel.UnitOfMeasurementId = unitOfMeasurement.UnitOfMeasurementId;
                 unitOfMeasurementModel.UnitOfMeasurementName = unitOfMeasurement.UnitOfMeasurementName;
-
-                if (null != unitOfMeasurement.PreparedByUser)
-                {
-                    unitOfMeasurementModel.PreparedByName = unitOfMeasurement.PreparedByUser.UserName;
-                }
+                unitOfMeasurementModel.PreparedByName = null != unitOfMeasurement.PreparedByUser ? unitOfMeasurement.PreparedByUser.UserName : null;
 
                 return unitOfMeasurementModel;
             });
@@ -147,14 +135,11 @@ namespace ERP.Services.Master
             if (await Any(w => w.UnitOfMeasurementId != 0))
             {
                 IQueryable<Unitofmeasurement> query = GetQueryByCondition(w => w.UnitOfMeasurementId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.UnitOfMeasurementName,
-                                        Value = s.UnitOfMeasurementId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.UnitOfMeasurementName,
+                    Value = s.UnitOfMeasurementId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.

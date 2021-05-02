@@ -21,10 +21,9 @@ namespace ERP.Services.Master
 
             // assign values.
             Department department = new Department();
-
             department.DepartmentName = departmentModel.DepartmentName;
-
-            departmentId = await Create(department);
+            await Create(department);
+            departmentId = department.DepartmentId;
 
             return departmentId; // returns.
         }
@@ -39,7 +38,6 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 department.DepartmentName = departmentModel.DepartmentName;
-
                 isUpdated = await Update(department);
             }
 
@@ -102,14 +100,11 @@ namespace ERP.Services.Master
             IList<DepartmentModel> departmentModelList = null;
 
             // get records by query.
-
             IQueryable<Department> query = GetQueryByCondition(w => w.DepartmentId != 0).Include(w => w.PreparedByUser);
-
             if (0 != departmentId)
                 query = query.Where(w => w.DepartmentId == departmentId);
 
             IList<Department> departmentList = await query.ToListAsync();
-
             if (null != departmentList && departmentList.Count > 0)
             {
                 departmentModelList = new List<DepartmentModel>();
@@ -127,14 +122,9 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 DepartmentModel departmentModel = new DepartmentModel();
-
                 departmentModel.DepartmentId = department.DepartmentId;
                 departmentModel.DepartmentName = department.DepartmentName;
-
-                if (null != department.PreparedByUser)
-                {
-                    departmentModel.PreparedByName = department.PreparedByUser.UserName;
-                }
+                departmentModel.PreparedByName = null != department.PreparedByUser ? department.PreparedByUser.UserName : null;
 
                 return departmentModel;
             });
@@ -147,18 +137,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.DepartmentId != 0))
             {
                 IQueryable<Department> query = GetQueryByCondition(w => w.DepartmentId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.DepartmentName,
-                                        Value = s.DepartmentId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.DepartmentName,
+                    Value = s.DepartmentId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

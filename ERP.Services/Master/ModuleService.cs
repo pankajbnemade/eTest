@@ -21,11 +21,10 @@ namespace ERP.Services.Master
 
             // assign values.
             Module module = new Module();
-
             module.ModuleName = moduleModel.ModuleName;
             module.IsActive = moduleModel.IsActive;
-           
-            moduleId = await Create(module);
+            await Create(module);
+            moduleId = module.ModuleId;
 
             return moduleId; // returns.
         }
@@ -41,13 +40,11 @@ namespace ERP.Services.Master
                 // assign values.
                 module.ModuleName = moduleModel.ModuleName;
                 module.IsActive = moduleModel.IsActive;
-
                 isUpdated = await Update(module);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteModule(int moduleId)
         {
@@ -62,7 +59,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<ModuleModel> GetModuleById(int moduleId)
         {
@@ -92,7 +88,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all module list.
         /// </summary>
@@ -104,7 +99,6 @@ namespace ERP.Services.Master
             IList<ModuleModel> moduleModelList = null;
 
             // get records by query.
-
             IQueryable<Module> query = GetQueryByCondition(w => w.ModuleId != 0).Include(w => w.PreparedByUser);
 
             if (0 != moduleId)
@@ -133,16 +127,11 @@ namespace ERP.Services.Master
                 moduleModel.ModuleId = module.ModuleId;
                 moduleModel.ModuleName = module.ModuleName;
                 moduleModel.IsActive = module.IsActive;
-                
-                if (null != module.PreparedByUser)
-                {
-                    moduleModel.PreparedByName = module.PreparedByUser.UserName;
-                }
+                moduleModel.PreparedByName = null != module.PreparedByUser ? module.PreparedByUser.UserName : null;
 
                 return moduleModel;
             });
         }
-
 
         public async Task<IList<SelectListModel>> GetModuleSelectList()
         {
@@ -151,19 +140,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.ModuleId != 0))
             {
                 IQueryable<Module> query = GetQueryByCondition(w => w.ModuleId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.ModuleName,
-                                        Value = s.ModuleId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.ModuleName,
+                    Value = s.ModuleId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
-
     }
 }

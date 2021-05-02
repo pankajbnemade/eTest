@@ -21,10 +21,9 @@ namespace ERP.Services.Master
 
             // assign values.
             Voucherstyle voucherStyle = new Voucherstyle();
-
             voucherStyle.VoucherStyleName = voucherStyleModel.VoucherStyleName;
-          
-            voucherStyleId = await Create(voucherStyle);
+            await Create(voucherStyle);
+            voucherStyleId = voucherStyle.VoucherStyleId;
 
             return voucherStyleId; // returns.
         }
@@ -39,13 +38,12 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 voucherStyle.VoucherStyleName = voucherStyleModel.VoucherStyleName;
-               
+
                 isUpdated = await Update(voucherStyle);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteVoucherStyle(int voucherStyleId)
         {
@@ -60,7 +58,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<VoucherStyleModel> GetVoucherStyleById(int voucherStyleId)
         {
@@ -90,7 +87,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all voucherStyle list.
         /// </summary>
@@ -104,7 +100,6 @@ namespace ERP.Services.Master
             // get records by query.
 
             IQueryable<Voucherstyle> query = GetQueryByCondition(w => w.VoucherStyleId != 0);
-
             if (0 != voucherStyleId)
                 query = query.Where(w => w.VoucherStyleId == voucherStyleId);
 
@@ -127,7 +122,6 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 VoucherStyleModel voucherStyleModel = new VoucherStyleModel();
-
                 voucherStyleModel.VoucherStyleId = voucherStyle.VoucherStyleId;
                 voucherStyleModel.VoucherStyleName = voucherStyle.VoucherStyleName;
 
@@ -140,7 +134,6 @@ namespace ERP.Services.Master
             });
         }
 
-
         public async Task<IList<SelectListModel>> GetVoucherStyleSelectList()
         {
             IList<SelectListModel> resultModel = null;
@@ -148,7 +141,6 @@ namespace ERP.Services.Master
             if (await Any(w => w.VoucherStyleId != 0))
             {
                 IQueryable<Voucherstyle> query = GetQueryByCondition(w => w.VoucherStyleId != 0);
-
                 resultModel = await query
                                     .Select(s => new SelectListModel
                                     {
@@ -160,6 +152,5 @@ namespace ERP.Services.Master
 
             return resultModel; // returns.
         }
-
     }
 }

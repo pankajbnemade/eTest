@@ -20,16 +20,14 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Taxregisterdetail taxRegisterDetail = new Taxregisterdetail();
-
             taxRegisterDetail.TaxRegisterId = taxRegisterDetailModel.TaxRegisterId;
             taxRegisterDetail.SrNo = taxRegisterDetailModel.SrNo;
             taxRegisterDetail.TaxLedgerId = taxRegisterDetailModel.TaxLedgerId;
             taxRegisterDetail.TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount;
             taxRegisterDetail.Rate = taxRegisterDetailModel.Rate;
             taxRegisterDetail.TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct;
-
-
-            taxRegisterDetailId = await Create(taxRegisterDetail);
+            await Create(taxRegisterDetail);
+            taxRegisterDetailId = taxRegisterDetail.TaxRegisterDetId;
 
             return taxRegisterDetailId; // returns.
         }
@@ -40,18 +38,15 @@ namespace ERP.Services.Accounts
 
             // get record.
             Taxregisterdetail taxRegisterDetail = await GetByIdAsync(w => w.TaxRegisterDetId == taxRegisterDetailModel.TaxRegisterDetId);
-
             if (null != taxRegisterDetail)
             {
                 // assign values.
-
                 taxRegisterDetail.TaxRegisterId = taxRegisterDetailModel.TaxRegisterId;
                 taxRegisterDetail.SrNo = taxRegisterDetailModel.SrNo;
                 taxRegisterDetail.TaxLedgerId = taxRegisterDetailModel.TaxLedgerId;
                 taxRegisterDetail.TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount;
                 taxRegisterDetail.Rate = taxRegisterDetailModel.Rate;
                 taxRegisterDetail.TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct;
-
                 isUpdated = await Update(taxRegisterDetail);
             }
 
@@ -64,7 +59,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Taxregisterdetail taxRegisterDetail = await GetByIdAsync(w => w.TaxRegisterDetId == taxRegisterDetailId);
-
             if (null != taxRegisterDetail)
             {
                 isDeleted = await Delete(taxRegisterDetail);
@@ -78,7 +72,6 @@ namespace ERP.Services.Accounts
             TaxRegisterDetailModel taxRegisterDetailModel = null;
 
             IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await GetTaxRegisterDetailList(taxRegisterDetailId, 0);
-
             if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Any())
             {
                 taxRegisterDetailModel = taxRegisterDetailModelList.FirstOrDefault();
@@ -92,7 +85,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<TaxRegisterDetailModel> resultModel = new DataTableResultModel<TaxRegisterDetailModel>();
 
             IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await GetTaxRegisterDetailList(0, taxRegisterId);
-
             if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Any())
             {
                 resultModel = new DataTableResultModel<TaxRegisterDetailModel>();
@@ -108,7 +100,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<TaxRegisterDetailModel> resultModel = new DataTableResultModel<TaxRegisterDetailModel>();
 
             IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await GetTaxRegisterDetailList(0, 0);
-
             if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Any())
             {
                 resultModel = new DataTableResultModel<TaxRegisterDetailModel>();
@@ -154,7 +145,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 TaxRegisterDetailModel taxRegisterDetailModel = new TaxRegisterDetailModel();
-
                 taxRegisterDetailModel.TaxRegisterDetId = taxRegisterDetail.TaxRegisterDetId;
                 taxRegisterDetailModel.TaxRegisterId = taxRegisterDetail.TaxRegisterId;
                 taxRegisterDetailModel.SrNo = taxRegisterDetail.SrNo;

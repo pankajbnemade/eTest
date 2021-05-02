@@ -15,25 +15,22 @@ namespace ERP.Services.Accounts
     {
         public CurrencyConversionService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateCurrencyConversion(CurrencyConversionModel currencyConversionModel)
         {
             int currencyConversionId = 0;
 
             // assign values.
             Currencyconversion currencyConversion = new Currencyconversion();
-
             currencyConversion.ConversionId = currencyConversionModel.ConversionId;
             currencyConversion.CompanyId = currencyConversionModel.CompanyId;
             currencyConversion.CurrencyId = currencyConversionModel.CurrencyId;
             currencyConversion.EffectiveDateTime = currencyConversionModel.EffectiveDateTime;
             currencyConversion.ExchangeRate = currencyConversionModel.ExchangeRate;
-
-            currencyConversionId = await Create(currencyConversion);
+            await Create(currencyConversion);
+            currencyConversionId = currencyConversion.ConversionId;
 
             return currencyConversionId; // returns.
         }
-
 
         public async Task<bool> UpdateCurrencyConversion(CurrencyConversionModel currencyConversionModel)
         {
@@ -41,19 +38,16 @@ namespace ERP.Services.Accounts
 
             // get record.
             Currencyconversion currencyConversion = await GetByIdAsync(w => w.ConversionId == currencyConversionModel.ConversionId);
-
             if (null != currencyConversion)
             {
                 // assign values.
                 currencyConversion.EffectiveDateTime = currencyConversionModel.EffectiveDateTime;
                 currencyConversion.ExchangeRate = currencyConversionModel.ExchangeRate;
-
                 isUpdated = await Update(currencyConversion);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteCurrencyConversion(int currencyConversionId)
         {
@@ -61,7 +55,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Currencyconversion currencyConversion = await GetByIdAsync(w => w.ConversionId == currencyConversionId);
-
             if (null != currencyConversion)
             {
                 isDeleted = await Delete(currencyConversion);
@@ -70,13 +63,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<CurrencyConversionModel> GetCurrencyConversionById(int currencyConversionId)
         {
             CurrencyConversionModel currencyConversionModel = null;
 
             IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(currencyConversionId, 0);
-
             if (null != currencyConversionModelList && currencyConversionModelList.Any())
             {
                 currencyConversionModel = currencyConversionModelList.FirstOrDefault();
@@ -85,7 +76,6 @@ namespace ERP.Services.Accounts
             return currencyConversionModel; // returns.
         }
 
-
         public async Task<CurrencyConversionModel> GetExchangeRateByCurrencyId(int currencyId, DateTime invoiceDate)
         {
             CurrencyConversionModel currencyConversionModel = null;
@@ -93,9 +83,9 @@ namespace ERP.Services.Accounts
             // create query.
             if (await Any(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate))
             {
-                Currencyconversion currencyConversion = 
+                Currencyconversion currencyConversion =
                     await GetQueryByCondition(w => w.CurrencyId == currencyId && w.EffectiveDateTime <= invoiceDate)
-                    .Include(w => w.Currency).Include(w => w.Company).Include(w => w.PreparedByUser)                                     
+                    .Include(w => w.Currency).Include(w => w.Company).Include(w => w.PreparedByUser)
                     .OrderByDescending(w => w.EffectiveDateTime).FirstOrDefaultAsync();
 
                 currencyConversionModel = await AssignValueToModel(currencyConversion);
@@ -110,7 +100,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();
 
             IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(0, currencyId);
-
             if (null != currencyConversionModelList && currencyConversionModelList.Any())
             {
                 resultModel = new DataTableResultModel<CurrencyConversionModel>();
@@ -127,7 +116,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();
 
             IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(0, 0);
-
             if (null != currencyConversionModelList && currencyConversionModelList.Any())
             {
                 resultModel = new DataTableResultModel<CurrencyConversionModel>();
@@ -174,13 +162,12 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 CurrencyConversionModel currencyConversionModel = new CurrencyConversionModel();
-
                 currencyConversionModel.ConversionId = currencyConversion.ConversionId;
                 currencyConversionModel.CompanyId = currencyConversion.CompanyId;
                 currencyConversionModel.CurrencyId = currencyConversion.CurrencyId;
                 currencyConversionModel.EffectiveDateTime = currencyConversion.EffectiveDateTime;
                 currencyConversionModel.ExchangeRate = currencyConversion.ExchangeRate;
-                
+                // ###
                 currencyConversionModel.CompanyName = currencyConversion.Company.CompanyName;
                 currencyConversionModel.CurrencyName = currencyConversion.Currency.CurrencyName;
                 currencyConversionModel.PreparedByName = currencyConversion.PreparedByUser.UserName;

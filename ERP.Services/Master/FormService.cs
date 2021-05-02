@@ -21,11 +21,10 @@ namespace ERP.Services.Master
 
             // assign values.
             Form form = new Form();
-
             form.FormName = formModel.FormName;
             form.ModuleId = formModel.ModuleId;
-           
-            formId = await Create(form);
+            await Create(form);
+            formId = form.FormId;
 
             return formId; // returns.
         }
@@ -41,7 +40,6 @@ namespace ERP.Services.Master
                 // assign values.
                 form.FormName = formModel.FormName;
                 form.ModuleId = formModel.ModuleId;
-
                 isUpdated = await Update(form);
             }
 
@@ -62,7 +60,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<FormModel> GetFormById(int formId)
         {
@@ -92,7 +89,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all form list.
         /// </summary>
@@ -106,7 +102,6 @@ namespace ERP.Services.Master
             // get records by query.
 
             IQueryable<Form> query = GetQueryByCondition(w => w.FormId != 0).Include(w => w.PreparedByUser).Include(w => w.Module);
-
             if (0 != formId)
                 query = query.Where(w => w.FormId == formId);
 
@@ -129,16 +124,11 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 FormModel formModel = new FormModel();
-
                 formModel.FormId = form.FormId;
                 formModel.FormName = form.FormName;
                 formModel.ModuleId = form.ModuleId;
                 formModel.ModuleName = form.Module.ModuleName;
-
-                if (null != form.PreparedByUser)
-                {
-                    formModel.PreparedByName = form.PreparedByUser.UserName;
-                }
+                formModel.PreparedByName = null != form.PreparedByUser ? form.PreparedByUser.UserName : null;
 
                 return formModel;
             });
@@ -151,19 +141,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.FormId != 0))
             {
                 IQueryable<Form> query = GetQueryByCondition(w => w.FormId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.FormName,
-                                        Value = s.FormId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.FormName,
+                    Value = s.FormId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
-
     }
 }

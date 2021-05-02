@@ -22,7 +22,6 @@ namespace ERP.Services.Master
 
             // assign values.
             Company company = new Company();
-
             company.CompanyName = companyModel.CompanyName;
             company.Address = companyModel.Address;
             company.EmailAddress = companyModel.EmailAddress;
@@ -33,8 +32,8 @@ namespace ERP.Services.Master
             company.PostalCode = companyModel.PostalCode;
             company.CurrencyId = companyModel.CurrencyId;
             company.NoOfDecimals = companyModel.NoOfDecimals;
-
-            companyId = await Create(company);
+            await Create(company);
+            companyId = company.CompanyId;
 
             return companyId; // returns.
         }
@@ -65,7 +64,6 @@ namespace ERP.Services.Master
                 company.PostalCode = companyModel.PostalCode;
                 company.CurrencyId = companyModel.CurrencyId;
                 company.NoOfDecimals = companyModel.NoOfDecimals;
-
                 isUpdated = await Update(company);
             }
 
@@ -140,7 +138,6 @@ namespace ERP.Services.Master
 
             // create query.
             IQueryable<Company> query = GetQueryByCondition(w => w.CompanyId != 0).Include(s => s.Currency).Include(s => s.PreparedByUser);
-
             // apply filters.
             if (0 != companyId)
                 query = query.Where(w => w.CompanyId == companyId);
@@ -163,10 +160,8 @@ namespace ERP.Services.Master
         {
             return await Task.Run(() =>
             {
-                CompanyModel companyModel = new CompanyModel();
-
                 // assign values.
-
+                CompanyModel companyModel = new CompanyModel();
                 companyModel.CompanyId = company.CompanyId;
                 companyModel.CompanyName = company.CompanyName;
                 companyModel.Address = company.Address;
@@ -176,18 +171,10 @@ namespace ERP.Services.Master
                 companyModel.AlternatePhoneNo = company.AlternatePhoneNo;
                 companyModel.FaxNo = company.FaxNo;
                 companyModel.PostalCode = company.PostalCode;
-                companyModel.CurrencyId = Convert.ToInt32 (company.CurrencyId);
+                companyModel.CurrencyId = Convert.ToInt32(company.CurrencyId);
                 companyModel.NoOfDecimals = Convert.ToInt32(company.NoOfDecimals);
-
-                if (null != company.Currency)
-                {
-                    companyModel.CurrencyName = company.Currency.CurrencyName;
-                }
-
-                 if (null != company.PreparedByUser)
-                {
-                    companyModel.PreparedByName = company.PreparedByUser.UserName;
-                }
+                companyModel.CurrencyName = null != company.Currency ? company.Currency.CurrencyName : null;
+                companyModel.PreparedByName = null != company.PreparedByUser ? company.PreparedByUser.UserName : null;
 
                 return companyModel;
             });
@@ -200,14 +187,11 @@ namespace ERP.Services.Master
             if (await Any(w => w.CompanyId != 0))
             {
                 IQueryable<Company> query = GetQueryByCondition(w => w.CompanyId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.CompanyName,
-                                        Value = s.CompanyId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.CompanyName,
+                    Value = s.CompanyId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.

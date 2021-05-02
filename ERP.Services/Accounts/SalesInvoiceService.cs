@@ -3,7 +3,6 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
-using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -89,8 +88,8 @@ namespace ERP.Services.Accounts
             salesInvoice.StatusId = salesInvoiceModel.StatusId;
             salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
             salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
-
-            salesInvoiceId = await Create(salesInvoice);
+            await Create(salesInvoice);
+            salesInvoiceId = salesInvoice.InvoiceId;
 
             if (salesInvoiceId > 0)
             {
@@ -192,7 +191,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Salesinvoice salesInvoice = await GetByIdAsync(w => w.InvoiceId == salesInvoiceId);
-
             if (null != salesInvoice)
             {
 
@@ -209,7 +207,6 @@ namespace ERP.Services.Accounts
                 }
 
                 salesInvoice.DiscountAmount = salesInvoice.DiscountAmountFc * salesInvoice.ExchangeRate;
-
                 salesInvoice.GrossAmountFc = salesInvoice.TotalLineItemAmountFc + salesInvoice.DiscountAmountFc;
                 salesInvoice.GrossAmount = salesInvoice.GrossAmountFc * salesInvoice.ExchangeRate;
 
@@ -223,7 +220,6 @@ namespace ERP.Services.Accounts
                 }
 
                 salesInvoice.TaxAmount = salesInvoice.TaxAmountFc * salesInvoice.ExchangeRate;
-
                 salesInvoice.NetAmountFc = salesInvoice.GrossAmountFc + salesInvoice.DiscountAmountFc;
                 salesInvoice.NetAmount = salesInvoice.NetAmountFc * salesInvoice.ExchangeRate;
 
@@ -249,7 +245,6 @@ namespace ERP.Services.Accounts
             SalesInvoiceModel salesInvoiceModel = null;
 
             IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(invoiceId);
-
             if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
             {
                 salesInvoiceModel = salesInvoiceModelList.FirstOrDefault();
@@ -378,7 +373,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
-
                 salesInvoiceModel.InvoiceId = salesInvoice.InvoiceId;
                 salesInvoiceModel.InvoiceNo = salesInvoice.InvoiceNo;
                 salesInvoiceModel.InvoiceDate = salesInvoice.InvoiceDate;
@@ -413,54 +407,18 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.FinancialYearId = Convert.ToInt32(salesInvoice.FinancialYearId);
                 salesInvoiceModel.MaxNo = Convert.ToInt32(salesInvoice.MaxNo);
                 salesInvoiceModel.VoucherStyleId = Convert.ToInt32(salesInvoice.VoucherStyleId);
-                //salesInvoiceModel.PreparedByUserId = salesInvoice.PreparedByUserId;
-                //salesInvoiceModel.UpdatedByUserId = salesInvoice.UpdatedByUserId;
-                //salesInvoiceModel.PreparedDateTime = salesInvoice.PreparedDateTime;
-                //salesInvoiceModel.UpdatedDateTime = salesInvoice.UpdatedDateTime;
-
-                if (null != salesInvoice.CustomerLedger)
-                {
-                    salesInvoiceModel.CustomerLedgerName = salesInvoice.CustomerLedger.LedgerName;
-                }
-
-                if (null != salesInvoice.BillToAddress)
-                {
-                    salesInvoiceModel.BillToAddress = salesInvoice.BillToAddress.AddressDescription;
-                }
-
-                if (null != salesInvoice.AccountLedger)
-                {
-                    salesInvoiceModel.AccountLedgerName = salesInvoice.AccountLedger.LedgerName;
-                }
-
-                if (null != salesInvoice.BankLedger)
-                {
-                    salesInvoiceModel.BankLedgerName = salesInvoice.BankLedger.LedgerName;
-                }
-
-                if (null != salesInvoice.TaxRegister)
-                {
-                    salesInvoiceModel.TaxRegisterName = salesInvoice.TaxRegister.TaxRegisterName;
-                }
-
-                if (null != salesInvoice.Currency)
-                {
-                    salesInvoiceModel.CurrencyName = salesInvoice.Currency.CurrencyName;
-                }
-
-                if (null != salesInvoice.Status)
-                {
-                    salesInvoiceModel.StatusName = salesInvoice.Status.StatusName;
-                }
-
-                if (null != salesInvoice.PreparedByUser)
-                {
-                    salesInvoiceModel.PreparedByName = salesInvoice.PreparedByUser.UserName;
-                }
+                // ###
+                salesInvoiceModel.CustomerLedgerName = null != salesInvoice.CustomerLedger ? salesInvoice.CustomerLedger.LedgerName : null;
+                salesInvoiceModel.BillToAddress = null != salesInvoice.BillToAddress ? salesInvoice.BillToAddress.AddressDescription : null;
+                salesInvoiceModel.AccountLedgerName = null != salesInvoice.AccountLedger ? salesInvoice.AccountLedger.LedgerName : null;
+                salesInvoiceModel.BankLedgerName = null != salesInvoice.BankLedger ? salesInvoice.BankLedger.LedgerName : null;
+                salesInvoiceModel.TaxRegisterName = null != salesInvoice.TaxRegister ? salesInvoice.TaxRegister.TaxRegisterName : null;
+                salesInvoiceModel.CurrencyName = null != salesInvoice.Currency ? salesInvoice.Currency.CurrencyName : null;
+                salesInvoiceModel.StatusName = null != salesInvoice.Status ? salesInvoice.Status.StatusName : null;
+                salesInvoiceModel.PreparedByName = null != salesInvoice.PreparedByUser ? salesInvoice.PreparedByUser.UserName : null;
 
                 return salesInvoiceModel;
             });
-
         }
 
         #endregion Private Methods

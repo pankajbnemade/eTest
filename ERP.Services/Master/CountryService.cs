@@ -22,8 +22,8 @@ namespace ERP.Services.Master
             // assign values.
             Country country = new Country();
             country.CountryName = countryModel.CountryName;
-
-            countryId = await Create(country);
+            await Create(country);
+            countryId = country.CountryId;
 
             return countryId; // returns.
         }
@@ -38,13 +38,11 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 country.CountryName = countryModel.CountryName;
-
                 isUpdated = await Update(country);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteCountry(int countryId)
         {
@@ -59,7 +57,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<CountryModel> GetCountryById(int countryId)
         {
@@ -101,14 +98,12 @@ namespace ERP.Services.Master
             IList<CountryModel> countryModelList = null;
 
             // get records by query.
-
             IQueryable<Country> query = GetQueryByCondition(w => w.CountryId != 0).Include(s => s.PreparedByUser);
 
             if (0 != countryId)
                 query = query.Where(w => w.CountryId == countryId);
 
             IList<Country> countryList = await query.ToListAsync();
-
             if (null != countryList && countryList.Count > 0)
             {
                 countryModelList = new List<CountryModel>();
@@ -126,14 +121,9 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 CountryModel countryModel = new CountryModel();
-
                 countryModel.CountryId = country.CountryId;
                 countryModel.CountryName = country.CountryName;
-
-                if (null != country.PreparedByUser)
-                {
-                    countryModel.PreparedByName = country.PreparedByUser.UserName;
-                }
+                countryModel.PreparedByName = null != country.PreparedByUser ? country.PreparedByUser.UserName : null;
 
                 return countryModel;
             });
@@ -146,18 +136,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.CountryId != 0))
             {
                 IQueryable<Country> query = GetQueryByCondition(w => w.CountryId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.CountryName,
-                                        Value = s.CountryId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.CountryName,
+                    Value = s.CountryId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

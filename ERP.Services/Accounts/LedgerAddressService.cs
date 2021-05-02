@@ -15,14 +15,12 @@ namespace ERP.Services.Accounts
     {
         public LedgerAddressService(ErpDbContext dbContext) : base(dbContext) { }
 
-
         public async Task<int> CreateLedgerAddress(LedgerAddressModel ledgerAddressModel)
         {
             int ledgerAddressId = 0;
 
             // assign values.
             Ledgeraddress ledgerAddress = new Ledgeraddress();
-
             ledgerAddress.LedgerId = ledgerAddressModel.LedgerId;
             ledgerAddress.AddressDescription = ledgerAddressModel.AddressDescription;
             ledgerAddress.CountryId = ledgerAddressModel.CountryId;
@@ -32,8 +30,8 @@ namespace ERP.Services.Accounts
             ledgerAddress.PhoneNo = ledgerAddressModel.PhoneNo;
             ledgerAddress.PostalCode = ledgerAddressModel.PostalCode;
             ledgerAddress.FaxNo = ledgerAddressModel.FaxNo;
-
-            ledgerAddressId = await Create(ledgerAddress);
+            await Create(ledgerAddress);
+            ledgerAddressId = ledgerAddress.AddressId;
 
             return ledgerAddressId; // returns.
         }
@@ -45,7 +43,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledgeraddress ledgerAddress = await GetByIdAsync(w => w.AddressId == ledgerAddressModel.AddressId);
-
             if (null != ledgerAddress)
             {
                 // assign values.
@@ -71,7 +68,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledgeraddress ledgerAddress = await GetByIdAsync(w => w.AddressId == ledgerAddressId);
-
             if (null != ledgerAddress)
             {
                 isDeleted = await Delete(ledgerAddress);
@@ -86,7 +82,6 @@ namespace ERP.Services.Accounts
             LedgerAddressModel ledgerAddressModel = null;
 
             IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(ledgerAddressId);
-
             if (null != ledgerAddressModelList && ledgerAddressModelList.Any())
             {
                 ledgerAddressModel = ledgerAddressModelList.FirstOrDefault();
@@ -101,7 +96,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerAddressModel> resultModel = new DataTableResultModel<LedgerAddressModel>();
 
             IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(0);
-
             if (null != ledgerAddressModelList && ledgerAddressModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerAddressModel>();
@@ -145,7 +139,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 LedgerAddressModel ledgerAddressModel = new LedgerAddressModel();
-
                 ledgerAddressModel.AddressId = ledgerAddress.AddressId;
                 ledgerAddressModel.LedgerId = ledgerAddress.LedgerId;
                 ledgerAddressModel.AddressDescription = ledgerAddress.AddressDescription;
@@ -156,9 +149,7 @@ namespace ERP.Services.Accounts
                 ledgerAddressModel.PhoneNo = ledgerAddress.PhoneNo;
                 ledgerAddressModel.PostalCode = ledgerAddress.PostalCode;
                 ledgerAddressModel.FaxNo = ledgerAddress.FaxNo;
-
                 //####
-
                 ledgerAddressModel.LedgerName = ledgerAddress.Ledger.LedgerName;
                 ledgerAddressModel.CountryName = ledgerAddress.Country.CountryName;
                 ledgerAddressModel.StateIName = ledgerAddress.State.StateName;
@@ -167,7 +158,6 @@ namespace ERP.Services.Accounts
                 return ledgerAddressModel;
             });
         }
-
 
         public async Task<IList<SelectListModel>> GetLedgerAddressSelectList(int ledgerId)
         {
@@ -181,13 +171,11 @@ namespace ERP.Services.Accounts
                 if (0 != ledgerId)
                     query = query.Where(w => w.LedgerId == ledgerId);
 
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.AddressDescription,
-                                        Value = s.AddressId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.AddressDescription,
+                    Value = s.AddressId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.

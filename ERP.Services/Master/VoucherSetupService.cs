@@ -21,12 +21,11 @@ namespace ERP.Services.Master
 
             // assign values.
             Vouchersetup voucherSetup = new Vouchersetup();
-
             voucherSetup.VoucherSetupName = voucherSetupModel.VoucherSetupName;
             voucherSetup.ModuleId = voucherSetupModel.ModuleId;
             voucherSetup.IsActive = voucherSetupModel.IsActive;
-
-            voucherSetupId = await Create(voucherSetup);
+            await Create(voucherSetup);
+            voucherSetupId = voucherSetup.VoucherSetupId;
 
             return voucherSetupId; // returns.
         }
@@ -43,7 +42,6 @@ namespace ERP.Services.Master
                 voucherSetup.VoucherSetupName = voucherSetupModel.VoucherSetupName;
                 voucherSetup.ModuleId = voucherSetupModel.ModuleId;
                 voucherSetup.IsActive = voucherSetupModel.IsActive;
-
                 isUpdated = await Update(voucherSetup);
             }
 
@@ -131,18 +129,12 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 VoucherSetupModel voucherSetupModel = new VoucherSetupModel();
-
                 voucherSetupModel.VoucherSetupId = voucherSetup.VoucherSetupId;
                 voucherSetupModel.VoucherSetupName = voucherSetup.VoucherSetupName;
                 voucherSetupModel.ModuleId = voucherSetup.ModuleId;
                 voucherSetupModel.IsActive = voucherSetup.IsActive;
-
                 voucherSetupModel.ModuleName = voucherSetup.Module.ModuleName;
-                
-                if (null != voucherSetup.PreparedByUser)
-                {
-                    voucherSetupModel.PreparedByName = voucherSetup.PreparedByUser.UserName;
-                }
+                voucherSetupModel.PreparedByName = null != voucherSetup.PreparedByUser ? voucherSetup.PreparedByUser.UserName : null;
 
                 return voucherSetupModel;
             });
@@ -155,7 +147,6 @@ namespace ERP.Services.Master
             if (await Any(w => w.VoucherSetupId != 0))
             {
                 IQueryable<Vouchersetup> query = GetQueryByCondition(w => w.VoucherSetupId != 0);
-
                 resultModel = await query
                                     .Select(s => new SelectListModel
                                     {

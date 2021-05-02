@@ -34,16 +34,8 @@ namespace ERP.Services.Master
             City city = new City();
             city.CityName = cityModel.CityName;
             city.StateId = cityModel.StateId;
-
-
-            city.PreparedByUserId = 1;
-            city.PreparedDateTime = DateTime.Now;
-            city.UpdatedByUserId = 1;
-            city.UpdatedDateTime = DateTime.Now;
-
-
-
-            cityId = await Create(city);
+            await Create(city);
+            cityId = city.CityId;
 
             return cityId; // returns.
         }
@@ -66,9 +58,6 @@ namespace ERP.Services.Master
                 // assign values.
                 city.CityName = cityModel.CityName;
                 city.StateId = cityModel.StateId;
-                city.UpdatedByUserId = 1;
-                city.UpdatedDateTime = DateTime.Now;
-
                 isUpdated = await Update(city);
             }
 
@@ -153,7 +142,6 @@ namespace ERP.Services.Master
 
             // create query.
             IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0).Include(s => s.State).ThenInclude(ct => ct.Country).Include(s => s.PreparedByUser);
-
             // apply filters.
             if (0 != cityId)
                 query = query.Where(w => w.CityId == cityId);
@@ -166,7 +154,6 @@ namespace ERP.Services.Master
 
             // get records by query.
             List<City> cityList = await query.ToListAsync();
-
             if (null != cityList && cityList.Count > 0)
             {
                 cityModelList = new List<CityModel>();
@@ -185,19 +172,13 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 CityModel cityModel = new CityModel();
-
                 cityModel.CityId = city.CityId;
                 cityModel.CityName = city.CityName;
                 cityModel.StateId = city.State.StateId;
                 cityModel.StateName = city.State.StateName;
                 cityModel.CountryId = city.State.Country.CountryId;
-
-                cityModel.CountryName = city.State.Country.CountryName;
-                
-                if (null != city.PreparedByUser)
-                {
-                    cityModel.PreparedByName = city.PreparedByUser.UserName;
-                }
+                cityModel.CountryName = null != city.State && null != city.State.Country ? city.State.Country.CountryName : null;
+                cityModel.PreparedByName = null != city.PreparedByUser ? city.PreparedByUser.UserName : null;
 
                 return cityModel;
             });
@@ -210,18 +191,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.CityId != 0))
             {
                 IQueryable<City> query = GetQueryByCondition(w => w.CityId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.CityName,
-                                        Value = s.CityId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.CityName,
+                    Value = s.CityId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

@@ -21,12 +21,11 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Currency currency = new Currency();
-
             currency.CurrencyCode = currencyModel.CurrencyCode;
             currency.CurrencyName = currencyModel.CurrencyName;
             currency.Denomination = currencyModel.Denomination;
-
-            currencyId = await Create(currency);
+            await Create(currency);
+            currencyId = currency.CurrencyId;
 
             return currencyId; // returns.
         }
@@ -37,13 +36,11 @@ namespace ERP.Services.Accounts
 
             // get record.
             Currency currency = await GetByIdAsync(w => w.CurrencyId == currencyModel.CurrencyId);
-
             if (null != currency)
             {
                 // assign values.
                 currency.CurrencyName = currencyModel.CurrencyName;
                 currency.Denomination = currencyModel.Denomination;
-
                 isUpdated = await Update(currency);
             }
 
@@ -56,7 +53,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Currency currency = await GetByIdAsync(w => w.CurrencyId == currencyId);
-
             if (null != currency)
             {
                 isDeleted = await Delete(currency);
@@ -83,7 +79,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<CurrencyModel> resultModel = new DataTableResultModel<CurrencyModel>();
 
             IList<CurrencyModel> currencyModelList = await GetCurrencyList(0);
-
             if (null != currencyModelList && currencyModelList.Any())
             {
                 resultModel = new DataTableResultModel<CurrencyModel>();
@@ -110,7 +105,6 @@ namespace ERP.Services.Accounts
             if (null != currencyList && currencyList.Count > 0)
             {
                 currencyModelList = new List<CurrencyModel>();
-
                 foreach (Currency currency in currencyList)
                 {
                     currencyModelList.Add(await AssignValueToModel(currency));
@@ -125,7 +119,6 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 CurrencyModel currencyModel = new CurrencyModel();
-
                 currencyModel.CurrencyId = currency.CurrencyId;
                 currencyModel.CurrencyCode = currency.CurrencyCode;
                 currencyModel.CurrencyName = currency.CurrencyName;
@@ -142,14 +135,11 @@ namespace ERP.Services.Accounts
             if (await Any(w => w.CurrencyId != 0))
             {
                 IQueryable<Currency> query = GetQueryByCondition(w => w.CurrencyId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.CurrencyName,
-                                        Value = s.CurrencyId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.CurrencyName,
+                    Value = s.CurrencyId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.

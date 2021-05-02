@@ -47,9 +47,7 @@ namespace ERP.Services.Accounts
 
             // assign values.
             SalesInvoiceModel salesInvoiceModel = null;
-
             salesInvoiceModel = await salesInvoice.GetSalesInvoiceById((int)salesInvoiceTaxModel.InvoiceId);
-
             Salesinvoicetax salesInvoiceTax = new Salesinvoicetax();
             salesInvoiceTax.InvoiceId = salesInvoiceTaxModel.InvoiceId;
             salesInvoiceTax.SrNo = salesInvoiceTaxModel.SrNo;
@@ -75,8 +73,8 @@ namespace ERP.Services.Accounts
             salesInvoiceTax.TaxAmountFc = multiplier * salesInvoiceTaxModel.TaxAmountFc;
             salesInvoiceTax.TaxAmount = multiplier * salesInvoiceTaxModel.TaxAmount;
             salesInvoiceTax.Remark = salesInvoiceTaxModel.Remark;
-
-            salesInvoiceTaxId = await Create(salesInvoiceTax);
+            await Create(salesInvoiceTax);
+            salesInvoiceTaxId = salesInvoiceTax.InvoiceTaxId;
 
             if (salesInvoiceTaxId != 0)
             {
@@ -93,11 +91,9 @@ namespace ERP.Services.Accounts
 
             // get record.
             Salesinvoicetax salesInvoiceTax = await GetByIdAsync(w => w.InvoiceTaxId == salesInvoiceTaxModel.InvoiceTaxId);
-
             if (null != salesInvoiceTax)
             {
                 // assign values.
-
                 salesInvoiceTax.InvoiceId = salesInvoiceTaxModel.InvoiceId;
                 salesInvoiceTax.SrNo = salesInvoiceTaxModel.SrNo;
                 salesInvoiceTax.TaxLedgerId = salesInvoiceTaxModel.TaxLedgerId;
@@ -140,7 +136,6 @@ namespace ERP.Services.Accounts
 
             // get record.
             Salesinvoicetax salesInvoiceTax = await GetByIdAsync(w => w.InvoiceTaxId == salesInvoiceTaxId);
-
             if (null != salesInvoiceTax)
             {
                 isDeleted = await Delete(salesInvoiceTax);
@@ -159,7 +154,6 @@ namespace ERP.Services.Accounts
             SalesInvoiceTaxModel salesInvoiceTaxModel = null;
 
             IList<SalesInvoiceTaxModel> salesInvoiceTaxModelList = await GetSalesInvoiceTaxList(salesInvoiceTaxId, 0);
-
             if (null != salesInvoiceTaxModelList && salesInvoiceTaxModelList.Any())
             {
                 salesInvoiceTaxModel = salesInvoiceTaxModelList.FirstOrDefault();
@@ -173,7 +167,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceTaxModel> resultModel = new DataTableResultModel<SalesInvoiceTaxModel>();
 
             IList<SalesInvoiceTaxModel> salesInvoiceTaxModelList = await GetSalesInvoiceTaxList(0, salesInvoiceId);
-
             if (null != salesInvoiceTaxModelList && salesInvoiceTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceTaxModel>();
@@ -195,7 +188,6 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceTaxModel> resultModel = new DataTableResultModel<SalesInvoiceTaxModel>();
 
             IList<SalesInvoiceTaxModel> salesInvoiceTaxModelList = await GetSalesInvoiceTaxList(0, 0);
-
             if (null != salesInvoiceTaxModelList && salesInvoiceTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceTaxModel>();
@@ -251,11 +243,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceTaxModel.TaxAmountFc = salesInvoiceTax.TaxAmountFc;
                 salesInvoiceTaxModel.TaxAmount = salesInvoiceTax.TaxAmount;
                 salesInvoiceTaxModel.Remark = salesInvoiceTax.Remark;
-
-                if (null != salesInvoiceTax.TaxLedger)
-                {
-                    salesInvoiceTaxModel.TaxLedgerName = salesInvoiceTax.TaxLedger.LedgerName;
-                }
+                salesInvoiceTaxModel.TaxLedgerName = null != salesInvoiceTax.TaxLedger ? salesInvoiceTax.TaxLedger.LedgerName : null;
 
                 return salesInvoiceTaxModel;
             });

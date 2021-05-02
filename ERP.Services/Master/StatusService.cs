@@ -21,10 +21,9 @@ namespace ERP.Services.Master
 
             // assign values.
             Status status = new Status();
-
             status.StatusName = statusModel.StatusName;
-
-            statusId = await Create(status);
+            await Create(status);
+            statusId = status.StatusId;
 
             return statusId; // returns.
         }
@@ -39,13 +38,11 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 status.StatusName = statusModel.StatusName;
-
                 isUpdated = await Update(status);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteStatus(int statusId)
         {
@@ -60,7 +57,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<StatusModel> GetStatusById(int statusId)
         {
@@ -90,7 +86,6 @@ namespace ERP.Services.Master
             return resultModel; // returns.
         }
 
-
         /// <summary>
         /// get all status list.
         /// </summary>
@@ -102,9 +97,7 @@ namespace ERP.Services.Master
             IList<StatusModel> statusModelList = null;
 
             // get records by query.
-
             IQueryable<Status> query = GetQueryByCondition(w => w.StatusId != 0).Include(w => w.PreparedByUser);
-
             if (0 != statusId)
                 query = query.Where(w => w.StatusId == statusId);
 
@@ -127,14 +120,9 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 StatusModel statusModel = new StatusModel();
-
                 statusModel.StatusId = status.StatusId;
                 statusModel.StatusName = status.StatusName;
-
-                if (null != status.PreparedByUser)
-                {
-                    statusModel.PreparedByName = status.PreparedByUser.UserName;
-                }
+                statusModel.PreparedByName = null != status.PreparedByUser ? status.PreparedByUser.UserName : null;
 
                 return statusModel;
             });
@@ -147,18 +135,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.StatusId != 0))
             {
                 IQueryable<Status> query = GetQueryByCondition(w => w.StatusId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.StatusName,
-                                        Value = s.StatusId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.StatusName,
+                    Value = s.StatusId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

@@ -21,15 +21,14 @@ namespace ERP.Services.Master
 
             // assign values.
             Employee employee = new Employee();
-
             employee.EmployeeCode = employeeModel.EmployeeCode;
             employee.FirstName = employeeModel.FirstName;
             employee.LastName = employeeModel.LastName;
             employee.DesignationId = employeeModel.DesignationId;
             employee.DepartmentId = employeeModel.DepartmentId;
             employee.EmailAddress = employeeModel.EmailAddress;
-
-            employeeId = await Create(employee);
+            await Create(employee);
+            employeeId = employee.EmployeeId;
 
             return employeeId; // returns.
         }
@@ -49,13 +48,11 @@ namespace ERP.Services.Master
                 employee.DesignationId = employeeModel.DesignationId;
                 employee.DepartmentId = employeeModel.DepartmentId;
                 employee.EmailAddress = employeeModel.EmailAddress;
-
                 isUpdated = await Update(employee);
             }
 
             return isUpdated; // returns.
         }
-
 
         public async Task<bool> DeleteEmployee(int employeeId)
         {
@@ -70,7 +67,6 @@ namespace ERP.Services.Master
 
             return isDeleted; // returns.
         }
-
 
         public async Task<EmployeeModel> GetEmployeeById(int employeeId)
         {
@@ -99,7 +95,6 @@ namespace ERP.Services.Master
 
             return resultModel; // returns.
         }
-
 
         /// <summary>
         /// get all employee list.
@@ -137,7 +132,6 @@ namespace ERP.Services.Master
             return await Task.Run(() =>
             {
                 EmployeeModel employeeModel = new EmployeeModel();
-
                 employeeModel.EmployeeId = employee.EmployeeId;
                 employeeModel.EmployeeCode = employee.EmployeeCode;
                 employeeModel.FirstName = employee.FirstName;
@@ -145,21 +139,9 @@ namespace ERP.Services.Master
                 employeeModel.DesignationId = employee.DesignationId;
                 employeeModel.DepartmentId = employee.DepartmentId;
                 employeeModel.EmailAddress = employee.EmailAddress;
-
-                if (null != employee.Designation)
-                {
-                    employeeModel.DesignationName = employee.Designation.DesignationName;
-                }
-
-                if (null != employee.Department)
-                {
-                    employeeModel.DepartmentName = employee.Department.DepartmentName;
-                }
-
-                if (null != employee.PreparedByUser)
-                {
-                    employeeModel.PreparedByName = employee.PreparedByUser.UserName;
-                }
+                employeeModel.DesignationName = null != employee.Designation ? employee.Designation.DesignationName : null;
+                employeeModel.DepartmentName = null != employee.Department ? employee.Department.DepartmentName : null;
+                employeeModel.PreparedByName = null != employee.PreparedByUser ? employee.PreparedByUser.UserName : null;
 
                 return employeeModel;
             });
@@ -172,18 +154,14 @@ namespace ERP.Services.Master
             if (await Any(w => w.EmployeeId != 0))
             {
                 IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0);
-
-                resultModel = await query
-                                    .Select(s => new SelectListModel
-                                    {
-                                        DisplayText = s.FirstName + " " + s.LastName,
-                                        Value = s.EmployeeId.ToString()
-                                    })
-                                    .ToListAsync();
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = $"{s.FirstName} {s.LastName}",
+                    Value = s.EmployeeId.ToString()
+                }).ToListAsync();
             }
 
             return resultModel; // returns.
         }
-
     }
 }

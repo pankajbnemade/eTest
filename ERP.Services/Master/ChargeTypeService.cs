@@ -20,11 +20,9 @@ namespace ERP.Services.Master
 
             // assign values.
             Chargetype chargeType = new Chargetype();
-
             chargeType.ChargeTypeName = chargeTypeModel.ChargeTypeName;
-          
-
-            chargeTypeId = await Create(chargeType);
+            await Create(chargeType);
+            chargeTypeId = chargeType.ChargeTypeId;
 
             return chargeTypeId; // returns.
         }
@@ -46,8 +44,6 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 chargeType.ChargeTypeName = chargeTypeModel.ChargeTypeName;
-              
-
                 isUpdated = await Update(chargeType);
             }
 
@@ -94,7 +90,6 @@ namespace ERP.Services.Master
             return chargeTypeModel; // returns.
         }
 
-
         /// <summary>
         /// get all chargeType list
         /// </summary>
@@ -122,7 +117,6 @@ namespace ERP.Services.Master
 
             // create query.
             IQueryable<Chargetype> query = GetQueryByCondition(w => w.ChargeTypeId != 0).Include(w => w.PreparedByUser);
-
             // apply filters.
             if (0 != chargeTypeId)
                 query = query.Where(w => w.ChargeTypeId == chargeTypeId);
@@ -145,18 +139,11 @@ namespace ERP.Services.Master
         {
             return await Task.Run(() =>
             {
-                ChargeTypeModel chargeTypeModel = new ChargeTypeModel();
-
                 // assign values.
-                Chargetype chargeType = new Chargetype();
-
+                ChargeTypeModel chargeTypeModel = new ChargeTypeModel();
                 chargeTypeModel.ChargeTypeName = chargeType.ChargeTypeName;
-                
-                if (null != chargeType.PreparedByUser)
-                {
-                    chargeTypeModel.PreparedByName = chargeType.PreparedByUser.UserName;
-                }
-                
+                chargeTypeModel.PreparedByName = null != chargeType.PreparedByUser ? chargeType.PreparedByUser.UserName : null;
+
                 return chargeTypeModel;
             });
         }
