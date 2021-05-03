@@ -3,34 +3,16 @@
     ViewBag.Title = "Sales Invoice List";
 }
 
-@*<section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Sales Invoice List</h1>
-                </div>
-                <div class="col-sm-6">
-                </div>
-            </div>
-        </div>
-    </section>*@
-
-
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-9">
                 <h1>Sales Invoice List</h1>
             </div>
-            <div class="col-3">
-
-
-
-            </div>
+            <div class="col-3"></div>
         </div>
     </div>
 </section>
-
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -75,7 +57,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12 text-right">
-                                <button class="btn btn-primary" type="button" id="search-invoice">
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnSearchInvoice();">
                                     <i class="fas fa-search"></i> Search
                                 </button>
                                 <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
@@ -212,6 +194,11 @@
 
     }
 
+    // search data.
+    function fnSearchInvoice() {
+        $("#salesInvoiceGrid").DataTable().ajax.reload();
+    }
+
     // reset filter.
     function fnResetSearch() {
         $('#searchFilterCriteria :input[type=text]').each(function (index) {
@@ -220,6 +207,8 @@
         $('#searchFilterCriteria select').each(function (index) {
             $(this).val('');
         });
+
+        $("#salesInvoiceGrid").DataTable().ajax.reload();
     }
 
     // new button click.

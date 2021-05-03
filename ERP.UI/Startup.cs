@@ -1,13 +1,16 @@
 using ERP.DataAccess.Entity;
 using ERP.DataAccess.EntityData;
+using ERP.Models.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.IO;
 
 namespace ERP.UI
 {
@@ -16,6 +19,12 @@ namespace ERP.UI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            SeriLogExtensions.ConfigureSeriLog("ERPUI");
+
+            if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Logs")))
+            {
+                Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "Logs"));
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -36,9 +45,14 @@ namespace ERP.UI
             });
 
             services.AddControllers();
-            services.AddControllersWithViews()
-                    .AddRazorRuntimeCompilation()
-                    .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<SeriLogFilter>();
+            }).AddRazorRuntimeCompilation()
+              .AddNewtonsoftJson(options =>
+              {
+                  options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+              });
             services.AddRazorPages();
             services.AddHttpContextAccessor();
             // registering dependency injection(application services).
@@ -52,7 +66,7 @@ namespace ERP.UI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -72,6 +86,9 @@ namespace ERP.UI
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+            //app.UseContextAccessor();
+            loggerFactory.AddSeriLog();
+            app.UseSeriLogMiddleware();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
