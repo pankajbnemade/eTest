@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Manage Invoice";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Purchase Invoice</h1>
+            </div>
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-secondary float-right" title="Back" onclick="javascript: fnBackToIndex();">
+                    <i class="fas fa-arrow-left"></i>  Back
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary card-outline card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="tab-list" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link" id="master-tab" data-toggle="tab" href="#invmaster" role="tab" aria-controls="invmaster" aria-selected="true">Master</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="detail-tab" data-toggle="tab" href="#invdetail" role="tab" aria-controls="invdetail" aria-selected="false">Detail</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="summary-tab" data-toggle="tab" href="#invsummary" role="tab" aria-controls="invsummary" aria-selected="false">Summary</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="invmaster" role="tabpanel" aria-labelledby="master-tab"></div>
+                            <div class="tab-pane fade" id="invdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
+                            <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div>
+                            <div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="modal-invoice" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+<div id="modal-invoice-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+@{ await Html.RenderPartialAsync("~/Areas/Accounts/Views/PurchaseInvoiceTaxDetail/_ConfirmDeleteInvoiceTaxDetail.cshtml"); }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tab-list li:first-child a').tab('show');
+    });
+
+        // back to index invoice.
+    function fnBackToIndex() {
+        window.location.href = '@Url.Action("Index", "PurchaseInvoice")';
+    }
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        //console.log(e.target.id);// newly activated tab
+        //console.log(e.relatedTarget); // previous active tab
+        var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+        switch ($(e.target).attr('aria-controls')) {
+            case 'invmaster':
+                tabUrl = '@Url.Action("ViewInvoiceMaster", "PurchaseInvoice", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
+                break;
+            case 'invdetail':
+                tabUrl = '@Url.Action("InvoiceDetail", "PurchaseInvoiceDetail", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
+                break;
+            case 'invtaxmaster':
+                tabUrl = '@Url.Action("InvoiceTaxMaster", "PurchaseInvoiceTaxMaster", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
+                break;
+            case 'invsummary':
+                tabUrl = '@Url.Action("ViewInvoiceSummary", "PurchaseInvoice", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
+                break;
+            default:
+                break;
+        }
+        $('#' + tabPanel).empty();
+        $('#' + tabPanel).load(tabUrl);
+    });
+</script>

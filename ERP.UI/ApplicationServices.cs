@@ -65,6 +65,12 @@ namespace ERP.UI
             services.AddTransient<ISalesInvoiceDetail, SalesInvoiceDetailService>();
             services.AddTransient<ISalesInvoiceTax, SalesInvoiceTaxService>();
             services.AddTransient<ISalesInvoiceDetailTax, SalesInvoiceDetailTaxService>();
+
+            services.AddTransient<IPurchaseInvoice, PurchaseInvoiceService>();
+            services.AddTransient<IPurchaseInvoiceDetail, PurchaseInvoiceDetailService>();
+            services.AddTransient<IPurchaseInvoiceTax, PurchaseInvoiceTaxService>();
+            services.AddTransient<IPurchaseInvoiceDetailTax, PurchaseInvoiceDetailTaxService>();
+
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
 
 

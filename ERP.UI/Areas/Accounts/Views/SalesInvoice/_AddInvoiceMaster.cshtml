@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            @if (Model.InvoiceId > 0)
+            @if (Model.SalesInvoiceId > 0)
             {
                 <div class="modal-title">Edit Invoice</div>
             }
@@ -20,7 +20,7 @@
               data-ajax-begin="return BeginInvoiceMaster();" data-ajax-success="SuccessInvoiceMaster"
               data-ajax="true" data-ajax-method="post">
             <div class="modal-body">
-                @Html.HiddenFor(model => model.InvoiceId)
+                @Html.HiddenFor(model => model.SalesInvoiceId)
                 @Html.HiddenFor(model => model.CompanyId)
                 @Html.HiddenFor(model => model.FinancialYearId)
                 @Html.HiddenFor(model => model.InvoiceNo)
@@ -215,7 +215,7 @@
 
         $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
 
-        if ('@Model.InvoiceId' > 0 && '@Model.CustomerLedgerId' > 0) {
+        if ('@Model.SalesInvoiceId' > 0 && '@Model.CustomerLedgerId' > 0) {
             GetBillToAddressByLedgerId('@Model.CustomerLedgerId');
         }
     });
@@ -295,9 +295,11 @@
     }
     // success form
     function SuccessInvoiceMaster(data) {
-        $('#modal-invoice-master').modal('hide');
+        
         if (data.Result.Status) {
+            $('#modal-invoice').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
+
             $("#salesInvoiceGrid").DataTable().ajax.reload();
         }
         else {

@@ -15,10 +15,12 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceService : Repository<Salesinvoice>, ISalesInvoice
     {
-        ICommon common;
+        private readonly ICommon common;
+
         public SalesInvoiceService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
         {
             common = _common;
+            //salesInvoiceDetail = _salesInvoiceDetail;
         }
 
         /// <summary>
@@ -55,6 +57,7 @@ namespace ERP.Services.Accounts
             GenerateNoModel generateNoModel = await GenerateInvoiceNo(salesInvoiceModel.CompanyId, salesInvoiceModel.FinancialYearId);
             // assign values.
             Salesinvoice salesInvoice = new Salesinvoice();
+
             salesInvoice.MaxNo = generateNoModel.MaxNo;
             salesInvoice.VoucherStyleId = generateNoModel.VoucherStyleId;
             salesInvoice.InvoiceNo = generateNoModel.VoucherNo;
@@ -88,8 +91,12 @@ namespace ERP.Services.Accounts
             salesInvoice.StatusId = salesInvoiceModel.StatusId;
             salesInvoice.CompanyId = salesInvoiceModel.CompanyId;
             salesInvoice.FinancialYearId = salesInvoiceModel.FinancialYearId;
+
             await Create(salesInvoice);
-            salesInvoiceId = salesInvoice.InvoiceId;
+            salesInvoiceId = salesInvoice.SalesInvoiceId;
+
+            //await Create(salesInvoice);
+            //salesInvoiceId = await Create(salesInvoice);
 
             if (salesInvoiceId > 0)
             {
@@ -111,7 +118,8 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Salesinvoice salesInvoice = await GetByIdAsync(w => w.InvoiceId == salesInvoiceModel.InvoiceId);
+            Salesinvoice salesInvoice = await GetByIdAsync(w => w.SalesInvoiceId == salesInvoiceModel.SalesInvoiceId);
+
             if (null != salesInvoice)
             {
                 // assign values.
@@ -159,7 +167,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await UpdateSalesInvoiceMasterAmount(salesInvoice.InvoiceId);
+                await UpdateSalesInvoiceMasterAmount(salesInvoice.SalesInvoiceId);
             }
             return isUpdated; // returns.
         }
@@ -167,16 +175,17 @@ namespace ERP.Services.Accounts
         /// <summary>
         /// delete sales invoice.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns>
         /// return true if success.
         /// </returns>
-        public async Task<bool> DeleteSalesInvoice(int invoiceId)
+        public async Task<bool> DeleteSalesInvoice(int salesInvoiceId)
         {
             bool isDeleted = false;
 
             // get record.
-            Salesinvoice salesInvoice = await GetByIdAsync(w => w.InvoiceId == invoiceId);
+            Salesinvoice salesInvoice = await GetByIdAsync(w => w.SalesInvoiceId == salesInvoiceId);
+
             if (null != salesInvoice)
             {
                 isDeleted = await Delete(salesInvoice);
@@ -190,7 +199,11 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Salesinvoice salesInvoice = await GetByIdAsync(w => w.InvoiceId == salesInvoiceId);
+
+            Salesinvoice salesInvoice = await GetQueryByCondition(w => w.SalesInvoiceId == salesInvoiceId)
+                .Include(w => w.Salesinvoicedetails).Include(w => w.Salesinvoicetaxes)
+                .Include(w => w.Currency).FirstOrDefaultAsync();
+
             if (null != salesInvoice)
             {
 
@@ -235,16 +248,17 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get sales invoice based on invoiceId
+        /// get sales invoice based on salesInvoiceId
         /// </summary>
         /// <returns>
         /// return record.
         /// </returns>
-        public async Task<SalesInvoiceModel> GetSalesInvoiceById(int invoiceId)
+        public async Task<SalesInvoiceModel> GetSalesInvoiceById(int salesInvoiceId)
         {
             SalesInvoiceModel salesInvoiceModel = null;
 
-            IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(invoiceId);
+            IList<SalesInvoiceModel> salesInvoiceModelList = await GetSalesInvoiceList(salesInvoiceId);
+
             if (null != salesInvoiceModelList && salesInvoiceModelList.Any())
             {
                 salesInvoiceModel = salesInvoiceModelList.FirstOrDefault();
@@ -297,7 +311,7 @@ namespace ERP.Services.Accounts
         {
             DataTableResultModel<SalesInvoiceModel> resultModel = new DataTableResultModel<SalesInvoiceModel>();
 
-            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.InvoiceId != 0);
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0);
 
             if (!string.IsNullOrEmpty(searchFilterModel.InvoiceNo))
             {
@@ -324,9 +338,10 @@ namespace ERP.Services.Accounts
 
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
+
             resultModel.ResultList = await query.Select(s => new SalesInvoiceModel
             {
-                InvoiceId = s.InvoiceId,
+                SalesInvoiceId = s.SalesInvoiceId,
                 InvoiceNo = s.InvoiceNo,
                 InvoiceDate = s.InvoiceDate,
                 NetAmount = s.NetAmount,
@@ -342,7 +357,7 @@ namespace ERP.Services.Accounts
             IList<SalesInvoiceModel> salesInvoiceModelList = null;
 
             // create query.
-            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.InvoiceId != 0)
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0)
                                             .Include(w => w.CustomerLedger).Include(w => w.BillToAddress)
                                             .Include(w => w.AccountLedger).Include(w => w.BankLedger)
                                             .Include(w => w.TaxRegister).Include(w => w.Currency)
@@ -350,7 +365,7 @@ namespace ERP.Services.Accounts
 
             // apply filters.
             if (0 != salesInvoiceId)
-                query = query.Where(w => w.InvoiceId == salesInvoiceId);
+                query = query.Where(w => w.SalesInvoiceId == salesInvoiceId);
 
             // get records by query.
             List<Salesinvoice> salesInvoiceList = await query.ToListAsync();
@@ -373,7 +388,7 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
-                salesInvoiceModel.InvoiceId = salesInvoice.InvoiceId;
+                salesInvoiceModel.SalesInvoiceId = salesInvoice.SalesInvoiceId;
                 salesInvoiceModel.InvoiceNo = salesInvoice.InvoiceNo;
                 salesInvoiceModel.InvoiceDate = salesInvoice.InvoiceDate;
                 salesInvoiceModel.CustomerLedgerId = salesInvoice.CustomerLedgerId;
@@ -407,6 +422,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.FinancialYearId = Convert.ToInt32(salesInvoice.FinancialYearId);
                 salesInvoiceModel.MaxNo = Convert.ToInt32(salesInvoice.MaxNo);
                 salesInvoiceModel.VoucherStyleId = Convert.ToInt32(salesInvoice.VoucherStyleId);
+
                 // ###
                 salesInvoiceModel.CustomerLedgerName = null != salesInvoice.CustomerLedger ? salesInvoice.CustomerLedger.LedgerName : null;
                 salesInvoiceModel.BillToAddress = null != salesInvoice.BillToAddress ? salesInvoice.BillToAddress.AddressDescription : null;

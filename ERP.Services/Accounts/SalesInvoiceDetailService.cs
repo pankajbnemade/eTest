@@ -31,9 +31,9 @@ namespace ERP.Services.Accounts
         {
             int srNo = 0;
 
-            if (await Any(w => w.InvoiceDetId != 0 && w.InvoiceId == salesInvoiceId))
+            if (await Any(w => w.SalesInvoiceDetId != 0 && w.SalesInvoiceId == salesInvoiceId))
             {
-                srNo = await GetQueryByCondition(w => w.InvoiceDetId != 0 && w.InvoiceId == salesInvoiceId).MaxAsync(m => Convert.ToInt32(m.SrNo));
+                srNo = await GetQueryByCondition(w => w.SalesInvoiceDetId != 0 && w.SalesInvoiceId == salesInvoiceId).MaxAsync(m => Convert.ToInt32(m.SrNo));
             }
 
             return (srNo + 1);
@@ -45,7 +45,7 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Salesinvoicedetail salesInvoiceDetail = new Salesinvoicedetail();
-            salesInvoiceDetail.InvoiceId = salesInvoiceDetailModel.InvoiceId;
+            salesInvoiceDetail.SalesInvoiceId = salesInvoiceDetailModel.SalesInvoiceId;
             salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
             salesInvoiceDetail.Description = salesInvoiceDetailModel.Description;
             salesInvoiceDetail.UnitOfMeasurementId = salesInvoiceDetailModel.UnitOfMeasurementId;
@@ -59,14 +59,16 @@ namespace ERP.Services.Accounts
             salesInvoiceDetail.NetAmountFc = 0;
             salesInvoiceDetail.NetAmount = 0;
 
+            await Create(salesInvoiceDetail);
+            salesInvoiceDetailId = salesInvoiceDetail.SalesInvoiceDetId;
+
+            //salesInvoiceDetailId = await Create(salesInvoiceDetail);
+
             if (salesInvoiceDetailId != 0)
             {
                 await UpdateSalesInvoiceDetailAmount(salesInvoiceDetailId);
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
+                //await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.salesInvoiceId);
             }
-
-            await Create(salesInvoiceDetail);
-            salesInvoiceDetailId = salesInvoiceDetail.InvoiceDetId;
 
             return salesInvoiceDetailId; // returns.
         }
@@ -76,11 +78,11 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.InvoiceDetId == salesInvoiceDetailModel.InvoiceDetId);
+            Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.SalesInvoiceDetId == salesInvoiceDetailModel.SalesInvoiceDetId);
             if (null != salesInvoiceDetail)
             {
                 // assign values.
-                salesInvoiceDetail.InvoiceId = salesInvoiceDetailModel.InvoiceId;
+                salesInvoiceDetail.SalesInvoiceId = salesInvoiceDetailModel.SalesInvoiceId;
                 salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
                 salesInvoiceDetail.Description = salesInvoiceDetailModel.Description;
                 salesInvoiceDetail.UnitOfMeasurementId = salesInvoiceDetailModel.UnitOfMeasurementId;
@@ -98,8 +100,8 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await UpdateSalesInvoiceDetailAmount(salesInvoiceDetailModel.InvoiceDetId);
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
+                await UpdateSalesInvoiceDetailAmount(salesInvoiceDetailModel.SalesInvoiceDetId);
+                //await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.salesInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -110,22 +112,24 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Salesinvoicedetail salesInvoiceDetail = await GetQueryByCondition(w => w.InvoiceDetId == salesInvoiceDetailId)
-                        .Include(w => w.Invoice).FirstOrDefaultAsync();
+            Salesinvoicedetail salesInvoiceDetail = await GetQueryByCondition(w => w.SalesInvoiceDetId == salesInvoiceDetailId)
+                        .Include(w => w.SalesInvoice).Include(w => w.Salesinvoicedetailtaxes).FirstOrDefaultAsync();
+
             if (null != salesInvoiceDetail)
             {
                 salesInvoiceDetail.GrossAmountFc = salesInvoiceDetail.Quantity * salesInvoiceDetail.PerUnit * salesInvoiceDetail.UnitPrice;
-                salesInvoiceDetail.GrossAmount = salesInvoiceDetail.GrossAmountFc * salesInvoiceDetail.Invoice.ExchangeRate;
+                salesInvoiceDetail.GrossAmount = salesInvoiceDetail.GrossAmountFc * salesInvoiceDetail.SalesInvoice.ExchangeRate;
                 salesInvoiceDetail.TaxAmountFc = salesInvoiceDetail.Salesinvoicedetailtaxes.Sum(s => s.TaxAmountFc);
-                salesInvoiceDetail.TaxAmount = salesInvoiceDetail.Invoice.ExchangeRate * salesInvoiceDetail.TaxAmountFc;
+                salesInvoiceDetail.TaxAmount = salesInvoiceDetail.SalesInvoice.ExchangeRate * salesInvoiceDetail.TaxAmountFc;
                 salesInvoiceDetail.NetAmountFc = salesInvoiceDetail.TaxAmountFc + salesInvoiceDetail.GrossAmountFc;
-                salesInvoiceDetail.NetAmount = salesInvoiceDetail.Invoice.ExchangeRate * salesInvoiceDetail.NetAmountFc;
+                salesInvoiceDetail.NetAmount = salesInvoiceDetail.SalesInvoice.ExchangeRate * salesInvoiceDetail.NetAmountFc;
+
                 isUpdated = await Update(salesInvoiceDetail);
             }
 
             if (isUpdated != false)
             {
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.SalesInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -136,7 +140,8 @@ namespace ERP.Services.Accounts
             bool isDeleted = false;
 
             // get record.
-            Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.InvoiceDetId == salesInvoiceDetailId);
+            Salesinvoicedetail salesInvoiceDetail = await GetByIdAsync(w => w.SalesInvoiceDetId == salesInvoiceDetailId);
+
             if (null != salesInvoiceDetail)
             {
                 isDeleted = await Delete(salesInvoiceDetail);
@@ -144,7 +149,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.InvoiceId);
+                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceDetail.SalesInvoiceId);
             }
 
             return isDeleted; // returns.
@@ -155,6 +160,7 @@ namespace ERP.Services.Accounts
             SalesInvoiceDetailModel salesInvoiceDetailModel = null;
 
             IList<SalesInvoiceDetailModel> salesInvoiceModelDetailList = await GetSalesInvoiceDetailList(salesInvoiceDetailId, 0);
+
             if (null != salesInvoiceModelDetailList && salesInvoiceModelDetailList.Any())
             {
                 salesInvoiceDetailModel = salesInvoiceModelDetailList.FirstOrDefault();
@@ -197,19 +203,26 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
+        //public async Task<IList<SalesInvoiceDetailModel>> GetSalesInvoiceDetailList( int salesInvoiceId)
+        //{
+        //    IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = await GetSalesInvoiceDetailList(0, salesInvoiceId);
+
+        //    return salesInvoiceDetailModelList; // returns.
+        //}
+
         private async Task<IList<SalesInvoiceDetailModel>> GetSalesInvoiceDetailList(int salesInvoiceDetailId, int salesInvoiceId)
         {
             IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = null;
 
             // create query.
-            IQueryable<Salesinvoicedetail> query = GetQueryByCondition(w => w.InvoiceDetId != 0)
+            IQueryable<Salesinvoicedetail> query = GetQueryByCondition(w => w.SalesInvoiceDetId != 0)
                                                         .Include(w => w.UnitOfMeasurement);
             // apply filters.
             if (0 != salesInvoiceDetailId)
-                query = query.Where(w => w.InvoiceDetId == salesInvoiceDetailId);
+                query = query.Where(w => w.SalesInvoiceDetId == salesInvoiceDetailId);
 
             if (0 != salesInvoiceId)
-                query = query.Where(w => w.InvoiceId == salesInvoiceId);
+                query = query.Where(w => w.SalesInvoiceId == salesInvoiceId);
 
             // get records by query.
             List<Salesinvoicedetail> salesInvoiceDetailList = await query.ToListAsync();
@@ -232,8 +245,8 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 SalesInvoiceDetailModel salesInvoiceDetailModel = new SalesInvoiceDetailModel();
-                salesInvoiceDetailModel.InvoiceDetId = salesInvoiceDetail.InvoiceDetId;
-                salesInvoiceDetailModel.InvoiceId = salesInvoiceDetail.InvoiceId;
+                salesInvoiceDetailModel.SalesInvoiceDetId = salesInvoiceDetail.SalesInvoiceDetId;
+                salesInvoiceDetailModel.SalesInvoiceId = salesInvoiceDetail.SalesInvoiceId;
                 salesInvoiceDetailModel.SrNo = salesInvoiceDetail.SrNo;
                 salesInvoiceDetailModel.Description = salesInvoiceDetail.Description;
                 salesInvoiceDetailModel.UnitOfMeasurementId = salesInvoiceDetail.UnitOfMeasurementId;

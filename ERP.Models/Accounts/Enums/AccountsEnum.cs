@@ -49,6 +49,9 @@ namespace ERP.Models.Accounts.Enums
         [Description("Sundry Debtor")]
         SundryDebtor = 26,
 
+        [Description("Sundry Creditor")]
+        SundryCreditor = 16,
+
         [Description("Bank A/C")]
         BankAccount = 27,
     }

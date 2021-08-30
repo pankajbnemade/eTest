@@ -1,0 +1,105 @@
+﻿@*<div class="row mb-3">
+        <div class="col-12 text-right">
+
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-12">
+        <table id="purchaseInvoiceDetailGrid" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr class="table-header">
+                    <th>
+                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-invoice-dtl" title="Add New Line">
+                            <i class="fas fa-plus"></i>
+                        </button>Action
+                    </th>
+                    <th>PurchaseInvoiceDetId</th>
+                    <th>Sr No</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>UOM</th>
+                    <th>Per Unit</th>
+                    <th>Unit Price</th>
+                    <th>Gross Amount FC</th>
+                    <th>Tax Amount FC</th>
+                    <th>Net Amount FC</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#purchaseInvoiceDetailGrid").DataTable({
+            "pageLength": 25,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetPurchaseInvoiceDetailList", "PurchaseInvoiceDetail", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceDetail(' + full.PurchaseInvoiceDetId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceDetail(this, ' + full.PurchaseInvoiceDetId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnInvoiceTaxDetail(' + full.PurchaseInvoiceDetId + ')"><span class="fa fa-info-circle"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "PurchaseInvoiceDetId", "name": "PurchaseInvoiceDetId", "visible": false  },
+                { "data": "SrNo", "name": "SrNo" },
+                { "data": "Description", "name": "Description" },
+                { "data": "Quantity", "name": "Quantity", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "UnitOfMeasurementName", "name": "UOM" },
+                { "data": "PerUnit", "name": "Per Unit" },
+                { "data": "UnitPrice", "name": "Unit Price", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "GrossAmountFc", "name": "GrossAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "TaxAmountFc", "name": "TaxAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "NetAmountFc", "name": "NetAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') }
+            ],
+        });
+    });
+
+    // add new invoice detail.
+    $('#add-new-invoice-dtl').click(function () {
+        var model = { purchaseInvoiceId: '@ViewBag.PurchaseInvoiceId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceDetail", "PurchaseInvoiceDetail")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit invoice detail.
+    function fnEditInvoiceDetail(purchaseInvoiceDetId) {
+        var model = { purchaseInvoiceDetId: purchaseInvoiceDetId };
+
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceDetail", "PurchaseInvoiceDetail")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+    // invoice tax deatil.
+    function fnInvoiceTaxDetail(purchaseInvoiceDetId) {
+        var model = { purchaseInvoiceDetId: purchaseInvoiceDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("InvoiceTaxDetail", "PurchaseInvoiceTaxDetail")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteInvoiceDetail"); }

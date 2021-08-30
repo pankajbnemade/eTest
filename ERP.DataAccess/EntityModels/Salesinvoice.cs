@@ -16,7 +16,7 @@ namespace ERP.DataAccess.EntityModels
         }
 
         [Key]
-        public int InvoiceId { get; set; }
+        public int SalesInvoiceId { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string InvoiceNo { get; set; }
         [Column(TypeName = "datetime")]
@@ -114,9 +114,9 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Salesinvoices))]
         public virtual Voucherstyle VoucherStyle { get; set; }
-        [InverseProperty(nameof(Salesinvoicedetail.Invoice))]
+        [InverseProperty(nameof(Salesinvoicedetail.SalesInvoice))]
         public virtual ICollection<Salesinvoicedetail> Salesinvoicedetails { get; set; }
-        [InverseProperty(nameof(Salesinvoicetax.Invoice))]
+        [InverseProperty(nameof(Salesinvoicetax.SalesInvoice))]
         public virtual ICollection<Salesinvoicetax> Salesinvoicetaxes { get; set; }
     }
 }

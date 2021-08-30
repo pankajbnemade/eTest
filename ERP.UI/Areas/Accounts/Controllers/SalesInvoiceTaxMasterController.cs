@@ -27,9 +27,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> InvoiceTaxMaster(int invoiceId)
+        public async Task<IActionResult> InvoiceTaxMaster(int salesInvoiceId)
         {
-            ViewBag.InvoiceId = invoiceId;
+            ViewBag.SalesInvoiceId = salesInvoiceId;
 
             return await Task.Run(() =>
             {
@@ -42,9 +42,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> GetSalesInvoiceTaxMasterList(int invoiceId)
+        public async Task<JsonResult> GetSalesInvoiceTaxMasterList(int salesInvoiceId)
         {
-            DataTableResultModel<SalesInvoiceTaxModel> resultModel = await _salesInvoiceTax.GetSalesInvoiceTaxBySalesInvoiceId(invoiceId);
+            DataTableResultModel<SalesInvoiceTaxModel> resultModel = await _salesInvoiceTax.GetSalesInvoiceTaxBySalesInvoiceId(salesInvoiceId);
 
             return await Task.Run(() =>
             {
@@ -62,15 +62,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> AddInvoiceTaxMaster(int invoiceId)
+        public async Task<IActionResult> AddInvoiceTaxMaster(int salesInvoiceId)
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
             ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = new SalesInvoiceTaxModel();
-            salesInvoiceTaxModel.InvoiceId = invoiceId;
-            salesInvoiceTaxModel.SrNo = await _salesInvoiceTax.GenerateSrNo(invoiceId);
+            salesInvoiceTaxModel.SalesInvoiceId = salesInvoiceId;
+            salesInvoiceTaxModel.SrNo = await _salesInvoiceTax.GenerateSrNo(salesInvoiceId);
 
             return await Task.Run(() =>
             {
@@ -83,13 +83,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> EditInvoiceTaxMaster(int invoiceTaxId)
+        public async Task<IActionResult> EditInvoiceTaxMaster(int salesInvoiceTaxId)
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
             ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
 
-            SalesInvoiceTaxModel salesInvoiceTaxModel = await _salesInvoiceTax.GetSalesInvoiceTaxById(invoiceTaxId);
+            SalesInvoiceTaxModel salesInvoiceTaxModel = await _salesInvoiceTax.GetSalesInvoiceTaxById(salesInvoiceTaxId);
 
             return await Task.Run(() =>
             {
@@ -109,7 +109,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (ModelState.IsValid)
             {
-                if (salesInvoiceTaxModel.InvoiceTaxId > 0)
+                if (salesInvoiceTaxModel.SalesInvoiceTaxId > 0)
                 {
                     // update record.
                     if (true == await _salesInvoiceTax.UpdateSalesInvoiceTax(salesInvoiceTaxModel))
@@ -136,10 +136,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <param name="invoiceTaxId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> DeleteInvoiceTaxMaster(int invoiceTaxId)
+        public async Task<JsonResult> DeleteInvoiceTaxMaster(int salesInvoiceTaxId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-            if (true == await _salesInvoiceTax.DeleteSalesInvoiceTax(invoiceTaxId))
+            if (true == await _salesInvoiceTax.DeleteSalesInvoiceTax(salesInvoiceTaxId))
             {
                 data.Result.Status = true;
             }

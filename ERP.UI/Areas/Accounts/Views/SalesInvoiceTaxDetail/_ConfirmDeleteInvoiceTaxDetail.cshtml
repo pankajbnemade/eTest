@@ -20,9 +20,11 @@
 
 <script type="text/javascript">
     // remove element button click.
-    var _invoiceDetTaxId = null;
-    function fnDeleteInvoiceTaxDetail(element, invoiceDetTaxId) {
-        _invoiceDetTaxId = invoiceDetTaxId;
+    var _salesInvoiceDetTaxId = null;
+    function fnDeleteInvoiceTaxDetail(element, salesInvoiceDetTaxId) {
+
+        _salesInvoiceDetTaxId = salesInvoiceDetTaxId;
+
         $(element).attr("data-target", "#modalConfirmInvoiceTaxDetail");
 
         $('#modalConfirmInvoiceTaxDetail').on('show.bs.modal', function (e) {
@@ -30,11 +32,14 @@
             var form = $(e.relatedTarget).closest('form');
             $(this).find('.modal-footer #modalConfirmInvoiceTaxDetail').data('form', form);
         });
+
     }
 
     // form confirm (yes/ok) handler, submits form
     $('#modalConfirmInvoiceTaxDetail').find('.modal-footer #delete-invoice-tax-detail').on('click', function () {
-        var model = { invoiceDetTaxId: invoiceDetTaxId };
+
+        var model = { salesInvoiceDetTaxId: salesInvoiceDetTaxId };
+
         AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("DeleteInvoiceTaxDetail", "SalesInvoiceTaxDetail")', '', model,
         function (data) {
             if (data.Result.Status) {

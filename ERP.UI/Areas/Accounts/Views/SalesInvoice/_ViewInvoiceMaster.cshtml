@@ -106,32 +106,30 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPercentage):</span>
-                    @Html.DisplayFor(model => model.DiscountPercentage)
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
                     <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPercentageOrAmount):</span>
                     @Html.DisplayFor(model => model.DiscountPercentageOrAmount)
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPercentage) @Html.DisplayFor(model => model.DiscountPercentageOrAmount):</span>
+                    @Html.DisplayFor(model => model.DiscountPercentage)
+                </div>
+            </div>
+            @*<div class="col-sm-4">
+                <div class="form-group">
                     <span class="text-bold">@Html.DisplayNameFor(model => model.GrossAmountFc):</span>
                     @Html.DisplayFor(model => model.GrossAmountFc)
                 </div>
-            </div>
+            </div>*@
         </div>
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditInvoiceMaster('@Model.InvoiceId');">
+                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditInvoiceMaster('@Model.SalesInvoiceId');">
                         <i class="far fa-edit"></i>  Edit
                     </button>
-                    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">
-                        <i class="fas fa-arrow-left"></i>  Back
-                    </button>
+                   
                 </div>
             </div>
         </div>
@@ -144,8 +142,8 @@
     });
 
     // edit invoice master.
-    function fnEditInvoiceMaster(invoiceId) {
-        var model = { invoiceId: invoiceId };
+    function fnEditInvoiceMaster(salesInvoiceId) {
+        var model = { salesInvoiceId: salesInvoiceId };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceMaster", "SalesInvoice")', 'html', model,
         function (data) {
             $('#modal-invoice').empty();
@@ -154,8 +152,5 @@
         }, null, true, null, false);
     }
 
-    // edit invoice.
-    function fnBackToIndex() {
-        window.location.href = '@Url.Action("Index", "SalesInvoice")';
-    }
+
 </script>

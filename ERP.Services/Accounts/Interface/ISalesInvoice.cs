@@ -38,7 +38,7 @@ namespace ERP.Services.Accounts.Interface
         /// <summary>
         /// delete sales invoice.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns>
         /// return true if success.
         /// </returns>
@@ -47,7 +47,7 @@ namespace ERP.Services.Accounts.Interface
         Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId);
 
         /// <summary>
-        /// get sales invoice based on invoiceId
+        /// get sales invoice based on salesInvoiceId
         /// </summary>
         /// <returns>
         /// return record.

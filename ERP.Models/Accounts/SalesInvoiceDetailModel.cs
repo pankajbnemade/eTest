@@ -10,8 +10,8 @@ namespace ERP.Models.Accounts
 {
     public class SalesInvoiceDetailModel
     {
-        public int InvoiceDetId { get; set; }
-        public int? InvoiceId { get; set; }
+        public int SalesInvoiceDetId { get; set; }
+        public int? SalesInvoiceId { get; set; }
 
         [Display(Name = "Sr No.")]
         [Required(ErrorMessage = "Sr No. is required.")]
@@ -33,17 +33,30 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Per Unit")]
         [Required(ErrorMessage = "Per Unit is required.")]
-        [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
+        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
         public int? PerUnit { get; set; }
 
         [Display(Name = "Unit Price")]
         [Required(ErrorMessage = "Unit Price is required.")]
+         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
         public decimal? UnitPrice { get; set; }
+
+        [Display(Name = "Gross Amount FC")]
         public decimal? GrossAmountFc { get; set; }
+
+        [Display(Name = "Gross Amount")]
         public decimal? GrossAmount { get; set; }
+
+        [Display(Name = "Tax Amount")]
         public decimal? TaxAmount { get; set; }
+
+        [Display(Name = "Tax Amount FC")]
         public decimal? TaxAmountFc { get; set; }
+
+        [Display(Name = "Net Amount FC")]
         public decimal? NetAmountFc { get; set; }
+
+        [Display(Name = "Net Amount")]
         public decimal? NetAmount { get; set; }
 
         //####

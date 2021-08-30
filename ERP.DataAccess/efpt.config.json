@@ -8,7 +8,6 @@
    "ModelNamespace": null,
    "OutputContextPath": "EntityData",
    "OutputPath": "EntityModels",
-   "ProceduresReturnList": false,
    "ProjectRootNamespace": "ERP.DataAccess",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
@@ -188,5 +187,6 @@
    "UseNoObjectFilter": false,
    "UseNodaTime": false,
    "UseNullableReferences": false,
+   "UseSchemaFolders": false,
    "UseSpatial": false
 }

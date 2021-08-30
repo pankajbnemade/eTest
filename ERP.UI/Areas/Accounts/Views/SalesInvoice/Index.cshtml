@@ -1,7 +1,5 @@
 ﻿@model SearchFilterSalesInvoiceModel
-@{
-    ViewBag.Title = "Sales Invoice List";
-}
+@{ ViewBag.Title = "Sales Invoice List"; }
 
 <section class="content-header">
     <div class="container-fluid">
@@ -74,31 +72,33 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                @*<div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Search Result</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="salesInvoiceGrid" class="table table-bordered table-striped w-100">
-                                <thead>
-                                    <tr class="table-header">
-                                        <th class="no-sort">Action</th>
-                                        <th>InvoiceId</th>
-                                        <th>Invoice No</th>
-                                        <th>Invoice Date</th>
-                                        <th>Net Amount</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="card-body">*@
+                <div class="table-responsive">
+                    <table id="salesInvoiceGrid" class="table table-bordered table-striped w-100">
+                        <thead>
+                            <tr class="table-header">
+                                <th class="no-sort">Action</th>
+                                <th>SalesInvoiceId</th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
+                @*</div>
+                    </div>*@
             </div>
         </div>
     </div>
 </section>
-<div id="modal-invoice-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+<div id="modal-invoice" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
 <style>
     .no-sort::after {
         display: none !important;
@@ -141,16 +141,16 @@
             },
             "columns": [
                 {
-                    "orderable": false ,
+                   
                     "width": "8%",
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceMaster(' + full.InvoiceId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteInvoiceMaster(this, ' + full.InvoiceId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceMaster(' + full.SalesInvoiceId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceMaster(this, ' + full.SalesInvoiceId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },
-                { "data": "InvoiceId", "name": "InvoiceId", "visible": false },
+                { "data": "SalesInvoiceId", "name": "SalesInvoiceId", "visible": false },
                 { "data": "InvoiceNo", "name": "InvoiceNo" },
                 {
                     "data": "InvoiceDate", "name": "InvoiceDate",
@@ -158,7 +158,7 @@
                         return moment(dt).format("DD/MMM/YYYY");
                     }
                 },
-                { "data": "NetAmount", "name": "NetAmount" }
+                { "data": "NetAmount", "name": "NetAmount", render: $.fn.dataTable.render.number(',', '.', 2, '') }
             ],
         });
 
@@ -185,12 +185,12 @@
     });
 
     // edit invoice.
-    function fnEditInvoiceMaster(invoiceId) {
-        window.location.href = '@Url.Action("ManageInvoice", "SalesInvoice")?invoiceId=' + invoiceId;
+    function fnEditInvoiceMaster(salesInvoiceId) {
+        window.location.href = '@Url.Action("ManageInvoice", "SalesInvoice")?salesInvoiceId=' + salesInvoiceId;
     }
 
     // delete invoice.
-    function fnDeleteInvoiceMaster(invoiceId) {
+    function fnDeleteInvoiceMaster(salesInvoiceId) {
 
     }
 
@@ -215,9 +215,10 @@
     function fnAddSalesInvoice() {
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceMaster", "SalesInvoice")', 'html', '',
         function (data) {
-            $('#modal-invoice-master').empty();
-            $('#modal-invoice-master').html(data).modal('show');
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
             return false;
         }, null, true, null, false);
     }
 </script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteInvoiceMaster"); }

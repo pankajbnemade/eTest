@@ -11,6 +11,7 @@ namespace ERP.Models.Helpers
         public const string AlphaNumeric = "^[0-9A-Za-z ]+$";
         public const string AlphaNumericNoSpace = "^[0-9A-Za-z]+$";
         public const string NumericOnly = "^[0-9]*$";
+        //public const string DecimalOnly = @"^[0-9]([\.\,][0-9]{1,3})?$";
         public const string InvalidEmailAddress = @"(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$";
         public const string PhoneNumber = "^([0-9]{10})$";
         public const string InvalidDate = @"^(([0-9])|([0-2][0-9])|([3][0-1]))\/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\/\d{4}$";

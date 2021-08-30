@@ -28,9 +28,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> InvoiceDetail(int invoiceId)
+        public async Task<IActionResult> InvoiceDetail(int salesInvoiceId)
         {
-            ViewBag.InvoiceId = invoiceId;
+            ViewBag.SalesInvoiceId = salesInvoiceId;
 
             return await Task.Run(() =>
             {
@@ -43,9 +43,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> GetSalesInvoiceDetailList(int invoiceId)
+        public async Task<JsonResult> GetSalesInvoiceDetailList(int salesInvoiceId)
         {
-            DataTableResultModel<SalesInvoiceDetailModel> resultModel = await _salesInvoiceDetail.GetSalesInvoiceDetailBySalesInvoiceId(invoiceId);
+            DataTableResultModel<SalesInvoiceDetailModel> resultModel = await _salesInvoiceDetail.GetSalesInvoiceDetailBySalesInvoiceId(salesInvoiceId);
 
             return await Task.Run(() =>
             {
@@ -63,13 +63,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> AddInvoiceDetail(int invoiceId)
+        public async Task<IActionResult> AddInvoiceDetail(int salesInvoiceId)
         {
             ViewBag.UnitOfMeasurementList = await _unitOfMeasurement.GetUnitOfMeasurementSelectList();
 
             SalesInvoiceDetailModel salesInvoiceDetailModel = new SalesInvoiceDetailModel();
-            salesInvoiceDetailModel.InvoiceId = invoiceId;
-            salesInvoiceDetailModel.SrNo = await _salesInvoiceDetail.GenerateSrNo(invoiceId);
+
+            salesInvoiceDetailModel.SalesInvoiceId = salesInvoiceId;
+            salesInvoiceDetailModel.SrNo = await _salesInvoiceDetail.GenerateSrNo(salesInvoiceId);
 
             return await Task.Run(() =>
             {
@@ -80,14 +81,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// edit invoice detail.
         /// </summary>
-        /// <param name="invoiceDetId"></param>
+        /// <param name="salesInvoiceDetId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> EditInvoiceDetail(int invoiceDetId)
+        public async Task<IActionResult> EditInvoiceDetail(int salesInvoiceDetId)
         {
             ViewBag.UnitOfMeasurementList = await _unitOfMeasurement.GetUnitOfMeasurementSelectList();
 
-            SalesInvoiceDetailModel salesInvoiceDetailModel = await _salesInvoiceDetail.GetSalesInvoiceDetailById(invoiceDetId);
-            
+            SalesInvoiceDetailModel salesInvoiceDetailModel = await _salesInvoiceDetail.GetSalesInvoiceDetailById(salesInvoiceDetId);
+
             return await Task.Run(() =>
             {
                 return PartialView("_AddInvoiceDetail", salesInvoiceDetailModel);
@@ -106,7 +107,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (ModelState.IsValid)
             {
-                if (salesInvoiceDetailModel.InvoiceDetId > 0)
+                if (salesInvoiceDetailModel.SalesInvoiceDetId > 0)
                 {
                     // update record.
                     if (true == await _salesInvoiceDetail.UpdateSalesInvoiceDetail(salesInvoiceDetailModel))
@@ -133,10 +134,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <param name="invoiceId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> DeleteInvoiceDetail(int invoiceDetId)
+        public async Task<JsonResult> DeleteInvoiceDetail(int salesInvoiceDetId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-            if (true == await _salesInvoiceDetail.DeleteSalesInvoiceDetail(invoiceDetId))
+
+            if (true == await _salesInvoiceDetail.DeleteSalesInvoiceDetail(salesInvoiceDetId))
             {
                 data.Result.Status = true;
             }

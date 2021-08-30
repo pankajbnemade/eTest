@@ -10,8 +10,8 @@ namespace ERP.DataAccess.EntityModels
     public partial class Salesinvoicedetailtax
     {
         [Key]
-        public int InvoiceDetTaxId { get; set; }
-        public int? InvoiceDetId { get; set; }
+        public int SalesInvoiceDetTaxId { get; set; }
+        public int? SalesInvoiceDetId { get; set; }
         public int? SrNo { get; set; }
         public int? TaxLedgerId { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -33,12 +33,12 @@ namespace ERP.DataAccess.EntityModels
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDateTime { get; set; }
 
-        [ForeignKey(nameof(InvoiceDetId))]
-        [InverseProperty(nameof(Salesinvoicedetail.Salesinvoicedetailtaxes))]
-        public virtual Salesinvoicedetail InvoiceDet { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
         [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailtaxPreparedByUsers))]
         public virtual Aspnetuser PreparedByUser { get; set; }
+        [ForeignKey(nameof(SalesInvoiceDetId))]
+        [InverseProperty(nameof(Salesinvoicedetail.Salesinvoicedetailtaxes))]
+        public virtual Salesinvoicedetail SalesInvoiceDet { get; set; }
         [ForeignKey(nameof(TaxLedgerId))]
         [InverseProperty(nameof(Ledger.Salesinvoicedetailtaxes))]
         public virtual Ledger TaxLedger { get; set; }

@@ -113,7 +113,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// edit invoice master.
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> EditInvoiceMaster(int invoiceId)
+        public async Task<IActionResult> EditInvoiceMaster(int salesInvoiceId)
         {
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
             ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
@@ -123,7 +123,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
 
-            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(invoiceId);
+            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(salesInvoiceId);
 
             return await Task.Run(() =>
             {
@@ -190,7 +190,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (ModelState.IsValid)
             {
-                if (salesInvoiceModel.InvoiceId > 0)
+                if (salesInvoiceModel.SalesInvoiceId > 0)
                 {
                     // update record.
                     if (true == await _salesInvoice.UpdateSalesInvoice(salesInvoiceModel))
@@ -215,9 +215,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// manage invoice.
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> ManageInvoice(int invoiceId)
+        public async Task<IActionResult> ManageInvoice(int salesInvoiceId)
         {
-            ViewBag.InvoiceId = invoiceId;
+            ViewBag.salesInvoiceId = salesInvoiceId;
 
             return await Task.Run(() =>
             {
@@ -229,9 +229,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// view invoice master.
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> ViewInvoiceMaster(int invoiceId)
+        public async Task<IActionResult> ViewInvoiceMaster(int salesInvoiceId)
         {
-            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(invoiceId);
+            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(salesInvoiceId);
 
             return await Task.Run(() =>
             {
@@ -240,15 +240,29 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
+        /// view invoice summary.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> ViewInvoiceSummary(int salesInvoiceId)
+        {
+            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(salesInvoiceId);
+
+            return await Task.Run(() =>
+            {
+                return PartialView("_ViewInvoiceSummary", salesInvoiceModel);
+            });
+        }
+
+        /// <summary>
         /// delete invoice master.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> DeleteInvoiceMaster(int invoiceId)
+        public async Task<JsonResult> DeleteInvoiceMaster(int salesInvoiceId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-            if (true == await _salesInvoice.DeleteSalesInvoice(invoiceId))
+            if (true == await _salesInvoice.DeleteSalesInvoice(salesInvoiceId))
             {
                 data.Result.Status = true;
             }

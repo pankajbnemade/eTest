@@ -102,6 +102,7 @@ namespace ERP.Services.Accounts
 
             // get records by query.
             List<Currency> currencyList = await query.ToListAsync();
+
             if (null != currencyList && currencyList.Count > 0)
             {
                 currencyModelList = new List<CurrencyModel>();

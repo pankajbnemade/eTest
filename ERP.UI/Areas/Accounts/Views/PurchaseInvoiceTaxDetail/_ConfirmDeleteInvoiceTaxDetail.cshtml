@@ -1,0 +1,51 @@
+﻿<div class="modal fade" id="modalConfirmInvoiceTaxDetail" role="dialog" data-backdrop="static" data-keyboard="true" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title classh4">Confirm Delete</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="delete-invoice-tax-detail">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // remove element button click.
+    var _purchaseInvoiceDetTaxId = null;
+    function fnDeleteInvoiceTaxDetail(element, purchaseInvoiceDetTaxId) {
+        _purchaseInvoiceDetTaxId = purchaseInvoiceDetTaxId;
+        $(element).attr("data-target", "#modalConfirmInvoiceTaxDetail");
+
+        $('#modalConfirmInvoiceTaxDetail').on('show.bs.modal', function (e) {
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #modalConfirmInvoiceTaxDetail').data('form', form);
+        });
+    }
+
+    // form confirm (yes/ok) handler, submits form
+    $('#modalConfirmInvoiceTaxDetail').find('.modal-footer #delete-invoice-tax-detail').on('click', function () {
+        var model = { purchaseInvoiceDetTaxId: purchaseInvoiceDetTaxId };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("DeleteInvoiceTaxDetail", "PurchaseInvoiceTaxDetail")', '', model,
+        function (data) {
+            if (data.Result.Status) {
+                $('#modalConfirmInvoiceTaxDetail').modal('hide');
+                $('#purchaseInvoiceTaxDetailGrid').DataTable().ajax.reload();
+                fnSuccessNotify('Record deleted.');
+            }
+            else {
+                fnDangerNotify('Error occured while processing request.');
+            }
+        }, null, true, null, false);
+    });
+
+</script>

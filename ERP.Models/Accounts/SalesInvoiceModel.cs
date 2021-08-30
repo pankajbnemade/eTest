@@ -2,13 +2,14 @@
 using ERP.Models.Helpers;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
     public class SalesInvoiceModel
     {
-        public int InvoiceId { get; set; }
+        public int SalesInvoiceId { get; set; }
 
         [Display(Name = "Invoice No.")]
         [Required(ErrorMessage = "Invoice No. is required.")]
@@ -74,23 +75,46 @@ namespace ERP.Models.Accounts
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
         public decimal? ExchangeRate { get; set; }
+
+        [Display(Name = "Line Total Amount FC")]
         public decimal? TotalLineItemAmountFc { get; set; }
+        
+        [Display(Name = "Line Total Amount")]
         public decimal? TotalLineItemAmount { get; set; }
+
+        [Display(Name = "Gross Amount FC")]
         public decimal? GrossAmountFc { get; set; }
+
+        [Display(Name = "Gross Amount")]
         public decimal? GrossAmount { get; set; }
+
+        [Display(Name = "Net Amount FC")]
         public decimal? NetAmountFc { get; set; }
+
+        [Display(Name = "Net Amount")]
         public decimal? NetAmount { get; set; }
+
+        [Display(Name = "Net Amount FC In Word")]
         public string NetAmountFcinWord { get; set; }
+
+        [Display(Name = "Tax amount FC")]
         public decimal? TaxAmountFc { get; set; }
+
+        [Display(Name = "Tax Amount")]
         public decimal? TaxAmount { get; set; }
         
         [Display(Name = "Discount Type")]
         public string DiscountPercentageOrAmount { get; set; }
 
-        [Display(Name = "Discount Percentage/Amount")]
+        [Display(Name = "Discount")]
         public decimal? DiscountPercentage { get; set; }
+
+         [Display(Name = "Discount Amount FC")]
         public decimal? DiscountAmountFc { get; set; }
+
+         [Display(Name = "Discount Amount FC")]
         public decimal? DiscountAmount { get; set; }
+
         public int? StatusId { get; set; }
         public int CompanyId { get; set; }
         public int FinancialYearId { get; set; }
@@ -118,5 +142,6 @@ namespace ERP.Models.Accounts
         public string StatusName { get; set; }
 
         public string PreparedByName { get; set; }
+
     }
 }

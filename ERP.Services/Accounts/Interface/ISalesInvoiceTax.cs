@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -27,5 +28,7 @@ namespace ERP.Services.Accounts.Interface
         Task<DataTableResultModel<SalesInvoiceTaxModel>> GetSalesInvoiceTaxBySalesInvoiceId(int salesInvoiceId);
 
         Task<DataTableResultModel<SalesInvoiceTaxModel>> GetSalesInvoiceTaxList();
+
+        //Task<IList<SalesInvoiceTaxModel>> GetSalesInvoiceTaxList(int salesInvoiceId);
     }
 }

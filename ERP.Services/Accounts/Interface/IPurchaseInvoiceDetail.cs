@@ -7,6 +7,8 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface IPurchaseInvoiceDetail : IRepository<Purchaseinvoicedetail>
     {
+        Task<int> GenerateSrNo(int purchaseInvoiceId);
+
         Task<int> CreatePurchaseInvoiceDetail(PurchaseInvoiceDetailModel purchaseInvoiceDetailModel);
 
         Task<bool> UpdatePurchaseInvoiceDetail(PurchaseInvoiceDetailModel purchaseInvoiceDetailModel);
@@ -17,6 +19,9 @@ namespace ERP.Services.Accounts.Interface
 
         Task<PurchaseInvoiceDetailModel> GetPurchaseInvoiceDetailById(int purchaseInvoiceDetailId);
 
+        Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailByPurchaseInvoiceId(int purchaseInvoiceId);
+
         Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList();
+
     }
 }

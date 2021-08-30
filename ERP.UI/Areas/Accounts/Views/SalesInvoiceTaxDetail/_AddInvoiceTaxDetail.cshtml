@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-md">
     <div class="modal-content">
         <div class="modal-header">
-            @if (Model.InvoiceDetTaxId > 0)
+            @if (Model.SalesInvoiceDetTaxId > 0)
             {
                 <h4 class="modal-title">Edit Invoice Tax Detail</h4>
             }
@@ -20,8 +20,8 @@
               data-ajax-begin="return BeginInvoiceTaxDetail();" data-ajax-success="SuccessInvoiceTaxDetail"
               data-ajax="true" data-ajax-method="post">
             <div class="modal-body">
-                @Html.HiddenFor(model => model.InvoiceDetTaxId)
-                @Html.HiddenFor(model => model.InvoiceDetId)
+                @Html.HiddenFor(model => model.SalesInvoiceDetTaxId)
+                @Html.HiddenFor(model => model.SalesInvoiceDetId)
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">
@@ -70,7 +70,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxAmountFc)
-                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
                                 @Html.ValidationMessageFor(model => model.TaxAmountFc)
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxAmount)
-                                @Html.TextBoxFor(model => model.TaxAmount, new { @class = "form-control form-control-sm" })
+                                @Html.TextBoxFor(model => model.TaxAmount, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
                                 @Html.ValidationMessageFor(model => model.TaxAmount)
                             </div>
                         </div>

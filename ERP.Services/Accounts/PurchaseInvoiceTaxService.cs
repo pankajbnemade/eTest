@@ -76,7 +76,8 @@ namespace ERP.Services.Accounts
             purchaseInvoiceTax.TaxAmount = multiplier * purchaseInvoiceTaxModel.TaxAmount;
             purchaseInvoiceTax.Remark = purchaseInvoiceTaxModel.Remark;
 
-            purchaseInvoiceTaxId = await Create(purchaseInvoiceTax);
+            await Create(purchaseInvoiceTax);
+            purchaseInvoiceTaxId = purchaseInvoiceTax.PurchaseInvoiceTaxId;
 
             if (purchaseInvoiceTaxId != 0)
             {
@@ -92,7 +93,8 @@ namespace ERP.Services.Accounts
             int multiplier = 1;
 
             // get record.
-            Purchaseinvoicetax purchaseInvoiceTax = await GetByIdAsync(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxModel.PurchaseInvoiceTaxId);
+            Purchaseinvoicetax purchaseInvoiceTax = await GetQueryByCondition(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxModel.PurchaseInvoiceTaxId)
+                        .Include(w => w.PurchaseInvoice).FirstOrDefaultAsync();
 
             if (null != purchaseInvoiceTax)
             {
@@ -241,6 +243,7 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 PurchaseInvoiceTaxModel purchaseInvoiceTaxModel = new PurchaseInvoiceTaxModel();
+
                 purchaseInvoiceTaxModel.PurchaseInvoiceTaxId = purchaseInvoiceTax.PurchaseInvoiceTaxId;
                 purchaseInvoiceTaxModel.PurchaseInvoiceId = purchaseInvoiceTax.PurchaseInvoiceId;
                 purchaseInvoiceTaxModel.SrNo = purchaseInvoiceTax.SrNo;
@@ -252,10 +255,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceTaxModel.TaxAmount = purchaseInvoiceTax.TaxAmount;
                 purchaseInvoiceTaxModel.Remark = purchaseInvoiceTax.Remark;
 
-                if (null != purchaseInvoiceTax.TaxLedger)
-                {
-                    purchaseInvoiceTaxModel.TaxLedgerName = purchaseInvoiceTax.TaxLedger.LedgerName;
-                }
+                purchaseInvoiceTaxModel.TaxLedgerName = null != purchaseInvoiceTax.TaxLedger ? purchaseInvoiceTax.TaxLedger.LedgerName : null;
 
                 return purchaseInvoiceTaxModel;
             });

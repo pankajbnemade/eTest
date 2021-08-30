@@ -1,0 +1,51 @@
+﻿<div class="modal fade" id="modalConfirmInvoiceTaxMaster" role="dialog" data-backdrop="static" data-keyboard="true" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title classh4">Confirm Delete</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="delete-invoice-tax-master">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // remove element button click.
+    var _invoiceTaxId = null;
+    function fnDeleteInvoiceTaxMaster(element, purchaseInvoiceTaxId) {
+        _invoiceTaxId = purchaseInvoiceTaxId;
+        $(element).attr("data-target", "#modalConfirmInvoiceTaxMaster");
+
+        $('#modalConfirmInvoiceTaxMaster').on('show.bs.modal', function (e) {
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #modalConfirmInvoiceTaxMaster').data('form', form);
+        });
+    }
+
+    // form confirm (yes/ok) handler, submits form
+    $('#modalConfirmInvoiceTaxMaster').find('.modal-footer #delete-invoice-tax-master').on('click', function () {
+        var model = { purchaseInvoiceTaxId: _invoiceTaxId };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("DeleteInvoiceTaxMaster", "PurchaseInvoiceTaxMaster")', '', model,
+        function (data) {
+            if (data.Result.Status) {
+                $('#modalConfirmInvoiceTaxMaster').modal('hide');
+                $('#purchaseInvoiceTaxMasterGrid').DataTable().ajax.reload();
+                fnSuccessNotify('Record deleted.');
+            }
+            else {
+                fnDangerNotify('Error occured while processing request.');
+            }
+        }, null, true, null, false);
+    });
+
+</script>

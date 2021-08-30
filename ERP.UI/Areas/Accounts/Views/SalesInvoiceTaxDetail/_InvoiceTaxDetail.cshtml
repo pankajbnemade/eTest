@@ -2,11 +2,11 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">Invoice Tax Detail</h4>
-            <div class="px-4">
-                <button class="btn btn-primary" type="button" id="add-new-invoice-taxdetl">
-                    <i class="fas fa-plus"></i>  Add
-                </button>
-            </div>
+            @*<div class="px-4">
+                    <button class="btn btn-primary" type="button" id="add-new-invoice-taxdetl">
+                        <i class="fas fa-plus"></i>  Add
+                    </button>
+                </div>*@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -17,9 +17,14 @@
                     <table id="salesInvoiceTaxDetailGrid" class="table table-bordered table-striped w-100">
                         <thead>
                             <tr class="table-header">
-                                <th>Action</th>
-                                <th>InvoiceDetTaxId</th>
-                                <th>InvoiceDetId</th>
+                                <th>
+                                    <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-invoice-taxdetl">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    Action
+                                </th>
+                                <th>SalesInvoiceDetTaxId</th>
+                                <th>SalesInvoiceDetId</th>
                                 <th>Sr No</th>
                                 <th>Tax Ledger Name</th>
                                 <th>Tax Percentage or Amount</th>
@@ -39,34 +44,35 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#salesInvoiceTaxDetailGrid").DataTable({
-            "pageLength": 20,
+            "pageLength": 25,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
             /*"scrollX": true,*/
             "ajax": {
-                "url": "@Url.Action("GetSalesInvoiceTaxDetailList", "SalesInvoiceTaxDetail", new { invoiceDetId = ViewBag.InvoiceDetId })",
+                "url": "@Url.Action("GetSalesInvoiceTaxDetailList", "SalesInvoiceTaxDetail", new { salesInvoiceDetId = ViewBag.SalesInvoiceDetId })",
                 "type": "POST",
                 "datatype": "json",
             },
             "columns": [
                 {
+                    "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceTaxDetail(' + full.InvoiceDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxDetail(this, ' + full.InvoiceDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceTaxDetail(' + full.SalesInvoiceDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxDetail(this, ' + full.SalesInvoiceDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },
-                { "data": "InvoiceDetTaxId", "name": "InvoiceDetTaxId", "visible": false },
-                { "data": "InvoiceDetId", "name": "InvoiceDetId", "visible": false },
+                { "data": "SalesInvoiceDetTaxId", "name": "SalesInvoiceDetTaxId", "visible": false },
+                { "data": "SalesInvoiceDetId", "name": "SalesInvoiceDetId", "visible": false },
                 { "data": "SrNo", "name": "SrNo" },
                 { "data": "TaxLedgerName", "name": "TaxLedgerName" },
                 { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
-                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc" },
+                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
                 { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" },
-                { "data": "TaxAmountFc", "name": "TaxAmountFc" },
+                { "data": "TaxAmountFc", "name": "TaxAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '')},
                 { "data": "Remark", "name": "Remark" }
             ],
         });
@@ -74,7 +80,7 @@
 
     // add invoice tax detail.
     $('#add-new-invoice-taxdetl').click(function () {
-        var model = { invoiceDetId: '@ViewBag.InvoiceDetId' };
+        var model = { salesInvoiceDetId: '@ViewBag.SalesInvoiceDetId' };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceTaxDetail", "SalesInvoiceTaxDetail")', 'html', model,
         function (data) {
             $('#modal-invoice-detail').empty();
@@ -84,14 +90,17 @@
     });
 
      // edit invoice tax detail.
-    function fnEditInvoiceTaxDetail(invoiceDetTaxId) {
-        var model = { invoiceDetTaxId: invoiceDetTaxId };
+    function fnEditInvoiceTaxDetail(salesInvoiceDetTaxId) {
+
+        var model = { salesInvoiceDetTaxId: salesInvoiceDetTaxId };
+
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceTaxDetail", "SalesInvoiceTaxDetail")', 'html', model,
         function (data) {
             $('#modal-invoice-detail').empty();
             $('#modal-invoice-detail').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+            }, null, true, null, false);
+
     }
 </script>
 
@@ -121,3 +130,5 @@
         }
     }*/
 </style>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteInvoiceTaxDetail"); }

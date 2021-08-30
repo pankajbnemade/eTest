@@ -25,11 +25,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// invoice tax detail.
         /// </summary>
-        /// <param name="invoiceDetId"></param>
+        /// <param name="salesInvoiceDetId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> InvoiceTaxDetail(int invoiceDetId)
+        public async Task<IActionResult> InvoiceTaxDetail(int salesInvoiceDetId)
         {
-            ViewBag.InvoiceDetId = invoiceDetId;
+            ViewBag.SalesInvoiceDetId = salesInvoiceDetId;
 
             return await Task.Run(() =>
             {
@@ -40,11 +40,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         ///// <summary>
         ///// view invoice tax detail.
         ///// </summary>
-        ///// <param name="invoiceDetId"></param>
+        ///// <param name="salesInvoiceDetId"></param>
         ///// <returns></returns>
-        //public async Task<IActionResult> ViewInvoiceTaxDetail(int invoiceDetId)
+        //public async Task<IActionResult> ViewInvoiceTaxDetail(int salesInvoiceDetId)
         //{
-        //    ViewBag.InvoiceDetId = invoiceDetId;
+        //    ViewBag.SalesInvoiceDetId = salesInvoiceDetId;
 
         //    return await Task.Run(() =>
         //    {
@@ -57,9 +57,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> GetSalesInvoiceTaxDetailList(int invoiceDetId)
+        public async Task<JsonResult> GetSalesInvoiceTaxDetailList(int salesInvoiceDetId)
         {
-            DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = await _salesInvoiceDetailTax.GetSalesInvoiceDetailTaxBySalesInvoiceDetailId(invoiceDetId);
+            DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = await _salesInvoiceDetailTax.GetSalesInvoiceDetailTaxBySalesInvoiceDetailId(salesInvoiceDetId);
 
             return await Task.Run(() =>
             {
@@ -75,17 +75,17 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// add invoice tax detail.
         /// </summary>
-        /// <param name="invoiceDetId"></param>
+        /// <param name="salesInvoiceDetId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> AddInvoiceTaxDetail(int invoiceDetId)
+        public async Task<IActionResult> AddInvoiceTaxDetail(int salesInvoiceDetId)
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
             ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes);
 
             SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = new SalesInvoiceDetailTaxModel();
-            salesInvoiceDetailTaxModel.InvoiceDetId = invoiceDetId;
-            salesInvoiceDetailTaxModel.SrNo = await _salesInvoiceDetailTax.GenerateSrNo(invoiceDetId);
+            salesInvoiceDetailTaxModel.SalesInvoiceDetId = salesInvoiceDetId;
+            salesInvoiceDetailTaxModel.SrNo = await _salesInvoiceDetailTax.GenerateSrNo(salesInvoiceDetId);
 
             return await Task.Run(() =>
             {
@@ -96,15 +96,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// edit invoice tax detail.
         /// </summary>
-        /// <param name="invoiceDetTaxId"></param>
+        /// <param name="salesInvoiceDetTaxId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> EditInvoiceTaxDetail(int invoiceDetTaxId)
+        public async Task<IActionResult> EditInvoiceTaxDetail(int salesInvoiceDetTaxId)
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
             ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes);
 
-            SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = await _salesInvoiceDetailTax.GetSalesInvoiceDetailTaxById(invoiceDetTaxId);
+            SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = await _salesInvoiceDetailTax.GetSalesInvoiceDetailTaxById(salesInvoiceDetTaxId);
 
             return await Task.Run(() =>
             {
@@ -124,7 +124,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (ModelState.IsValid)
             {
-                if (salesInvoiceDetailTaxModel.InvoiceDetTaxId > 0)
+                if (salesInvoiceDetailTaxModel.SalesInvoiceDetTaxId > 0)
                 {
                     // update record.
                     if (true == await _salesInvoiceDetailTax.UpdateSalesInvoiceDetailTax(salesInvoiceDetailTaxModel))
@@ -148,13 +148,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// delete invoice tax detail.
         /// </summary>
-        /// <param name="invoiceDetTaxId"></param>
+        /// <param name="salesInvoiceDetTaxId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> DeleteInvoiceTaxDetail(int invoiceDetTaxId)
+        public async Task<JsonResult> DeleteInvoiceTaxDetail(int salesInvoiceDetTaxId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-            if (true == await _salesInvoiceDetailTax.DeleteSalesInvoiceDetailTax(invoiceDetTaxId))
+
+            if (true == await _salesInvoiceDetailTax.DeleteSalesInvoiceDetailTax(salesInvoiceDetTaxId))
             {
                 data.Result.Status = true;
             }

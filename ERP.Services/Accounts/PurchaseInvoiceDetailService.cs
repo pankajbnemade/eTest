@@ -56,10 +56,11 @@ namespace ERP.Services.Accounts
             if (purchaseInvoiceDetailId != 0)
             {
                 await UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailId);
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
+                //await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
-            purchaseInvoiceDetailId = await Create(purchaseInvoiceDetail);
+             await Create(purchaseInvoiceDetail);
+            purchaseInvoiceDetailId = purchaseInvoiceDetail.PurchaseInvoiceDetId;
 
             return purchaseInvoiceDetailId; // returns.
         }
@@ -95,7 +96,7 @@ namespace ERP.Services.Accounts
             if (isUpdated != false)
             {
                 await UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailModel.PurchaseInvoiceDetId);
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
+                //await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -106,8 +107,8 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Purchaseinvoicedetail purchaseInvoiceDetail = await GetQueryByCondition(w => w.PurchaseInvoiceDetId == purchaseInvoiceDetailId)
-                                                        .Include(w => w.PurchaseInvoice).FirstOrDefaultAsync();
+            Purchaseinvoicedetail purchaseInvoiceDetail =  await GetQueryByCondition(w => w.PurchaseInvoiceDetId == purchaseInvoiceDetailId)
+                                                                 .Include(w => w.PurchaseInvoice).Include(w => w.Purchaseinvoicedetailtaxes).FirstOrDefaultAsync();
 
             if (null != purchaseInvoiceDetail)
             {
@@ -232,6 +233,7 @@ namespace ERP.Services.Accounts
             {
                 PurchaseInvoiceDetailModel purchaseInvoiceDetailModel = new PurchaseInvoiceDetailModel();
 
+                purchaseInvoiceDetailModel.PurchaseInvoiceDetId = purchaseInvoiceDetail.PurchaseInvoiceDetId;
                 purchaseInvoiceDetailModel.PurchaseInvoiceId = purchaseInvoiceDetail.PurchaseInvoiceId;
                 purchaseInvoiceDetailModel.SrNo = purchaseInvoiceDetail.SrNo;
                 purchaseInvoiceDetailModel.Description = purchaseInvoiceDetail.Description;
@@ -248,7 +250,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailModel.NetAmount = purchaseInvoiceDetail.NetAmount;
 
                 //--####
-                purchaseInvoiceDetailModel.UnitOfMeasurementName = purchaseInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName;
+                purchaseInvoiceDetailModel.UnitOfMeasurementName = null != purchaseInvoiceDetail.UnitOfMeasurement ? purchaseInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
 
                 return purchaseInvoiceDetailModel;
             });

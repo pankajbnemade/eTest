@@ -7,6 +7,8 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface IPurchaseInvoiceTax : IRepository<Purchaseinvoicetax>
     {
+         Task<int> GenerateSrNo(int salesInvoiceId);
+
         Task<int> CreatePurchaseInvoiceTax(PurchaseInvoiceTaxModel purchaseInvoiceTaxModel);
 
         Task<bool> UpdatePurchaseInvoiceTax(PurchaseInvoiceTaxModel purchaseInvoiceTaxModel);

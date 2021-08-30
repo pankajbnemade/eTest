@@ -15,8 +15,8 @@ namespace ERP.DataAccess.EntityModels
         }
 
         [Key]
-        public int InvoiceDetId { get; set; }
-        public int? InvoiceId { get; set; }
+        public int SalesInvoiceDetId { get; set; }
+        public int? SalesInvoiceId { get; set; }
         public int? SrNo { get; set; }
         [Column(TypeName = "varchar(2000)")]
         public string Description { get; set; }
@@ -45,19 +45,19 @@ namespace ERP.DataAccess.EntityModels
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDateTime { get; set; }
 
-        [ForeignKey(nameof(InvoiceId))]
-        [InverseProperty(nameof(Salesinvoice.Salesinvoicedetails))]
-        public virtual Salesinvoice Invoice { get; set; }
         [ForeignKey(nameof(PreparedByUserId))]
         [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailPreparedByUsers))]
         public virtual Aspnetuser PreparedByUser { get; set; }
+        [ForeignKey(nameof(SalesInvoiceId))]
+        [InverseProperty(nameof(Salesinvoice.Salesinvoicedetails))]
+        public virtual Salesinvoice SalesInvoice { get; set; }
         [ForeignKey(nameof(UnitOfMeasurementId))]
         [InverseProperty(nameof(Unitofmeasurement.Salesinvoicedetails))]
         public virtual Unitofmeasurement UnitOfMeasurement { get; set; }
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.SalesinvoicedetailUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
-        [InverseProperty(nameof(Salesinvoicedetailtax.InvoiceDet))]
+        [InverseProperty(nameof(Salesinvoicedetailtax.SalesInvoiceDet))]
         public virtual ICollection<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
     }
 }

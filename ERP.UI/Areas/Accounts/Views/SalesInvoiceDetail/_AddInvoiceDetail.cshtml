@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            @if (Model.InvoiceDetId > 0)
+            @if (Model.SalesInvoiceDetId > 0)
             {
                 <h4 class="modal-title">Edit Invoice Detail</h4>
             }
@@ -20,8 +20,8 @@
               data-ajax-begin="return BeginInvoiceDetail();" data-ajax-success="SuccessInvoiceDetail"
               data-ajax="true" data-ajax-method="post">
             <div class="modal-body">
-                @Html.HiddenFor(model => model.InvoiceDetId)
-                @Html.HiddenFor(model => model.InvoiceId)
+                @Html.HiddenFor(model => model.SalesInvoiceDetId)
+                @Html.HiddenFor(model => model.SalesInvoiceId)
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">

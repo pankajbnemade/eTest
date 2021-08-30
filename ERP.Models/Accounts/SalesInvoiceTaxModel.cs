@@ -5,8 +5,8 @@ namespace ERP.Models.Accounts
 {
     public class SalesInvoiceTaxModel
     {
-        public int InvoiceTaxId { get; set; }
-        public int? InvoiceId { get; set; }
+        public int SalesInvoiceTaxId { get; set; }
+        public int? SalesInvoiceId { get; set; }
 
         [Display(Name = "Sr No.")]
         [Required(ErrorMessage = "Sr No. is required.")]
@@ -23,7 +23,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Percentage or Amount FC")]
         [Required(ErrorMessage = "Tax Percentage or Amount FC is required.")]
-        [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
+        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal? TaxPerOrAmountFc { get; set; }
 
         [Display(Name = "Tax Add or Deduct")]

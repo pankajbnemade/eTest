@@ -1,0 +1,222 @@
+﻿@model SearchFilterPurchaseInvoiceModel
+@{ ViewBag.Title = "Purchase Invoice List"; }
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-9">
+                <h1>Purchase Invoice List</h1>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body" id="searchFilterCriteria">
+                        <div class="row">
+                            <div class="col-6 col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.InvoiceNo)
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SupplierLedgerId, new { @class = "" })
+                                        @Html.DropDownListFor(model => model.SupplierLedgerId, new SelectList(ViewBag.SupplierList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(model => model.SupplierLedgerId)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FromDate)
+                                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                        @Html.ValidationMessageFor(model => model.FromDate)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ToDate)
+                                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                        @Html.ValidationMessageFor(model => model.ToDate)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnSearchInvoice();">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddPurchaseInvoice();">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @*<div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Search Result</h3>
+                    </div>
+                    <div class="card-body">*@
+                <div class="table-responsive">
+                    <table id="purchasesInvoiceGrid" class="table table-bordered table-striped w-100">
+                        <thead>
+                            <tr class="table-header">
+                                <th class="no-sort">Action</th>
+                                <th>PurchaseInvoiceId</th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                @*</div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+<div id="modal-invoice" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+<style>
+    .no-sort::after {
+        display: none !important;
+    }
+
+    .no-sort::before {
+        display: none !important;
+    }
+
+    .no-sort {
+        pointer-events: none !important;
+        cursor: default !important;
+    }
+</style>
+<script type="text/javascript">
+    const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+    const TO_PATTERN = 'DD/MM/YYYY HH:mm';
+    $(document).ready(function () {
+        $("#purchasesInvoiceGrid").DataTable({
+            "processing": true,
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",//'lrtip',
+            "serverSide": true,
+            "ajax": {
+                "url": "@Url.Action("GetPurchaseInvoiceList", "PurchaseInvoice")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: function () {
+                        var searchFilterModel = {
+                            InvoiceNo: $('#InvoiceNo').val(),
+                            SupplierLedgerId: $('#SupplierLedgerId').val(),
+                            FromDate: $('#FromDate').val(),
+                            ToDate: $('#ToDate').val(),
+                        };
+
+                        return JSON.stringify(searchFilterModel);
+                    }
+                },
+            },
+            "columns": [
+                {
+                    "orderable": false ,
+                    "width": "8%",
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceMaster(' + full.PurchaseInvoiceId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceMaster(this, ' + full.PurchaseInvoiceId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "PurchaseInvoiceId", "name": "PurchaseInvoiceId", "visible": false },
+                { "data": "InvoiceNo", "name": "InvoiceNo" },
+                {
+                    "data": "InvoiceDate", "name": "InvoiceDate",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                { "data": "NetAmount", "name": "NetAmount", render: $.fn.dataTable.render.number(',', '.', 2, '') }
+            ],
+        });
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+
+    // edit invoice.
+    function fnEditInvoiceMaster(purchaseInvoiceId) {
+        window.location.href = '@Url.Action("ManageInvoice", "PurchaseInvoice")?purchaseInvoiceId=' + purchaseInvoiceId;
+    }
+
+    // delete invoice.
+    function fnDeleteInvoiceMaster(purchaseInvoiceId) {
+
+    }
+
+    // search data.
+    function fnSearchInvoice() {
+        $("#purchasesInvoiceGrid").DataTable().ajax.reload();
+    }
+
+    // reset filter.
+    function fnResetSearch() {
+        $('#searchFilterCriteria :input[type=text]').each(function (index) {
+            $(this).val('');
+        });
+        $('#searchFilterCriteria select').each(function (index) {
+            $(this).val('');
+        });
+
+        $("#purchasesInvoiceGrid").DataTable().ajax.reload();
+    }
+
+    // new button click.
+    function fnAddPurchaseInvoice() {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceMaster", "PurchaseInvoice")', 'html', '',
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteInvoiceMaster"); }

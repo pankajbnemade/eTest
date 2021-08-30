@@ -7,6 +7,14 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface IPurchaseInvoice : IRepository<Purchaseinvoice>
     {
+        /// <summary>
+        /// generate invoice no.
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="financialYearId"></param>
+        /// <returns>
+        /// return invoice no.
+        /// </returns>
         Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId);
 
         Task<int> CreatePurchaseInvoice(PurchaseInvoiceModel purchaseInvoiceModel);

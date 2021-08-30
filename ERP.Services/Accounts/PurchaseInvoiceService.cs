@@ -32,7 +32,7 @@ namespace ERP.Services.Accounts
         /// </returns>
         public async Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId)
         {
-            int voucherSetupId = 2;
+            int voucherSetupId = 3;
             // get maxno.
             int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
 
@@ -89,11 +89,12 @@ namespace ERP.Services.Accounts
             purchaseInvoice.DiscountAmountFc = 0;
             purchaseInvoice.DiscountAmount = 0;
 
-            purchaseInvoice.StatusId = 1;//purchaseInvoiceModel.StatusId;
+            purchaseInvoice.StatusId = 1;
             purchaseInvoice.CompanyId = purchaseInvoiceModel.CompanyId;
             purchaseInvoice.FinancialYearId = purchaseInvoiceModel.FinancialYearId;
 
-            purchaseInvoiceId = await Create(purchaseInvoice);
+            await Create(purchaseInvoice);
+            purchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId;
 
             if (purchaseInvoiceId != 0)
             {
@@ -166,16 +167,16 @@ namespace ERP.Services.Accounts
         /// <summary>
         /// delete purchase invoice.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns>
         /// return true if success.
         /// </returns>
-        public async Task<bool> DeletePurchaseInvoice(int invoiceId)
+        public async Task<bool> DeletePurchaseInvoice(int salesInvoiceId)
         {
             bool isDeleted = false;
 
             // get record.
-            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == invoiceId);
+            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == salesInvoiceId);
             if (null != purchaseInvoice)
             {
                 isDeleted = await Delete(purchaseInvoice);
@@ -189,7 +190,9 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceId);
+            Purchaseinvoice purchaseInvoice = await GetQueryByCondition(w => w.PurchaseInvoiceId == purchaseInvoiceId)
+                                                    .Include(w => w.Purchaseinvoicedetails).Include(w => w.Purchaseinvoicetaxes)
+                                                    .Include(w => w.Currency).FirstOrDefaultAsync();
 
             if (null != purchaseInvoice)
             {
@@ -233,16 +236,16 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get purchase invoice based on invoiceId
+        /// get purchase invoice based on salesInvoiceId
         /// </summary>
         /// <returns>
         /// return record.
         /// </returns>
-        public async Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int invoiceId)
+        public async Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int purchaseInvoiceId)
         {
             PurchaseInvoiceModel purchaseInvoiceModel = null;
 
-            IList<PurchaseInvoiceModel> purchaseInvoiceModelList = await GetPurchaseInvoiceList(invoiceId);
+            IList<PurchaseInvoiceModel> purchaseInvoiceModelList = await GetPurchaseInvoiceList(purchaseInvoiceId);
 
             if (null != purchaseInvoiceModelList && purchaseInvoiceModelList.Any())
             {
@@ -251,7 +254,7 @@ namespace ERP.Services.Accounts
 
             return purchaseInvoiceModel; // returns.
         }
-                
+
         /// <summary>
         /// get search purchase invoice result list.
         /// </summary>
@@ -282,7 +285,7 @@ namespace ERP.Services.Accounts
         }
 
         #region Private Methods
-        
+
         /// <summary>
         /// get records from database.
         /// </summary>
@@ -343,8 +346,11 @@ namespace ERP.Services.Accounts
             // create query.
             IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0)
                                             .Include(w => w.SupplierLedger).Include(w => w.BillToAddress)
+                                            .Include(w => w.AccountLedger)
                                             .Include(w => w.TaxRegister).Include(w => w.Currency)
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
+
+
 
             // apply filters.
             if (0 != purchaseInvoiceId)
@@ -405,18 +411,19 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceModel.FinancialYearId = Convert.ToInt32(purchaseInvoice.FinancialYearId);
                 purchaseInvoiceModel.MaxNo = purchaseInvoice.MaxNo;
                 purchaseInvoiceModel.VoucherStyleId = purchaseInvoice.VoucherStyleId;
-                purchaseInvoiceModel.PreparedByUserId = purchaseInvoice.PreparedByUserId;
-                purchaseInvoiceModel.UpdatedByUserId = purchaseInvoice.UpdatedByUserId;
-                purchaseInvoiceModel.PreparedDateTime = purchaseInvoice.PreparedDateTime;
-                purchaseInvoiceModel.UpdatedDateTime = purchaseInvoice.UpdatedDateTime;
+                //purchaseInvoiceModel.PreparedByUserId = purchaseInvoice.PreparedByUserId;
+                //purchaseInvoiceModel.UpdatedByUserId = purchaseInvoice.UpdatedByUserId;
+                //purchaseInvoiceModel.PreparedDateTime = purchaseInvoice.PreparedDateTime;
+                //purchaseInvoiceModel.UpdatedDateTime = purchaseInvoice.UpdatedDateTime;
 
-                purchaseInvoiceModel.SupplierLedgerName = purchaseInvoice.SupplierLedger.LedgerName;
-                purchaseInvoiceModel.BillToAddress = purchaseInvoice.BillToAddress.AddressDescription;
-                purchaseInvoiceModel.AccountLedgerName = purchaseInvoice.AccountLedger.LedgerName;
-                purchaseInvoiceModel.TaxRegisterName = purchaseInvoice.TaxRegister.TaxRegisterName;
-                purchaseInvoiceModel.CurrencyName = purchaseInvoice.Currency.CurrencyName;
-                purchaseInvoiceModel.StatusName = purchaseInvoice.Status.StatusName;
-                purchaseInvoiceModel.PreparedByName = purchaseInvoice.PreparedByUser.UserName;
+                // ###
+                purchaseInvoiceModel.SupplierLedgerName = null != purchaseInvoice.SupplierLedger ? purchaseInvoice.SupplierLedger.LedgerName : null;
+                purchaseInvoiceModel.BillToAddress = null != purchaseInvoice.BillToAddress ? purchaseInvoice.BillToAddress.AddressDescription : null;
+                purchaseInvoiceModel.AccountLedgerName = null != purchaseInvoice.AccountLedger ? purchaseInvoice.AccountLedger.LedgerName : null;
+                purchaseInvoiceModel.TaxRegisterName = null != purchaseInvoice.TaxRegister ? purchaseInvoice.TaxRegister.TaxRegisterName : null;
+                purchaseInvoiceModel.CurrencyName = null != purchaseInvoice.Currency ? purchaseInvoice.Currency.CurrencyName : null;
+                purchaseInvoiceModel.StatusName = null != purchaseInvoice.Status ? purchaseInvoice.Status.StatusName : null;
+                purchaseInvoiceModel.PreparedByName = null != purchaseInvoice.PreparedByUser ? purchaseInvoice.PreparedByUser.UserName : null;
 
                 return purchaseInvoiceModel;
             });

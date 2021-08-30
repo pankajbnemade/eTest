@@ -1,18 +1,20 @@
-﻿<div class="row mb-3">
-    <div class="col-12 text-right">
-        <button class="btn btn-primary" type="button" id="add-new-tax-master">
-            <i class="fas fa-plus"></i>  Add
-        </button>
-    </div>
-</div>
+﻿@*<div class="row mb-3">
+        <div class="col-12 text-right">
+
+        </div>
+    </div>*@
 <div class="row">
     <div class="col-12">
         <table id="salesInvoiceTaxMasterGrid" class="table table-bordered table-striped w-100">
             <thead>
                 <tr>
-                    <th>Action</th>
-                    <th>InvoiceTaxId</th>
-                    <th>InvoiceId</th>
+                    <th>
+                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-tax-master">
+                            <i class="fas fa-plus"></i>
+                        </button> Action
+                    </th>
+                    <th>SalesInvoiceTaxId</th>
+                    <th>SalesInvoiceId</th>
                     <th>Sr No</th>
                     <th>Tax Ledger Name</th>
                     <th>Tax Percentage or Amount</th>
@@ -29,34 +31,35 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#salesInvoiceTaxMasterGrid").DataTable({
-            "pageLength": 20,
+            "pageLength": 25,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
             "scrollX": true,
             "ajax": {
-                "url": "@Url.Action("GetSalesInvoiceTaxMasterList", "SalesInvoiceTaxMaster", new { invoiceId = ViewBag.InvoiceId })",
+                "url": "@Url.Action("GetSalesInvoiceTaxMasterList", "SalesInvoiceTaxMaster", new { salesInvoiceId = ViewBag.SalesInvoiceId })",
                 "type": "POST",
                 "datatype": "json",
             },
             "columns": [
                 {
+                    "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnEditInvoiceTaxMaster(' + full.InvoiceTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.InvoiceTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceTaxMaster(' + full.SalesInvoiceTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.SalesInvoiceTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },
-                { "data": "InvoiceTaxId", "name": "InvoiceTaxId", "visible": false },
-                { "data": "InvoiceId", "name": "InvoiceId", "visible": false  },
+                { "data": "SalesInvoiceTaxId", "name": "SalesInvoiceTaxId", "visible": false },
+                { "data": "SalesInvoiceId", "name": "SalesInvoiceId", "visible": false  },
                 { "data": "SrNo", "name": "SrNo" },
                 { "data": "TaxLedgerName", "name": "TaxLedgerName" },
                 { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
-                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc" },
+                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
                 { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" },
-                { "data": "TaxAmountFc", "name": "TaxAmountFc" },
+                { "data": "TaxAmountFc", "name": "TaxAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '')},
                 { "data": "Remark", "name": "Remark" },
             ],
         });
@@ -64,7 +67,7 @@
 
      // add new invoice tax master.
     $('#add-new-tax-master').click(function () {
-        var model = { invoiceId: '@ViewBag.InvoiceId' };
+        var model = { salesInvoiceId: '@ViewBag.SalesInvoiceId' };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceTaxMaster", "SalesInvoiceTaxMaster")', 'html', model,
         function (data) {
             $('#modal-invoice').empty();
@@ -74,8 +77,8 @@
     });
 
     // edit invoice tax master.
-    function fnEditInvoiceTaxMaster(invoiceTaxId) {
-        var model = { invoiceTaxId: invoiceTaxId };
+    function fnEditInvoiceTaxMaster(salesInvoiceTaxId) {
+        var model = { salesInvoiceTaxId: salesInvoiceTaxId };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditInvoiceTaxMaster", "SalesInvoiceTaxMaster")', 'html', model,
         function (data) {
             $('#modal-invoice').empty();
@@ -84,3 +87,4 @@
         }, null, true, null, false);
     }
 </script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteInvoiceTaxMaster"); }
