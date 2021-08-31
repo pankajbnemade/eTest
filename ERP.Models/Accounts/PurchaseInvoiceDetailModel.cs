@@ -55,6 +55,7 @@ namespace ERP.Models.Accounts
         [Display(Name = "Net Amount")]
         public decimal? NetAmount { get; set; }
         //####
+        [Display(Name = "Unit Of Measurement Name")]
         public string UnitOfMeasurementName { get; set; }
     }
 }
