@@ -78,10 +78,10 @@ namespace ERP.UI
             services.AddTransient<ICreditNoteTax, CreditNoteTaxService>();
             services.AddTransient<ICreditNoteDetailTax, CreditNoteDetailTaxService>();
 
-            //services.AddTransient<IDebitNote, DebitNoteService>();
-            //services.AddTransient<IDebitNoteDetail, DebitNoteDetailService>();
-            //services.AddTransient<IDebitNoteTax, DebitNoteTaxService>();
-            //services.AddTransient<IDebitNoteDetailTax, DebitNoteDetailTaxService>();
+            services.AddTransient<IDebitNote, DebitNoteService>();
+            services.AddTransient<IDebitNoteDetail, DebitNoteDetailService>();
+            services.AddTransient<IDebitNoteTax, DebitNoteTaxService>();
+            services.AddTransient<IDebitNoteDetailTax, DebitNoteDetailTaxService>();
 
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
 

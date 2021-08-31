@@ -1,0 +1,137 @@
+﻿@model DebitNoteDetailTaxModel
+
+<div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.DebitNoteDetTaxId > 0)
+            {
+                <h4 class="modal-title">Edit Debit Note Tax Detail</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">Add Debit Note Tax Detail</h4>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmDebitNoteTaxDetail" class="width100" method="post"
+              asp-action="SaveDebitNoteTaxDetail" asp-controller="DebitNoteTaxDetail" asp-area="Accounts"
+              data-ajax-begin="return BeginDebitNoteTaxDetail();" data-ajax-success="SuccessDebitNoteTaxDetail"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.DebitNoteDetTaxId)
+                @Html.HiddenFor(model => model.DebitNoteDetId)
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SrNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.SrNo, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.SrNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxLedgerId, new SelectList(ViewBag.TaxLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxLedgerId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxPercentageOrAmount, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxPercentageOrAmount)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxPerOrAmountFc, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.ValidationMessageFor(model => model.TaxPerOrAmountFc)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxAddOrDeduct, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxAddOrDeduct, new SelectList(ViewBag.TaxAddOrDeductList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxAddOrDeduct)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxAmountFc)
+                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
+                                @Html.ValidationMessageFor(model => model.TaxAmountFc)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxAmount)
+                                @Html.TextBoxFor(model => model.TaxAmount, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
+                                @Html.ValidationMessageFor(model => model.TaxAmount)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Remark)
+                                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.Remark)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+    });
+
+    // begin form
+    function BeginDebitNoteTaxDetail() {
+        var form = $("#frmDebitNoteTaxDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessDebitNoteTaxDetail(data) {
+        if (data.Result.Status) {
+            $('#modal-debitnote-detail').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $("#debitNoteTaxDetailGrid").DataTable().ajax.reload();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

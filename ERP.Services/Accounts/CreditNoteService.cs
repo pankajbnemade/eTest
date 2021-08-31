@@ -32,7 +32,7 @@ namespace ERP.Services.Accounts
         /// </returns>
         public async Task<GenerateNoModel> GenerateCreditNoteNo(int companyId, int financialYearId)
         {
-            int voucherSetupId = 3;
+            int voucherSetupId = 4;
             // get maxno.
             int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
 

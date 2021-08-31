@@ -1,0 +1,355 @@
+﻿@model DebitNoteModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.DebitNoteId > 0)
+            {
+                <div class="modal-title">Edit Debit Note</div>
+            }
+            else
+            {
+                <div class="modal-title">Add Debit Note</div>
+            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmDebitNoteMaster" class="width100" method="post"
+              asp-action="SaveDebitNoteMaster" asp-controller="DebitNote" asp-area="Accounts"
+              data-ajax-begin="return BeginDebitNoteMaster();" data-ajax-success="SuccessDebitNoteMaster"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.DebitNoteId)
+                @Html.HiddenFor(model => model.CompanyId)
+                @Html.HiddenFor(model => model.FinancialYearId)
+                @Html.HiddenFor(model => model.DebitNoteNo)
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DebitNoteNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.DebitNoteNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.DebitNoteNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DebitNoteDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.DebitNoteDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.DebitNoteDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PartyLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.PartyLedgerId, new SelectList(ViewBag.PartyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PartyLedgerId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BillToAddressId, new { @class = "required" })
+                                <select class="form-control" asp-for="BillToAddressId">
+                                    <option value="">Select</option>
+                                </select>
+                                @Html.ValidationMessageFor(model => model.BillToAddressId)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PartyReferenceNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.PartyReferenceNo, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PartyReferenceNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PartyReferenceDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.PartyReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.PartyReferenceDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.OurReferenceNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.OurReferenceNo, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.OurReferenceNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.OurReferenceDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.OurReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.OurReferenceDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AccountLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.AccountLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.AccountLedgerId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PaymentTerm)
+                                @Html.TextBoxFor(model => model.PaymentTerm, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PaymentTerm)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CreditLimitDays)
+                                @Html.TextBoxFor(model => model.CreditLimitDays, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.CreditLimitDays)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxModelType, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxModelType, new SelectList(ViewBag.TaxModelTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxModelType)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxRegisterId)
+                                @Html.DropDownListFor(model => model.TaxRegisterId, new SelectList(ViewBag.TaxRegisterList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxRegisterId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.CurrencyId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.ValidationMessageFor(model => model.ExchangeRate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DiscountPercentageOrAmount)
+                                @Html.DropDownListFor(model => model.DiscountPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.DiscountPercentageOrAmount)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DiscountPerOrAmountFc)
+                                @Html.TextBoxFor(model => model.DiscountPerOrAmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.ValidationMessageFor(model => model.DiscountPerOrAmountFc)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Remark)
+                                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.Remark)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DebitNoteDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('#PartyReferenceDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('#OurReferenceDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
+
+        if ('@Model.DebitNoteId' > 0 && '@Model.PartyLedgerId' > 0) {
+            GetBillToAddressByLedgerId('@Model.PartyLedgerId');
+        }
+    });
+
+    // customer change.
+    $(document).on('change', '#PartyLedgerId', function () {
+        GetBillToAddressByLedgerId(this.value);
+    });
+
+    // get bill to address by ledgerId.
+    function GetBillToAddressByLedgerId(ledgerId) {
+        if ('' != ledgerId) {
+            var model = { ledgerId: ledgerId };
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetBillToAddressByLedgerId", "DebitNote")', '', model,
+                function (response) {
+                    $('#BillToAddressId').empty();
+                    $('#BillToAddressId').append("<option value=''>Select</option>");
+
+                    if (true == response.Result.Status) {
+                        $.each(response.Result.Data, function (i, item) {
+                            $('#BillToAddressId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                        });
+                        if ('@Model.PartyLedgerId' > 0) {
+                            $('#BillToAddressId').val('@Model.BillToAddressId');
+                        }
+                    }
+                    else {
+                        if ('NoItems' == response.Result.Message) {
+                            $("span[data-valmsg-for='BillToAddressId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                            $("span[data-valmsg-for='BillToAddressId']").html('<span for="BillToAddressId" class="">No data found.</span>');
+                        }
+                    }
+                }, null, true, null, false);
+        }
+        else {
+            $('#BillToAddressId').empty();
+            $('#BillToAddressId').append("<option value=''>Select</option>");
+        }
+    }
+
+    // currency change.
+    $(document).on('change', '#CurrencyId', function () {
+        GetExchangeRateByCurrencyId(this.value);
+    });
+
+    // get exchange rate by currencyId.
+    function GetExchangeRateByCurrencyId(currencyId) {
+        if ('' != currencyId) {
+            var model = { currencyId: currencyId, debitNoteDate: $('#DebitNoteDate').val()  };
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "DebitNote")', '', model,
+            function (response) {
+                if (true == response.Result.Status) {
+                    $('#ExchangeRate').val(response.Result.Data);
+                }
+                else {
+                    $('#ExchangeRate').val(0);
+                }
+            }, null, true, null, false);
+        }
+        else {
+            $('#ExchangeRate').val(0);
+        }
+       /* $('#ExchangeRate').val(currencyId);*/
+    }
+
+    // begin form
+    function BeginDebitNoteMaster() {
+        var form = $("#frmDebitNoteMaster");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessDebitNoteMaster(data) {
+       
+        if (data.Result.Status) {
+            $('#modal-debitnote').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $("#debitNoteGrid").DataTable().ajax.reload();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
+
+<style type="text/css">
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>

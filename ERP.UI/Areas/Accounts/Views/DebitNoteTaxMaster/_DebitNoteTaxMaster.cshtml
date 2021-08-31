@@ -1,0 +1,90 @@
+﻿@*<div class="row mb-3">
+        <div class="col-12 text-right">
+
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-12">
+        <table id="debitNoteTaxMasterGrid" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr>
+                    <th>
+                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-tax-master">
+                            <i class="fas fa-plus"></i>
+                        </button> Action
+                    </th>
+                    <th>DebitNoteTaxId</th>
+                    <th>DebitNoteId</th>
+                    <th>Sr No</th>
+                    <th>Tax Ledger Name</th>
+                    <th>Tax Percentage or Amount</th>
+                    <th>Tax Per or AmountFc</th>
+                    <th>Tax Add or Deduct</th>
+                    <th>Tax AmountFc</th>
+                    <th>Remark</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#debitNoteTaxMasterGrid").DataTable({
+            "pageLength": 25,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetDebitNoteTaxMasterList", "DebitNoteTaxMaster", new { debitNoteId = ViewBag.DebitNoteId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditDebitNoteTaxMaster(' + full.DebitNoteTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteTaxMaster(this, ' + full.DebitNoteTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "DebitNoteTaxId", "name": "DebitNoteTaxId", "visible": false },
+                { "data": "DebitNoteId", "name": "DebitNoteId", "visible": false  },
+                { "data": "SrNo", "name": "SrNo" },
+                { "data": "TaxLedgerName", "name": "TaxLedgerName" },
+                { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
+                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" },
+                { "data": "TaxAmountFc", "name": "TaxAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '')},
+                { "data": "Remark", "name": "Remark" },
+            ],
+        });
+    });
+
+     // add new debitnote tax master.
+    $('#add-new-tax-master').click(function () {
+        var model = { debitNoteId: '@ViewBag.DebitNoteId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddDebitNoteTaxMaster", "DebitNoteTaxMaster")', 'html', model,
+        function (data) {
+            $('#modal-debitnote').empty();
+            $('#modal-debitnote').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit debitnote tax master.
+    function fnEditDebitNoteTaxMaster(debitNoteTaxId) {
+        var model = { debitNoteTaxId: debitNoteTaxId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditDebitNoteTaxMaster", "DebitNoteTaxMaster")', 'html', model,
+        function (data) {
+            $('#modal-debitnote').empty();
+            $('#modal-debitnote').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteDebitNoteTaxMaster"); }

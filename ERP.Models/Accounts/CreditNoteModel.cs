@@ -31,9 +31,9 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Account Ledger is required.")]
         public int? AccountLedgerId { get; set; }
 
-        [Display(Name = "Our Ref No")]
+        [Display(Name = "Party Ref No")]
         [StringLength(250, ErrorMessage = "250 chars only.")]
-        [Required(ErrorMessage = "Our Ref No is required.")]
+        [Required(ErrorMessage = "Party Ref No is required.")]
         public string PartyReferenceNo { get; set; }
 
         [DataType(DataType.DateTime)]
