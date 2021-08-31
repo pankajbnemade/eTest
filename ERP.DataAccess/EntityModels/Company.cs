@@ -11,7 +11,9 @@ namespace ERP.DataAccess.EntityModels
     {
         public Company()
         {
+            Creditnotes = new HashSet<Creditnote>();
             Currencyconversions = new HashSet<Currencyconversion>();
+            Debitnotes = new HashSet<Debitnote>();
             Financialyearcompanyrelations = new HashSet<Financialyearcompanyrelation>();
             Ledgercompanyrelations = new HashSet<Ledgercompanyrelation>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
@@ -57,8 +59,12 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.CompanyUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.Company))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Currencyconversion.Company))]
         public virtual ICollection<Currencyconversion> Currencyconversions { get; set; }
+        [InverseProperty(nameof(Debitnote.Company))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Financialyearcompanyrelation.Company))]
         public virtual ICollection<Financialyearcompanyrelation> Financialyearcompanyrelations { get; set; }
         [InverseProperty(nameof(Ledgercompanyrelation.Company))]

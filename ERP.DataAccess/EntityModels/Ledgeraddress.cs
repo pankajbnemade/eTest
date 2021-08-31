@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Ledgeraddress()
         {
+            Creditnotes = new HashSet<Creditnote>();
+            Debitnotes = new HashSet<Debitnote>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
             Salesinvoices = new HashSet<Salesinvoice>();
         }
@@ -56,6 +58,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.LedgeraddressUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.BillToAddress))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
+        [InverseProperty(nameof(Debitnote.BillToAddress))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.BillToAddress))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
         [InverseProperty(nameof(Salesinvoice.BillToAddress))]

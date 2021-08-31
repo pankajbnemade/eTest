@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Taxregister()
         {
+            Creditnotes = new HashSet<Creditnote>();
+            Debitnotes = new HashSet<Debitnote>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
             Salesinvoices = new HashSet<Salesinvoice>();
             Taxregisterdetails = new HashSet<Taxregisterdetail>();
@@ -33,6 +35,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.TaxregisterUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.TaxRegister))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
+        [InverseProperty(nameof(Debitnote.TaxRegister))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.TaxRegister))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
         [InverseProperty(nameof(Salesinvoice.TaxRegister))]

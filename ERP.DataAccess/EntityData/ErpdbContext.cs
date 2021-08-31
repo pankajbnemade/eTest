@@ -6,7 +6,6 @@ using ERP.DataAccess.EntityModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.DataAccess.Entity;
 
-
 namespace ERP.DataAccess.EntityData
 {
     public partial class ErpDbContext : IdentityDbContext<ApplicationIdentityUser, ApplicationRole, int>
@@ -31,8 +30,16 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Creditnote> Creditnotes { get; set; }
+        public virtual DbSet<Creditnotedetail> Creditnotedetails { get; set; }
+        public virtual DbSet<Creditnotedetailtax> Creditnotedetailtaxes { get; set; }
+        public virtual DbSet<Creditnotetax> Creditnotetaxes { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Currencyconversion> Currencyconversions { get; set; }
+        public virtual DbSet<Debitnote> Debitnotes { get; set; }
+        public virtual DbSet<Debitnotedetail> Debitnotedetails { get; set; }
+        public virtual DbSet<Debitnotedetailtax> Debitnotedetailtaxes { get; set; }
+        public virtual DbSet<Debitnotetax> Debitnotetaxes { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Designation> Designations { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
@@ -375,6 +382,273 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_Country_User_UpdatedByUserId");
             });
 
+            modelBuilder.Entity<Creditnote>(entity =>
+            {
+                entity.HasIndex(e => e.AccountLedgerId)
+                    .HasName("IX_CreditNote_AccountLedgerId");
+
+                entity.HasIndex(e => e.BillToAddressId)
+                    .HasName("FK_CreditNote_Ledger_BillToAddressId_idx");
+
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_CreditNote_CompanyId");
+
+                entity.HasIndex(e => e.CreditNoteNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("IX_CreditNote_CurrencyId");
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_CreditNote_FinancialYearId");
+
+                entity.HasIndex(e => e.PartyLedgerId)
+                    .HasName("IX_CreditNote_PartyLedgerId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_CreditNote_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_CreditNote_StatusId");
+
+                entity.HasIndex(e => e.TaxRegisterId)
+                    .HasName("IX_CreditNote_TaxRegisterId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_CreditNote_aspnetusers_UpdatedByUserId_idx");
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("tf_idx");
+
+                entity.Property(e => e.CreditNoteNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.DiscountPercentageOrAmount)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.NetAmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.OurReferenceNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PartyReferenceNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PaymentTerm)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Remark)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxModelType)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.AccountLedger)
+                    .WithMany(p => p.CreditnoteAccountLedgers)
+                    .HasForeignKey(d => d.AccountLedgerId)
+                    .HasConstraintName("FK_CreditNote_Ledger_AccountLedgerId");
+
+                entity.HasOne(d => d.BillToAddress)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.BillToAddressId)
+                    .HasConstraintName("FK_CreditNote_Ledger_BillToAddressId");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_CreditNote_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CreditNote_Currency_CurrencyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_CreditNote_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PartyLedger)
+                    .WithMany(p => p.CreditnotePartyLedgers)
+                    .HasForeignKey(d => d.PartyLedgerId)
+                    .HasConstraintName("FK_CreditNote_Ledger_PartyLedgerId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.CreditnotePreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_CreditNote_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_CreditNote_Status_StatusId");
+
+                entity.HasOne(d => d.TaxRegister)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.TaxRegisterId)
+                    .HasConstraintName("FK_CreditNote_TaxRegister_TaxRegisterId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.CreditnoteUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_CreditNote_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Creditnotes)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_CreditNote_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Creditnotedetail>(entity =>
+            {
+                entity.HasKey(e => e.CreditNoteDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("IX_CreditNoteDetails_CreditNoteId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_CreditNoteDetails_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UnitOfMeasurementId)
+                    .HasName("IX_CreditNoteDetails_UnitOfMeasurementId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_CreditNoteDetails_aspnetusers_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Description)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Creditnotedetails)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .HasConstraintName("FK_CreditNoteDetails_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.CreditnotedetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_CreditNoteDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.UnitOfMeasurement)
+                    .WithMany(p => p.Creditnotedetails)
+                    .HasForeignKey(d => d.UnitOfMeasurementId)
+                    .HasConstraintName("FK_CreditNoteDetails_UnitOfMeasurement_UnitOfMeasurementId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.CreditnotedetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_CreditNoteDetails_aspnetusers_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Creditnotedetailtax>(entity =>
+            {
+                entity.HasKey(e => e.CreditNoteDetTaxId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.CreditNoteDetId)
+                    .HasName("IX_CreditNoteDetailTax_CreditNoteDetId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_CreditNoteDetailTax_Aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.TaxLedgerId)
+                    .HasName("IX_CreditNoteDetailTax_TaxLedgerId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_CreditNoteDetailTax_Aspnetusers_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Remark)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxAddOrDeduct)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.CreditNoteDet)
+                    .WithMany(p => p.Creditnotedetailtaxes)
+                    .HasForeignKey(d => d.CreditNoteDetId)
+                    .HasConstraintName("FK_PIDetailTax_InvoiceDetail_CreditNoteDetId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.CreditnotedetailtaxPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_CreditNoteDetailTax_Aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.TaxLedger)
+                    .WithMany(p => p.Creditnotedetailtaxes)
+                    .HasForeignKey(d => d.TaxLedgerId)
+                    .HasConstraintName("FK_CreditNoteDetailTax_Ledger_TaxLedgerId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.CreditnotedetailtaxUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_CreditNoteDetailTax_Aspnetusers_aspnetusersUpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Creditnotetax>(entity =>
+            {
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("IX_CreditNoteTax_CreditNoteId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_CreditNoteTax_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.TaxLedgerId)
+                    .HasName("IX_CreditNoteTax_TaxLedgerId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_CreditNoteTax_aspnetusers_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Remark)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxAddOrDeduct)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Creditnotetaxes)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .HasConstraintName("FK_CreditNoteTax_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.CreditnotetaxPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_CreditNoteTax_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.TaxLedger)
+                    .WithMany(p => p.Creditnotetaxes)
+                    .HasForeignKey(d => d.TaxLedgerId)
+                    .HasConstraintName("FK_CreditNoteTax_Ledger_TaxLedgerId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.CreditnotetaxUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_CreditNoteTax_aspnetusers_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Currency>(entity =>
             {
                 entity.HasIndex(e => e.CurrencyName)
@@ -446,6 +720,273 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.CurrencyconversionUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_CurrencyConversion_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Debitnote>(entity =>
+            {
+                entity.HasIndex(e => e.AccountLedgerId)
+                    .HasName("IX_DebitNote_AccountLedgerId");
+
+                entity.HasIndex(e => e.BillToAddressId)
+                    .HasName("FK_DebitNote_Ledger_BillToAddressId_idx");
+
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_DebitNote_CompanyId");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("IX_DebitNote_CurrencyId");
+
+                entity.HasIndex(e => e.DebitNoteNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_DebitNote_FinancialYearId");
+
+                entity.HasIndex(e => e.PartyLedgerId)
+                    .HasName("IX_DebitNote_PartyLedgerId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_DebitNote_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_DebitNote_StatusId");
+
+                entity.HasIndex(e => e.TaxRegisterId)
+                    .HasName("IX_DebitNote_TaxRegisterId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_DebitNote_aspnetusers_UpdatedByUserId_idx");
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("tf_idx");
+
+                entity.Property(e => e.DebitNoteNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.DiscountPercentageOrAmount)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.NetAmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.OurReferenceNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PartyReferenceNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PaymentTerm)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Remark)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxModelType)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.AccountLedger)
+                    .WithMany(p => p.DebitnoteAccountLedgers)
+                    .HasForeignKey(d => d.AccountLedgerId)
+                    .HasConstraintName("FK_DebitNote_Ledger_AccountLedgerId");
+
+                entity.HasOne(d => d.BillToAddress)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.BillToAddressId)
+                    .HasConstraintName("FK_DebitNote_Ledger_BillToAddressId");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_DebitNote_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DebitNote_Currency_CurrencyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_DebitNote_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PartyLedger)
+                    .WithMany(p => p.DebitnotePartyLedgers)
+                    .HasForeignKey(d => d.PartyLedgerId)
+                    .HasConstraintName("FK_DebitNote_Ledger_PartyLedgerId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.DebitnotePreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_DebitNote_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_DebitNote_Status_StatusId");
+
+                entity.HasOne(d => d.TaxRegister)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.TaxRegisterId)
+                    .HasConstraintName("FK_DebitNote_TaxRegister_TaxRegisterId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.DebitnoteUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_DebitNote_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Debitnotes)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_DebitNote_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Debitnotedetail>(entity =>
+            {
+                entity.HasKey(e => e.DebitNoteDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("IX_DebitNoteDetails_DebitNoteId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_DebitNoteDetails_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UnitOfMeasurementId)
+                    .HasName("IX_DebitNoteDetails_UnitOfMeasurementId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_DebitNoteDetails_aspnetusers_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Description)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Debitnotedetails)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .HasConstraintName("FK_DebitNoteDetails_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.DebitnotedetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_DebitNoteDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.UnitOfMeasurement)
+                    .WithMany(p => p.Debitnotedetails)
+                    .HasForeignKey(d => d.UnitOfMeasurementId)
+                    .HasConstraintName("FK_DebitNoteDetails_UnitOfMeasurement_UnitOfMeasurementId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.DebitnotedetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_DebitNoteDetails_aspnetusers_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Debitnotedetailtax>(entity =>
+            {
+                entity.HasKey(e => e.DebitNoteDetTaxId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.DebitNoteDetId)
+                    .HasName("IX_DebitNoteDetailTax_DebitNoteDetId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_DebitNoteDetailTax_Aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.TaxLedgerId)
+                    .HasName("IX_DebitNoteDetailTax_TaxLedgerId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_DebitNoteDetailTax_Aspnetusers_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Remark)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxAddOrDeduct)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.DebitNoteDet)
+                    .WithMany(p => p.Debitnotedetailtaxes)
+                    .HasForeignKey(d => d.DebitNoteDetId)
+                    .HasConstraintName("FK_PIDetailTax_InvoiceDetail_DebitNoteDetId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.DebitnotedetailtaxPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_DebitNoteDetailTax_Aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.TaxLedger)
+                    .WithMany(p => p.Debitnotedetailtaxes)
+                    .HasForeignKey(d => d.TaxLedgerId)
+                    .HasConstraintName("FK_DebitNoteDetailTax_Ledger_TaxLedgerId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.DebitnotedetailtaxUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_DebitNoteDetailTax_Aspnetusers_aspnetusersUpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Debitnotetax>(entity =>
+            {
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("IX_DebitNoteTax_DebitNoteId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_DebitNoteTax_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.TaxLedgerId)
+                    .HasName("IX_DebitNoteTax_TaxLedgerId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_DebitNoteTax_aspnetusers_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Remark)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxAddOrDeduct)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Debitnotetaxes)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .HasConstraintName("FK_DebitNoteTax_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.DebitnotetaxPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_DebitNoteTax_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.TaxLedger)
+                    .WithMany(p => p.Debitnotetaxes)
+                    .HasForeignKey(d => d.TaxLedgerId)
+                    .HasConstraintName("FK_DebitNoteTax_Ledger_TaxLedgerId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.DebitnotetaxUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_DebitNoteTax_aspnetusers_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Department>(entity =>

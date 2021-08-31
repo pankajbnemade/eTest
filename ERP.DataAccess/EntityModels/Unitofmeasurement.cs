@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Unitofmeasurement()
         {
+            Creditnotedetails = new HashSet<Creditnotedetail>();
+            Debitnotedetails = new HashSet<Debitnotedetail>();
             Purchaseinvoicedetails = new HashSet<Purchaseinvoicedetail>();
             Salesinvoicedetails = new HashSet<Salesinvoicedetail>();
         }
@@ -32,6 +34,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.UnitofmeasurementUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnotedetail.UnitOfMeasurement))]
+        public virtual ICollection<Creditnotedetail> Creditnotedetails { get; set; }
+        [InverseProperty(nameof(Debitnotedetail.UnitOfMeasurement))]
+        public virtual ICollection<Debitnotedetail> Debitnotedetails { get; set; }
         [InverseProperty(nameof(Purchaseinvoicedetail.UnitOfMeasurement))]
         public virtual ICollection<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
         [InverseProperty(nameof(Salesinvoicedetail.UnitOfMeasurement))]

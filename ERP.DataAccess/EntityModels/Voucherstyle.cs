@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Voucherstyle()
         {
+            Creditnotes = new HashSet<Creditnote>();
+            Debitnotes = new HashSet<Debitnote>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
             Salesinvoices = new HashSet<Salesinvoice>();
             Vouchersetupdetails = new HashSet<Vouchersetupdetail>();
@@ -33,6 +35,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.VoucherstyleUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.VoucherStyle))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
+        [InverseProperty(nameof(Debitnote.VoucherStyle))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.VoucherStyle))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
         [InverseProperty(nameof(Salesinvoice.VoucherStyle))]

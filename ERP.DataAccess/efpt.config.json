@@ -58,11 +58,43 @@
          "ObjectType": 0
       },
       {
+         "Name": "creditnote",
+         "ObjectType": 0
+      },
+      {
+         "Name": "creditnotedetail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "creditnotedetailtax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "creditnotetax",
+         "ObjectType": 0
+      },
+      {
          "Name": "currency",
          "ObjectType": 0
       },
       {
          "Name": "currencyconversion",
+         "ObjectType": 0
+      },
+      {
+         "Name": "debitnote",
+         "ObjectType": 0
+      },
+      {
+         "Name": "debitnotedetail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "debitnotedetailtax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "debitnotetax",
          "ObjectType": 0
       },
       {

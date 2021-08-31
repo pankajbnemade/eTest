@@ -23,10 +23,26 @@ namespace ERP.DataAccess.EntityModels
             CompanyUpdatedByUsers = new HashSet<Company>();
             CountryPreparedByUsers = new HashSet<Country>();
             CountryUpdatedByUsers = new HashSet<Country>();
+            CreditnotePreparedByUsers = new HashSet<Creditnote>();
+            CreditnoteUpdatedByUsers = new HashSet<Creditnote>();
+            CreditnotedetailPreparedByUsers = new HashSet<Creditnotedetail>();
+            CreditnotedetailUpdatedByUsers = new HashSet<Creditnotedetail>();
+            CreditnotedetailtaxPreparedByUsers = new HashSet<Creditnotedetailtax>();
+            CreditnotedetailtaxUpdatedByUsers = new HashSet<Creditnotedetailtax>();
+            CreditnotetaxPreparedByUsers = new HashSet<Creditnotetax>();
+            CreditnotetaxUpdatedByUsers = new HashSet<Creditnotetax>();
             CurrencyPreparedByUsers = new HashSet<Currency>();
             CurrencyUpdatedByUsers = new HashSet<Currency>();
             CurrencyconversionPreparedByUsers = new HashSet<Currencyconversion>();
             CurrencyconversionUpdatedByUsers = new HashSet<Currencyconversion>();
+            DebitnotePreparedByUsers = new HashSet<Debitnote>();
+            DebitnoteUpdatedByUsers = new HashSet<Debitnote>();
+            DebitnotedetailPreparedByUsers = new HashSet<Debitnotedetail>();
+            DebitnotedetailUpdatedByUsers = new HashSet<Debitnotedetail>();
+            DebitnotedetailtaxPreparedByUsers = new HashSet<Debitnotedetailtax>();
+            DebitnotedetailtaxUpdatedByUsers = new HashSet<Debitnotedetailtax>();
+            DebitnotetaxPreparedByUsers = new HashSet<Debitnotetax>();
+            DebitnotetaxUpdatedByUsers = new HashSet<Debitnotetax>();
             DepartmentPreparedByUsers = new HashSet<Department>();
             DepartmentUpdatedByUsers = new HashSet<Department>();
             DesignationPreparedByUsers = new HashSet<Designation>();
@@ -132,6 +148,22 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Country> CountryPreparedByUsers { get; set; }
         [InverseProperty(nameof(Country.UpdatedByUser))]
         public virtual ICollection<Country> CountryUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnote.PreparedByUser))]
+        public virtual ICollection<Creditnote> CreditnotePreparedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnote.UpdatedByUser))]
+        public virtual ICollection<Creditnote> CreditnoteUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnotedetail.PreparedByUser))]
+        public virtual ICollection<Creditnotedetail> CreditnotedetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnotedetail.UpdatedByUser))]
+        public virtual ICollection<Creditnotedetail> CreditnotedetailUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnotedetailtax.PreparedByUser))]
+        public virtual ICollection<Creditnotedetailtax> CreditnotedetailtaxPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnotedetailtax.UpdatedByUser))]
+        public virtual ICollection<Creditnotedetailtax> CreditnotedetailtaxUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnotetax.PreparedByUser))]
+        public virtual ICollection<Creditnotetax> CreditnotetaxPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Creditnotetax.UpdatedByUser))]
+        public virtual ICollection<Creditnotetax> CreditnotetaxUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Currency.PreparedByUser))]
         public virtual ICollection<Currency> CurrencyPreparedByUsers { get; set; }
         [InverseProperty(nameof(Currency.UpdatedByUser))]
@@ -140,6 +172,22 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Currencyconversion> CurrencyconversionPreparedByUsers { get; set; }
         [InverseProperty(nameof(Currencyconversion.UpdatedByUser))]
         public virtual ICollection<Currencyconversion> CurrencyconversionUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnote.PreparedByUser))]
+        public virtual ICollection<Debitnote> DebitnotePreparedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnote.UpdatedByUser))]
+        public virtual ICollection<Debitnote> DebitnoteUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnotedetail.PreparedByUser))]
+        public virtual ICollection<Debitnotedetail> DebitnotedetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnotedetail.UpdatedByUser))]
+        public virtual ICollection<Debitnotedetail> DebitnotedetailUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnotedetailtax.PreparedByUser))]
+        public virtual ICollection<Debitnotedetailtax> DebitnotedetailtaxPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnotedetailtax.UpdatedByUser))]
+        public virtual ICollection<Debitnotedetailtax> DebitnotedetailtaxUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnotetax.PreparedByUser))]
+        public virtual ICollection<Debitnotetax> DebitnotetaxPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Debitnotetax.UpdatedByUser))]
+        public virtual ICollection<Debitnotetax> DebitnotetaxUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Department.PreparedByUser))]
         public virtual ICollection<Department> DepartmentPreparedByUsers { get; set; }
         [InverseProperty(nameof(Department.UpdatedByUser))]

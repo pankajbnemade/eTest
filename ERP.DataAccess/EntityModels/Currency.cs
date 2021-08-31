@@ -12,7 +12,9 @@ namespace ERP.DataAccess.EntityModels
         public Currency()
         {
             Companies = new HashSet<Company>();
+            Creditnotes = new HashSet<Creditnote>();
             Currencyconversions = new HashSet<Currencyconversion>();
+            Debitnotes = new HashSet<Debitnote>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
             Salesinvoices = new HashSet<Salesinvoice>();
@@ -42,8 +44,12 @@ namespace ERP.DataAccess.EntityModels
         public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Company.Currency))]
         public virtual ICollection<Company> Companies { get; set; }
+        [InverseProperty(nameof(Creditnote.Currency))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Currencyconversion.Currency))]
         public virtual ICollection<Currencyconversion> Currencyconversions { get; set; }
+        [InverseProperty(nameof(Debitnote.Currency))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Ledgerfinancialyearbalance.Currency))]
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.Currency))]

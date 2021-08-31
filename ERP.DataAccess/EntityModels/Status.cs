@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Status()
         {
+            Creditnotes = new HashSet<Creditnote>();
+            Debitnotes = new HashSet<Debitnote>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
             Salesinvoices = new HashSet<Salesinvoice>();
         }
@@ -32,6 +34,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.StatusUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.Status))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
+        [InverseProperty(nameof(Debitnote.Status))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.Status))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
         [InverseProperty(nameof(Salesinvoice.Status))]

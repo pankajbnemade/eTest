@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Financialyear()
         {
+            Creditnotes = new HashSet<Creditnote>();
+            Debitnotes = new HashSet<Debitnote>();
             Financialyearcompanyrelations = new HashSet<Financialyearcompanyrelation>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
@@ -39,6 +41,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.FinancialyearUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.FinancialYear))]
+        public virtual ICollection<Creditnote> Creditnotes { get; set; }
+        [InverseProperty(nameof(Debitnote.FinancialYear))]
+        public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Financialyearcompanyrelation.FinancialYear))]
         public virtual ICollection<Financialyearcompanyrelation> Financialyearcompanyrelations { get; set; }
         [InverseProperty(nameof(Ledgerfinancialyearbalance.FinancialYear))]

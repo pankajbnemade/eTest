@@ -11,6 +11,14 @@ namespace ERP.DataAccess.EntityModels
     {
         public Ledger()
         {
+            CreditnoteAccountLedgers = new HashSet<Creditnote>();
+            CreditnotePartyLedgers = new HashSet<Creditnote>();
+            Creditnotedetailtaxes = new HashSet<Creditnotedetailtax>();
+            Creditnotetaxes = new HashSet<Creditnotetax>();
+            DebitnoteAccountLedgers = new HashSet<Debitnote>();
+            DebitnotePartyLedgers = new HashSet<Debitnote>();
+            Debitnotedetailtaxes = new HashSet<Debitnotedetailtax>();
+            Debitnotetaxes = new HashSet<Debitnotetax>();
             InverseParentGroup = new HashSet<Ledger>();
             Ledgeraddresses = new HashSet<Ledgeraddress>();
             Ledgercompanyrelations = new HashSet<Ledgercompanyrelation>();
@@ -57,6 +65,22 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.LedgerUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Creditnote.AccountLedger))]
+        public virtual ICollection<Creditnote> CreditnoteAccountLedgers { get; set; }
+        [InverseProperty(nameof(Creditnote.PartyLedger))]
+        public virtual ICollection<Creditnote> CreditnotePartyLedgers { get; set; }
+        [InverseProperty(nameof(Creditnotedetailtax.TaxLedger))]
+        public virtual ICollection<Creditnotedetailtax> Creditnotedetailtaxes { get; set; }
+        [InverseProperty(nameof(Creditnotetax.TaxLedger))]
+        public virtual ICollection<Creditnotetax> Creditnotetaxes { get; set; }
+        [InverseProperty(nameof(Debitnote.AccountLedger))]
+        public virtual ICollection<Debitnote> DebitnoteAccountLedgers { get; set; }
+        [InverseProperty(nameof(Debitnote.PartyLedger))]
+        public virtual ICollection<Debitnote> DebitnotePartyLedgers { get; set; }
+        [InverseProperty(nameof(Debitnotedetailtax.TaxLedger))]
+        public virtual ICollection<Debitnotedetailtax> Debitnotedetailtaxes { get; set; }
+        [InverseProperty(nameof(Debitnotetax.TaxLedger))]
+        public virtual ICollection<Debitnotetax> Debitnotetaxes { get; set; }
         [InverseProperty(nameof(Ledger.ParentGroup))]
         public virtual ICollection<Ledger> InverseParentGroup { get; set; }
         [InverseProperty(nameof(Ledgeraddress.Ledger))]
