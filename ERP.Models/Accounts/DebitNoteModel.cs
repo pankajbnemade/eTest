@@ -3,7 +3,7 @@ using ERP.Models.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ERP.DataAccess.EntityModels
+namespace ERP.Models.Accounts
 {
     public partial class DebitNoteModel
     {
@@ -127,7 +127,7 @@ namespace ERP.DataAccess.EntityModels
 
         //####
 
-        public string SupplierLedgerName { get; set; }
+        public string PartyLedgerName { get; set; }
         public string BillToAddress { get; set; }
         public string AccountLedgerName { get; set; }
         public string TaxRegisterName { get; set; }

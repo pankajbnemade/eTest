@@ -1,0 +1,175 @@
+﻿@model CreditNoteModel
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CreditNoteNo):</span>
+
+                    @Html.DisplayFor(model => model.CreditNoteNo)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CreditNoteDate):</span>
+                    @Html.DisplayFor(model => model.CreditNoteDate)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.PartyLedgerId):</span>
+                    @Html.DisplayFor(model => model.PartyLedgerName)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.BillToAddressId):</span>
+                    @Html.DisplayFor(model => model.BillToAddress)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.PartyReferenceNo):</span>
+                    @Html.DisplayFor(model => model.PartyReferenceNo)
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.PartyReferenceDate):</span>
+                    @Html.DisplayFor(model => model.PartyReferenceDate)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+               
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.OurReferenceNo):</span>
+                    @Html.DisplayFor(model => model.OurReferenceNo)
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.OurReferenceDate):</span>
+                    @Html.DisplayFor(model => model.OurReferenceDate)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.AccountLedgerId):</span>
+                    @Html.DisplayFor(model => model.AccountLedgerName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.PaymentTerm):</span>
+                    @Html.DisplayFor(model => model.PaymentTerm)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                @*<div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.BankLedgerId):</span>
+                    @Html.DisplayFor(model => model.BankLedgerName)
+                </div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CreditLimitDays):</span>
+                    @Html.DisplayFor(model => model.CreditLimitDays)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.Remark):</span>
+                    @Html.DisplayFor(model => model.Remark)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.TaxModelType):</span>
+                    @Html.DisplayFor(model => model.TaxModelType)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.TaxRegisterId):</span>
+                    @Html.DisplayFor(model => model.TaxRegisterName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CurrencyId):</span>
+                    @Html.DisplayFor(model => model.CurrencyName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ExchangeRate):</span>
+                    @Html.DisplayFor(model => model.ExchangeRate)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPercentageOrAmount):</span>
+                    @Html.DisplayFor(model => model.DiscountPercentageOrAmount)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.DiscountPerOrAmountFc) @Html.DisplayFor(model => model.DiscountPercentageOrAmount):</span>
+                    @Html.DisplayFor(model => model.DiscountPerOrAmountFc)
+                </div>
+            </div>
+            @*<div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.GrossAmountFc):</span>
+                    @Html.DisplayFor(model => model.GrossAmountFc)
+                </div>
+            </div>*@
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditCreditNoteMaster('@Model.CreditNoteId');">
+                        <i class="far fa-edit"></i>  Edit
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    // edit creditnote master.
+    function fnEditCreditNoteMaster(creditNoteId) {
+        var model = { creditNoteId: creditNoteId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCreditNoteMaster", "CreditNote")', 'html', model,
+        function (data) {
+            $('#modal-creditnote').empty();
+            $('#modal-creditnote').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+
+</script>

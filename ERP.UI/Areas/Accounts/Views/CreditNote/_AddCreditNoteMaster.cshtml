@@ -1,43 +1,43 @@
-﻿@model PurchaseInvoiceModel
+﻿@model CreditNoteModel
 
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            @if (Model.PurchaseInvoiceId > 0)
+            @if (Model.CreditNoteId > 0)
             {
-                <div class="modal-title">Edit Invoice</div>
+                <div class="modal-title">Edit Credit Note</div>
             }
             else
             {
-                <div class="modal-title">Add Invoice</div>
+                <div class="modal-title">Add Credit Note</div>
             }
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form id="frmInvoiceMaster" class="width100" method="post"
-              asp-action="SaveInvoiceMaster" asp-controller="PurchaseInvoice" asp-area="Accounts"
-              data-ajax-begin="return BeginInvoiceMaster();" data-ajax-success="SuccessInvoiceMaster"
+        <form id="frmCreditNoteMaster" class="width100" method="post"
+              asp-action="SaveCreditNoteMaster" asp-controller="CreditNote" asp-area="Accounts"
+              data-ajax-begin="return BeginCreditNoteMaster();" data-ajax-success="SuccessCreditNoteMaster"
               data-ajax="true" data-ajax-method="post">
             <div class="modal-body">
-                @Html.HiddenFor(model => model.PurchaseInvoiceId)
+                @Html.HiddenFor(model => model.CreditNoteId)
                 @Html.HiddenFor(model => model.CompanyId)
                 @Html.HiddenFor(model => model.FinancialYearId)
-                @Html.HiddenFor(model => model.InvoiceNo)
+                @Html.HiddenFor(model => model.CreditNoteNo)
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.InvoiceNo, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.InvoiceNo)
+                                @Html.LabelFor(model => model.CreditNoteNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.CreditNoteNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.CreditNoteNo)
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.InvoiceDate, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.InvoiceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.InvoiceDate)
+                                @Html.LabelFor(model => model.CreditNoteDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.CreditNoteDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.CreditNoteDate)
                             </div>
                         </div>
                     </div>
@@ -46,22 +46,11 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.SupplierLedgerId, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.SupplierLedgerId, new SelectList(ViewBag.SupplierList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.SupplierLedgerId)
+                                @Html.LabelFor(model => model.PartyLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.PartyLedgerId, new SelectList(ViewBag.PartyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PartyLedgerId)
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.SupplierReferenceNo, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.SupplierReferenceNo, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.SupplierReferenceNo)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BillToAddressId, new { @class = "required" })
@@ -71,15 +60,47 @@
                                 @Html.ValidationMessageFor(model => model.BillToAddressId)
                             </div>
                         </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.SupplierReferenceDate, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.SupplierReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.SupplierReferenceDate)
+                                @Html.LabelFor(model => model.PartyReferenceNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.PartyReferenceNo, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PartyReferenceNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PartyReferenceDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.PartyReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.PartyReferenceDate)
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.OurReferenceNo, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.OurReferenceNo, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.OurReferenceNo)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.OurReferenceDate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.OurReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.OurReferenceDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">
@@ -101,7 +122,7 @@
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">
-                           
+
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -189,7 +210,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#InvoiceDate').datetimepicker({
+        $('#CreditNoteDate').datetimepicker({
             format: 'DD/MMM/YYYY',
             useCurrent: false,
             defaultDate: false, // setValue:''
@@ -199,7 +220,17 @@
             }
         });
 
-        $('#SupplierReferenceDate').datetimepicker({
+        $('#PartyReferenceDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('#OurReferenceDate').datetimepicker({
             format: 'DD/MMM/YYYY',
             useCurrent: false,
             defaultDate: false, // setValue:''
@@ -211,13 +242,13 @@
 
         $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
 
-        if ('@Model.PurchaseInvoiceId' > 0 && '@Model.SupplierLedgerId' > 0) {
-            GetBillToAddressByLedgerId('@Model.SupplierLedgerId');
+        if ('@Model.CreditNoteId' > 0 && '@Model.PartyLedgerId' > 0) {
+            GetBillToAddressByLedgerId('@Model.PartyLedgerId');
         }
     });
 
     // customer change.
-    $(document).on('change', '#SupplierLedgerId', function () {
+    $(document).on('change', '#PartyLedgerId', function () {
         GetBillToAddressByLedgerId(this.value);
     });
 
@@ -225,7 +256,7 @@
     function GetBillToAddressByLedgerId(ledgerId) {
         if ('' != ledgerId) {
             var model = { ledgerId: ledgerId };
-            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetBillToAddressByLedgerId", "PurchaseInvoice")', '', model,
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetBillToAddressByLedgerId", "CreditNote")', '', model,
                 function (response) {
                     $('#BillToAddressId').empty();
                     $('#BillToAddressId').append("<option value=''>Select</option>");
@@ -234,7 +265,7 @@
                         $.each(response.Result.Data, function (i, item) {
                             $('#BillToAddressId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
                         });
-                        if ('@Model.SupplierLedgerId' > 0) {
+                        if ('@Model.PartyLedgerId' > 0) {
                             $('#BillToAddressId').val('@Model.BillToAddressId');
                         }
                     }
@@ -260,8 +291,8 @@
     // get exchange rate by currencyId.
     function GetExchangeRateByCurrencyId(currencyId) {
         if ('' != currencyId) {
-            var model = { currencyId: currencyId, invoiceDate: $('#InvoiceDate').val()  };
-            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "PurchaseInvoice")', '', model,
+            var model = { currencyId: currencyId, creditNoteDate: $('#CreditNoteDate').val()  };
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "CreditNote")', '', model,
             function (response) {
                 if (true == response.Result.Status) {
                     $('#ExchangeRate').val(response.Result.Data);
@@ -278,8 +309,8 @@
     }
 
     // begin form
-    function BeginInvoiceMaster() {
-        var form = $("#frmInvoiceMaster");
+    function BeginCreditNoteMaster() {
+        var form = $("#frmCreditNoteMaster");
         $(form).removeData("validator").removeData("unobtrusiveValidation");
         $.validator.unobtrusive.parse($(form));
         var validator = $(form).validate();
@@ -290,12 +321,12 @@
         }
     }
     // success form
-    function SuccessInvoiceMaster(data) {
+    function SuccessCreditNoteMaster(data) {
        
         if (data.Result.Status) {
-            $('#modal-invoice').modal('hide');
+            $('#modal-creditnote').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
-            $("#purchaseInvoiceGrid").DataTable().ajax.reload();
+            $("#creditNoteGrid").DataTable().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

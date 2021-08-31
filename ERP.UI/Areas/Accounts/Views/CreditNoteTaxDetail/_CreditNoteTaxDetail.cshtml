@@ -1,0 +1,129 @@
+﻿<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Credit WNote Tax Detail</h4>
+            @*<div class="px-4">
+                    <button class="btn btn-primary" type="button" id="add-new-creditnote-taxdetl">
+                        <i class="fas fa-plus"></i>  Add
+                    </button>
+                </div>*@
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12 table-responsive">
+                    <table id="creditNoteTaxDetailGrid" class="table table-bordered table-striped w-100">
+                        <thead>
+                            <tr class="table-header">
+                                <th>
+                                    <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-creditnote-taxdetl">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    Action
+                                </th>
+                                <th>CreditNoteDetTaxId</th>
+                                <th>CreditNoteDetId</th>
+                                <th>Sr No</th>
+                                <th>Tax Ledger Name</th>
+                                <th>Tax Percentage or Amount</th>
+                                <th>TaxPer or AmountFc</th>
+                                <th>Tax Add or Deduct</th>
+                                <th>Tax AmountFc</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#creditNoteTaxDetailGrid").DataTable({
+            "pageLength": 25,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            /*"scrollX": true,*/
+            "ajax": {
+                "url": "@Url.Action("GetCreditNoteTaxDetailList", "CreditNoteTaxDetail", new { CreditNoteDetId = ViewBag.CreditNoteDetId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCreditNoteTaxDetail(' + full.CreditNoteDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCreditNoteTaxDetail(this, ' + full.CreditNoteDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "CreditNoteDetTaxId", "name": "CreditNoteDetTaxId", "visible": false },
+                { "data": "CreditNoteDetId", "name": "CreditNoteDetId", "visible": false },
+                { "data": "SrNo", "name": "SrNo" },
+                { "data": "TaxLedgerName", "name": "TaxLedgerName" },
+                { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
+                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" },
+                { "data": "TaxAmountFc", "name": "TaxAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '')},
+                { "data": "Remark", "name": "Remark" }
+            ],
+        });
+    });
+
+    // add creditnote tax detail.
+    $('#add-new-creditnote-taxdetl').click(function () {
+        var model = { creditNoteDetId: '@ViewBag.CreditNoteDetId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddCreditNoteTaxDetail", "CreditNoteTaxDetail")', 'html', model,
+        function (data) {
+            $('#modal-creditnote-detail').empty();
+            $('#modal-creditnote-detail').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+     // edit creditnote tax detail.
+    function fnEditCreditNoteTaxDetail(creditNoteDetTaxId) {
+        var model = { creditNoteDetTaxId: creditNoteDetTaxId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCreditNoteTaxDetail", "CreditNoteTaxDetail")', 'html', model,
+        function (data) {
+            $('#modal-creditnote-detail').empty();
+            $('#modal-creditnote-detail').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteCreditNoteTaxDetail"); }
+<style>
+    /*#modal-creditnote .modal-dialog {
+        height: 90%;*/ /* = 90% of the .modal-backdrop block = %90 of the screen */
+    /*}
+
+    #modal-creditnote .modal-content {
+        height: 100%;*/ /* = 100% of the .modal-dialog block */
+    /*}
+
+    #modal-creditnote .modal-body {
+        height: 300px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        #modal-creditnote .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        #modal-creditnote .modal-body {
+            height: 600px;
+        }
+    }*/
+</style>

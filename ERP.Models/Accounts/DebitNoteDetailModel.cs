@@ -2,7 +2,7 @@
 using ERP.Models.Helpers;
 using System.ComponentModel.DataAnnotations;
 
-namespace ERP.DataAccess.EntityModels
+namespace ERP.Models.Accounts
 {
     public partial class DebitNoteDetailModel
     {

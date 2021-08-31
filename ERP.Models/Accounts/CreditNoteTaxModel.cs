@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ERP.DataAccess.EntityModels
+namespace ERP.Models.Accounts
 {
     public partial class CreditNoteTaxModel
     {

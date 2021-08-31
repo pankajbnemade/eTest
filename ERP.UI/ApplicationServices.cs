@@ -60,6 +60,8 @@ namespace ERP.UI
             services.AddTransient<ICurrency, CurrencyService>();
             services.AddTransient<ICurrencyConversion, CurrencyConversionService>();
             services.AddTransient<IFinancialYear, FinancialYearService>();
+            services.AddTransient<IFinancialYearCompanyRelation, FinancialYearCompanyRelationService>();
+            services.AddTransient<ILedgerFinancialYearBalance, LedgerFinancialYearBalanceService>();
 
             services.AddTransient<ISalesInvoice, SalesInvoiceService>();
             services.AddTransient<ISalesInvoiceDetail, SalesInvoiceDetailService>();
@@ -71,6 +73,16 @@ namespace ERP.UI
             services.AddTransient<IPurchaseInvoiceTax, PurchaseInvoiceTaxService>();
             services.AddTransient<IPurchaseInvoiceDetailTax, PurchaseInvoiceDetailTaxService>();
 
+            services.AddTransient<ICreditNote, CreditNoteService>();
+            services.AddTransient<ICreditNoteDetail, CreditNoteDetailService>();
+            services.AddTransient<ICreditNoteTax, CreditNoteTaxService>();
+            services.AddTransient<ICreditNoteDetailTax, CreditNoteDetailTaxService>();
+
+            //services.AddTransient<IDebitNote, DebitNoteService>();
+            //services.AddTransient<IDebitNoteDetail, DebitNoteDetailService>();
+            //services.AddTransient<IDebitNoteTax, DebitNoteTaxService>();
+            //services.AddTransient<IDebitNoteDetailTax, DebitNoteDetailTaxService>();
+
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
 
 
@@ -80,7 +92,7 @@ namespace ERP.UI
 
             services.AddTransient<IApplicationIdentityUser, ApplicationIdentityUserService>();
 
-            
+
             #endregion
 
             services.AddTransient<ICommon, CommonService>();

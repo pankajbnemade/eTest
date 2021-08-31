@@ -98,6 +98,21 @@
 
   <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteDetail\_AddCreditNoteDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteDetail\_ConfirmDeleteCreditNoteDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteDetail\_CreditNoteDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteTaxDetail\_AddCreditNoteTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteTaxDetail\_ConfirmDeleteCreditNoteTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteTaxDetail\_CreditNoteTaxDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteTaxMaster\_AddCreditNoteTaxMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteTaxMaster\_ConfirmDeleteCreditNoteTaxMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteTaxMaster\_CreditNoteTaxMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNote\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNote\ManageCreditNote.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNote\_AddCreditNoteMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNote\_ConfirmDeleteCreditNoteMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNote\_ViewCreditNoteMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNote\_ViewCreditNoteSummary.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYear\Index.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYear\_AddFinancialYear.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />

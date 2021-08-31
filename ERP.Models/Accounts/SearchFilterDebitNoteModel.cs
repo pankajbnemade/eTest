@@ -1,0 +1,20 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace ERP.Models.Accounts
+{
+    public class SearchFilterDebitNoteModel
+    {
+        [Display(Name = "Debit Note No.")]
+        public string DebitNoteNo { get; set; }
+
+        [Display(Name = "Party Ledger")]
+        public Nullable<int> PartyLedgerId { get; set; }
+
+        [Display(Name = "From Date")]
+        public Nullable<DateTime> FromDate { get; set; }
+
+        [Display(Name = "To Date")]
+        public Nullable<DateTime> ToDate { get; set; }
+    }
+}
