@@ -11,8 +11,12 @@ namespace ERP.DataAccess.EntityModels
     {
         public Debitnote()
         {
+            Advanceadjustmentdetails = new HashSet<Advanceadjustmentdetail>();
             Debitnotedetails = new HashSet<Debitnotedetail>();
             Debitnotetaxes = new HashSet<Debitnotetax>();
+            Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
+            Paymentvoucherdetails = new HashSet<Paymentvoucherdetail>();
+            Receiptvoucherdetails = new HashSet<Receiptvoucherdetail>();
         }
 
         [Key]
@@ -114,9 +118,17 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Debitnotes))]
         public virtual Voucherstyle VoucherStyle { get; set; }
+        [InverseProperty(nameof(Advanceadjustmentdetail.DebitNote))]
+        public virtual ICollection<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
         [InverseProperty(nameof(Debitnotedetail.DebitNote))]
         public virtual ICollection<Debitnotedetail> Debitnotedetails { get; set; }
         [InverseProperty(nameof(Debitnotetax.DebitNote))]
         public virtual ICollection<Debitnotetax> Debitnotetaxes { get; set; }
+        [InverseProperty(nameof(Journalvoucherdetail.DebitNote))]
+        public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
+        [InverseProperty(nameof(Paymentvoucherdetail.DebitNote))]
+        public virtual ICollection<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
+        [InverseProperty(nameof(Receiptvoucherdetail.DebitNote))]
+        public virtual ICollection<Receiptvoucherdetail> Receiptvoucherdetails { get; set; }
     }
 }

@@ -11,6 +11,9 @@ namespace ERP.DataAccess.EntityModels
     {
         public Purchaseinvoice()
         {
+            Advanceadjustmentdetails = new HashSet<Advanceadjustmentdetail>();
+            Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
+            Paymentvoucherdetails = new HashSet<Paymentvoucherdetail>();
             Purchaseinvoicedetails = new HashSet<Purchaseinvoicedetail>();
             Purchaseinvoicetaxes = new HashSet<Purchaseinvoicetax>();
         }
@@ -110,6 +113,12 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(VoucherStyleId))]
         [InverseProperty(nameof(Voucherstyle.Purchaseinvoices))]
         public virtual Voucherstyle VoucherStyle { get; set; }
+        [InverseProperty(nameof(Advanceadjustmentdetail.PurchaseInvoice))]
+        public virtual ICollection<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
+        [InverseProperty(nameof(Journalvoucherdetail.PurchaseInvoice))]
+        public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
+        [InverseProperty(nameof(Paymentvoucherdetail.PurchaseInvoice))]
+        public virtual ICollection<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
         [InverseProperty(nameof(Purchaseinvoicedetail.PurchaseInvoice))]
         public virtual ICollection<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.PurchaseInvoice))]

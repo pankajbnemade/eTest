@@ -11,13 +11,18 @@ namespace ERP.DataAccess.EntityModels
     {
         public Company()
         {
+            Advanceadjustments = new HashSet<Advanceadjustment>();
+            Contravouchers = new HashSet<Contravoucher>();
             Creditnotes = new HashSet<Creditnote>();
             Currencyconversions = new HashSet<Currencyconversion>();
             Debitnotes = new HashSet<Debitnote>();
             Financialyearcompanyrelations = new HashSet<Financialyearcompanyrelation>();
+            Journalvouchers = new HashSet<Journalvoucher>();
             Ledgercompanyrelations = new HashSet<Ledgercompanyrelation>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
+            Paymentvouchers = new HashSet<Paymentvoucher>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
+            Receiptvouchers = new HashSet<Receiptvoucher>();
             Salesinvoices = new HashSet<Salesinvoice>();
             Vouchersetupdetails = new HashSet<Vouchersetupdetail>();
         }
@@ -59,6 +64,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.CompanyUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Advanceadjustment.Company))]
+        public virtual ICollection<Advanceadjustment> Advanceadjustments { get; set; }
+        [InverseProperty(nameof(Contravoucher.Company))]
+        public virtual ICollection<Contravoucher> Contravouchers { get; set; }
         [InverseProperty(nameof(Creditnote.Company))]
         public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Currencyconversion.Company))]
@@ -67,12 +76,18 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Financialyearcompanyrelation.Company))]
         public virtual ICollection<Financialyearcompanyrelation> Financialyearcompanyrelations { get; set; }
+        [InverseProperty(nameof(Journalvoucher.Company))]
+        public virtual ICollection<Journalvoucher> Journalvouchers { get; set; }
         [InverseProperty(nameof(Ledgercompanyrelation.Company))]
         public virtual ICollection<Ledgercompanyrelation> Ledgercompanyrelations { get; set; }
         [InverseProperty(nameof(Ledgerfinancialyearbalance.Company))]
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.Company))]
+        public virtual ICollection<Paymentvoucher> Paymentvouchers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.Company))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.Company))]
+        public virtual ICollection<Receiptvoucher> Receiptvouchers { get; set; }
         [InverseProperty(nameof(Salesinvoice.Company))]
         public virtual ICollection<Salesinvoice> Salesinvoices { get; set; }
         [InverseProperty(nameof(Vouchersetupdetail.Company))]

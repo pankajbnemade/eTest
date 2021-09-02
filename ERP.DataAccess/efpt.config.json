@@ -14,6 +14,14 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
+         "Name": "advanceadjustment",
+         "ObjectType": 0
+      },
+      {
+         "Name": "advanceadjustmentdetail",
+         "ObjectType": 0
+      },
+      {
          "Name": "aspnetroleclaims",
          "ObjectType": 0
       },
@@ -51,6 +59,14 @@
       },
       {
          "Name": "company",
+         "ObjectType": 0
+      },
+      {
+         "Name": "contravoucher",
+         "ObjectType": 0
+      },
+      {
+         "Name": "contravoucherdetail",
          "ObjectType": 0
       },
       {
@@ -122,6 +138,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "journalvoucher",
+         "ObjectType": 0
+      },
+      {
+         "Name": "journalvoucherdetail",
+         "ObjectType": 0
+      },
+      {
          "Name": "ledger",
          "ObjectType": 0
       },
@@ -142,6 +166,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "paymentvoucher",
+         "ObjectType": 0
+      },
+      {
+         "Name": "paymentvoucherdetail",
+         "ObjectType": 0
+      },
+      {
          "Name": "purchaseinvoice",
          "ObjectType": 0
       },
@@ -155,6 +187,14 @@
       },
       {
          "Name": "purchaseinvoicetax",
+         "ObjectType": 0
+      },
+      {
+         "Name": "receiptvoucher",
+         "ObjectType": 0
+      },
+      {
+         "Name": "receiptvoucherdetail",
          "ObjectType": 0
       },
       {

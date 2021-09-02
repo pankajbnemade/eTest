@@ -19,6 +19,8 @@ namespace ERP.DataAccess.EntityData
         {
         }
 
+        public virtual DbSet<Advanceadjustment> Advanceadjustments { get; set; }
+        public virtual DbSet<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
         public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
         public virtual DbSet<Aspnetroleclaim> Aspnetroleclaims { get; set; }
         public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
@@ -29,6 +31,8 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Chargetype> Chargetypes { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<Contravoucher> Contravouchers { get; set; }
+        public virtual DbSet<Contravoucherdetail> Contravoucherdetails { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Creditnote> Creditnotes { get; set; }
         public virtual DbSet<Creditnotedetail> Creditnotedetails { get; set; }
@@ -46,15 +50,21 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Financialyear> Financialyears { get; set; }
         public virtual DbSet<Financialyearcompanyrelation> Financialyearcompanyrelations { get; set; }
         public virtual DbSet<Form> Forms { get; set; }
+        public virtual DbSet<Journalvoucher> Journalvouchers { get; set; }
+        public virtual DbSet<Journalvoucherdetail> Journalvoucherdetails { get; set; }
         public virtual DbSet<Ledger> Ledgers { get; set; }
         public virtual DbSet<Ledgeraddress> Ledgeraddresses { get; set; }
         public virtual DbSet<Ledgercompanyrelation> Ledgercompanyrelations { get; set; }
         public virtual DbSet<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
+        public virtual DbSet<Paymentvoucher> Paymentvouchers { get; set; }
+        public virtual DbSet<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
         public virtual DbSet<Purchaseinvoice> Purchaseinvoices { get; set; }
         public virtual DbSet<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
         public virtual DbSet<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
         public virtual DbSet<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
+        public virtual DbSet<Receiptvoucher> Receiptvouchers { get; set; }
+        public virtual DbSet<Receiptvoucherdetail> Receiptvoucherdetails { get; set; }
         public virtual DbSet<Salesinvoice> Salesinvoices { get; set; }
         public virtual DbSet<Salesinvoicedetail> Salesinvoicedetails { get; set; }
         public virtual DbSet<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
@@ -71,6 +81,163 @@ namespace ERP.DataAccess.EntityData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Advanceadjustment>(entity =>
+            {
+                entity.HasIndex(e => e.AccountLedgerId)
+                    .HasName("IX_AdvanceAdjustment_AccountLedgerId");
+
+                entity.HasIndex(e => e.AdvanceAdjustmentNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_AdvanceAdjustment_CompanyId");
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_AdvanceAdjustment_FinancialYearId");
+
+                entity.HasIndex(e => e.PaymentVoucherId)
+                    .HasName("IX_AdvanceAdjustment_PaymentVoucherId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_AdvanceAdjustment_aspnetusers_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.ReceiptVoucherId)
+                    .HasName("IX_AdvanceAdjustment_ReceiptVoucherId");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_AdvanceAdjustment_StatusId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_AdvanceAdjustment_aspnetusers_UpdatedByUserId_idx");
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("tf_idx");
+
+                entity.Property(e => e.AdvanceAdjustmentNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.AmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.AccountLedger)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.AccountLedgerId)
+                    .HasConstraintName("FK_AdvanceAdjustment_Ledger_AccountLedgerId");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_AdvanceAdjustment_Company_CompanyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_AdvanceAdjustment_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PaymentVoucher)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.PaymentVoucherId)
+                    .HasConstraintName("FK_AdvanceAdjustment_PaymentVoucher_CompanyId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.AdvanceadjustmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_AdvanceAdjustment_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.ReceiptVoucher)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.ReceiptVoucherId)
+                    .HasConstraintName("FK_AdvanceAdjustment_ReceiptVoucher_CompanyId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_AdvanceAdjustment_Status_StatusId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.AdvanceadjustmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_AdvanceAdjustment_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_AdvanceAdjustment_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Advanceadjustmentdetail>(entity =>
+            {
+                entity.HasKey(e => e.AdvanceAdjustmentDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.AdvanceAdjustmentId)
+                    .HasName("IX_AdvanceAdjustmentDetails_AdvanceAdjustmentId");
+
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("IX_AdvanceAdjustmentDetails_CreditNoteId");
+
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("IX_AdvanceAdjustmentDetails_DebitNoteId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_AdvanceAdjustmentDetails_PreparedByUserId");
+
+                entity.HasIndex(e => e.PurchaseInvoiceId)
+                    .HasName("IX_AdvanceAdjustmentDetails_PurchaseInvoiceId");
+
+                entity.HasIndex(e => e.SalesInvoiceId)
+                    .HasName("IX_AdvanceAdjustmentDetails_SalesInvoiceId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_AdvanceAdjustmentDetails_UpdatedByUserId");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.AdvanceAdjustment)
+                    .WithMany(p => p.Advanceadjustmentdetails)
+                    .HasForeignKey(d => d.AdvanceAdjustmentId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_AdvanceAdj_AdvanceAdjustmentId");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Advanceadjustmentdetails)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Advanceadjustmentdetails)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.AdvanceadjustmentdetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.PurchaseInvoice)
+                    .WithMany(p => p.Advanceadjustmentdetails)
+                    .HasForeignKey(d => d.PurchaseInvoiceId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_PurchaseInvoice_PurchaseInvoiceId");
+
+                entity.HasOne(d => d.SalesInvoice)
+                    .WithMany(p => p.Advanceadjustmentdetails)
+                    .HasForeignKey(d => d.SalesInvoiceId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_SalesInvoice_SalesInvoiceId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.AdvanceadjustmentdetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_AdvanceAdjustmentDetails_aspnetusers_UpdatedByUserId");
+            });
 
             modelBuilder.Entity<Aspnetrole>(entity =>
             {
@@ -353,6 +520,128 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.CompanyUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_Company_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Contravoucher>(entity =>
+            {
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_ContraVoucher_CompanyId");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("IX_ContraVoucher_CurrencyId");
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_ContraVoucher_FinancialYearId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_ContraVoucher_PreparedByUserId");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_ContraVoucher_StatusId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_ContraVoucher_UpdatedByUserId");
+
+                entity.HasIndex(e => e.VoucherNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("IX_ContraVoucher_VoucherStyleId");
+
+                entity.Property(e => e.ChequeAmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ChequeNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.VoucherNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Contravouchers)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_ContraVoucher_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Contravouchers)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContraVoucher_Currency_CurrencyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Contravouchers)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_ContraVoucher_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ContravoucherPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_ContraVoucher_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Contravouchers)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_ContraVoucher_Status_StatusId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ContravoucherUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_ContraVoucher_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Contravouchers)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_ContraVoucher_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Contravoucherdetail>(entity =>
+            {
+                entity.HasKey(e => e.ContraVoucherDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.ContraVoucherId)
+                    .HasName("IX_ContraVoucherDetails_ContraVoucherId");
+
+                entity.HasIndex(e => e.ParticularLedgerId)
+                    .HasName("IX_ContraVoucherDetails_ParticularLedgerId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_ContraVoucherDetails_PreparedByUserId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_ContraVoucherDetails_UpdatedByUserId");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.ContraVoucher)
+                    .WithMany(p => p.Contravoucherdetails)
+                    .HasForeignKey(d => d.ContraVoucherId)
+                    .HasConstraintName("FK_ContraVoucherDetails_ContraVoucher_ContraVoucherId");
+
+                entity.HasOne(d => d.ParticularLedger)
+                    .WithMany(p => p.Contravoucherdetails)
+                    .HasForeignKey(d => d.ParticularLedgerId)
+                    .HasConstraintName("FK_ContraVoucherDetails_Ledger_ParticularLedgerId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ContravoucherdetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_ContraVoucherDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ContravoucherdetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_ContraVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Country>(entity =>
@@ -1198,6 +1487,156 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_Form_User_UpdatedByUserId");
             });
 
+            modelBuilder.Entity<Journalvoucher>(entity =>
+            {
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_JournalVoucher_CompanyId");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("IX_JournalVoucher_CurrencyId");
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_JournalVoucher_FinancialYearId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_JournalVoucher_PreparedByUserId");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_JournalVoucher_StatusId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_JournalVoucher_UpdatedByUserId");
+
+                entity.HasIndex(e => e.VoucherNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("IX_JournalVoucher_VoucherStyleId");
+
+                entity.Property(e => e.AmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.VoucherNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Journalvouchers)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_JournalVoucher_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Journalvouchers)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JournalVoucher_Currency_CurrencyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Journalvouchers)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_JournalVoucher_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.JournalvoucherPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_JournalVoucher_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Journalvouchers)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_JournalVoucher_Status_StatusId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.JournalvoucherUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_JournalVoucher_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Journalvouchers)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_JournalVoucher_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Journalvoucherdetail>(entity =>
+            {
+                entity.HasKey(e => e.JournalVoucherDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("IX_JournalVoucherDetails_CreditNoteId_idx");
+
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("IX_JournalVoucherDetails_DebitNoteId_idx");
+
+                entity.HasIndex(e => e.JournalVoucherId)
+                    .HasName("IX_JournalVoucherDetails_JournalVoucherId");
+
+                entity.HasIndex(e => e.ParticularLedgerId)
+                    .HasName("IX_JournalVoucherDetails_ParticularLedgerId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_JournalVoucherDetails_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.PurchaseInvoiceId)
+                    .HasName("IX_JournalVoucherDetails_PurchaseInvoiceId_idx");
+
+                entity.HasIndex(e => e.SalesInvoiceId)
+                    .HasName("IX_JournalVoucherDetails_SalesInvoiceId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_JournalVoucherDetails_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Journalvoucherdetails)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .HasConstraintName("FK_JournalVoucherDetails_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Journalvoucherdetails)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .HasConstraintName("FK_JournalVoucherDetails_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.JournalVoucher)
+                    .WithMany(p => p.Journalvoucherdetails)
+                    .HasForeignKey(d => d.JournalVoucherId)
+                    .HasConstraintName("FK_JournalVoucherDetails_JournalVoucher_JournalVoucherId");
+
+                entity.HasOne(d => d.ParticularLedger)
+                    .WithMany(p => p.Journalvoucherdetails)
+                    .HasForeignKey(d => d.ParticularLedgerId)
+                    .HasConstraintName("FK_JournalVoucherDetails_Ledger_ParticularLedgerId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.JournalvoucherdetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_JournalVoucherDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.PurchaseInvoice)
+                    .WithMany(p => p.Journalvoucherdetails)
+                    .HasForeignKey(d => d.PurchaseInvoiceId)
+                    .HasConstraintName("FK_JournalVoucherDetails_PurchaseInvoice_PurchaseInvoiceId");
+
+                entity.HasOne(d => d.SalesInvoice)
+                    .WithMany(p => p.Journalvoucherdetails)
+                    .HasForeignKey(d => d.SalesInvoiceId)
+                    .HasConstraintName("FK_JournalVoucherDetails_SalesInvoice_SalesInvoiceId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.JournalvoucherdetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_JournalVoucherDetails_aspnetusers_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Ledger>(entity =>
             {
                 entity.HasIndex(e => e.LedgerCode)
@@ -1433,6 +1872,164 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.ModuleUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_Module_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Paymentvoucher>(entity =>
+            {
+                entity.HasIndex(e => e.AccountLedgerId)
+                    .HasName("IX_PaymentVoucher_AccountLedgerId");
+
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_PaymentVoucher_CompanyId");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("IX_PaymentVoucher_CurrencyId");
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_PaymentVoucher_FinancialYearId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_PaymentVoucher_PreparedByUserId");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_PaymentVoucher_StatusId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_PaymentVoucher_UpdatedByUserId");
+
+                entity.HasIndex(e => e.VoucherNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("IX_PaymentVoucher_VoucherStyleId");
+
+                entity.Property(e => e.AmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ChequeNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TypeCorB)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.VoucherNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.AccountLedger)
+                    .WithMany(p => p.Paymentvouchers)
+                    .HasForeignKey(d => d.AccountLedgerId)
+                    .HasConstraintName("FK_PaymentVoucher_Ledger_AccountLedgerId");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Paymentvouchers)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_PaymentVoucher_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Paymentvouchers)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PaymentVoucher_Currency_CurrencyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Paymentvouchers)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_PaymentVoucher_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.PaymentvoucherPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_PaymentVoucher_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Paymentvouchers)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_PaymentVoucher_Status_StatusId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.PaymentvoucherUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_PaymentVoucher_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Paymentvouchers)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_PaymentVoucher_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Paymentvoucherdetail>(entity =>
+            {
+                entity.HasKey(e => e.PaymentVoucherDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("IX_PaymentVoucherDetails_CreditNoteId");
+
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("IX_PaymentVoucherDetails_DebitNoteId");
+
+                entity.HasIndex(e => e.ParticularLedgerId)
+                    .HasName("IX_PaymentVoucherDetails_ParticularLedgerId");
+
+                entity.HasIndex(e => e.PaymentVoucherId)
+                    .HasName("IX_PaymentVoucherDetails_PaymentVoucherId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_PaymentVoucherDetails_PreparedByUserId");
+
+                entity.HasIndex(e => e.PurchaseInvoiceId)
+                    .HasName("IX_PaymentVoucherDetails_PurchaseInvoiceId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_PaymentVoucherDetails_UpdatedByUserId");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Paymentvoucherdetails)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Paymentvoucherdetails)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.ParticularLedger)
+                    .WithMany(p => p.Paymentvoucherdetails)
+                    .HasForeignKey(d => d.ParticularLedgerId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_Ledger_ParticularLedgerId");
+
+                entity.HasOne(d => d.PaymentVoucher)
+                    .WithMany(p => p.Paymentvoucherdetails)
+                    .HasForeignKey(d => d.PaymentVoucherId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_PaymentVoucher_PaymentVoucherId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.PaymentvoucherdetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.PurchaseInvoice)
+                    .WithMany(p => p.Paymentvoucherdetails)
+                    .HasForeignKey(d => d.PurchaseInvoiceId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_PurchaseInvoice_PurchaseInvoiceId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.PaymentvoucherdetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_PaymentVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Purchaseinvoice>(entity =>
@@ -1696,6 +2293,166 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.PurchaseinvoicetaxUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_PurchaseInvoiceTax_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Receiptvoucher>(entity =>
+            {
+                entity.HasIndex(e => e.AccountLedgerId)
+                    .HasName("IX_ReceiptVoucher_AccountLedgerId");
+
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("IX_ReceiptVoucher_CompanyId");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("IX_ReceiptVoucher_CurrencyId");
+
+                entity.HasIndex(e => e.FinancialYearId)
+                    .HasName("IX_ReceiptVoucher_FinancialYearId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_ReceiptVoucher_PreparedByUserId");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("IX_ReceiptVoucher_StatusId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_ReceiptVoucher_UpdatedByUserId");
+
+                entity.HasIndex(e => e.VoucherNo)
+                    .HasName("DocumentNo_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.VoucherStyleId)
+                    .HasName("tf");
+
+                entity.Property(e => e.AmountFcinWord)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ChequeNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TypeCorB)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.VoucherNo)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.AccountLedger)
+                    .WithMany(p => p.Receiptvouchers)
+                    .HasForeignKey(d => d.AccountLedgerId)
+                    .HasConstraintName("FK_ReceiptVoucher_Ledger_AccountLedgerId");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Receiptvouchers)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_ReceiptVoucher_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Receiptvouchers)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReceiptVoucher_Currency_CurrencyId");
+
+                entity.HasOne(d => d.FinancialYear)
+                    .WithMany(p => p.Receiptvouchers)
+                    .HasForeignKey(d => d.FinancialYearId)
+                    .HasConstraintName("FK_ReceiptVoucher_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ReceiptvoucherPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_ReceiptVoucher_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Receiptvouchers)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_ReceiptVoucher_Status_StatusId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ReceiptvoucherUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_ReceiptVoucher_aspnetusers_UpdatedByUserId");
+
+                entity.HasOne(d => d.VoucherStyle)
+                    .WithMany(p => p.Receiptvouchers)
+                    .HasForeignKey(d => d.VoucherStyleId)
+                    .HasConstraintName("FK_ReceiptVoucher_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Receiptvoucherdetail>(entity =>
+            {
+                entity.HasKey(e => e.ReceiptVoucherDetId)
+                    .HasName("PRIMARY");
+
+                entity.HasComment("FK_ReceiptVoucherDetails_Ledger_ParticularLedgerId");
+
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("IX_ReceiptVoucherDetails_CreditNoteId");
+
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("IX_ReceiptVoucherDetails_DebitNoteId");
+
+                entity.HasIndex(e => e.ParticularLedgerId)
+                    .HasName("IX_ReceiptVoucherDetails_ParticularLedgerId");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("IX_ReceiptVoucherDetails_PreparedByUserId");
+
+                entity.HasIndex(e => e.ReceiptVoucherId)
+                    .HasName("IX_ReceiptVoucherDetails_ReceiptVoucherId");
+
+                entity.HasIndex(e => e.SalesInvoiceId)
+                    .HasName("IX_ReceiptVoucherDetails_SalesInvoiceId");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("IX_ReceiptVoucherDetails_UpdatedByUserId");
+
+                entity.Property(e => e.Narration)
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Receiptvoucherdetails)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Receiptvoucherdetails)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.ParticularLedger)
+                    .WithMany(p => p.Receiptvoucherdetails)
+                    .HasForeignKey(d => d.ParticularLedgerId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_Ledger_ParticularLedgerId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ReceiptvoucherdetailPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_aspnetusers_PreparedByUserId");
+
+                entity.HasOne(d => d.ReceiptVoucher)
+                    .WithMany(p => p.Receiptvoucherdetails)
+                    .HasForeignKey(d => d.ReceiptVoucherId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_ReceiptVoucher_ReceiptVoucherId");
+
+                entity.HasOne(d => d.SalesInvoice)
+                    .WithMany(p => p.Receiptvoucherdetails)
+                    .HasForeignKey(d => d.SalesInvoiceId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_SalesInvoice_SalesInvoiceId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ReceiptvoucherdetailUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_ReceiptVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Salesinvoice>(entity =>

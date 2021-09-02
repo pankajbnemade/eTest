@@ -11,6 +11,10 @@ namespace ERP.DataAccess.EntityModels
     {
         public Aspnetuser()
         {
+            AdvanceadjustmentPreparedByUsers = new HashSet<Advanceadjustment>();
+            AdvanceadjustmentUpdatedByUsers = new HashSet<Advanceadjustment>();
+            AdvanceadjustmentdetailPreparedByUsers = new HashSet<Advanceadjustmentdetail>();
+            AdvanceadjustmentdetailUpdatedByUsers = new HashSet<Advanceadjustmentdetail>();
             Aspnetuserclaims = new HashSet<Aspnetuserclaim>();
             Aspnetuserlogins = new HashSet<Aspnetuserlogin>();
             Aspnetuserroles = new HashSet<Aspnetuserrole>();
@@ -21,6 +25,10 @@ namespace ERP.DataAccess.EntityModels
             CityUpdatedByUsers = new HashSet<City>();
             CompanyPreparedByUsers = new HashSet<Company>();
             CompanyUpdatedByUsers = new HashSet<Company>();
+            ContravoucherPreparedByUsers = new HashSet<Contravoucher>();
+            ContravoucherUpdatedByUsers = new HashSet<Contravoucher>();
+            ContravoucherdetailPreparedByUsers = new HashSet<Contravoucherdetail>();
+            ContravoucherdetailUpdatedByUsers = new HashSet<Contravoucherdetail>();
             CountryPreparedByUsers = new HashSet<Country>();
             CountryUpdatedByUsers = new HashSet<Country>();
             CreditnotePreparedByUsers = new HashSet<Creditnote>();
@@ -55,6 +63,10 @@ namespace ERP.DataAccess.EntityModels
             FinancialyearcompanyrelationUpdatedByUsers = new HashSet<Financialyearcompanyrelation>();
             FormPreparedByUsers = new HashSet<Form>();
             FormUpdatedByUsers = new HashSet<Form>();
+            JournalvoucherPreparedByUsers = new HashSet<Journalvoucher>();
+            JournalvoucherUpdatedByUsers = new HashSet<Journalvoucher>();
+            JournalvoucherdetailPreparedByUsers = new HashSet<Journalvoucherdetail>();
+            JournalvoucherdetailUpdatedByUsers = new HashSet<Journalvoucherdetail>();
             LedgerPreparedByUsers = new HashSet<Ledger>();
             LedgerUpdatedByUsers = new HashSet<Ledger>();
             LedgeraddressPreparedByUsers = new HashSet<Ledgeraddress>();
@@ -65,6 +77,10 @@ namespace ERP.DataAccess.EntityModels
             LedgerfinancialyearbalanceUpdatedByUsers = new HashSet<Ledgerfinancialyearbalance>();
             ModulePreparedByUsers = new HashSet<Module>();
             ModuleUpdatedByUsers = new HashSet<Module>();
+            PaymentvoucherPreparedByUsers = new HashSet<Paymentvoucher>();
+            PaymentvoucherUpdatedByUsers = new HashSet<Paymentvoucher>();
+            PaymentvoucherdetailPreparedByUsers = new HashSet<Paymentvoucherdetail>();
+            PaymentvoucherdetailUpdatedByUsers = new HashSet<Paymentvoucherdetail>();
             PurchaseinvoicePreparedByUsers = new HashSet<Purchaseinvoice>();
             PurchaseinvoiceUpdatedByUsers = new HashSet<Purchaseinvoice>();
             PurchaseinvoicedetailPreparedByUsers = new HashSet<Purchaseinvoicedetail>();
@@ -73,6 +89,10 @@ namespace ERP.DataAccess.EntityModels
             PurchaseinvoicedetailtaxUpdatedByUsers = new HashSet<Purchaseinvoicedetailtax>();
             PurchaseinvoicetaxPreparedByUsers = new HashSet<Purchaseinvoicetax>();
             PurchaseinvoicetaxUpdatedByUsers = new HashSet<Purchaseinvoicetax>();
+            ReceiptvoucherPreparedByUsers = new HashSet<Receiptvoucher>();
+            ReceiptvoucherUpdatedByUsers = new HashSet<Receiptvoucher>();
+            ReceiptvoucherdetailPreparedByUsers = new HashSet<Receiptvoucherdetail>();
+            ReceiptvoucherdetailUpdatedByUsers = new HashSet<Receiptvoucherdetail>();
             SalesinvoicePreparedByUsers = new HashSet<Salesinvoice>();
             SalesinvoiceUpdatedByUsers = new HashSet<Salesinvoice>();
             SalesinvoicedetailPreparedByUsers = new HashSet<Salesinvoicedetail>();
@@ -124,6 +144,14 @@ namespace ERP.DataAccess.EntityModels
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
 
+        [InverseProperty(nameof(Advanceadjustment.PreparedByUser))]
+        public virtual ICollection<Advanceadjustment> AdvanceadjustmentPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Advanceadjustment.UpdatedByUser))]
+        public virtual ICollection<Advanceadjustment> AdvanceadjustmentUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Advanceadjustmentdetail.PreparedByUser))]
+        public virtual ICollection<Advanceadjustmentdetail> AdvanceadjustmentdetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Advanceadjustmentdetail.UpdatedByUser))]
+        public virtual ICollection<Advanceadjustmentdetail> AdvanceadjustmentdetailUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Aspnetuserclaim.User))]
         public virtual ICollection<Aspnetuserclaim> Aspnetuserclaims { get; set; }
         [InverseProperty(nameof(Aspnetuserlogin.User))]
@@ -144,6 +172,14 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Company> CompanyPreparedByUsers { get; set; }
         [InverseProperty(nameof(Company.UpdatedByUser))]
         public virtual ICollection<Company> CompanyUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Contravoucher.PreparedByUser))]
+        public virtual ICollection<Contravoucher> ContravoucherPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Contravoucher.UpdatedByUser))]
+        public virtual ICollection<Contravoucher> ContravoucherUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Contravoucherdetail.PreparedByUser))]
+        public virtual ICollection<Contravoucherdetail> ContravoucherdetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Contravoucherdetail.UpdatedByUser))]
+        public virtual ICollection<Contravoucherdetail> ContravoucherdetailUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Country.PreparedByUser))]
         public virtual ICollection<Country> CountryPreparedByUsers { get; set; }
         [InverseProperty(nameof(Country.UpdatedByUser))]
@@ -212,6 +248,14 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Form> FormPreparedByUsers { get; set; }
         [InverseProperty(nameof(Form.UpdatedByUser))]
         public virtual ICollection<Form> FormUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Journalvoucher.PreparedByUser))]
+        public virtual ICollection<Journalvoucher> JournalvoucherPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Journalvoucher.UpdatedByUser))]
+        public virtual ICollection<Journalvoucher> JournalvoucherUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Journalvoucherdetail.PreparedByUser))]
+        public virtual ICollection<Journalvoucherdetail> JournalvoucherdetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Journalvoucherdetail.UpdatedByUser))]
+        public virtual ICollection<Journalvoucherdetail> JournalvoucherdetailUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Ledger.PreparedByUser))]
         public virtual ICollection<Ledger> LedgerPreparedByUsers { get; set; }
         [InverseProperty(nameof(Ledger.UpdatedByUser))]
@@ -232,6 +276,14 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Module> ModulePreparedByUsers { get; set; }
         [InverseProperty(nameof(Module.UpdatedByUser))]
         public virtual ICollection<Module> ModuleUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.PreparedByUser))]
+        public virtual ICollection<Paymentvoucher> PaymentvoucherPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.UpdatedByUser))]
+        public virtual ICollection<Paymentvoucher> PaymentvoucherUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Paymentvoucherdetail.PreparedByUser))]
+        public virtual ICollection<Paymentvoucherdetail> PaymentvoucherdetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Paymentvoucherdetail.UpdatedByUser))]
+        public virtual ICollection<Paymentvoucherdetail> PaymentvoucherdetailUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.PreparedByUser))]
         public virtual ICollection<Purchaseinvoice> PurchaseinvoicePreparedByUsers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.UpdatedByUser))]
@@ -248,6 +300,14 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Purchaseinvoicetax> PurchaseinvoicetaxPreparedByUsers { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.UpdatedByUser))]
         public virtual ICollection<Purchaseinvoicetax> PurchaseinvoicetaxUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.PreparedByUser))]
+        public virtual ICollection<Receiptvoucher> ReceiptvoucherPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.UpdatedByUser))]
+        public virtual ICollection<Receiptvoucher> ReceiptvoucherUpdatedByUsers { get; set; }
+        [InverseProperty(nameof(Receiptvoucherdetail.PreparedByUser))]
+        public virtual ICollection<Receiptvoucherdetail> ReceiptvoucherdetailPreparedByUsers { get; set; }
+        [InverseProperty(nameof(Receiptvoucherdetail.UpdatedByUser))]
+        public virtual ICollection<Receiptvoucherdetail> ReceiptvoucherdetailUpdatedByUsers { get; set; }
         [InverseProperty(nameof(Salesinvoice.PreparedByUser))]
         public virtual ICollection<Salesinvoice> SalesinvoicePreparedByUsers { get; set; }
         [InverseProperty(nameof(Salesinvoice.UpdatedByUser))]

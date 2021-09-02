@@ -11,9 +11,14 @@ namespace ERP.DataAccess.EntityModels
     {
         public Status()
         {
+            Advanceadjustments = new HashSet<Advanceadjustment>();
+            Contravouchers = new HashSet<Contravoucher>();
             Creditnotes = new HashSet<Creditnote>();
             Debitnotes = new HashSet<Debitnote>();
+            Journalvouchers = new HashSet<Journalvoucher>();
+            Paymentvouchers = new HashSet<Paymentvoucher>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
+            Receiptvouchers = new HashSet<Receiptvoucher>();
             Salesinvoices = new HashSet<Salesinvoice>();
         }
 
@@ -34,12 +39,22 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.StatusUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Advanceadjustment.Status))]
+        public virtual ICollection<Advanceadjustment> Advanceadjustments { get; set; }
+        [InverseProperty(nameof(Contravoucher.Status))]
+        public virtual ICollection<Contravoucher> Contravouchers { get; set; }
         [InverseProperty(nameof(Creditnote.Status))]
         public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Debitnote.Status))]
         public virtual ICollection<Debitnote> Debitnotes { get; set; }
+        [InverseProperty(nameof(Journalvoucher.Status))]
+        public virtual ICollection<Journalvoucher> Journalvouchers { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.Status))]
+        public virtual ICollection<Paymentvoucher> Paymentvouchers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.Status))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.Status))]
+        public virtual ICollection<Receiptvoucher> Receiptvouchers { get; set; }
         [InverseProperty(nameof(Salesinvoice.Status))]
         public virtual ICollection<Salesinvoice> Salesinvoices { get; set; }
     }

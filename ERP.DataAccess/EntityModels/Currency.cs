@@ -12,11 +12,15 @@ namespace ERP.DataAccess.EntityModels
         public Currency()
         {
             Companies = new HashSet<Company>();
+            Contravouchers = new HashSet<Contravoucher>();
             Creditnotes = new HashSet<Creditnote>();
             Currencyconversions = new HashSet<Currencyconversion>();
             Debitnotes = new HashSet<Debitnote>();
+            Journalvouchers = new HashSet<Journalvoucher>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
+            Paymentvouchers = new HashSet<Paymentvoucher>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
+            Receiptvouchers = new HashSet<Receiptvoucher>();
             Salesinvoices = new HashSet<Salesinvoice>();
         }
 
@@ -44,16 +48,24 @@ namespace ERP.DataAccess.EntityModels
         public virtual Aspnetuser UpdatedByUser { get; set; }
         [InverseProperty(nameof(Company.Currency))]
         public virtual ICollection<Company> Companies { get; set; }
+        [InverseProperty(nameof(Contravoucher.Currency))]
+        public virtual ICollection<Contravoucher> Contravouchers { get; set; }
         [InverseProperty(nameof(Creditnote.Currency))]
         public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Currencyconversion.Currency))]
         public virtual ICollection<Currencyconversion> Currencyconversions { get; set; }
         [InverseProperty(nameof(Debitnote.Currency))]
         public virtual ICollection<Debitnote> Debitnotes { get; set; }
+        [InverseProperty(nameof(Journalvoucher.Currency))]
+        public virtual ICollection<Journalvoucher> Journalvouchers { get; set; }
         [InverseProperty(nameof(Ledgerfinancialyearbalance.Currency))]
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.Currency))]
+        public virtual ICollection<Paymentvoucher> Paymentvouchers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.Currency))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.Currency))]
+        public virtual ICollection<Receiptvoucher> Receiptvouchers { get; set; }
         [InverseProperty(nameof(Salesinvoice.Currency))]
         public virtual ICollection<Salesinvoice> Salesinvoices { get; set; }
     }

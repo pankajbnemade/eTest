@@ -11,9 +11,14 @@ namespace ERP.DataAccess.EntityModels
     {
         public Voucherstyle()
         {
+            Advanceadjustments = new HashSet<Advanceadjustment>();
+            Contravouchers = new HashSet<Contravoucher>();
             Creditnotes = new HashSet<Creditnote>();
             Debitnotes = new HashSet<Debitnote>();
+            Journalvouchers = new HashSet<Journalvoucher>();
+            Paymentvouchers = new HashSet<Paymentvoucher>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
+            Receiptvouchers = new HashSet<Receiptvoucher>();
             Salesinvoices = new HashSet<Salesinvoice>();
             Vouchersetupdetails = new HashSet<Vouchersetupdetail>();
         }
@@ -35,12 +40,22 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.VoucherstyleUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Advanceadjustment.VoucherStyle))]
+        public virtual ICollection<Advanceadjustment> Advanceadjustments { get; set; }
+        [InverseProperty(nameof(Contravoucher.VoucherStyle))]
+        public virtual ICollection<Contravoucher> Contravouchers { get; set; }
         [InverseProperty(nameof(Creditnote.VoucherStyle))]
         public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Debitnote.VoucherStyle))]
         public virtual ICollection<Debitnote> Debitnotes { get; set; }
+        [InverseProperty(nameof(Journalvoucher.VoucherStyle))]
+        public virtual ICollection<Journalvoucher> Journalvouchers { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.VoucherStyle))]
+        public virtual ICollection<Paymentvoucher> Paymentvouchers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.VoucherStyle))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.VoucherStyle))]
+        public virtual ICollection<Receiptvoucher> Receiptvouchers { get; set; }
         [InverseProperty(nameof(Salesinvoice.VoucherStyle))]
         public virtual ICollection<Salesinvoice> Salesinvoices { get; set; }
         [InverseProperty(nameof(Vouchersetupdetail.VoucherStyle))]

@@ -62,7 +62,7 @@ namespace ERP.Models.Accounts
         public string PaymentTerm { get; set; }
 
         [Display(Name = "Remark")]
-        [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters.")]
+        [StringLength(2000, ErrorMessage = "Remark cannot exceed 2000 characters.")]
         public string Remark { get; set; }
 
         [Display(Name = "Tax Model Type")]

@@ -11,11 +11,16 @@ namespace ERP.DataAccess.EntityModels
     {
         public Financialyear()
         {
+            Advanceadjustments = new HashSet<Advanceadjustment>();
+            Contravouchers = new HashSet<Contravoucher>();
             Creditnotes = new HashSet<Creditnote>();
             Debitnotes = new HashSet<Debitnote>();
             Financialyearcompanyrelations = new HashSet<Financialyearcompanyrelation>();
+            Journalvouchers = new HashSet<Journalvoucher>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
+            Paymentvouchers = new HashSet<Paymentvoucher>();
             Purchaseinvoices = new HashSet<Purchaseinvoice>();
+            Receiptvouchers = new HashSet<Receiptvoucher>();
             Salesinvoices = new HashSet<Salesinvoice>();
             Vouchersetupdetails = new HashSet<Vouchersetupdetail>();
         }
@@ -41,16 +46,26 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.FinancialyearUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Advanceadjustment.FinancialYear))]
+        public virtual ICollection<Advanceadjustment> Advanceadjustments { get; set; }
+        [InverseProperty(nameof(Contravoucher.FinancialYear))]
+        public virtual ICollection<Contravoucher> Contravouchers { get; set; }
         [InverseProperty(nameof(Creditnote.FinancialYear))]
         public virtual ICollection<Creditnote> Creditnotes { get; set; }
         [InverseProperty(nameof(Debitnote.FinancialYear))]
         public virtual ICollection<Debitnote> Debitnotes { get; set; }
         [InverseProperty(nameof(Financialyearcompanyrelation.FinancialYear))]
         public virtual ICollection<Financialyearcompanyrelation> Financialyearcompanyrelations { get; set; }
+        [InverseProperty(nameof(Journalvoucher.FinancialYear))]
+        public virtual ICollection<Journalvoucher> Journalvouchers { get; set; }
         [InverseProperty(nameof(Ledgerfinancialyearbalance.FinancialYear))]
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.FinancialYear))]
+        public virtual ICollection<Paymentvoucher> Paymentvouchers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.FinancialYear))]
         public virtual ICollection<Purchaseinvoice> Purchaseinvoices { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.FinancialYear))]
+        public virtual ICollection<Receiptvoucher> Receiptvouchers { get; set; }
         [InverseProperty(nameof(Salesinvoice.FinancialYear))]
         public virtual ICollection<Salesinvoice> Salesinvoices { get; set; }
         [InverseProperty(nameof(Vouchersetupdetail.FinancialYear))]

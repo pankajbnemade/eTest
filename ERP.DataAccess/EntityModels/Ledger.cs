@@ -11,6 +11,8 @@ namespace ERP.DataAccess.EntityModels
     {
         public Ledger()
         {
+            Advanceadjustments = new HashSet<Advanceadjustment>();
+            Contravoucherdetails = new HashSet<Contravoucherdetail>();
             CreditnoteAccountLedgers = new HashSet<Creditnote>();
             CreditnotePartyLedgers = new HashSet<Creditnote>();
             Creditnotedetailtaxes = new HashSet<Creditnotedetailtax>();
@@ -20,13 +22,18 @@ namespace ERP.DataAccess.EntityModels
             Debitnotedetailtaxes = new HashSet<Debitnotedetailtax>();
             Debitnotetaxes = new HashSet<Debitnotetax>();
             InverseParentGroup = new HashSet<Ledger>();
+            Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
             Ledgeraddresses = new HashSet<Ledgeraddress>();
             Ledgercompanyrelations = new HashSet<Ledgercompanyrelation>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
+            Paymentvoucherdetails = new HashSet<Paymentvoucherdetail>();
+            Paymentvouchers = new HashSet<Paymentvoucher>();
             PurchaseinvoiceAccountLedgers = new HashSet<Purchaseinvoice>();
             PurchaseinvoiceSupplierLedgers = new HashSet<Purchaseinvoice>();
             Purchaseinvoicedetailtaxes = new HashSet<Purchaseinvoicedetailtax>();
             Purchaseinvoicetaxes = new HashSet<Purchaseinvoicetax>();
+            Receiptvoucherdetails = new HashSet<Receiptvoucherdetail>();
+            Receiptvouchers = new HashSet<Receiptvoucher>();
             SalesinvoiceAccountLedgers = new HashSet<Salesinvoice>();
             SalesinvoiceBankLedgers = new HashSet<Salesinvoice>();
             SalesinvoiceCustomerLedgers = new HashSet<Salesinvoice>();
@@ -65,6 +72,10 @@ namespace ERP.DataAccess.EntityModels
         [ForeignKey(nameof(UpdatedByUserId))]
         [InverseProperty(nameof(Aspnetuser.LedgerUpdatedByUsers))]
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        [InverseProperty(nameof(Advanceadjustment.AccountLedger))]
+        public virtual ICollection<Advanceadjustment> Advanceadjustments { get; set; }
+        [InverseProperty(nameof(Contravoucherdetail.ParticularLedger))]
+        public virtual ICollection<Contravoucherdetail> Contravoucherdetails { get; set; }
         [InverseProperty(nameof(Creditnote.AccountLedger))]
         public virtual ICollection<Creditnote> CreditnoteAccountLedgers { get; set; }
         [InverseProperty(nameof(Creditnote.PartyLedger))]
@@ -83,12 +94,18 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Debitnotetax> Debitnotetaxes { get; set; }
         [InverseProperty(nameof(Ledger.ParentGroup))]
         public virtual ICollection<Ledger> InverseParentGroup { get; set; }
+        [InverseProperty(nameof(Journalvoucherdetail.ParticularLedger))]
+        public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
         [InverseProperty(nameof(Ledgeraddress.Ledger))]
         public virtual ICollection<Ledgeraddress> Ledgeraddresses { get; set; }
         [InverseProperty(nameof(Ledgercompanyrelation.Ledger))]
         public virtual ICollection<Ledgercompanyrelation> Ledgercompanyrelations { get; set; }
         [InverseProperty(nameof(Ledgerfinancialyearbalance.Ledger))]
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
+        [InverseProperty(nameof(Paymentvoucherdetail.ParticularLedger))]
+        public virtual ICollection<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
+        [InverseProperty(nameof(Paymentvoucher.AccountLedger))]
+        public virtual ICollection<Paymentvoucher> Paymentvouchers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.AccountLedger))]
         public virtual ICollection<Purchaseinvoice> PurchaseinvoiceAccountLedgers { get; set; }
         [InverseProperty(nameof(Purchaseinvoice.SupplierLedger))]
@@ -97,6 +114,10 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
         [InverseProperty(nameof(Purchaseinvoicetax.TaxLedger))]
         public virtual ICollection<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
+        [InverseProperty(nameof(Receiptvoucherdetail.ParticularLedger))]
+        public virtual ICollection<Receiptvoucherdetail> Receiptvoucherdetails { get; set; }
+        [InverseProperty(nameof(Receiptvoucher.AccountLedger))]
+        public virtual ICollection<Receiptvoucher> Receiptvouchers { get; set; }
         [InverseProperty(nameof(Salesinvoice.AccountLedger))]
         public virtual ICollection<Salesinvoice> SalesinvoiceAccountLedgers { get; set; }
         [InverseProperty(nameof(Salesinvoice.BankLedger))]
