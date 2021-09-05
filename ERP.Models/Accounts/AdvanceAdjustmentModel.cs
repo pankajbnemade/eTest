@@ -9,15 +9,15 @@ namespace ERP.Models.Accounts
     {
         public int AdvanceAdjustmentId { get; set; }
 
-        [Display(Name = "Voucher No")]
+        [Display(Name = "Advance Adjustment No")]
         [Required(ErrorMessage = "Vocuher No is required.")]
-        public string VoucherNo { get; set; }
+        public string AdvanceAdjustmentNo { get; set; }
 
         [DataType(DataType.DateTime)]
-        [Display(Name = "Voucher Date")]
+        [Display(Name = "Advance Adjustment Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}", ApplyFormatInEditMode = true)]
-        [Required(ErrorMessage = "Voucher Date is required.")]
-        public DateTime? VoucherDate { get; set; }
+        [Required(ErrorMessage = "Advance Adjustment Date is required.")]
+        public DateTime? AdvanceAdjustmentDate { get; set; }
 
         [Display(Name = "Account Ledger")]
         [Required(ErrorMessage = "Account Ledger is required.")]
@@ -35,6 +35,14 @@ namespace ERP.Models.Accounts
         [StringLength(2000, ErrorMessage = "Narration cannot exceed 2000 characters.")]
         public string Narration { get; set; }
 
+        [Display(Name = "Currency")]
+        [Required(ErrorMessage = "Currency is required.")]
+        public int CurrencyId { get; set; }
+
+        [Display(Name = "Exchange Rate")]
+        [Required(ErrorMessage = "Exchange Rate is required.")]
+        public decimal ExchangeRate { get; set; }
+
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
@@ -51,9 +59,9 @@ namespace ERP.Models.Accounts
 
         public int? StatusId { get; set; }
 
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
-        public int? FinancialYearId { get; set; }
+        public int FinancialYearId { get; set; }
 
         public int? MaxNo { get; set; }
 

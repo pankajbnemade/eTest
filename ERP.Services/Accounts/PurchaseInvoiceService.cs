@@ -167,16 +167,17 @@ namespace ERP.Services.Accounts
         /// <summary>
         /// delete purchase invoice.
         /// </summary>
-        /// <param name="salesInvoiceId"></param>
+        /// <param name="purchaseInvoiceId"></param>
         /// <returns>
         /// return true if success.
         /// </returns>
-        public async Task<bool> DeletePurchaseInvoice(int salesInvoiceId)
+        public async Task<bool> DeletePurchaseInvoice(int purchaseInvoiceId)
         {
             bool isDeleted = false;
 
             // get record.
-            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == salesInvoiceId);
+            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceId);
+            
             if (null != purchaseInvoice)
             {
                 isDeleted = await Delete(purchaseInvoice);
@@ -236,7 +237,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get purchase invoice based on salesInvoiceId
+        /// get purchase invoice based on purchaseInvoiceId
         /// </summary>
         /// <returns>
         /// return record.

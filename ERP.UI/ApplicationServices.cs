@@ -54,6 +54,7 @@ namespace ERP.UI
             #endregion // Master
 
             #region Accounts
+
             services.AddTransient<ILedger, LedgerService>();
             services.AddTransient<ILedgerAddress, LedgerAddressService>();
             services.AddTransient<ITaxRegister, TaxRegisterService>();
@@ -82,6 +83,21 @@ namespace ERP.UI
             services.AddTransient<IDebitNoteDetail, DebitNoteDetailService>();
             services.AddTransient<IDebitNoteTax, DebitNoteTaxService>();
             services.AddTransient<IDebitNoteDetailTax, DebitNoteDetailTaxService>();
+
+            services.AddTransient<IPaymentVoucher, PaymentVoucherService>();
+            services.AddTransient<IPaymentVoucherDetail, PaymentVoucherDetailService>();
+
+            services.AddTransient<IReceiptVoucher, ReceiptVoucherService>();
+            services.AddTransient<IReceiptVoucherDetail, ReceiptVoucherDetailService>();
+
+            services.AddTransient<IContraVoucher, ContraVoucherService>();
+            services.AddTransient<IContraVoucherDetail, ContraVoucherDetailService>();
+
+            services.AddTransient<IJournalVoucher, JournalVoucherService>();
+            services.AddTransient<IJournalVoucherDetail, JournalVoucherDetailService>();
+
+            services.AddTransient<IAdvanceAdjustment, AdvanceAdjustmentService>();
+            services.AddTransient<IAdvanceAdjustmentDetail, AdvanceAdjustmentDetailService>();
 
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
 

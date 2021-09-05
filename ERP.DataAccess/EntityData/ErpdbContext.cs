@@ -78,12 +78,22 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
+//            }
+//        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
+           base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
+                entity.ToTable("advanceadjustment");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_AdvanceAdjustment_AccountLedgerId");
 
@@ -93,6 +103,9 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_AdvanceAdjustment_CompanyId");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("FK_AdvanceAdjustment_Currency_CurrencyId_idx");
 
                 entity.HasIndex(e => e.FinancialYearId)
                     .HasName("IX_AdvanceAdjustment_FinancialYearId");
@@ -115,17 +128,35 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf_idx");
 
+                entity.Property(e => e.AdvanceAdjustmentDate).HasColumnType("datetime");
+
                 entity.Property(e => e.AdvanceAdjustmentNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.AmountFcinWord)
+                    .HasColumnName("Amount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.Advanceadjustments)
@@ -136,6 +167,12 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.CompanyId)
                     .HasConstraintName("FK_AdvanceAdjustment_Company_CompanyId");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AdvanceAdjustment_Currency_CurrencyId");
 
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Advanceadjustments)
@@ -178,6 +215,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.AdvanceAdjustmentDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("advanceadjustmentdetail");
+
                 entity.HasIndex(e => e.AdvanceAdjustmentId)
                     .HasName("IX_AdvanceAdjustmentDetails_AdvanceAdjustmentId");
 
@@ -199,9 +238,20 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_AdvanceAdjustmentDetails_UpdatedByUserId");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.AdvanceAdjustment)
                     .WithMany(p => p.Advanceadjustmentdetails)
@@ -241,33 +291,42 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Aspnetrole>(entity =>
             {
+                entity.ToTable("aspnetroles");
+
                 entity.HasIndex(e => e.NormalizedName)
                     .HasName("RoleNameIndex")
                     .IsUnique();
 
                 entity.Property(e => e.ConcurrencyStamp)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Name)
+                    .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NormalizedName)
+                    .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
             });
 
             modelBuilder.Entity<Aspnetroleclaim>(entity =>
             {
+                entity.ToTable("aspnetroleclaims");
+
                 entity.HasIndex(e => e.RoleId)
                     .HasName("IX_AspNetRoleClaims_RoleId");
 
                 entity.Property(e => e.ClaimType)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.ClaimValue)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -279,6 +338,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Aspnetuser>(entity =>
             {
+                entity.ToTable("aspnetusers");
+
                 entity.HasIndex(e => e.NormalizedEmail)
                     .HasName("EmailIndex");
 
@@ -287,48 +348,60 @@ namespace ERP.DataAccess.EntityData
                     .IsUnique();
 
                 entity.Property(e => e.ConcurrencyStamp)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Email)
+                    .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NormalizedEmail)
+                    .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NormalizedUserName)
+                    .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PasswordHash)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PhoneNumber)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.SecurityStamp)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.UserName)
+                    .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
             });
 
             modelBuilder.Entity<Aspnetuserclaim>(entity =>
             {
+                entity.ToTable("aspnetuserclaims");
+
                 entity.HasIndex(e => e.UserId)
                     .HasName("IX_AspNetUserClaims_UserId");
 
                 entity.Property(e => e.ClaimType)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.ClaimValue)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -344,18 +417,23 @@ namespace ERP.DataAccess.EntityData
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
+                entity.ToTable("aspnetuserlogins");
+
                 entity.HasIndex(e => e.UserId)
                     .HasName("IX_AspNetUserLogins_UserId");
 
                 entity.Property(e => e.LoginProvider)
+                    .HasColumnType("varchar(255)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.ProviderKey)
+                    .HasColumnType("varchar(255)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.ProviderDisplayName)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -370,6 +448,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => new { e.UserId, e.RoleId })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+                entity.ToTable("aspnetuserroles");
 
                 entity.HasIndex(e => e.RoleId)
                     .HasName("IX_AspNetUserRoles_RoleId");
@@ -391,15 +471,20 @@ namespace ERP.DataAccess.EntityData
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
 
+                entity.ToTable("aspnetusertokens");
+
                 entity.Property(e => e.LoginProvider)
+                    .HasColumnType("varchar(255)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Name)
+                    .HasColumnType("varchar(255)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Value)
+                    .HasColumnType("longtext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -411,6 +496,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Chargetype>(entity =>
             {
+                entity.ToTable("chargetype");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_ChargeType_User_PreparedByUserId_idx");
 
@@ -418,8 +505,14 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_ChargeType_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.ChargeTypeName)
+                    .IsRequired()
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ChargetypePreparedByUsers)
@@ -434,6 +527,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<City>(entity =>
             {
+                entity.ToTable("city");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_City_User_PreparedByUserId_idx");
 
@@ -444,8 +539,14 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_City_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.CityName)
+                    .IsRequired()
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CityPreparedByUsers)
@@ -465,6 +566,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Company>(entity =>
             {
+                entity.ToTable("company");
+
                 entity.HasIndex(e => e.CurrencyId)
                     .HasName("IX_Company_CurrencyId");
 
@@ -475,34 +578,47 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Company_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Address)
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.AlternatePhoneNo)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.CompanyName)
+                    .IsRequired()
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.EmailAddress)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.FaxNo)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PhoneNo)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PostalCode)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Website)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -524,6 +640,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Contravoucher>(entity =>
             {
+                entity.ToTable("contravoucher");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_ContraVoucher_CompanyId");
 
@@ -549,19 +667,50 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_ContraVoucher_VoucherStyleId");
 
+                entity.Property(e => e.ChequeAmountFc)
+                    .HasColumnName("ChequeAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.ChequeAmountFcinWord)
+                    .HasColumnName("ChequeAmount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ChequeDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ChequeNo)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.CreditAmountFc)
+                    .HasColumnName("CreditAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmountFc)
+                    .HasColumnName("DebitAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.VoucherDate).HasColumnType("datetime");
+
                 entity.Property(e => e.VoucherNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -607,6 +756,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.ContraVoucherDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("contravoucherdetail");
+
                 entity.HasIndex(e => e.ContraVoucherId)
                     .HasName("IX_ContraVoucherDetails_ContraVoucherId");
 
@@ -619,9 +770,26 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_ContraVoucherDetails_UpdatedByUserId");
 
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.CreditAmountFc)
+                    .HasColumnName("CreditAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmountFc)
+                    .HasColumnName("DebitAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.ContraVoucher)
                     .WithMany(p => p.Contravoucherdetails)
@@ -646,6 +814,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Country>(entity =>
             {
+                entity.ToTable("country");
+
                 entity.HasIndex(e => e.CountryName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -657,8 +827,14 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Country_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.CountryName)
+                    .IsRequired()
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CountryPreparedByUsers)
@@ -673,6 +849,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Creditnote>(entity =>
             {
+                entity.ToTable("creditnote");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_CreditNote_AccountLedgerId");
 
@@ -710,37 +888,92 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf_idx");
 
+                entity.Property(e => e.CreditNoteDate).HasColumnType("datetime");
+
                 entity.Property(e => e.CreditNoteNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountAmountFc)
+                    .HasColumnName("DiscountAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountPerOrAmountFc)
+                    .HasColumnName("DiscountPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.NetAmountFcinWord)
+                    .HasColumnName("NetAmount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.OurReferenceDate).HasColumnType("datetime");
 
                 entity.Property(e => e.OurReferenceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.PartyReferenceDate).HasColumnType("datetime");
+
                 entity.Property(e => e.PartyReferenceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PaymentTerm)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxModelType)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TotalLineItemAmountFc)
+                    .HasColumnName("TotalLineItemAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.CreditnoteAccountLedgers)
@@ -804,6 +1037,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.CreditNoteDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("creditnotedetail");
+
                 entity.HasIndex(e => e.CreditNoteId)
                     .HasName("IX_CreditNoteDetails_CreditNoteId");
 
@@ -817,8 +1052,35 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_CreditNoteDetails_aspnetusers_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Description)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
+
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CreditNote)
                     .WithMany(p => p.Creditnotedetails)
@@ -846,6 +1108,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.CreditNoteDetTaxId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("creditnotedetailtax");
+
                 entity.HasIndex(e => e.CreditNoteDetId)
                     .HasName("IX_CreditNoteDetailTax_CreditNoteDetId");
 
@@ -858,17 +1122,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_CreditNoteDetailTax_Aspnetusers_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CreditNoteDet)
                     .WithMany(p => p.Creditnotedetailtaxes)
@@ -893,6 +1174,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Creditnotetax>(entity =>
             {
+                entity.ToTable("creditnotetax");
+
                 entity.HasIndex(e => e.CreditNoteId)
                     .HasName("IX_CreditNoteTax_CreditNoteId");
 
@@ -905,17 +1188,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_CreditNoteTax_aspnetusers_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CreditNote)
                     .WithMany(p => p.Creditnotetaxes)
@@ -940,6 +1240,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Currency>(entity =>
             {
+                entity.ToTable("currency");
+
                 entity.HasIndex(e => e.CurrencyName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -951,16 +1253,24 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Currency_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.CurrencyCode)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.CurrencyName)
+                    .IsRequired()
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Denomination)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CurrencyPreparedByUsers)
@@ -978,6 +1288,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.ConversionId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("currencyconversion");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_CurrencyConversion_CompanyId");
 
@@ -989,6 +1301,14 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_CurrencyConversion_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.EffectiveDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Currencyconversions)
@@ -1013,6 +1333,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Debitnote>(entity =>
             {
+                entity.ToTable("debitnote");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_DebitNote_AccountLedgerId");
 
@@ -1050,37 +1372,92 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf_idx");
 
+                entity.Property(e => e.DebitNoteDate).HasColumnType("datetime");
+
                 entity.Property(e => e.DebitNoteNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountAmountFc)
+                    .HasColumnName("DiscountAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountPerOrAmountFc)
+                    .HasColumnName("DiscountPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.NetAmountFcinWord)
+                    .HasColumnName("NetAmount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.OurReferenceDate).HasColumnType("datetime");
 
                 entity.Property(e => e.OurReferenceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.PartyReferenceDate).HasColumnType("datetime");
+
                 entity.Property(e => e.PartyReferenceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PaymentTerm)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxModelType)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TotalLineItemAmountFc)
+                    .HasColumnName("TotalLineItemAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.DebitnoteAccountLedgers)
@@ -1144,6 +1521,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.DebitNoteDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("debitnotedetail");
+
                 entity.HasIndex(e => e.DebitNoteId)
                     .HasName("IX_DebitNoteDetails_DebitNoteId");
 
@@ -1157,8 +1536,35 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_DebitNoteDetails_aspnetusers_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Description)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
+
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.DebitNote)
                     .WithMany(p => p.Debitnotedetails)
@@ -1186,6 +1592,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.DebitNoteDetTaxId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("debitnotedetailtax");
+
                 entity.HasIndex(e => e.DebitNoteDetId)
                     .HasName("IX_DebitNoteDetailTax_DebitNoteDetId");
 
@@ -1198,17 +1606,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_DebitNoteDetailTax_Aspnetusers_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.DebitNoteDet)
                     .WithMany(p => p.Debitnotedetailtaxes)
@@ -1233,6 +1658,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Debitnotetax>(entity =>
             {
+                entity.ToTable("debitnotetax");
+
                 entity.HasIndex(e => e.DebitNoteId)
                     .HasName("IX_DebitNoteTax_DebitNoteId");
 
@@ -1245,17 +1672,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_DebitNoteTax_aspnetusers_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.DebitNote)
                     .WithMany(p => p.Debitnotetaxes)
@@ -1280,6 +1724,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Department>(entity =>
             {
+                entity.ToTable("department");
+
                 entity.HasIndex(e => e.DepartmentName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -1291,8 +1737,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Department_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.DepartmentName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DepartmentPreparedByUsers)
@@ -1307,6 +1758,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Designation>(entity =>
             {
+                entity.ToTable("designation");
+
                 entity.HasIndex(e => e.DesignationName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -1318,8 +1771,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Designation_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.DesignationName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DesignationPreparedByUsers)
@@ -1334,6 +1792,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Employee>(entity =>
             {
+                entity.ToTable("employee");
+
                 entity.HasIndex(e => e.DepartmentId)
                     .HasName("IX_Employee_DepartmentId");
 
@@ -1351,20 +1811,28 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Employee_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.EmailAddress)
+                    .HasColumnType("text")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.EmployeeCode)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.FirstName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.LastName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.Employees)
@@ -1389,6 +1857,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Financialyear>(entity =>
             {
+                entity.ToTable("financialyear");
+
                 entity.HasIndex(e => e.FinancialYearName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -1400,8 +1870,17 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_FinancialYear_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.FinancialYearName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.FromDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.ToDate).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.FinancialyearPreparedByUsers)
@@ -1419,6 +1898,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.RelationId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("financialyearcompanyrelation");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_FinancialYearCompanyRelation_CompanyId");
 
@@ -1430,6 +1911,10 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_FinancialYearCompanyRelation_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Financialyearcompanyrelations)
@@ -1454,6 +1939,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Form>(entity =>
             {
+                entity.ToTable("form");
+
                 entity.HasIndex(e => e.FormName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -1468,8 +1955,14 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Form_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.FormName)
+                    .IsRequired()
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Module)
                     .WithMany(p => p.Forms)
@@ -1489,6 +1982,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Journalvoucher>(entity =>
             {
+                entity.ToTable("journalvoucher");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_JournalVoucher_CompanyId");
 
@@ -1514,15 +2009,45 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_JournalVoucher_VoucherStyleId");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.AmountFcinWord)
+                    .HasColumnName("Amount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.CreditAmountFc)
+                    .HasColumnName("CreditAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmountFc)
+                    .HasColumnName("DebitAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.VoucherDate).HasColumnType("datetime");
+
                 entity.Property(e => e.VoucherNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -1568,6 +2093,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.JournalVoucherDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("journalvoucherdetail");
+
                 entity.HasIndex(e => e.CreditNoteId)
                     .HasName("IX_JournalVoucherDetails_CreditNoteId_idx");
 
@@ -1592,9 +2119,26 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_JournalVoucherDetails_UpdatedByUserId_idx");
 
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.CreditAmountFc)
+                    .HasColumnName("CreditAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DebitAmountFc)
+                    .HasColumnName("DebitAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CreditNote)
                     .WithMany(p => p.Journalvoucherdetails)
@@ -1639,6 +2183,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Ledger>(entity =>
             {
+                entity.ToTable("ledger");
+
                 entity.HasIndex(e => e.LedgerCode)
                     .HasName("Code_UNIQUE")
                     .IsUnique();
@@ -1653,16 +2199,25 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Ledger_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.LedgerCode)
+                    .IsRequired()
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.LedgerName)
+                    .IsRequired()
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.TaxRegisteredNo)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.ParentGroup)
                     .WithMany(p => p.InverseParentGroup)
@@ -1685,6 +2240,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.AddressId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("ledgeraddress");
+
                 entity.HasIndex(e => e.CityId)
                     .HasName("IX_LedgerAddress_CityId");
 
@@ -1704,24 +2261,33 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_LedgerAddress_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.AddressDescription)
+                    .HasColumnType("varchar(1000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.EmailAddress)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.FaxNo)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PhoneNo)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PostalCode)
+                    .HasColumnType("varchar(20)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.City)
                     .WithMany(p => p.Ledgeraddresses)
@@ -1759,6 +2325,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.RelationId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("ledgercompanyrelation");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_LedgerCompanyRelation_CompanyId");
 
@@ -1770,6 +2338,10 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_LedgerCompanyRelation_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Ledgercompanyrelations)
@@ -1797,6 +2369,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.LedgerBalanceId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("ledgerfinancialyearbalance");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_LedgerFinancialYearBalance_CompanyId");
 
@@ -1814,6 +2388,18 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_LedgerFinancialYearBalance_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.OpeningBalanceAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.OpeningBalanceAmountFc)
+                    .HasColumnName("OpeningBalanceAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Ledgerfinancialyearbalances)
@@ -1849,6 +2435,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Module>(entity =>
             {
+                entity.ToTable("module");
+
                 entity.HasIndex(e => e.ModuleName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -1860,8 +2448,14 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Module_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.ModuleName)
+                    .IsRequired()
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ModulePreparedByUsers)
@@ -1876,6 +2470,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Paymentvoucher>(entity =>
             {
+                entity.ToTable("paymentvoucher");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_PaymentVoucher_AccountLedgerId");
 
@@ -1904,23 +2500,49 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_PaymentVoucher_VoucherStyleId");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.AmountFcinWord)
+                    .HasColumnName("Amount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ChequeAmountFc)
+                    .HasColumnName("ChequeAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.ChequeDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ChequeNo)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.TypeCorB)
+                    .HasColumnType("varchar(1)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.VoucherDate).HasColumnType("datetime");
+
                 entity.Property(e => e.VoucherNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -1971,6 +2593,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.PaymentVoucherDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("paymentvoucherdetail");
+
                 entity.HasIndex(e => e.CreditNoteId)
                     .HasName("IX_PaymentVoucherDetails_CreditNoteId");
 
@@ -1992,9 +2616,20 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_PaymentVoucherDetails_UpdatedByUserId");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CreditNote)
                     .WithMany(p => p.Paymentvoucherdetails)
@@ -2034,6 +2669,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Purchaseinvoice>(entity =>
             {
+                entity.ToTable("purchaseinvoice");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_PurchaseInvoice_AccountLedgerId");
 
@@ -2071,33 +2708,85 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf_idx");
 
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountAmountFc)
+                    .HasColumnName("DiscountAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountPerOrAmountFc)
+                    .HasColumnName("DiscountPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.DiscountPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.InvoiceDate).HasColumnType("datetime");
 
                 entity.Property(e => e.InvoiceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.NetAmountFcinWord)
+                    .HasColumnName("NetAmount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PaymentTerm)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.SupplierReferenceDate).HasColumnType("datetime");
 
                 entity.Property(e => e.SupplierReferenceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxModelType)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TotalLineItemAmountFc)
+                    .HasColumnName("TotalLineItemAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.PurchaseinvoiceAccountLedgers)
@@ -2161,6 +2850,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.PurchaseInvoiceDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("purchaseinvoicedetail");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_PurchaseInvoiceDetails_User_PreparedByUserId_idx");
 
@@ -2174,8 +2865,35 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_PurchaseInvoiceDetails_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Description)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
+
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.PurchaseinvoicedetailPreparedByUsers)
@@ -2203,6 +2921,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.PurchaseInvoiceDetTaxId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("purchaseinvoicedetailtax");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_PurchaseInvoiceDetailTax_User_PreparedByUserId_idx");
 
@@ -2215,17 +2935,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_PurchaseInvoiceDetailTax_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.PurchaseinvoicedetailtaxPreparedByUsers)
@@ -2250,6 +2987,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Purchaseinvoicetax>(entity =>
             {
+                entity.ToTable("purchaseinvoicetax");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_PurchaseInvoiceTax_User_PreparedByUserId_idx");
 
@@ -2262,17 +3001,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_PurchaseInvoiceTax_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.PurchaseinvoicetaxPreparedByUsers)
@@ -2297,6 +3053,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Receiptvoucher>(entity =>
             {
+                entity.ToTable("receiptvoucher");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_ReceiptVoucher_AccountLedgerId");
 
@@ -2325,23 +3083,49 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.AmountFcinWord)
+                    .HasColumnName("Amount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ChequeAmountFc)
+                    .HasColumnName("ChequeAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.ChequeDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ChequeNo)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.TypeCorB)
+                    .HasColumnType("varchar(1)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.VoucherDate).HasColumnType("datetime");
+
                 entity.Property(e => e.VoucherNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -2392,6 +3176,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.ReceiptVoucherDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("receiptvoucherdetail");
+
                 entity.HasComment("FK_ReceiptVoucherDetails_Ledger_ParticularLedgerId");
 
                 entity.HasIndex(e => e.CreditNoteId)
@@ -2415,9 +3201,20 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_ReceiptVoucherDetails_UpdatedByUserId");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.Narration)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CreditNote)
                     .WithMany(p => p.Receiptvoucherdetails)
@@ -2457,6 +3254,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Salesinvoice>(entity =>
             {
+                entity.ToTable("salesinvoice");
+
                 entity.HasIndex(e => e.AccountLedgerId)
                     .HasName("IX_SalesInvoice_AccountLedgerId");
 
@@ -2497,33 +3296,83 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_SalesInvoice_VoucherStyle_VoucherStyleId_idx");
 
+                entity.Property(e => e.CustomerReferenceDate).HasColumnType("datetime");
+
                 entity.Property(e => e.CustomerReferenceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountAmountFc)
+                    .HasColumnName("DiscountAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.InvoiceDate).HasColumnType("datetime");
 
                 entity.Property(e => e.InvoiceNo)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.NetAmountFcinWord)
+                    .HasColumnName("NetAmount_FCInWord")
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.PaymentTerm)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxModelType)
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TotalLineItemAmountFc)
+                    .HasColumnName("TotalLineItemAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.SalesinvoiceAccountLedgers)
@@ -2591,6 +3440,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.SalesInvoiceDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("salesinvoicedetail");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_SalesInvoiceDetails_User_PreparedByUserId_idx");
 
@@ -2604,12 +3455,38 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_SalesInvoiceDetails_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.Description)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasDefaultValueSql("'0.0000'");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
 
-                entity.Property(e => e.TaxAmountFc).HasDefaultValueSql("'0.0000'");
+                entity.Property(e => e.GrossAmountFc)
+                    .HasColumnName("GrossAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.NetAmountFc)
+                    .HasColumnName("NetAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
+
+                entity.Property(e => e.TaxAmount)
+                    .HasColumnType("decimal(18,4)")
+                    .HasDefaultValueSql("'0.0000'");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)")
+                    .HasDefaultValueSql("'0.0000'");
+
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.SalesinvoicedetailPreparedByUsers)
@@ -2637,6 +3514,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.SalesInvoiceDetTaxId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("salesinvoicedetailtax");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_SalesInvoiceDetailsTax_User_PreparedByUserId_idx");
 
@@ -2649,17 +3528,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_SalesInvoiceDetailsTax_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.SalesinvoicedetailtaxPreparedByUsers)
@@ -2684,6 +3580,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Salesinvoicetax>(entity =>
             {
+                entity.ToTable("salesinvoicetax");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_SalesInvoiceTax_User_PreparedByUserId_idx");
 
@@ -2696,17 +3594,34 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_SalesInvoiceTax_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.Remark)
+                    .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxAmountFc)
+                    .HasColumnName("TaxAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.TaxPerOrAmountFc)
+                    .HasColumnName("TaxPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.SalesinvoicetaxPreparedByUsers)
@@ -2731,6 +3646,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<State>(entity =>
             {
+                entity.ToTable("state");
+
                 entity.HasIndex(e => e.CountryId)
                     .HasName("IX_State_CountryId");
 
@@ -2740,9 +3657,14 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_State_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.StateName)
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.States)
@@ -2762,6 +3684,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Status>(entity =>
             {
+                entity.ToTable("status");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_Status_User_PreparedByUserId_idx");
 
@@ -2772,9 +3696,14 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_Status_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.StatusName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.StatusPreparedByUsers)
@@ -2789,6 +3718,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Taxregister>(entity =>
             {
+                entity.ToTable("taxregister");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_TaxRegister_User_PreparedByUserId_idx");
 
@@ -2799,9 +3730,14 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_TaxRegister_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.TaxRegisterName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.TaxregisterPreparedByUsers)
@@ -2819,6 +3755,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.TaxRegisterDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("taxregisterdetail");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_TaxRegisterDetails_User_PreparedByUserId_idx");
 
@@ -2831,13 +3769,21 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_TaxRegisterDetails_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Rate).HasColumnType("decimal(18,4)");
+
                 entity.Property(e => e.TaxAddOrDeduct)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.TaxregisterdetailPreparedByUsers)
@@ -2862,6 +3808,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Unitofmeasurement>(entity =>
             {
+                entity.ToTable("unitofmeasurement");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_UnitOfMeasurement_User_PreparedByUserId_idx");
 
@@ -2872,9 +3820,14 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_UnitOfMeasurement_User_UpdatedByUserId_idx");
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.UnitOfMeasurementName)
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.UnitofmeasurementPreparedByUsers)
@@ -2889,6 +3842,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Vouchersetup>(entity =>
             {
+                entity.ToTable("vouchersetup");
+
                 entity.HasIndex(e => e.ModuleId)
                     .HasName("IX_VoucherSetup_Module_ModuleId_idx");
 
@@ -2902,7 +3857,13 @@ namespace ERP.DataAccess.EntityData
                     .HasName("Name_UNIQUE")
                     .IsUnique();
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.VoucherSetupName)
+                    .IsRequired()
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -2927,6 +3888,8 @@ namespace ERP.DataAccess.EntityData
                 entity.HasKey(e => e.VoucherSetupDetId)
                     .HasName("PRIMARY");
 
+                entity.ToTable("vouchersetupdetail");
+
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_VoucherSetupDetails_Company_CompanyId");
 
@@ -2946,24 +3909,33 @@ namespace ERP.DataAccess.EntityData
                     .HasName("IX_VoucherSetupDetails_VoucherStyle_VoucherStyleId");
 
                 entity.Property(e => e.FormatText)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NoPad)
+                    .HasColumnType("char(1)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NoPostString)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NoPreString)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.NoSeparator)
+                    .HasColumnType("varchar(100)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Vouchersetupdetails)
@@ -2998,6 +3970,8 @@ namespace ERP.DataAccess.EntityData
 
             modelBuilder.Entity<Voucherstyle>(entity =>
             {
+                entity.ToTable("voucherstyle");
+
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_VoucherStyle_User_PreparedByUserId_idx");
 
@@ -3008,7 +3982,12 @@ namespace ERP.DataAccess.EntityData
                     .HasName("Name_UNIQUE")
                     .IsUnique();
 
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.VoucherStyleName)
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 

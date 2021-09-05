@@ -28,7 +28,7 @@ namespace ERP.Services.Accounts.Interface
         Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int purchaseInvoiceId);
         
         /// <summary>
-        /// get search sales invoice result list.
+        /// get search purchase invoice result list.
         /// </summary>
         /// <param name="dataTableAjaxPostModel"></param>
         /// <param name="searchFilterModel"></param>

@@ -74,9 +74,9 @@ namespace ERP.Models.Accounts
 
         public int? StatusId { get; set; }
 
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
-        public int? FinancialYearId { get; set; }
+        public int FinancialYearId { get; set; }
 
         public int? MaxNo { get; set; }
 
