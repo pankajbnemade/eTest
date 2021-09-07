@@ -1,0 +1,100 @@
+﻿@*<div class="row mb-3">
+        <div class="col-12 text-right">
+
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-12">
+        <table id="paymentVoucherDetailGrid" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr class="table-header">
+                    <th>
+                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-voucher-dtl" title="Add New Line">
+                            <i class="fas fa-plus"></i>
+                        </button>Action
+                    </th>
+                    <th>PaymentVoucherDetId</th>
+                    <th>Particular</th>
+                    <th>Transaction Type</th>
+                    <th>Amount Fc</th>
+                    <th>Bill Type</th>
+                    <th>Bill No</th>
+                    <th>Narration</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#paymentVoucherDetailGrid").DataTable({
+            "pageLength": 25,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetPaymentVoucherDetailList", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditVoucherDetail(' + full.PaymentVoucherDetId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteVoucherDetail(this, ' + full.PaymentVoucherDetId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnVoucherTaxDetail(' + full.PaymentVoucherDetId + ')"><span class="fa fa-info-circle"></span></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "PaymentVoucherDetId", "name": "PaymentVoucherDetId", "visible": false  },
+                { "data": "ParticularLedgerName", "name": "Particular" },
+                { "data": "TransactionTypeName", "name": "Transaction Type" },
+                { "data": "AmountFc", "name": "Amount Fc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "BillType", "name": "Bill Type" },
+                { "data": "BillNo", "name": "BillNo" },
+                { "data": "Narration", "name": "Narration" }
+               
+            ],
+        });
+    });
+
+    // add new voucher detail.
+    $('#add-new-voucher-dtl').click(function () {
+        var model = { paymentVoucherId: '@ViewBag.PaymentVoucherId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddVoucherDetail", "PaymentVoucherDetail")', 'html', model,
+        function (data) {
+            $('#modal-voucher').empty();
+            $('#modal-voucher').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit voucher detail.
+    function fnEditVoucherDetail(paymentVoucherDetId) {
+        var model = { paymentVoucherDetId: paymentVoucherDetId };
+
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditVoucherDetail", "PaymentVoucherDetail")', 'html', model,
+        function (data) {
+            $('#modal-voucher').empty();
+            $('#modal-voucher').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+    // voucher tax deatil.
+    function fnVoucherTaxDetail(paymentVoucherDetId) {
+        var model = { paymentVoucherDetId: paymentVoucherDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("VoucherTaxDetail", "PaymentVoucherTaxDetail")', 'html', model,
+        function (data) {
+            $('#modal-voucher').empty();
+            $('#modal-voucher').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteVoucherDetail"); }

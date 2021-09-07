@@ -1,0 +1,125 @@
+﻿@model PaymentVoucherModel
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.VoucherNo):</span>
+
+                    @Html.DisplayFor(model => model.VoucherNo)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.VoucherDate):</span>
+                    @Html.DisplayFor(model => model.VoucherDate)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.TypeCorB):</span>
+                    @Html.DisplayFor(model => model.TypeCorBName)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.PaymentTypeId):</span>
+                    @Html.DisplayFor(model => model.PaymentTypeName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.AccountLedgerId):</span>
+                    @Html.DisplayFor(model => model.AccountLedgerName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ClosingBalance):</span>
+                    @Html.DisplayFor(model => model.ClosingBalance)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.CurrencyId):</span>
+                    @Html.DisplayFor(model => model.CurrencyName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ExchangeRate):</span>
+                    @Html.DisplayFor(model => model.ExchangeRate)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                @*<div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.BankLedgerId):</span>
+                    @Html.DisplayFor(model => model.BankLedgerName)
+                </div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeNo):</span>
+                    @Html.DisplayFor(model => model.ChequeNo)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeDate):</span>
+                    @Html.DisplayFor(model => model.ChequeDate)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeAmountFc):</span>
+                    @Html.DisplayFor(model => model.ChequeAmountFc)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <span class="text-bold">@Html.DisplayNameFor(model => model.Narration):</span>
+                    @Html.DisplayFor(model => model.Narration)
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditVoucherMaster('@Model.PaymentVoucherId');">
+                        <i class="far fa-edit"></i>  Edit
+                    </button>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    // edit voucher master.
+    function fnEditVoucherMaster(paymentVoucherId) {
+        var model = { paymentVoucherId: paymentVoucherId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditVoucherMaster", "PaymentVoucher")', 'html', model,
+        function (data) {
+            $('#modal-voucher').empty();
+            $('#modal-voucher').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+
+</script>

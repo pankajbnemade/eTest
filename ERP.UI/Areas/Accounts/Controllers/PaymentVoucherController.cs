@@ -19,8 +19,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
     {
         private readonly IPaymentVoucher _paymentVoucher;
         private readonly ILedger _ledger;
-        private readonly ILedgerAddress _ledgerAddress;
-        private readonly ITaxRegister _taxRegister;
         private readonly ICurrency _currency;
         private readonly ICurrencyConversion _currencyConversion;
 
@@ -30,22 +28,18 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public PaymentVoucherController(
             IPaymentVoucher paymentVoucher,
             ILedger ledger,
-            ILedgerAddress ledgerAddress,
-            ITaxRegister taxRegister,
             ICurrency currency,
             ICurrencyConversion currencyConversion)
         {
             this._paymentVoucher = paymentVoucher;
             this._ledger = ledger;
-            this._ledgerAddress = ledgerAddress;
-            this._taxRegister = taxRegister;
             this._currency = currency;
             this._currencyConversion = currencyConversion;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.SupplierList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor);
+            ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0);
 
             return await Task.Run(() =>
             {
@@ -85,12 +79,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddVoucherMaster()
         {
-            ViewBag.SupplierList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
-            ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
+            //ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
-            ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
-            ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
+            ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
+            ViewBag.PaymentTypeList = EnumHelper.GetEnumListFor<PaymentType>();
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
             PaymentVoucherModel paymentVoucherModel = new PaymentVoucherModel();
@@ -114,12 +106,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditVoucherMaster(int paymentVoucherId)
         {
-            ViewBag.SupplierList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
-            ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
+            //ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
-            ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
-            ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
+            ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
+            ViewBag.PaymentTypeList = EnumHelper.GetEnumListFor<PaymentType>();
 
             PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
 
@@ -130,18 +120,28 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// get bill to address based on ledgerId
+        /// get ledger list by cash or bank
         /// </summary>
-        /// <param name="ledgerId"></param>
+        /// <param name="typeCorB"></param>
         /// <returns>
         /// return json.
         /// </returns>
         [HttpPost]
-        public async Task<JsonResult> GetBillToAddressByLedgerId(int ledgerId)
+        public async Task<JsonResult> GetAccountLedgerByTypeCorB(string typeCorB)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            IList<SelectListModel> selectList = await _ledgerAddress.GetLedgerAddressSelectList(ledgerId);
+            IList<SelectListModel> selectList;
+
+            if (typeCorB == "C")
+            {
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount);
+            }
+            else
+            {
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
+            }
+
             if (null != selectList && selectList.Any())
             {
                 data.Result.Status = true;
@@ -150,6 +150,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
             else
             {
                 data.Result.Message = "NoItems";
+            }
+
+            return Json(data); // returns.
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetClosingBalanceByAccountLedgerId(int accountLedgerId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId(accountLedgerId);
+
+            if (null != ledgerModel)
+            {
+                data.Result.Status = true;
+                data.Result.Data = ledgerModel.ClosingBalance;
+            }
+            else
+            {
+                data.Result.Data = "0";
             }
 
             return Json(data); // returns.

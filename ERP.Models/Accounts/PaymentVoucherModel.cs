@@ -61,17 +61,17 @@ namespace ERP.Models.Accounts
         public string Narration { get; set; }
 
         [Display(Name = "Amount FC")]
-        [Required(ErrorMessage = "Amount FC is required.")]
+        //[Required(ErrorMessage = "Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
         public decimal? AmountFc { get; set; }
 
         [Display(Name = "Amount")]
-        [Required(ErrorMessage = "Amount is required.")]
+        //[Required(ErrorMessage = "Amount is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
         public decimal? Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
-        [Required(ErrorMessage = "Amount FC in word is required.")]
+        //[Required(ErrorMessage = "Amount FC in word is required.")]
         public string AmountFcinWord { get; set; }
 
         public int? StatusId { get; set; }
@@ -92,6 +92,9 @@ namespace ERP.Models.Accounts
         public string CurrencyName { get; set; }
         public string StatusName { get; set; }
         public string PreparedByName { get; set; }
+
+        [Display(Name = "Closing Balance")]
+        public decimal? ClosingBalance { get; set; }
 
     }
 }

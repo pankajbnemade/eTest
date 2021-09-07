@@ -19,6 +19,8 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DataTableResultModel<LedgerModel>> GetLedgerListByParentGroupId(int parentGroupId);
 
+        Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId);
+
         Task<DataTableResultModel<LedgerModel>> GetLedgerList();
 
         Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId);

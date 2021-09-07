@@ -42,5 +42,9 @@ namespace ERP.Models.Accounts
         [Display(Name = "Prepared By Name")]
         public string PreparedByName { get; set; }
 
+        //######
+        [Display(Name = "Closing Balance")]
+        public decimal? ClosingBalance { get; set; }
+
     }
 }

@@ -3,6 +3,7 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
@@ -23,12 +24,12 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// generate invoice no.
+        /// generate voucher no.
         /// </summary>
         /// <param name="companyId"></param>
         /// <param name="financialYearId"></param>
         /// <returns>
-        /// return invoice no.
+        /// return voucher no.
         /// </returns>
         public async Task<GenerateNoModel> GeneratePaymentVoucherNo(int companyId, int financialYearId)
         {
@@ -42,7 +43,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// create new purchase invoice.
+        /// create new payment voucher.
         /// </summary>
         /// <param name="paymentVoucherModel"></param>
         /// <returns>
@@ -93,7 +94,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// update purchase invoice.
+        /// update payment voucher.
         /// </summary>
         /// <param name="paymentVoucherModel"></param>
         /// <returns>
@@ -136,7 +137,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// delete purchase invoice.
+        /// delete payment voucher.
         /// </summary>
         /// <param name="paymentVoucherId"></param>
         /// <returns>
@@ -148,7 +149,7 @@ namespace ERP.Services.Accounts
 
             // get record.
             Paymentvoucher paymentVoucher = await GetByIdAsync(w => w.PaymentVoucherId == PaymentVoucherId);
-            
+
             if (null != paymentVoucher)
             {
                 isDeleted = await Delete(paymentVoucher);
@@ -180,7 +181,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get purchase invoice based on PaymentVoucherId
+        /// get payment voucher based on PaymentVoucherId
         /// </summary>
         /// <returns>
         /// return record.
@@ -200,7 +201,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get search purchase invoice result list.
+        /// get search payment voucher result list.
         /// </summary>
         /// <param name="dataTableAjaxPostModel"></param>
         /// <param name="searchFilterModel"></param>
@@ -250,9 +251,9 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.VoucherNo.Contains(searchFilterModel.VoucherNo));
             }
 
-            if (null != searchFilterModel.AccountLedgerId)
+            if (null != searchFilterModel.LedgerId)
             {
-                query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
+                query = query.Where(w => w.AccountLedgerId == searchFilterModel.LedgerId);
             }
 
             if (null != searchFilterModel.FromDate)
@@ -340,14 +341,17 @@ namespace ERP.Services.Accounts
                 paymentVoucherModel.FinancialYearId = Convert.ToInt32(paymentVoucher.FinancialYearId);
                 paymentVoucherModel.MaxNo = paymentVoucher.MaxNo;
                 paymentVoucherModel.VoucherStyleId = paymentVoucher.VoucherStyleId;
-                
+
                 // ###
                 paymentVoucherModel.AccountLedgerName = null != paymentVoucher.AccountLedger ? paymentVoucher.AccountLedger.LedgerName : null;
                 paymentVoucherModel.CurrencyName = null != paymentVoucher.Currency ? paymentVoucher.Currency.CurrencyName : null;
                 paymentVoucherModel.StatusName = null != paymentVoucher.Status ? paymentVoucher.Status.StatusName : null;
                 paymentVoucherModel.PreparedByName = null != paymentVoucher.PreparedByUser ? paymentVoucher.PreparedByUser.UserName : null;
-                //paymentVoucherModel.PaymentTypeName = null != paymentVoucher.PreparedByUser ? paymentVoucher.PreparedByUser.UserName : null;
-                paymentVoucherModel.TypeCorB = "C" != paymentVoucher.TypeCorB ? "Cash" : "Bank";
+
+                //paymentVoucherModel.TypeCorBName = EnumHelper.GetDescription(paymentVoucher.TypeCorB);
+
+                paymentVoucherModel.TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(paymentVoucher.TypeCorB);
+                paymentVoucherModel.PaymentTypeName = EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)paymentVoucher.PaymentTypeId).ToString());
 
                 return paymentVoucherModel;
             });

@@ -1,0 +1,114 @@
+﻿@model PaymentVoucherDetailModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.PaymentVoucherDetId > 0)
+            {
+<h4 class="modal-title">Edit Voucher Detail</h4> }
+            else
+            {
+<h4 class="modal-title">Add Voucher Detail</h4>            }
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="frmVoucherDetail" class="width100" method="post"
+              asp-action="SaveVoucherDetail" asp-controller="PaymentVoucherDetail" asp-area="Accounts"
+              data-ajax-begin="return BeginVoucherDetail();" data-ajax-success="SuccessVoucherDetail"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.PaymentVoucherDetId)
+                @Html.HiddenFor(model => model.PaymentVoucherId)
+
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ParticularLedgerId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.ParticularLedgerId, new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.ParticularLedgerId)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TransactionTypeId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TransactionTypeId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AmountFc, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.AmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.ValidationMessageFor(model => model.AmountFc)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Narration)
+                                @Html.TextBoxFor(model => model.Narration, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.Narration)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <table id="outstandingBillGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    <th>BillId</th>
+                                    <th>BillNo</th>
+                                    <th>Outstanding Amount FC</th>
+                                    <th>Amount FC</th>
+                                    <th>Narration</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+    });
+
+    // begin form
+    function BeginVoucherDetail() {
+        var form = $("#frmVoucherDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessVoucherDetail(data) {
+        if (data.Result.Status) {
+            $('#modal-voucher').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

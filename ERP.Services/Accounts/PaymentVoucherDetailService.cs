@@ -1,7 +1,9 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -174,7 +176,9 @@ namespace ERP.Services.Accounts
             IList<PaymentVoucherDetailModel> paymentVoucherDetailModelList = null;
 
             // create query.
-            IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0);
+            IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0)
+                                                    .Include(w => w.ParticularLedger)
+                                                    .Include(w => w.PurchaseInvoice).Include(w => w.CreditNote).Include(w => w.DebitNote);
 
             // apply filters.
             if (0 != paymentVoucherDetailId)
@@ -213,12 +217,29 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.Amount = paymentVoucherDetail.Amount;
                 paymentVoucherDetailModel.Narration = paymentVoucherDetail.Narration;
 
-                paymentVoucherDetailModel.PurchaseInvoiceId = paymentVoucherDetail.PurchaseInvoiceId;
-                paymentVoucherDetailModel.CreditNoteId = paymentVoucherDetail.CreditNoteId;
-                paymentVoucherDetailModel.DebitNoteId = paymentVoucherDetail.DebitNoteId;
+                paymentVoucherDetailModel.PurchaseInvoiceId = null != paymentVoucherDetail.PurchaseInvoiceId ? paymentVoucherDetail.PurchaseInvoiceId : 0;
+                paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
+                paymentVoucherDetailModel.DebitNoteId = null != paymentVoucherDetail.DebitNoteId ? paymentVoucherDetail.DebitNoteId : 0;
 
                 //--####
-                //paymentVoucherDetailModel.TransactionTypeName = null != paymentVoucherDetail.UnitOfMeasurement ? paymentVoucherDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
+                paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
+
+                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+                {
+                    paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
+                    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
+                }
+                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+                {
+                    paymentVoucherDetailModel.InvoiceType = "Credit Note";
+                    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.CreditNote.CreditNoteNo;
+                }
+                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
+                {
+                    paymentVoucherDetailModel.InvoiceType = "Debit Note";
+                    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
+                }
 
                 return paymentVoucherDetailModel;
             });

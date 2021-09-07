@@ -104,6 +104,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
             IList<LedgerModel> ledgerModelList = await GetLedgerList(0, 0);
+
             if (null != ledgerModelList && ledgerModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerModel>();
@@ -112,6 +113,24 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        
+        public async Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId)
+        {
+             LedgerModel ledgerModel = null;
+
+            // create query.
+            if (await Any(w => w.LedgerId == ledgerId))
+            {
+                Ledger ledger =
+                    await GetQueryByCondition(w => w.LedgerId == ledgerId)
+                    .FirstOrDefaultAsync();
+
+                ledgerModel = await AssignValueToModel(ledger);
+            }
+
+            return ledgerModel; // returns.
         }
 
         private async Task<IList<LedgerModel>> GetLedgerList(int ledgerId, int parentGroupId)
@@ -146,6 +165,7 @@ namespace ERP.Services.Accounts
             return ledgerModelList; // returns.
         }
 
+
         private async Task<LedgerModel> AssignValueToModel(Ledger ledger)
         {
             return await Task.Run(() =>
@@ -162,6 +182,7 @@ namespace ERP.Services.Accounts
                 //######
                 ledgerModel.ParentGroupName = null != ledger.ParentGroup ? ledger.ParentGroup.LedgerName : null;
                 ledgerModel.PreparedByName = null != ledger.PreparedByUser ? ledger.PreparedByUser.UserName : null;
+                ledgerModel.ClosingBalance = 500;
 
                 return ledgerModel;
             });

@@ -48,6 +48,9 @@ namespace ERP.Models.Accounts
         //###
 
         public string TransactionTypeName { get; set; }
+        public string ParticularLedgerName { get; set; }
+        public string InvoiceType { get; set; }
+        public string InvoiceNo { get; set; }
 
     }
 }

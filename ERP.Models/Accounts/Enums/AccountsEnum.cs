@@ -54,5 +54,38 @@ namespace ERP.Models.Accounts.Enums
 
         [Description("Bank A/C")]
         BankAccount = 27,
+        
+        [Description("Cash A/C")]
+        CashAccount = 28,
+    }
+
+    public enum TypeCorB
+    {
+        [Description("Cash")]
+        C = 1,
+
+        [Description("Bank")]
+        B = 2,
+    }
+
+    public enum PaymentType
+    {
+        [Description("LC")]
+        LC = 1,
+
+        [Description("PDC")]
+        PDC = 2,
+    }
+
+    /// <summary>
+    /// tax total type.
+    /// </summary>
+    public enum TransactionType
+    {
+        [Description("Advance")]
+        Advance = 1,
+
+        [Description("Outstanding")]
+        Outstanding = 2,
     }
 }

@@ -18,6 +18,11 @@
     <Content Remove="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucher\ManageInvoice.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ConfirmDeleteInvoiceMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewInvoiceMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewInvoiceSummary.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewVoucherSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoiceDetail\_AddInvoiceDetail.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoiceDetail\_ConfirmDeleteInvoiceDetail.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoiceDetail\_InvoiceDetail.cshtml" />
@@ -134,6 +139,9 @@
     <None Include="Areas\Accounts\Views\Currency\Index.cshtml" />
     <None Include="Areas\Accounts\Views\Currency\_AddCurrency.cshtml" />
     <None Include="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentVoucherDetail\_AddVoucherDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentVoucherDetail\_ConfirmDeleteVoucherDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentVoucherDetail\_VoucherDetail.cshtml" />
     <None Include="Areas\Accounts\Views\PurchaseInvoiceDetail\_AddInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\PurchaseInvoiceDetail\_ConfirmDeleteInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\PurchaseInvoiceDetail\_InvoiceDetail.cshtml" />
