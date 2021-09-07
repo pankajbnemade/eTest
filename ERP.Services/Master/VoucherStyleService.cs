@@ -146,8 +146,7 @@ namespace ERP.Services.Master
                                     {
                                         DisplayText = s.VoucherStyleName,
                                         Value = s.VoucherStyleId.ToString()
-                                    })
-                                    .ToListAsync();
+                                    }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

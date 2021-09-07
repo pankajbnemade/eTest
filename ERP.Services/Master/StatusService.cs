@@ -139,7 +139,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.StatusName,
                     Value = s.StatusId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

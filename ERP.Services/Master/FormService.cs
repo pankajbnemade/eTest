@@ -145,7 +145,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.FormName,
                     Value = s.FormId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

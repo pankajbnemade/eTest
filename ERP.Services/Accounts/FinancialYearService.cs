@@ -144,7 +144,7 @@ namespace ERP.Services.Accounts
                 {
                     DisplayText = s.FinancialYearName,
                     Value = s.FinancialYearId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

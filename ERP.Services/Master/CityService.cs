@@ -195,7 +195,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.CityName,
                     Value = s.CityId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

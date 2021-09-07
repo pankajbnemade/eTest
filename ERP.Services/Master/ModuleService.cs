@@ -144,7 +144,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.ModuleName,
                     Value = s.ModuleId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

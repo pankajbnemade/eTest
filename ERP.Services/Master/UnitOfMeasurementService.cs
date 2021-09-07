@@ -139,7 +139,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.UnitOfMeasurementName,
                     Value = s.UnitOfMeasurementId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

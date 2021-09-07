@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace ERP.Services.Accounts
 {
@@ -262,6 +263,19 @@ namespace ERP.Services.Accounts
 
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
+
+            //sorting
+            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
+            {
+                query = query.OrderBy($"{sortBy} {sortDir}");
+            }
+
+            // datatable search
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                query = query.Where(w => w.AdvanceAdjustmentNo.ToLower().Contains(searchBy.ToLower()));
+            }
+
 
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);

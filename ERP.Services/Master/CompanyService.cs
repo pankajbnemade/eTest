@@ -191,7 +191,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.CompanyName,
                     Value = s.CompanyId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

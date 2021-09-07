@@ -140,7 +140,7 @@ namespace ERP.Services.Accounts
                 {
                     DisplayText = s.CurrencyName,
                     Value = s.CurrencyId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

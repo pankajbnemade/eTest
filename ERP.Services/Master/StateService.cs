@@ -154,7 +154,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.StateName,
                     Value = s.StateId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

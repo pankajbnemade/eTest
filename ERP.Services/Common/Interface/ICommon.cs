@@ -12,13 +12,13 @@ namespace ERP.Services.Common.Interface
     {
         Task<GenerateNoModel> GenerateVoucherNo(int maxNo, int voucherSetupId, int companyId, int financialYearId);
 
-        Task<IList<SelectListModel>> GetTaxModelTypeSelectList();
+        //Task<IList<SelectListModel>> GetTaxModelTypeSelectList();
 
-        Task<IList<SelectListModel>> GetDiscountTypeSelectList();
+        //Task<IList<SelectListModel>> GetDiscountTypeSelectList();
 
-        Task<IList<SelectListModel>> GetTaxPercentageOrAmountSelectList();
+        //Task<IList<SelectListModel>> GetTaxPercentageOrAmountSelectList();
 
-        Task<IList<SelectListModel>> GetTaxAddOrDeductSelectList();
+        //Task<IList<SelectListModel>> GetTaxAddOrDeductSelectList();
 
         Task<string> AmountInWord_Million(string amount, string currencyCode, string denomination);
     }

@@ -18,57 +18,57 @@ namespace ERP.Services.Common
             voucherSetupDetail = _voucherSetupDetail;
         }
 
-        public async Task<IList<SelectListModel>> GetTaxModelTypeSelectList()
-        {
-            IList<SelectListModel> resultModel = null;
+        //public async Task<IList<SelectListModel>> GetTaxModelTypeSelectList()
+        //{
+        //    IList<SelectListModel> resultModel = null;
 
-            resultModel.Add(new SelectListModel { DisplayText = "Sub Total", Value = "Sub Total" });
-            resultModel.Add(new SelectListModel { DisplayText = "Line Wise", Value = "Line Wise" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Sub Total", Value = "Sub Total" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Line Wise", Value = "Line Wise" });
 
-            return await Task.Run(() =>
-            {
-                return resultModel;
-            });  // returns.
-        }
+        //    return await Task.Run(() =>
+        //    {
+        //        return resultModel;
+        //    });  // returns.
+        //}
 
-        public async Task<IList<SelectListModel>> GetDiscountTypeSelectList()
-        {
-            IList<SelectListModel> resultModel = null;
+        //public async Task<IList<SelectListModel>> GetDiscountTypeSelectList()
+        //{
+        //    IList<SelectListModel> resultModel = null;
 
-            resultModel.Add(new SelectListModel { DisplayText = "Percentage", Value = "Percentage" });
-            resultModel.Add(new SelectListModel { DisplayText = "Amount", Value = "Amount" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Percentage", Value = "Percentage" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Amount", Value = "Amount" });
 
-            return await Task.Run(() =>
-            {
-                return resultModel;
-            }); ;// returns.
-        }
+        //    return await Task.Run(() =>
+        //    {
+        //        return resultModel;
+        //    }); ;// returns.
+        //}
 
-        public async Task<IList<SelectListModel>> GetTaxPercentageOrAmountSelectList()
-        {
-            IList<SelectListModel> resultModel = null;
+        //public async Task<IList<SelectListModel>> GetTaxPercentageOrAmountSelectList()
+        //{
+        //    IList<SelectListModel> resultModel = null;
 
-            resultModel.Add(new SelectListModel { DisplayText = "Percentage", Value = "Percentage" });
-            resultModel.Add(new SelectListModel { DisplayText = "Amount", Value = "Amount" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Percentage", Value = "Percentage" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Amount", Value = "Amount" });
 
-            return await Task.Run(() =>
-            {
-                return resultModel;
-            }); // returns.
-        }
+        //    return await Task.Run(() =>
+        //    {
+        //        return resultModel;
+        //    }); // returns.
+        //}
 
-        public async Task<IList<SelectListModel>> GetTaxAddOrDeductSelectList()
-        {
-            IList<SelectListModel> resultModel = null;
+        //public async Task<IList<SelectListModel>> GetTaxAddOrDeductSelectList()
+        //{
+        //    IList<SelectListModel> resultModel = null;
 
-            resultModel.Add(new SelectListModel { DisplayText = "Add", Value = "Add" });
-            resultModel.Add(new SelectListModel { DisplayText = "Deduct", Value = "Deduct" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Add", Value = "Add" });
+        //    resultModel.Add(new SelectListModel { DisplayText = "Deduct", Value = "Deduct" });
 
-            return await Task.Run(() =>
-            {
-                return resultModel;
-            }); // returns.
-        }
+        //    return await Task.Run(() =>
+        //    {
+        //        return resultModel;
+        //    }); // returns.
+        //}
 
         public async Task<GenerateNoModel> GenerateVoucherNo(int maxNo, int voucherSetupId, int companyId, int financialYearId)
         {

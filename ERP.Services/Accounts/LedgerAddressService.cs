@@ -175,7 +175,7 @@ namespace ERP.Services.Accounts
                 {
                     DisplayText = s.AddressDescription,
                     Value = s.AddressId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

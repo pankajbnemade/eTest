@@ -115,10 +115,10 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        
+
         public async Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId)
         {
-             LedgerModel ledgerModel = null;
+            LedgerModel ledgerModel = null;
 
             // create query.
             if (await Any(w => w.LedgerId == ledgerId))
@@ -204,7 +204,7 @@ namespace ERP.Services.Accounts
                 {
                     DisplayText = s.LedgerName,
                     Value = s.LedgerId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

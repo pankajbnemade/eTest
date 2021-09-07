@@ -140,7 +140,7 @@ namespace ERP.Services.Master
                 {
                     DisplayText = s.CountryName,
                     Value = s.CountryId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.

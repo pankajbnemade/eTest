@@ -140,7 +140,7 @@ namespace ERP.Services.Accounts
                 {
                     DisplayText = s.TaxRegisterName,
                     Value = s.TaxRegisterId.ToString()
-                }).ToListAsync();
+                }).OrderBy(w => w.DisplayText).ToListAsync();
             }
 
             return resultModel; // returns.
