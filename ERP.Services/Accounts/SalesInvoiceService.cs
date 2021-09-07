@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
@@ -336,6 +337,18 @@ namespace ERP.Services.Accounts
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
 
+            //sorting
+            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
+            {
+                query = query.OrderBy($"{sortBy} {sortDir}");
+            }
+
+            // datatable search
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                query = query.Where(w => w.InvoiceNo.ToLower().Contains(searchBy.ToLower()));
+            }
+
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
 
@@ -345,7 +358,7 @@ namespace ERP.Services.Accounts
                 InvoiceNo = s.InvoiceNo,
                 InvoiceDate = s.InvoiceDate,
                 NetAmount = s.NetAmount,
-            }).OrderByDescending(o => o.InvoiceDate).ToListAsync();
+            }).ToListAsync();
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
 
