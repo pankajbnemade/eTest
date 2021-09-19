@@ -156,6 +156,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = journalVoucherDetailModelList;
                 resultModel.TotalResultCount = journalVoucherDetailModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<JournalVoucherDetailModel>();
+                resultModel.ResultList = new List<JournalVoucherDetailModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }
@@ -174,6 +180,39 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        /// <summary>
+        /// get journal voucher List based on particularLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<JournalVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
+        {
+            IList<JournalVoucherDetailModel> journalVoucherDetailModelList = null;
+
+            // create query.
+            IQueryable<Journalvoucherdetail> query = GetQueryByCondition(w => w.JournalVoucherDetId != 0);
+
+            // apply filters.
+            if (0 != particularLedgerId)
+                query = query.Where(w => w.ParticularLedgerId == particularLedgerId);
+
+            // get records by query.
+            List<Journalvoucherdetail> journalVoucherDetailList = await query.ToListAsync();
+
+            if (null != journalVoucherDetailList && journalVoucherDetailList.Count > 0)
+            {
+                journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
+
+                foreach (Journalvoucherdetail journalVoucherDetail in journalVoucherDetailList)
+                {
+                    journalVoucherDetailModelList.Add(await AssignValueToModel(journalVoucherDetail));
+                }
+            }
+
+            return journalVoucherDetailModelList; // returns.
         }
 
         private async Task<IList<JournalVoucherDetailModel>> GetJournalVoucherDetailList(int journalVoucherDetailId, int journalVoucherId)

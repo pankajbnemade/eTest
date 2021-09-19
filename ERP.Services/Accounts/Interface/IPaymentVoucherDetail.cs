@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -17,7 +18,9 @@ namespace ERP.Services.Accounts.Interface
 
         Task<PaymentVoucherDetailModel> GetPaymentVoucherDetailById(int paymentVoucherDetailId);
 
-        Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailByPaymentVoucherId(int paymentVoucherId);
+        Task<IList<PaymentVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId);
+
+        Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailByPaymentVoucherId(int paymentVoucherId, int addRow);
 
         Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailList();
 

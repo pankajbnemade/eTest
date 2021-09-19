@@ -19,9 +19,9 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Advance Adjustment Date is required.")]
         public DateTime? AdvanceAdjustmentDate { get; set; }
 
-        [Display(Name = "Account Ledger")]
-        [Required(ErrorMessage = "Account Ledger is required.")]
-        public int? AccountLedgerId { get; set; }
+        [Display(Name = "Particular Ledger")]
+        [Required(ErrorMessage = "Particular Ledger is required.")]
+        public int? ParticularLedgerId { get; set; }
 
         [Display(Name = "Payment Voucher")]
         [Required(ErrorMessage = "Payment Voucher is required.")]

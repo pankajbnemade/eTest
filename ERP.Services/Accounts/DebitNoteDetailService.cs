@@ -176,6 +176,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = debitNoteDetailModelList;
                 resultModel.TotalResultCount = debitNoteDetailModelList.Count();
             }
+             else
+            {
+                resultModel = new DataTableResultModel<DebitNoteDetailModel>();
+                resultModel.ResultList = new List<DebitNoteDetailModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

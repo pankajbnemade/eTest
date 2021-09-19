@@ -146,6 +146,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = advanceAdjustmentDetailModelList;
                 resultModel.TotalResultCount = advanceAdjustmentDetailModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();
+                resultModel.ResultList = new List<AdvanceAdjustmentDetailModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }
@@ -164,6 +170,50 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        /// <summary>
+        /// get advance adjustment List based on particularLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<AdvanceAdjustmentDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
+        {
+            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = null;
+
+            // create query.
+            IQueryable<Advanceadjustmentdetail> query = GetQueryByCondition(w => w.AdvanceAdjustmentDetId != 0)
+                                                        .Include(w => w.AdvanceAdjustment);
+
+            // apply filters.
+            if (0 != particularLedgerId)
+                query = query.Where(w => w.AdvanceAdjustment.AccountLedgerId == particularLedgerId);
+
+
+            try
+            {
+                // get records by query.
+                List<Advanceadjustmentdetail> advanceAdjustmentDetailList = await query.ToListAsync();
+
+                if (null != advanceAdjustmentDetailList && advanceAdjustmentDetailList.Count > 0)
+                {
+                    advanceAdjustmentDetailModelList = new List<AdvanceAdjustmentDetailModel>();
+
+                    foreach (Advanceadjustmentdetail advanceAdjustmentDetail in advanceAdjustmentDetailList)
+                    {
+                        advanceAdjustmentDetailModelList.Add(await AssignValueToModel(advanceAdjustmentDetail));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+
+            return advanceAdjustmentDetailModelList; // returns.
         }
 
         private async Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList(int advanceAdjustmentDetailId, int advanceAdjustmentId)

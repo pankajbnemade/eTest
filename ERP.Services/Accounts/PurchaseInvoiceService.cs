@@ -178,7 +178,7 @@ namespace ERP.Services.Accounts
 
             // get record.
             Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceId);
-            
+
             if (null != purchaseInvoice)
             {
                 isDeleted = await Delete(purchaseInvoice);
@@ -286,6 +286,49 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
+        /// <summary>
+        /// get purchase invoice List based on supplierLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<OutstandingInvoiceModel>> GetPurchaseInvoiceListBySupplierLedgerId(int supplierLedgerId)
+        {
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
+
+            // create query.
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0);
+
+            // apply filters.
+            if (0 != supplierLedgerId)
+                query = query.Where(w => w.SupplierLedgerId == supplierLedgerId);
+
+            // get records by query.
+            List<Purchaseinvoice> purchaseInvoiceList = await query.ToListAsync();
+
+            if (null != purchaseInvoiceList && purchaseInvoiceList.Count > 0)
+            {
+                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+
+                foreach (Purchaseinvoice purchaseInvoice in purchaseInvoiceList)
+                {
+                    outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
+                    {
+                        InvoiceId = purchaseInvoice.PurchaseInvoiceId,
+                        InvoiceType = "Purchase Invoice",
+                        InvoiceNo = purchaseInvoice.InvoiceNo,
+                        InvoiceDate = purchaseInvoice.InvoiceDate,
+                        InvoiceAmount = purchaseInvoice.NetAmount,
+                        PurchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId,
+                    });
+                }
+            }
+
+            return outstandingInvoiceModelList; // returns.
+        }
+
+
+
         #region Private Methods
 
         /// <summary>
@@ -365,8 +408,6 @@ namespace ERP.Services.Accounts
                                             .Include(w => w.AccountLedger)
                                             .Include(w => w.TaxRegister).Include(w => w.Currency)
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
-
-
 
             // apply filters.
             if (0 != purchaseInvoiceId)

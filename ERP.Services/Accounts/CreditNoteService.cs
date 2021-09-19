@@ -124,7 +124,7 @@ namespace ERP.Services.Accounts
             if (null != creditNote)
             {
                 // assign values.
-                
+
                 creditNote.CreditNoteDate = creditNoteModel.CreditNoteDate;
                 creditNote.PartyLedgerId = creditNoteModel.PartyLedgerId;
                 creditNote.BillToAddressId = creditNoteModel.BillToAddressId;
@@ -287,6 +287,49 @@ namespace ERP.Services.Accounts
 
             return resultModel; // returns.
         }
+
+        /// <summary>
+        /// get credit note List based on partyLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<OutstandingInvoiceModel>> GetCreditNoteListByPartyLedgerId(int partyLedgerId)
+        {
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
+
+            // create query.
+            IQueryable<Creditnote> query = GetQueryByCondition(w => w.CreditNoteId != 0);
+
+            // apply filters.
+            if (0 != partyLedgerId)
+                query = query.Where(w => w.PartyLedgerId == partyLedgerId);
+
+            // get records by query.
+            List<Creditnote> creditNoteList = await query.ToListAsync();
+
+            if (null != creditNoteList && creditNoteList.Count > 0)
+            {
+                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+
+                foreach (Creditnote creditNote in creditNoteList)
+                {
+                    outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
+                    {
+                        InvoiceId = creditNote.CreditNoteId,
+                        InvoiceType = "Credit Note",
+                        InvoiceNo = creditNote.CreditNoteNo,
+                        InvoiceDate = creditNote.CreditNoteDate,
+                        InvoiceAmount = creditNote.NetAmount,
+                        CreditNoteId = creditNote.CreditNoteId,
+                    });
+                }
+            }
+
+            return outstandingInvoiceModelList; // returns.
+        }
+
+
 
         #region Private Methods
 

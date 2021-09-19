@@ -161,6 +161,8 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailModel = purchaseInvoiceModelDetailList.FirstOrDefault();
             }
 
+
+
             return purchaseInvoiceDetailModel; // returns.
         }
 
@@ -175,6 +177,12 @@ namespace ERP.Services.Accounts
                 resultModel = new DataTableResultModel<PurchaseInvoiceDetailModel>();
                 resultModel.ResultList = purchaseInvoiceDetailModelList;
                 resultModel.TotalResultCount = purchaseInvoiceDetailModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<PurchaseInvoiceDetailModel>();
+                resultModel.ResultList = new List<PurchaseInvoiceDetailModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

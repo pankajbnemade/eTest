@@ -124,7 +124,7 @@ namespace ERP.Services.Accounts
             if (null != debitNote)
             {
                 // assign values.
-                
+
                 debitNote.DebitNoteDate = debitNoteModel.DebitNoteDate;
                 debitNote.PartyLedgerId = debitNoteModel.PartyLedgerId;
                 debitNote.BillToAddressId = debitNoteModel.BillToAddressId;
@@ -286,6 +286,47 @@ namespace ERP.Services.Accounts
             DataTableResultModel<DebitNoteModel> resultModel = await GetDataFromDbase(searchFilterModel, searchBy, take, skip, sortBy, sortDir);
 
             return resultModel; // returns.
+        }
+
+        /// <summary>
+        /// get debit note List based on partyLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<OutstandingInvoiceModel>> GetDebitNoteListByPartyLedgerId(int partyLedgerId)
+        {
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
+
+            // create query.
+            IQueryable<Debitnote> query = GetQueryByCondition(w => w.DebitNoteId != 0);
+
+            // apply filters.
+            if (0 != partyLedgerId)
+                query = query.Where(w => w.PartyLedgerId == partyLedgerId);
+
+            // get records by query.
+            List<Debitnote> debitNoteList = await query.ToListAsync();
+
+            if (null != debitNoteList && debitNoteList.Count > 0)
+            {
+                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+
+                foreach (Debitnote debitNote in debitNoteList)
+                {
+                    outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
+                    {
+                        InvoiceId = debitNote.DebitNoteId,
+                        InvoiceType = "Debit Note",
+                        InvoiceNo = debitNote.DebitNoteNo,
+                        InvoiceDate = debitNote.DebitNoteDate,
+                        InvoiceAmount = debitNote.NetAmount,
+                        DebitNoteId = debitNote.DebitNoteId,
+                    });
+                }
+            }
+
+            return outstandingInvoiceModelList; // returns.
         }
 
         #region Private Methods

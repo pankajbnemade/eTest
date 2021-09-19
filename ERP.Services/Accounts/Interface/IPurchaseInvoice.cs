@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -26,7 +27,9 @@ namespace ERP.Services.Accounts.Interface
         Task<bool> UpdatePurchaseInvoiceMasterAmount(int? purchaseInvoiceId);
 
         Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int purchaseInvoiceId);
-        
+
+        Task<IList<OutstandingInvoiceModel>> GetPurchaseInvoiceListBySupplierLedgerId(int supplierLedgerId);
+
         /// <summary>
         /// get search purchase invoice result list.
         /// </summary>
@@ -36,7 +39,7 @@ namespace ERP.Services.Accounts.Interface
         /// return list.
         /// </returns>
         Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterPurchaseInvoiceModel searchFilterModel);
-   
+
         //Task<DataTableResultModel<PurchaseInvoiceModel>> GetPurchaseInvoiceList();
     }
 }

@@ -100,6 +100,7 @@ namespace ERP.UI
             services.AddTransient<IAdvanceAdjustmentDetail, AdvanceAdjustmentDetailService>();
 
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
+            services.AddTransient<IOutstandingInvoice, OutstandingInvoiceService>();
 
 
             #endregion // Accounts

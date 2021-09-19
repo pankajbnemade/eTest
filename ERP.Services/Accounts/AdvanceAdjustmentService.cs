@@ -63,7 +63,7 @@ namespace ERP.Services.Accounts
             advanceAdjustment.VoucherStyleId = generateNoModel.VoucherStyleId;
 
             advanceAdjustment.AdvanceAdjustmentDate = advanceAdjustmentModel.AdvanceAdjustmentDate;
-            advanceAdjustment.AccountLedgerId = advanceAdjustmentModel.AccountLedgerId;
+            advanceAdjustment.AccountLedgerId = advanceAdjustmentModel.ParticularLedgerId;
             advanceAdjustment.PaymentVoucherId = advanceAdjustmentModel.PaymentVoucherId;
             advanceAdjustment.ReceiptVoucherId = advanceAdjustmentModel.ReceiptVoucherId;
             advanceAdjustment.CurrencyId = advanceAdjustmentModel.CurrencyId;
@@ -105,7 +105,7 @@ namespace ERP.Services.Accounts
             if (null != advanceAdjustment)
             {
                 advanceAdjustment.AdvanceAdjustmentDate = advanceAdjustmentModel.AdvanceAdjustmentDate;
-                advanceAdjustment.AccountLedgerId = advanceAdjustmentModel.AccountLedgerId;
+                advanceAdjustment.AccountLedgerId = advanceAdjustmentModel.ParticularLedgerId;
                 advanceAdjustment.PaymentVoucherId = advanceAdjustmentModel.PaymentVoucherId;
                 advanceAdjustment.ReceiptVoucherId = advanceAdjustmentModel.ReceiptVoucherId;
                 advanceAdjustment.CurrencyId = advanceAdjustmentModel.CurrencyId;
@@ -331,7 +331,7 @@ namespace ERP.Services.Accounts
                 advanceAdjustmentModel.AdvanceAdjustmentId = advanceAdjustment.AdvanceAdjustmentId;
                 advanceAdjustmentModel.AdvanceAdjustmentNo = advanceAdjustment.AdvanceAdjustmentNo;
                 advanceAdjustmentModel.AdvanceAdjustmentDate = advanceAdjustment.AdvanceAdjustmentDate;
-                advanceAdjustmentModel.AccountLedgerId = advanceAdjustment.AccountLedgerId;
+                advanceAdjustmentModel.ParticularLedgerId = advanceAdjustment.AccountLedgerId;
                 advanceAdjustmentModel.PaymentVoucherId = advanceAdjustment.PaymentVoucherId;
                 advanceAdjustmentModel.ReceiptVoucherId = advanceAdjustment.ReceiptVoucherId;
                 advanceAdjustmentModel.CurrencyId = advanceAdjustment.CurrencyId;

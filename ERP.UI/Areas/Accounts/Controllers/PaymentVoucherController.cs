@@ -196,6 +196,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             return Json(data); // returns.
         }
 
+
         /// <summary>
         /// save sale voucher master.
         /// </summary>

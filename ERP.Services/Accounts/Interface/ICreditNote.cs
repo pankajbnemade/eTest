@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -27,6 +28,8 @@ namespace ERP.Services.Accounts.Interface
 
         Task<CreditNoteModel> GetCreditNoteById(int creditNoteId);
         
+        Task<IList<OutstandingInvoiceModel>> GetCreditNoteListByPartyLedgerId(int partyLedgerId);
+
         /// <summary>
         /// get search sales invoice result list.
         /// </summary>

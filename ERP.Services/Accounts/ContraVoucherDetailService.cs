@@ -146,6 +146,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = contraVoucherDetailModelList;
                 resultModel.TotalResultCount = contraVoucherDetailModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<ContraVoucherDetailModel>();
+                resultModel.ResultList = new List<ContraVoucherDetailModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

@@ -180,8 +180,6 @@
 
         $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
 
-
-
         if ('@Model.PaymentVoucherId' > 0 && '@Model.TypeCorB' != "") {
             GetAccountLedger('@Model.TypeCorB');
         }
@@ -189,10 +187,6 @@
         if ('@Model.PaymentVoucherId' > 0 && '@Model.AccountLedgerId' > 0) {
             GetClosingBalance('@Model.AccountLedgerId');
         }
-
-
-
-     
 
 
         // TypeCorB change.

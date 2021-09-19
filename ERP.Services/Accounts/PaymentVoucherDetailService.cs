@@ -6,7 +6,6 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +15,12 @@ namespace ERP.Services.Accounts
     public class PaymentVoucherDetailService : Repository<Paymentvoucherdetail>, IPaymentVoucherDetail
     {
         IPaymentVoucher paymentVoucher;
+        ILedger ledger;
 
-        public PaymentVoucherDetailService(ErpDbContext dbContext, IPaymentVoucher _paymentVoucher) : base(dbContext)
+        public PaymentVoucherDetailService(ErpDbContext dbContext, IPaymentVoucher _paymentVoucher, ILedger _ledger) : base(dbContext)
         {
             paymentVoucher = _paymentVoucher;
+            ledger = _ledger;
         }
 
         public async Task<int> CreatePaymentVoucherDetail(PaymentVoucherDetailModel paymentVoucherDetailModel)
@@ -139,7 +140,7 @@ namespace ERP.Services.Accounts
             return paymentVoucherDetailModel; // returns.
         }
 
-        public async Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailByPaymentVoucherId(int paymentVoucherId)
+        public async Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailByPaymentVoucherId(int paymentVoucherId, int addRow_Blank)
         {
             DataTableResultModel<PaymentVoucherDetailModel> resultModel = new DataTableResultModel<PaymentVoucherDetailModel>();
 
@@ -147,12 +148,61 @@ namespace ERP.Services.Accounts
 
             if (null != paymentVoucherDetailModelList && paymentVoucherDetailModelList.Any())
             {
+                if (addRow_Blank == 1)
+                {
+                    paymentVoucherDetailModelList.Add(await AddRow_Blank(paymentVoucherId));
+                }
+
+                resultModel = new DataTableResultModel<PaymentVoucherDetailModel>();
+                resultModel.ResultList = paymentVoucherDetailModelList;
+                resultModel.TotalResultCount = paymentVoucherDetailModelList.Count();
+            }
+            else
+            {
+                paymentVoucherDetailModelList = new List<PaymentVoucherDetailModel>();
+
+                if (addRow_Blank == 1)
+                {
+                    paymentVoucherDetailModelList.Add(await AddRow_Blank(paymentVoucherId));
+                }
+                //resultModel = new DataTableResultModel<PaymentVoucherDetailModel>();
+                //resultModel.ResultList = new List<PaymentVoucherDetailModel>();
+                //resultModel.TotalResultCount = 0;
+
                 resultModel = new DataTableResultModel<PaymentVoucherDetailModel>();
                 resultModel.ResultList = paymentVoucherDetailModelList;
                 resultModel.TotalResultCount = paymentVoucherDetailModelList.Count();
             }
 
+
             return resultModel; // returns.
+        }
+
+        private async Task<PaymentVoucherDetailModel> AddRow_Blank(int paymentVoucherId)
+        {
+            PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel();
+            IList<SelectListModel> particularLedgerList = await ledger.GetLedgerSelectList(0);
+
+            return await Task.Run(() =>
+            {
+                paymentVoucherDetailModel.PaymentVoucherId = paymentVoucherId;
+                paymentVoucherDetailModel.ParticularLedgerId = 0;
+                paymentVoucherDetailModel.TransactionTypeId = 0;
+                paymentVoucherDetailModel.AmountFc = 0;
+                paymentVoucherDetailModel.Amount = 0;
+                paymentVoucherDetailModel.Narration = "";
+                paymentVoucherDetailModel.PurchaseInvoiceId = 0;
+                paymentVoucherDetailModel.CreditNoteId = 0;
+                paymentVoucherDetailModel.DebitNoteId = 0;
+                paymentVoucherDetailModel.InvoiceNo = "";
+                paymentVoucherDetailModel.InvoiceType = "";
+                paymentVoucherDetailModel.ParticularLedgerName = "";
+                paymentVoucherDetailModel.TransactionTypeName = "";
+                paymentVoucherDetailModel.transactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
+                paymentVoucherDetailModel.particularLedgerList = particularLedgerList;
+                return paymentVoucherDetailModel;
+
+            });
         }
 
         public async Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailList()
@@ -169,6 +219,39 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        /// <summary>
+        /// get payment voucher List based on particularLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<PaymentVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
+        {
+            IList<PaymentVoucherDetailModel> paymentVoucherDetailModelList = null;
+
+            // create query.
+            IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0);
+
+            // apply filters.
+            if (0 != particularLedgerId)
+                query = query.Where(w => w.ParticularLedgerId == particularLedgerId);
+
+            // get records by query.
+            List<Paymentvoucherdetail> paymentVoucherDetailList = await query.ToListAsync();
+
+            if (null != paymentVoucherDetailList && paymentVoucherDetailList.Count > 0)
+            {
+                paymentVoucherDetailModelList = new List<PaymentVoucherDetailModel>();
+
+                foreach (Paymentvoucherdetail paymentVoucherDetail in paymentVoucherDetailList)
+                {
+                    paymentVoucherDetailModelList.Add(await AssignValueToModel(paymentVoucherDetail));
+                }
+            }
+
+            return paymentVoucherDetailModelList; // returns.
         }
 
         private async Task<IList<PaymentVoucherDetailModel>> GetPaymentVoucherDetailList(int paymentVoucherDetailId, int paymentVoucherId)
@@ -203,8 +286,12 @@ namespace ERP.Services.Accounts
             return paymentVoucherDetailModelList; // returns.
         }
 
+
+
         private async Task<PaymentVoucherDetailModel> AssignValueToModel(Paymentvoucherdetail paymentVoucherDetail)
         {
+            IList<SelectListModel> particularLedgerList = await ledger.GetLedgerSelectList(0);
+
             return await Task.Run(() =>
             {
                 PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel();
@@ -240,6 +327,10 @@ namespace ERP.Services.Accounts
                     paymentVoucherDetailModel.InvoiceType = "Debit Note";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
                 }
+
+                paymentVoucherDetailModel.transactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
+                paymentVoucherDetailModel.particularLedgerList = particularLedgerList;
+
 
                 return paymentVoucherDetailModel;
             });

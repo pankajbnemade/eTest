@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -53,6 +54,8 @@ namespace ERP.Services.Accounts.Interface
         /// return record.
         /// </returns>
         Task<SalesInvoiceModel> GetSalesInvoiceById(int salesInvoiceId);
+
+        Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId);
 
         /// <summary>
         /// get search sales invoice result list.

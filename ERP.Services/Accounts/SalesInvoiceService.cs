@@ -297,6 +297,48 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
+        /// <summary>
+        /// get sales invoice List based on customerLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+         public async Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId)
+        {
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
+
+            // create query.
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0);
+                                           
+               // apply filters.
+            if (0 != customerLedgerId)
+                query = query.Where(w => w.CustomerLedgerId == customerLedgerId);
+
+            // get records by query.
+            List<Salesinvoice> salesInvoiceList = await query.ToListAsync();
+
+            if (null != salesInvoiceList && salesInvoiceList.Count > 0)
+            {
+                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+
+                foreach (Salesinvoice salesInvoice in salesInvoiceList)
+                {
+                    outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
+                    {
+                        InvoiceId = salesInvoice.SalesInvoiceId,
+                        InvoiceType = "Sales Invoice",
+                        InvoiceNo = salesInvoice.InvoiceNo,
+                        InvoiceDate = salesInvoice.InvoiceDate,
+                        InvoiceAmount = salesInvoice.NetAmount,
+                        SalesInvoiceId = salesInvoice.SalesInvoiceId,
+                    });
+                }
+            }
+
+            return outstandingInvoiceModelList; // returns.
+        }
+
+
         #region Private Methods
 
         /// <summary>

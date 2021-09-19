@@ -5,110 +5,131 @@
         <div class="modal-header">
             @if (Model.PaymentVoucherDetId > 0)
             {
-<h4 class="modal-title">Edit Voucher Detail</h4> }
+                <h4 class="modal-title">Edit Voucher Detail</h4> }
             else
             {
-<h4 class="modal-title">Add Voucher Detail</h4>            }
+                <h4 class="modal-title">Add Voucher Detail</h4>}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form id="frmVoucherDetail" class="width100" method="post"
-              asp-action="SaveVoucherDetail" asp-controller="PaymentVoucherDetail" asp-area="Accounts"
-              data-ajax-begin="return BeginVoucherDetail();" data-ajax-success="SuccessVoucherDetail"
-              data-ajax="true" data-ajax-method="post">
-            <div class="modal-body">
-                @Html.HiddenFor(model => model.PaymentVoucherDetId)
-                @Html.HiddenFor(model => model.PaymentVoucherId)
+      
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.PaymentVoucherId)
+            @Html.HiddenFor(model => model.ParticularLedgerId)
 
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.ParticularLedgerId, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.ParticularLedgerId, new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.ParticularLedgerId)
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TransactionTypeId, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.TransactionTypeId)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.AmountFc, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.AmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
-                                @Html.ValidationMessageFor(model => model.AmountFc)
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Narration)
-                                @Html.TextBoxFor(model => model.Narration, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.Narration)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
-                        <table id="outstandingBillGrid" class="table table-bordered table-striped w-100">
-                            <thead>
-                                <tr class="table-header">
-                                    <th>BillId</th>
-                                    <th>BillNo</th>
-                                    <th>Outstanding Amount FC</th>
-                                    <th>Amount FC</th>
-                                    <th>Narration</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
 
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="outstandingBillGrid" class="table table-bordered table-striped w-100">
+                        <thead>
+                            <tr class="table-header">
+                                <th>Invoice Type</th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Invoice Amount FC</th>
+                                <th>Outstanding Amount FC</th>
+                                <th>Amount FC</th>
+                                <th>Narration</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
-                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
-            </div>
-        </form>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+
+        // search data.
+
+    $("#outstandingBillGrid").DataTable({
+        "pageLength": 25,
+        "paging": false,
+        "ordering": false,
+        "searching": false,
+        "info": false,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetOutstandingInvoiceList", "PaymentVoucherDetail")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    ledgerId: $('#ParticularLedgerId').val(),
+                    paymentVoucherId: $('#PaymentVoucherId').val()
+                    }
+                },
+            "columns": [
+                { "data": "InvoiceType", "name": "InvoiceType" },
+                { "data": "InvoiceNo", "name": "InvoiceNo" },
+                {
+                    "data": "InvoiceDate", "name": "InvoiceDate",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                { "data": "InvoiceAmount_FC", "name": "InvoiceAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "OutstandingAmount_FC", "name": "OutstandingAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                {
+                    "data": "AmountFc", "title": "Amount FC", "width": "80px",
+
+                    "render": function (data, type, row) {
+                        return '<input class="form-control form-control-sm"  id="AmountFc" name="AmountFc" type="text"  value = ' + row.AmountFc + '  >';
+                    }
+                },
+                {
+                    "data": "Narration", "title": "Narration",
+                    "render": function (data, type, row) {
+                        return  '<input id="PurchaseInvoiceId" type="hidden" value="' + full.PurchaseInvoiceId + '">' +
+                                '<input id="SalesInvoiceId" type="hidden" value="' + full.SalesInvoiceId + '">' +
+                                '<input id="CreditNoteId" type="hidden" value="' + full.CreditNoteId + '">' +
+                                '<input id="DebitNoteId" type="hidden" value="' + full.DebitNoteId + '">' +
+                                '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value = ' + row.Narration + '  >';
+                    }
+                }
+            ],
+        });
+
+
     });
 
-    // begin form
-    function BeginVoucherDetail() {
-        var form = $("#frmVoucherDetail");
-        $(form).removeData("validator").removeData("unobtrusiveValidation");
-        $.validator.unobtrusive.parse($(form));
-        var validator = $(form).validate();
-        var isModelValid = $(form).valid();
-        if (false == isModelValid) {
-            validator.focusInvalid();
-            return false;
-        }
-    }
-    // success form
-    function SuccessVoucherDetail(data) {
-        if (data.Result.Status) {
-            $('#modal-voucher').modal('hide');
-            fnSuccessNotify('Record saved sucessfully.');
-            $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
-        }
-        else {
-            fnDangerNotify('Error occured while processing request.');
-            return false;
-        }
-    }
+
+    //// begin form
+    //function BeginVoucherDetail() {
+    //    var form = $("#frmVoucherDetail");
+    //    $(form).removeData("validator").removeData("unobtrusiveValidation");
+    //    $.validator.unobtrusive.parse($(form));
+    //    var validator = $(form).validate();
+    //    var isModelValid = $(form).valid();
+    //    if (false == isModelValid) {
+    //        validator.focusInvalid();
+    //        return false;
+    //    }
+    //}
+    //// success form
+    //function SuccessVoucherDetail(data) {
+    //    if (data.Result.Status) {
+    //        $('#modal-voucher').modal('hide');
+    //        fnSuccessNotify('Record saved sucessfully.');
+    //        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
+    //    }
+    //    else {
+    //        fnDangerNotify('Error occured while processing request.');
+    //        return false;
+    //    }
+    //}
+
+
 </script>

@@ -161,7 +161,7 @@
         if (data.Result.Status) {
             $('#modal-invoice').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
-            $("#purchaseInvoiceDetailGrid").DataTable().ajax.reload();
+            $("#purchaseInvoiceDetailGrid").DataTable().clear().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

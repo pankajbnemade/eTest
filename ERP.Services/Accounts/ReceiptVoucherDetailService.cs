@@ -149,6 +149,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = receiptVoucherDetailModelList;
                 resultModel.TotalResultCount = receiptVoucherDetailModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<ReceiptVoucherDetailModel>();
+                resultModel.ResultList = new List<ReceiptVoucherDetailModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }
@@ -167,6 +173,39 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        /// <summary>
+        /// get receipt voucher List based on particularLedgerId
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+        public async Task<IList<ReceiptVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
+        {
+            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = null;
+
+            // create query.
+            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0);
+
+            // apply filters.
+            if (0 != particularLedgerId)
+                query = query.Where(w => w.ParticularLedgerId == particularLedgerId);
+
+            // get records by query.
+            List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
+
+            if (null != receiptVoucherDetailList && receiptVoucherDetailList.Count > 0)
+            {
+                receiptVoucherDetailModelList = new List<ReceiptVoucherDetailModel>();
+
+                foreach (Receiptvoucherdetail receiptVoucherDetail in receiptVoucherDetailList)
+                {
+                    receiptVoucherDetailModelList.Add(await AssignValueToModel(receiptVoucherDetail));
+                }
+            }
+
+            return receiptVoucherDetailModelList; // returns.
         }
 
         private async Task<IList<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailList(int receiptVoucherDetailId, int receiptVoucherId)
