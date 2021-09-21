@@ -308,9 +308,10 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Creditnote> creditNoteList = await query.ToListAsync();
 
+             outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+
             if (null != creditNoteList && creditNoteList.Count > 0)
             {
-                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
 
                 foreach (Creditnote creditNote in creditNoteList)
                 {
@@ -322,6 +323,9 @@ namespace ERP.Services.Accounts
                         InvoiceDate = creditNote.CreditNoteDate,
                         InvoiceAmount = creditNote.NetAmount,
                         CreditNoteId = creditNote.CreditNoteId,
+                         SalesInvoiceId = 0,
+                        PurchaseInvoiceId = 0,
+                        DebitNoteId = 0
                     });
                 }
             }

@@ -202,10 +202,10 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Journalvoucherdetail> journalVoucherDetailList = await query.ToListAsync();
 
+             journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
+
             if (null != journalVoucherDetailList && journalVoucherDetailList.Count > 0)
             {
-                journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
-
                 foreach (Journalvoucherdetail journalVoucherDetail in journalVoucherDetailList)
                 {
                     journalVoucherDetailModelList.Add(await AssignValueToModel(journalVoucherDetail));

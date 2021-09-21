@@ -50,6 +50,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = outstandingInvoiceModelList;
                 resultModel.TotalResultCount = outstandingInvoiceModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
+                resultModel.ResultList = new List<OutstandingInvoiceModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }
@@ -74,52 +80,64 @@ namespace ERP.Services.Accounts
 
             IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModel = await advanceAdjustmentDetail.GetInvoiceListByParticularLedgerId(ledgerId);
 
-            foreach (var o in purchaseInvoiceModel)
+            if (purchaseInvoiceModel != null)
             {
-                o.OutstandingAmount = o.InvoiceAmount - paymentVoucherDetailModel.Where(w => w.PurchaseInvoiceId == o.PurchaseInvoiceId)
-                                                                                .Sum(w => w.Amount);
+                foreach (var o in purchaseInvoiceModel)
+                {
+                    o.OutstandingAmount = o.InvoiceAmount - (paymentVoucherDetailModel == null ? 0 : paymentVoucherDetailModel.Where(w => w.PurchaseInvoiceId == o.PurchaseInvoiceId)
+                                                                                    .Sum(w => w.Amount));
 
-                o.OutstandingAmount = o.InvoiceAmount - journalVoucherDetailModel.Where(w => w.PurchaseInvoiceId == o.PurchaseInvoiceId)
-                                                                                .Sum(w => w.DebitAmount);
+                    o.OutstandingAmount = o.InvoiceAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.PurchaseInvoiceId == o.PurchaseInvoiceId)
+                                                                                    .Sum(w => w.DebitAmount));
 
-                o.OutstandingAmount = o.InvoiceAmount - advanceAdjustmentDetailModel.Where(w => w.PurchaseInvoiceId == o.PurchaseInvoiceId)
-                                                                                .Sum(w => w.Amount);
+                    o.OutstandingAmount = o.InvoiceAmount - (advanceAdjustmentDetailModel == null ? 0 : advanceAdjustmentDetailModel.Where(w => w.PurchaseInvoiceId == o.PurchaseInvoiceId)
+                                                                                    .Sum(w => w.Amount));
+                }
             }
 
-            foreach (var o in creditNoteModel)
+            if (creditNoteModel != null)
             {
-                o.OutstandingAmount = o.InvoiceAmount - paymentVoucherDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
-                                                                                .Sum(w => w.Amount);
+                foreach (var o in creditNoteModel)
+                {
+                    o.OutstandingAmount = o.InvoiceAmount - (paymentVoucherDetailModel == null ? 0 : paymentVoucherDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
+                                                                                    .Sum(w => w.Amount));
 
-                o.OutstandingAmount = o.InvoiceAmount - journalVoucherDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
-                                                                                .Sum(w => w.DebitAmount);
+                    o.OutstandingAmount = o.InvoiceAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
+                                                                                    .Sum(w => w.DebitAmount));
 
-                o.OutstandingAmount = o.InvoiceAmount - advanceAdjustmentDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
-                                                                                .Sum(w => w.Amount);
+                    o.OutstandingAmount = o.InvoiceAmount - (advanceAdjustmentDetailModel == null ? 0 : advanceAdjustmentDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
+                                                                                    .Sum(w => w.Amount));
+                }
             }
 
-            foreach (var o in salesInvoiceModel)
+            if (salesInvoiceModel != null)
             {
-                o.OutstandingAmount = o.InvoiceAmount - receiptVoucherDetailModel.Where(w => w.SalesInvoiceId == o.SalesInvoiceId)
-                                                                                .Sum(w => w.Amount);
+                foreach (var o in salesInvoiceModel)
+                {
+                    o.OutstandingAmount = o.InvoiceAmount - (receiptVoucherDetailModel == null ? 0 : receiptVoucherDetailModel.Where(w => w.SalesInvoiceId == o.SalesInvoiceId)
+                                                                                    .Sum(w => w.Amount));
 
-                o.OutstandingAmount = o.InvoiceAmount - journalVoucherDetailModel.Where(w => w.SalesInvoiceId == o.SalesInvoiceId)
-                                                                                .Sum(w => w.CreditAmount);
+                    o.OutstandingAmount = o.InvoiceAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.SalesInvoiceId == o.SalesInvoiceId)
+                                                                                    .Sum(w => w.CreditAmount));
 
-                o.OutstandingAmount = o.InvoiceAmount - advanceAdjustmentDetailModel.Where(w => w.SalesInvoiceId == o.SalesInvoiceId)
-                                                                                .Sum(w => w.Amount);
+                    o.OutstandingAmount = o.InvoiceAmount - (advanceAdjustmentDetailModel == null ? 0 : advanceAdjustmentDetailModel.Where(w => w.SalesInvoiceId == o.SalesInvoiceId)
+                                                                                    .Sum(w => w.Amount));
+                }
             }
 
-            foreach (var o in debitNoteModel)
+            if (debitNoteModel != null)
             {
-                o.OutstandingAmount = o.InvoiceAmount - receiptVoucherDetailModel.Where(w => w.DebitNoteId == o.DebitNoteId)
-                                                                                .Sum(w => w.Amount);
+                foreach (var o in debitNoteModel)
+                {
+                    o.OutstandingAmount = o.InvoiceAmount - (receiptVoucherDetailModel == null ? 0 : receiptVoucherDetailModel.Where(w => w.DebitNoteId == o.DebitNoteId)
+                                                                                    .Sum(w => w.Amount));
 
-                o.OutstandingAmount = o.InvoiceAmount - journalVoucherDetailModel.Where(w => w.DebitNoteId == o.CreditNoteId)
-                                                                                .Sum(w => w.CreditAmount);
+                    o.OutstandingAmount = o.InvoiceAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.DebitNoteId == o.CreditNoteId)
+                                                                                    .Sum(w => w.CreditAmount));
 
-                o.OutstandingAmount = o.InvoiceAmount - advanceAdjustmentDetailModel.Where(w => w.DebitNoteId == o.DebitNoteId)
-                                                                                .Sum(w => w.Amount);
+                    o.OutstandingAmount = o.InvoiceAmount - (advanceAdjustmentDetailModel == null ? 0 : advanceAdjustmentDetailModel.Where(w => w.DebitNoteId == o.DebitNoteId)
+                                                                                    .Sum(w => w.Amount));
+                }
             }
 
             outstandingInvoiceModelList = purchaseInvoiceModel.Where(w => w.OutstandingAmount > 0)
@@ -128,7 +146,11 @@ namespace ERP.Services.Accounts
                                         .Union(creditNoteModel.Where(w => w.OutstandingAmount > 0))
                                         .ToList();
 
-            outstandingInvoiceModelList.ToList().ForEach(w => w.OutstandingAmount_FC = w.OutstandingAmount * ExchangeRate);
+            outstandingInvoiceModelList.ToList().ForEach(w =>
+                                                {
+                                                    w.OutstandingAmount_FC = w.OutstandingAmount * ExchangeRate;
+                                                    w.InvoiceAmount_FC = w.InvoiceAmount * ExchangeRate;
+                                                });
 
             return outstandingInvoiceModelList; // returns.
         }

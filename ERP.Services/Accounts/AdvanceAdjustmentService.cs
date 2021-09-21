@@ -63,7 +63,7 @@ namespace ERP.Services.Accounts
             advanceAdjustment.VoucherStyleId = generateNoModel.VoucherStyleId;
 
             advanceAdjustment.AdvanceAdjustmentDate = advanceAdjustmentModel.AdvanceAdjustmentDate;
-            advanceAdjustment.AccountLedgerId = advanceAdjustmentModel.ParticularLedgerId;
+            advanceAdjustment.ParticularLedgerId = advanceAdjustmentModel.ParticularLedgerId;
             advanceAdjustment.PaymentVoucherId = advanceAdjustmentModel.PaymentVoucherId;
             advanceAdjustment.ReceiptVoucherId = advanceAdjustmentModel.ReceiptVoucherId;
             advanceAdjustment.CurrencyId = advanceAdjustmentModel.CurrencyId;
@@ -105,7 +105,7 @@ namespace ERP.Services.Accounts
             if (null != advanceAdjustment)
             {
                 advanceAdjustment.AdvanceAdjustmentDate = advanceAdjustmentModel.AdvanceAdjustmentDate;
-                advanceAdjustment.AccountLedgerId = advanceAdjustmentModel.ParticularLedgerId;
+                advanceAdjustment.ParticularLedgerId = advanceAdjustmentModel.ParticularLedgerId;
                 advanceAdjustment.PaymentVoucherId = advanceAdjustmentModel.PaymentVoucherId;
                 advanceAdjustment.ReceiptVoucherId = advanceAdjustmentModel.ReceiptVoucherId;
                 advanceAdjustment.CurrencyId = advanceAdjustmentModel.CurrencyId;
@@ -248,7 +248,7 @@ namespace ERP.Services.Accounts
 
             if (null != searchFilterModel.AccountLedgerId)
             {
-                query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
+                query = query.Where(w => w.ParticularLedgerId == searchFilterModel.AccountLedgerId);
             }
 
             if (null != searchFilterModel.FromDate)
@@ -298,7 +298,7 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Advanceadjustment> query = GetQueryByCondition(w => w.AdvanceAdjustmentId != 0)
-                                            .Include(w => w.AccountLedger)
+                                            .Include(w => w.ParticularLedger)
                                             //.Include(w => w.Currency)
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
 
@@ -331,7 +331,7 @@ namespace ERP.Services.Accounts
                 advanceAdjustmentModel.AdvanceAdjustmentId = advanceAdjustment.AdvanceAdjustmentId;
                 advanceAdjustmentModel.AdvanceAdjustmentNo = advanceAdjustment.AdvanceAdjustmentNo;
                 advanceAdjustmentModel.AdvanceAdjustmentDate = advanceAdjustment.AdvanceAdjustmentDate;
-                advanceAdjustmentModel.ParticularLedgerId = advanceAdjustment.AccountLedgerId;
+                advanceAdjustmentModel.ParticularLedgerId = advanceAdjustment.ParticularLedgerId;
                 advanceAdjustmentModel.PaymentVoucherId = advanceAdjustment.PaymentVoucherId;
                 advanceAdjustmentModel.ReceiptVoucherId = advanceAdjustment.ReceiptVoucherId;
                 advanceAdjustmentModel.CurrencyId = advanceAdjustment.CurrencyId;

@@ -307,11 +307,12 @@ namespace ERP.Services.Accounts
 
             // get records by query.
             List<Debitnote> debitNoteList = await query.ToListAsync();
+            
+            outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
 
             if (null != debitNoteList && debitNoteList.Count > 0)
             {
-                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
-
+                
                 foreach (Debitnote debitNote in debitNoteList)
                 {
                     outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
@@ -322,6 +323,9 @@ namespace ERP.Services.Accounts
                         InvoiceDate = debitNote.DebitNoteDate,
                         InvoiceAmount = debitNote.NetAmount,
                         DebitNoteId = debitNote.DebitNoteId,
+                        SalesInvoiceId = 0,
+                        PurchaseInvoiceId = 0,
+                        CreditNoteId = 0
                     });
                 }
             }

@@ -20,6 +20,7 @@ namespace ERP.Models.Accounts
         public decimal? OutstandingAmount { get; set; }
 
         public decimal? InvoiceAmount_FC { get; set; }
+
         public decimal? OutstandingAmount_FC { get; set; }
 
         public int? PurchaseInvoiceId { get; set; }

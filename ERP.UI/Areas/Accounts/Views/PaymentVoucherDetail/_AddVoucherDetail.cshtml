@@ -3,21 +3,15 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            @if (Model.PaymentVoucherDetId > 0)
-            {
-                <h4 class="modal-title">Edit Voucher Detail</h4> }
-            else
-            {
-                <h4 class="modal-title">Add Voucher Detail</h4>}
+            <h4 class="modal-title">Add Voucher Detail</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-      
+
         <div class="modal-body">
             @Html.HiddenFor(model => model.PaymentVoucherId)
             @Html.HiddenFor(model => model.ParticularLedgerId)
-
 
             <div class="row">
                 <div class="col-sm-12">
@@ -40,7 +34,9 @@
         </div>
         <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
-            <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+            <button class="btn btn-primary" type="button" id="save-outstanding-dtl" title="Save Outstanding">
+                Save Outstanding
+            </button>
         </div>
     </div>
 </div>
@@ -67,8 +63,8 @@
                 "type": "POST",
                 "datatype": "json",
                 "data": {
-                    ledgerId: $('#ParticularLedgerId').val(),
-                    paymentVoucherId: $('#PaymentVoucherId').val()
+                    ledgerId: $('.modal-body #ParticularLedgerId').val(),
+                    paymentVoucherId: $('.modal-body #PaymentVoucherId').val()
                     }
                 },
             "columns": [
@@ -86,50 +82,69 @@
                     "data": "AmountFc", "title": "Amount FC", "width": "80px",
 
                     "render": function (data, type, row) {
-                        return '<input class="form-control form-control-sm"  id="AmountFc" name="AmountFc" type="text"  value = ' + row.AmountFc + '  >';
+                        return '<input class="form-control form-control-sm"  id="AmountFc" name="AmountFc" type="text"  value = ' + '' + '  >';
                     }
                 },
                 {
                     "data": "Narration", "title": "Narration",
                     "render": function (data, type, row) {
-                        return  '<input id="PurchaseInvoiceId" type="hidden" value="' + full.PurchaseInvoiceId + '">' +
-                                '<input id="SalesInvoiceId" type="hidden" value="' + full.SalesInvoiceId + '">' +
-                                '<input id="CreditNoteId" type="hidden" value="' + full.CreditNoteId + '">' +
-                                '<input id="DebitNoteId" type="hidden" value="' + full.DebitNoteId + '">' +
-                                '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value = ' + row.Narration + '  >';
+                        return '<input id="PurchaseInvoiceId" type="hidden" value="' + row.PurchaseInvoiceId + '">' +
+                            '<input id="CreditNoteId" type="hidden" value="' + row.CreditNoteId + '">' +
+                            '<input id="DebitNoteId" type="hidden" value="' + row.DebitNoteId + '">' +
+                                '<input id="Narration" name="Narration" type="text" class="form-control form-control-sm" value = ' + '' + '  >';
                     }
                 }
             ],
         });
+    });
 
-
+    ////account invoice dtl.
+    $('#save-outstanding-dtl').click(function () {
+        fnSaveOutstandingDetail();
     });
 
 
-    //// begin form
-    //function BeginVoucherDetail() {
-    //    var form = $("#frmVoucherDetail");
-    //    $(form).removeData("validator").removeData("unobtrusiveValidation");
-    //    $.validator.unobtrusive.parse($(form));
-    //    var validator = $(form).validate();
-    //    var isModelValid = $(form).valid();
-    //    if (false == isModelValid) {
-    //        validator.focusInvalid();
-    //        return false;
-    //    }
-    //}
-    //// success form
-    //function SuccessVoucherDetail(data) {
-    //    if (data.Result.Status) {
-    //        $('#modal-voucher').modal('hide');
-    //        fnSuccessNotify('Record saved sucessfully.');
-    //        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
-    //    }
-    //    else {
-    //        fnDangerNotify('Error occured while processing request.');
-    //        return false;
-    //    }
-    //}
+    // edit Outstanding detail.
+    function fnSaveOutstandingDetail() {
+       
+        var paymentVoucherId = $('.modal-body #PaymentVoucherId').val();
+
+        $('#outstandingBillGrid tbody tr').each(function () {
+
+            alert($('.modal-body #PurchaseInvoiceId').val());
+
+            var model = {
+                paymentVoucherDetId: 0,
+                paymentVoucherId: paymentVoucherId,
+                particularLedgerId: $('.modal-body #ParticularLedgerId').val(),
+                transactionTypeId: 2,
+                purchaseInvoiceId: $('#PurchaseInvoiceId', this).val(),
+                creditNoteId: $('#CreditNoteId', this).val(),
+                debitNoteId: $('#DebitNoteId', this).val(),
+                amountFc: $('#AmountFc', this).val(),
+                narration: $('#Narration', this).val()
+            };
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("SaveVoucherDetailOutstanding", "PaymentVoucherDetail")', '', model,
+
+                function (response) {
+                    if (true == response.Result.Status) {
+                        console.log(response.Result.Data);
+                    }
+                    else {
+                        console.log(response.Result.Data);
+                    }
+                }, null, true, null, false);
+
+        });
+
+        $('#modal-voucher').modal('hide');
+
+        fnSuccessNotify('Record saved sucessfully.');
+
+        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
+        
+    } 
 
 
 </script>

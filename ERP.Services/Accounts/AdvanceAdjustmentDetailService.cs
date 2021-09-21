@@ -188,29 +188,20 @@ namespace ERP.Services.Accounts
 
             // apply filters.
             if (0 != particularLedgerId)
-                query = query.Where(w => w.AdvanceAdjustment.AccountLedgerId == particularLedgerId);
+                query = query.Where(w => w.AdvanceAdjustment.ParticularLedgerId == particularLedgerId);
 
+            // get records by query.
+            List<Advanceadjustmentdetail> advanceAdjustmentDetailList = await query.ToListAsync();
 
-            try
+            advanceAdjustmentDetailModelList = new List<AdvanceAdjustmentDetailModel>();
+
+            if (null != advanceAdjustmentDetailList && advanceAdjustmentDetailList.Count > 0)
             {
-                // get records by query.
-                List<Advanceadjustmentdetail> advanceAdjustmentDetailList = await query.ToListAsync();
-
-                if (null != advanceAdjustmentDetailList && advanceAdjustmentDetailList.Count > 0)
+                foreach (Advanceadjustmentdetail advanceAdjustmentDetail in advanceAdjustmentDetailList)
                 {
-                    advanceAdjustmentDetailModelList = new List<AdvanceAdjustmentDetailModel>();
-
-                    foreach (Advanceadjustmentdetail advanceAdjustmentDetail in advanceAdjustmentDetailList)
-                    {
-                        advanceAdjustmentDetailModelList.Add(await AssignValueToModel(advanceAdjustmentDetail));
-                    }
+                    advanceAdjustmentDetailModelList.Add(await AssignValueToModel(advanceAdjustmentDetail));
                 }
             }
-            catch (Exception ex)
-            {
-
-            }
-
 
 
             return advanceAdjustmentDetailModelList; // returns.

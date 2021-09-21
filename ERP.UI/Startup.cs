@@ -78,6 +78,7 @@ namespace ERP.UI
             }
             else
             {
+                app.UseExceptionHandler("/Error");
                 app.UseExceptionHandler(new ExceptionHandlerOptions { ExceptionHandlingPath = "/Error" });
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }

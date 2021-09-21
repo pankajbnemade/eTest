@@ -89,13 +89,10 @@ namespace ERP.DataAccess.EntityData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
                 entity.ToTable("advanceadjustment");
-
-                entity.HasIndex(e => e.AccountLedgerId)
-                    .HasName("IX_AdvanceAdjustment_AccountLedgerId");
 
                 entity.HasIndex(e => e.AdvanceAdjustmentNo)
                     .HasName("DocumentNo_UNIQUE")
@@ -109,6 +106,9 @@ namespace ERP.DataAccess.EntityData
 
                 entity.HasIndex(e => e.FinancialYearId)
                     .HasName("IX_AdvanceAdjustment_FinancialYearId");
+
+                entity.HasIndex(e => e.ParticularLedgerId)
+                    .HasName("IX_AdvanceAdjustment_ParticularLedgerId");
 
                 entity.HasIndex(e => e.PaymentVoucherId)
                     .HasName("IX_AdvanceAdjustment_PaymentVoucherId");
@@ -158,11 +158,6 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
-                entity.HasOne(d => d.AccountLedger)
-                    .WithMany(p => p.Advanceadjustments)
-                    .HasForeignKey(d => d.AccountLedgerId)
-                    .HasConstraintName("FK_AdvanceAdjustment_Ledger_AccountLedgerId");
-
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.CompanyId)
@@ -178,6 +173,11 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.FinancialYearId)
                     .HasConstraintName("FK_AdvanceAdjustment_FinancialYear_FinancialYearId");
+
+                entity.HasOne(d => d.ParticularLedger)
+                    .WithMany(p => p.Advanceadjustments)
+                    .HasForeignKey(d => d.ParticularLedgerId)
+                    .HasConstraintName("FK_AdvanceAdjustment_Ledger_ParticularLedgerId");
 
                 entity.HasOne(d => d.PaymentVoucher)
                     .WithMany(p => p.Advanceadjustments)

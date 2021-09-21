@@ -195,10 +195,10 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
 
+            receiptVoucherDetailModelList = new List<ReceiptVoucherDetailModel>();
+
             if (null != receiptVoucherDetailList && receiptVoucherDetailList.Count > 0)
             {
-                receiptVoucherDetailModelList = new List<ReceiptVoucherDetailModel>();
-
                 foreach (Receiptvoucherdetail receiptVoucherDetail in receiptVoucherDetailList)
                 {
                     receiptVoucherDetailModelList.Add(await AssignValueToModel(receiptVoucherDetail));

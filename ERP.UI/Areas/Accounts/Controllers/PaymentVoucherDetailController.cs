@@ -79,15 +79,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="paymentVoucherId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> AddVoucherDetail(Int32 ledgerId,Int32 paymentVoucherId)
+        public async Task<IActionResult> AddVoucherDetail(Int32 paymentVoucherId, Int32 particularLedgerId)
         {
-            //ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0);
-            //ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
-
             PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel();
 
             paymentVoucherDetailModel.PaymentVoucherId = paymentVoucherId;
-            paymentVoucherDetailModel.ParticularLedgerId = ledgerId;
+            paymentVoucherDetailModel.ParticularLedgerId = particularLedgerId;
 
             return await Task.Run(() =>
             {
@@ -176,8 +173,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
             return Json(data);
         }
 
-         [HttpPost]
-        public async Task<JsonResult> SaveVoucherDetailInline(Int32 paymentVoucherDetId,Int32 paymentVoucherId,Int32 particularLedgerId,Int32 transactionTypeId,decimal amountFc,string narration)
+        [HttpPost]
+        public async Task<JsonResult> SaveVoucherDetailInline(Int32 paymentVoucherDetId, Int32 paymentVoucherId, Int32 particularLedgerId, Int32 transactionTypeId, decimal amountFc, string narration)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
@@ -205,7 +202,55 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     if (true == await _paymentVoucherDetail.UpdatePaymentVoucherDetail(paymentVoucherDetailModel))
                     {
                         data.Result.Status = true;
-                         data.Result.Data = 1;
+                        data.Result.Data = 1;
+                    }
+                }
+                else
+                {
+                    // add new record.
+                    if (await _paymentVoucherDetail.CreatePaymentVoucherDetail(paymentVoucherDetailModel) > 0)
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = "0";
+                    }
+                }
+            }
+
+            return Json(data);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveVoucherDetailOutstanding(Int32 paymentVoucherDetId, Int32 paymentVoucherId, Int32 particularLedgerId,
+                Int32 transactionTypeId, Int32 purchaseInvoiceId,  Int32 creditNoteId, Int32 debitNoteId, decimal amountFc, string narration)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            // deserilize string search filter
+
+            PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel
+            {
+
+                PaymentVoucherDetId = paymentVoucherDetId,
+                PaymentVoucherId = paymentVoucherId,
+                ParticularLedgerId = particularLedgerId,
+                TransactionTypeId = transactionTypeId,
+                PurchaseInvoiceId = purchaseInvoiceId,
+                CreditNoteId = creditNoteId,
+                DebitNoteId = debitNoteId,
+                AmountFc = amountFc,
+                Narration = narration,
+            };
+
+
+            if (ModelState.IsValid)
+            {
+                if (paymentVoucherDetailModel.PaymentVoucherDetId > 0)
+                {
+                    // update record.
+                    if (true == await _paymentVoucherDetail.UpdatePaymentVoucherDetail(paymentVoucherDetailModel))
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = 1;
                     }
                 }
                 else

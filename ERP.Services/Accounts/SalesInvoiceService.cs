@@ -317,10 +317,11 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Salesinvoice> salesInvoiceList = await query.ToListAsync();
 
+            outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+
             if (null != salesInvoiceList && salesInvoiceList.Count > 0)
             {
-                outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
-
+                
                 foreach (Salesinvoice salesInvoice in salesInvoiceList)
                 {
                     outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
@@ -331,6 +332,9 @@ namespace ERP.Services.Accounts
                         InvoiceDate = salesInvoice.InvoiceDate,
                         InvoiceAmount = salesInvoice.NetAmount,
                         SalesInvoiceId = salesInvoice.SalesInvoiceId,
+                         PurchaseInvoiceId = 0,
+                        CreditNoteId = 0,
+                        DebitNoteId = 0
                     });
                 }
             }

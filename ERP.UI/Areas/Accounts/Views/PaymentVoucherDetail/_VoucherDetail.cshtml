@@ -28,7 +28,7 @@
 <div class="row">
     <div class="col-sm-12 p-2">
         <button class="btn btn-primary" type="button" id="save-invoice-dtl" title="Save Detail">
-            <i class=""></i>Save Detail
+            Save Detail
         </button>
     </div>
 </div>
@@ -158,8 +158,9 @@
     //});
 
 
-    $("#paymentVoucherDetailGrid").on('change', '#TransactionTypeId', function (e) {
-        e.preventDefault();
+    $("#paymentVoucherDetailGrid tbody").on('change', '#TransactionTypeId', function (e) {
+
+    //function fnOutstandingInvoice(paymentVoucherDetId)
 
         var currentRow = $(this).closest("tr");
 
@@ -167,10 +168,11 @@
             var paymentVoucherId = '@ViewBag.PaymentVoucherId';
 
             var model = {
-                paymentVoucherDetId: $('#PaymentVoucherDetId', this).val(),
                 paymentVoucherId: paymentVoucherId,
-                particularLedgerId: $('#ParticularLedgerId', this).val()
+                particularLedgerId: currentRow.find("#ParticularLedgerId").val()
             };
+
+            //alert(currentRow.find("#ParticularLedgerId").val());
 
             AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("AddVoucherDetail", "PaymentVoucherDetail")', 'html', model,
                 function (data) {
@@ -181,14 +183,6 @@
 
         }
 
-
-        //console.log(currentRow.find("#AmountFc").val());
-        //console.log(currentRow.find("#TransactionTypeId").val());
-        //console.log(currentRow.find("#TransactionTypeId  option:selected").text());
-        //console.log(data['PaymentVoucherDetId']);
-        //console.log(data['InvoiceType']);
-
-        // ... skipped ...
     });
 
     @*function fnOutstandingInvoice(paymentVoucherDetId) {
@@ -218,7 +212,7 @@
         console.log(paymentVoucherId);
     });
 
-     //account ledger change.
+     //account invoice dtl.
     $('#save-invoice-dtl').click(function () {
         fnSaveVoucherDetail();
     });
@@ -233,8 +227,8 @@
 
             //look for the fields firstName and lastName in the tr
             //get their values and push into storage
-            console.log($('#AmountFc', this).val());
-            console.log($('#PaymentVoucherDetId', this).val());
+            //console.log($('#AmountFc', this).val());
+            //console.log($('#PaymentVoucherDetId', this).val());
 
             var model = {
                 paymentVoucherDetId: $('#PaymentVoucherDetId', this).val(),

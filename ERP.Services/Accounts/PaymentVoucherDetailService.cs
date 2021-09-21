@@ -241,10 +241,10 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Paymentvoucherdetail> paymentVoucherDetailList = await query.ToListAsync();
 
+            paymentVoucherDetailModelList = new List<PaymentVoucherDetailModel>();
+
             if (null != paymentVoucherDetailList && paymentVoucherDetailList.Count > 0)
             {
-                paymentVoucherDetailModelList = new List<PaymentVoucherDetailModel>();
-
                 foreach (Paymentvoucherdetail paymentVoucherDetail in paymentVoucherDetailList)
                 {
                     paymentVoucherDetailModelList.Add(await AssignValueToModel(paymentVoucherDetail));
