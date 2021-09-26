@@ -49,6 +49,91 @@
 
     $(document).ready(function () {
 
+        dataTableLoad();
+
+        $("#paymentVoucherDetailGrid tbody").on('change', '#TransactionTypeId', function (e) {
+
+            var currentRow = $(this).closest("tr");
+
+            if (currentRow.find("#TransactionTypeId").val() == 2) {
+                var paymentVoucherId = '@ViewBag.PaymentVoucherId';
+
+                var model = {
+                    paymentVoucherId: paymentVoucherId,
+                    particularLedgerId: currentRow.find("#ParticularLedgerId").val()
+                };
+
+                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("AddVoucherDetail", "PaymentVoucherDetail")', 'html', model,
+                    function (data) {
+                        $('#modal-voucher').empty();
+                        $('#modal-voucher').html(data).modal('show');
+                        return false;
+                    }, null, true, null, false);
+
+            }
+
+        });
+
+        //account ledger change.
+        $('#add-new-invoice-dtl').click(function () {
+            var paymentVoucherId = '@ViewBag.PaymentVoucherId';
+            console.log(paymentVoucherId);
+        });
+
+         //account invoice dtl.
+        $('#save-invoice-dtl').click(function () {
+            fnSaveVoucherDetail();
+        });
+
+        // edit voucher detail.
+        function fnSaveVoucherDetail() {
+
+            var paymentVoucherId = '@ViewBag.PaymentVoucherId';
+
+            $('#paymentVoucherDetailGrid tbody tr').each(function () {
+
+                var model = {
+                    paymentVoucherDetId: $('#PaymentVoucherDetId', this).val(),
+                    paymentVoucherId: paymentVoucherId,
+                    particularLedgerId: $('#ParticularLedgerId', this).val(),
+                    transactionTypeId: $('#TransactionTypeId', this).val(),
+                    amountFc: $('#AmountFc', this).val(),
+                    narration: $('#Narration', this).val()
+                };
+
+                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("SaveVoucherDetailInline", "PaymentVoucherDetail")', '', model,
+                function (response) {
+                    if (true == response.Result.Status) {
+                        console.log(response.Result.Data);
+                    }
+                    else {
+                        console.log(0);
+                    }
+                    }, null, true, null, false);
+
+            });
+
+            fnSuccessNotify('Record saved.');
+
+            //$("#paymentVoucherDetailGrid").DataTable().ajax.reload();
+            dataTableLoad();
+
+        }
+
+    });
+
+    function dataTableLoad() {
+
+        var particularLedgerList = '@Html.Raw(ViewBag.ParticularLedgerListJson)';
+        var transactionTypeList = '@Html.Raw(ViewBag.TransactionTypeListJson)';
+
+        particularLedgerList = JSON.parse(particularLedgerList);
+        transactionTypeList = JSON.parse(transactionTypeList);
+
+        console.log(transactionTypeList);
+        console.log(particularLedgerList);
+
+
         $("#paymentVoucherDetailGrid").DataTable({
             "pageLength": 25,
             "paging":false,
@@ -61,7 +146,7 @@
             "bPaginate": true,
             "scrollX": true,
             "ajax": {
-                "url": "@Url.Action("GetPaymentVoucherDetailList", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId })",
+                "url": "@Url.Action("GetPaymentVoucherDetailList", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId, addRow_Blank=1 })",
                 "type": "POST",
                 "datatype": "json",
             },
@@ -88,19 +173,20 @@
 
                         ddl = ddl + '<option value="' + "" + '">' + "Select" + '</option>';
 
-                        for (var i = 0; i < full.particularLedgerList.length; i++) {
+                        //particularLedgerList = full.particularLedgerList;
 
-                            ddl = ddl + '<option value="' + full.particularLedgerList[i].Value + '"'
+                        for (var i = 0; i < particularLedgerList.length; i++) {
 
-                            if (data == full.particularLedgerList[i].Value) {
+                            ddl = ddl + '<option value="' + particularLedgerList[i].Value + '"'
+
+                            if (data == particularLedgerList[i].Value) {
                                 ddl = ddl + ' selected="selected"';
                             }
 
-                            ddl = ddl + '>' + full.particularLedgerList[i].DisplayText + '</option>';
+                            ddl = ddl + '>' + particularLedgerList[i].DisplayText + '</option>';
                         }
 
                         ddl += '</select>';
-
 
                         return ddl;
                     }
@@ -119,14 +205,18 @@
 
                         ddl = ddl + '<option value="' + "" + '">' + "Select" + '</option>';
 
-                        for (var i = 0; i < full.transactionTypeList.length ; i++) {
-                            ddl = ddl + '<option value="' + full.transactionTypeList[i].Value + '"'
+                        //transactionTypeList = full.transactionTypeList;
 
-                            if (data == full.transactionTypeList[i].Value) {
+                        //console.log(transactionTypeList);
+
+                        for (var i = 0; i < transactionTypeList.length ; i++) {
+                            ddl = ddl + '<option value="' + transactionTypeList[i].Value + '"'
+
+                            if (data == transactionTypeList[i].Value) {
                                 ddl = ddl + ' selected="selected"';
                             }
 
-                            ddl = ddl + '>' + full.transactionTypeList[i].Description + '</option>';
+                            ddl = ddl + '>' + transactionTypeList[i].Description + '</option>';
                         }
                         ddl += '</select>';
 
@@ -151,114 +241,7 @@
             ],
         });
 
-
-
-        //$(document).on('change', "select[id^='TransactionTypeId']", function () {
-    //    alert(this.value);
-    //});
-
-
-    $("#paymentVoucherDetailGrid tbody").on('change', '#TransactionTypeId', function (e) {
-
-    //function fnOutstandingInvoice(paymentVoucherDetId)
-
-        var currentRow = $(this).closest("tr");
-
-        if (currentRow.find("#TransactionTypeId").val() == 2) {
-            var paymentVoucherId = '@ViewBag.PaymentVoucherId';
-
-            var model = {
-                paymentVoucherId: paymentVoucherId,
-                particularLedgerId: currentRow.find("#ParticularLedgerId").val()
-            };
-
-            //alert(currentRow.find("#ParticularLedgerId").val());
-
-            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("AddVoucherDetail", "PaymentVoucherDetail")', 'html', model,
-                function (data) {
-                    $('#modal-voucher').empty();
-                    $('#modal-voucher').html(data).modal('show');
-                    return false;
-                }, null, true, null, false);
-
-        }
-
-    });
-
-    @*function fnOutstandingInvoice(paymentVoucherDetId) {
-
-        console.log($(this).attr('id'));
-        console.log($(this));
-
-        console.log(this.value);
-
-        //var model = {
-            //paymentVoucherId: '@ViewBag.PaymentVoucherId',
-            //paymentVoucherDetId: paymentVoucherDetId
-        //};
-
-        //AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("AddVoucherDetail", "PaymentVoucherDetail")', 'html', model,
-        //function (data) {
-            //$('#modal-voucher').empty();
-            //$('#modal-voucher').html(data).modal('show');
-            //return false;
-        //}, null, true, null, false);
-    }*@
-
-
-    //account ledger change.
-    $('#add-new-invoice-dtl').click(function () {
-        var paymentVoucherId = '@ViewBag.PaymentVoucherId';
-        console.log(paymentVoucherId);
-    });
-
-     //account invoice dtl.
-    $('#save-invoice-dtl').click(function () {
-        fnSaveVoucherDetail();
-    });
-
-
-    // edit voucher detail.
-    function fnSaveVoucherDetail() {
-
-        var paymentVoucherId = '@ViewBag.PaymentVoucherId';
-
-        $('#paymentVoucherDetailGrid tbody tr').each(function () {
-
-            //look for the fields firstName and lastName in the tr
-            //get their values and push into storage
-            //console.log($('#AmountFc', this).val());
-            //console.log($('#PaymentVoucherDetId', this).val());
-
-            var model = {
-                paymentVoucherDetId: $('#PaymentVoucherDetId', this).val(),
-                paymentVoucherId: paymentVoucherId,
-                particularLedgerId: $('#ParticularLedgerId', this).val(),
-                transactionTypeId: $('#TransactionTypeId', this).val(),
-                amountFc: $('#AmountFc', this).val(),
-                narration: $('#Narration', this).val()
-            };
-
-            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("SaveVoucherDetailInline", "PaymentVoucherDetail")', '', model,
-            function (response) {
-                if (true == response.Result.Status) {
-                    console.log(response.Result.Data);
-                }
-                else {
-                    console.log(0);
-                }
-                }, null, true, null, false);
-
-        });
-
-        fnSuccessNotify('Record saved.');
-
-        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
-
     }
-
-
-    });
 
 
 

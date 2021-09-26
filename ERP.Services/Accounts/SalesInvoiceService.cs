@@ -331,6 +331,7 @@ namespace ERP.Services.Accounts
                         InvoiceNo = salesInvoice.InvoiceNo,
                         InvoiceDate = salesInvoice.InvoiceDate,
                         InvoiceAmount = salesInvoice.NetAmount,
+                        OutstandingAmount = salesInvoice.NetAmount,
                         SalesInvoiceId = salesInvoice.SalesInvoiceId,
                          PurchaseInvoiceId = 0,
                         CreditNoteId = 0,

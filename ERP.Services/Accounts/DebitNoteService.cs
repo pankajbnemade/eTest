@@ -322,6 +322,7 @@ namespace ERP.Services.Accounts
                         InvoiceNo = debitNote.DebitNoteNo,
                         InvoiceDate = debitNote.DebitNoteDate,
                         InvoiceAmount = debitNote.NetAmount,
+                        OutstandingAmount = debitNote.NetAmount,
                         DebitNoteId = debitNote.DebitNoteId,
                         SalesInvoiceId = 0,
                         PurchaseInvoiceId = 0,

@@ -91,11 +91,12 @@
                         return '<input id="PurchaseInvoiceId" type="hidden" value="' + row.PurchaseInvoiceId + '">' +
                             '<input id="CreditNoteId" type="hidden" value="' + row.CreditNoteId + '">' +
                             '<input id="DebitNoteId" type="hidden" value="' + row.DebitNoteId + '">' +
-                                '<input id="Narration" name="Narration" type="text" class="form-control form-control-sm" value = ' + '' + '  >';
+                            '<input id="Narration" name="Narration" type="text" class="form-control form-control-sm" value = ' + '' + '  >';
                     }
                 }
             ],
         });
+
     });
 
     ////account invoice dtl.
@@ -106,12 +107,13 @@
 
     // edit Outstanding detail.
     function fnSaveOutstandingDetail() {
-       
+
         var paymentVoucherId = $('.modal-body #PaymentVoucherId').val();
 
         $('#outstandingBillGrid tbody tr').each(function () {
 
-            alert($('.modal-body #PurchaseInvoiceId').val());
+            //alert($('.modal-body #PurchaseInvoiceId').val());
+            //alert($('#Narration', this).val());
 
             var model = {
                 paymentVoucherDetId: 0,
@@ -142,9 +144,9 @@
 
         fnSuccessNotify('Record saved sucessfully.');
 
-        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
-        
-    } 
+        dataTableLoad();
+
+    }
 
 
 </script>

@@ -53,8 +53,8 @@ namespace ERP.Models.Accounts
         public string InvoiceType { get; set; }
         public string InvoiceNo { get; set; }
 
-        public IList<EnumModel> transactionTypeList  { get; set; }
-        public IList<SelectListModel> particularLedgerList  { get; set; }
+        //public IList<EnumModel> transactionTypeList  { get; set; }
+        //public IList<SelectListModel> particularLedgerList  { get; set; }
 
     }
 }
