@@ -17,16 +17,16 @@
                 <div class="col-sm-12">
                     <table id="outstandingBillGrid" class="table table-bordered table-striped w-100">
                         <thead>
-                            <tr class="table-header">
-                                <th>Invoice Type</th>
-                                <th>Invoice No</th>
-                                <th>Invoice Date</th>
-                                <th>Invoice Amount FC</th>
-                                <th>Outstanding Amount FC</th>
-                                <th>Amount FC</th>
-                                <th>Narration</th>
-                            </tr>
-                        </thead>
+                                <tr class="table-header">
+                                    <th>Invoice Type</th>
+                                    <th>Invoice No</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Amount FC</th>
+                                    <th>Outstanding Amount FC</th>
+                                    <th>Amount FC</th>
+                                    <th>Narration</th>
+                                </tr>
+                            </thead>
                     </table>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
 
         // search data.
 
@@ -53,9 +53,9 @@
         "ordering": false,
         "searching": false,
         "info": false,
-            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+        "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
             "scrollX": true,
             "ajax": {
@@ -68,25 +68,30 @@
                     }
                 },
             "columns": [
-                { "data": "InvoiceType", "name": "InvoiceType" },
-                { "data": "InvoiceNo", "name": "InvoiceNo" },
+                { "data": "InvoiceType", "name": "InvoiceType", "title":"Invoice Type"},
+                { "data": "InvoiceNo", "name": "InvoiceNo", "title":"Invoice No"},
                 {
-                    "data": "InvoiceDate", "name": "InvoiceDate",
+                    "data": "InvoiceDate", "name": "InvoiceDate", "title":"Invoice Date",
                     "render": function (dt) {
                         return moment(dt).format("DD/MMM/YYYY");
                     }
                 },
-                { "data": "InvoiceAmount_FC", "name": "InvoiceAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
-                { "data": "OutstandingAmount_FC", "name": "OutstandingAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
                 {
-                    "data": "AmountFc", "title": "Amount FC", "width": "80px",
-
+                    "data": "InvoiceAmount_FC", "name": "InvoiceAmount_FC", "title": "Invoice Amount FC",
+                    "render": $.fn.dataTable.render.number(',', '.', 2, '')
+                },
+                {
+                    "data": "OutstandingAmount_FC", "name": "OutstandingAmount_FC", "title": "Outstanding Amount FC",
+                    "render": $.fn.dataTable.render.number(',', '.', 2, '')
+                },
+                {
+                    "data": "AmountFc", "title": "Amount FC", "width": "100px",
                     "render": function (data, type, row) {
                         return '<input class="form-control form-control-sm"  id="AmountFc" name="AmountFc" type="text"  value = ' + '' + '  >';
                     }
                 },
                 {
-                    "data": "Narration", "title": "Narration",
+                    "data": "Narration", "name": "Narration", "title": "Narration",
                     "render": function (data, type, row) {
                         return '<input id="PurchaseInvoiceId" type="hidden" value="' + row.PurchaseInvoiceId + '">' +
                             '<input id="CreditNoteId" type="hidden" value="' + row.CreditNoteId + '">' +
@@ -145,6 +150,7 @@
         fnSuccessNotify('Record saved sucessfully.');
 
         dataTableLoad();
+        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
 
     }
 

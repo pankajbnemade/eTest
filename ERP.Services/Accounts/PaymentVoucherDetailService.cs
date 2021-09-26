@@ -36,7 +36,8 @@ namespace ERP.Services.Accounts
             paymentVoucherDetail.TransactionTypeId = paymentVoucherDetailModel.TransactionTypeId;
             paymentVoucherDetail.AmountFc = paymentVoucherDetailModel.AmountFc;
             paymentVoucherDetail.Amount = 0;
-            paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration;
+
+            paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
             paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
             paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
             paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
@@ -70,7 +71,7 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetail.TransactionTypeId = paymentVoucherDetailModel.TransactionTypeId;
                 paymentVoucherDetail.AmountFc = paymentVoucherDetailModel.AmountFc;
                 paymentVoucherDetail.Amount = 0;
-                paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration;
+               paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
                 paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
                 paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
                 paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;

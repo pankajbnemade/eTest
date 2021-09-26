@@ -5,13 +5,15 @@
     </div>*@
 <div class="row">
     <div class="col-sm-12">
+        <input id="addRow_Blank" type="hidden" value="0">
+
         <table id="paymentVoucherDetailGrid" class="table table-bordered table-striped w-100">
             <thead>
                 <tr class="table-header">
                     <th>
                         <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-invoice-dtl" title="Add New Line">
                             <i class="fas fa-plus"></i>
-                        </button> Action
+                        </button> @*Action*@
                     </th>
                     <th>PaymentVoucherDetId</th>
                     <th>Particular</th>
@@ -48,12 +50,19 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
 
         dataTableLoad();
 
         $("#paymentVoucherDetailGrid tbody").on('change', '#TransactionTypeId', function (e) {
-
             var currentRow = $(this).closest("tr");
+
+            if (currentRow.find("#ParticularLedgerId").val() == "") {
+                currentRow.find("#TransactionTypeId").val("");
+                alert("Please select Particular");
+                currentRow.find("#ParticularLedgerId").focus();
+                return false;
+            }
 
             if (currentRow.find("#TransactionTypeId").val() == 2) {
                 var paymentVoucherId = '@ViewBag.PaymentVoucherId';
@@ -63,21 +72,20 @@
                     particularLedgerId: currentRow.find("#ParticularLedgerId").val()
                 };
 
-                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("AddVoucherDetail", "PaymentVoucherDetail")', 'html', model,
+                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("MapOutstandingDetail", "PaymentVoucherDetail")', 'html', model,
                     function (data) {
                         $('#modal-voucher').empty();
                         $('#modal-voucher').html(data).modal('show');
                         return false;
                     }, null, true, null, false);
-
             }
 
         });
 
         //account ledger change.
         $('#add-new-invoice-dtl').click(function () {
-            var paymentVoucherId = '@ViewBag.PaymentVoucherId';
-            console.log(paymentVoucherId);
+            $("#addRow_Blank").val(1);
+            dataTableLoad();
         });
 
          //account invoice dtl.
@@ -117,24 +125,19 @@
 
             //$("#paymentVoucherDetailGrid").DataTable().ajax.reload();
             dataTableLoad();
-
         }
 
     });
 
     function dataTableLoad() {
-
-        var particularLedgerList = '@Html.Raw(ViewBag.ParticularLedgerListJson)';
-        var transactionTypeList = '@Html.Raw(ViewBag.TransactionTypeListJson)';
+        var particularLedgerList = '@Html.Raw(ViewBag.ParticularLedgerList)';
+        var transactionTypeList = '@Html.Raw(ViewBag.TransactionTypeList)';
 
         particularLedgerList = JSON.parse(particularLedgerList);
         transactionTypeList = JSON.parse(transactionTypeList);
 
-        console.log(transactionTypeList);
-        console.log(particularLedgerList);
-
-
         $("#paymentVoucherDetailGrid").DataTable({
+            "destroy": true,
             "pageLength": 25,
             "paging":false,
             "ordering": false,
@@ -146,9 +149,10 @@
             "bPaginate": true,
             "scrollX": true,
             "ajax": {
-                "url": "@Url.Action("GetPaymentVoucherDetailList", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId, addRow_Blank=1 })",
+                "url": "@Url.Action("GetPaymentVoucherDetailList", "PaymentVoucherDetail")",
                 "type": "POST",
                 "datatype": "json",
+                "data": { paymentVoucherId: 17, addRow_Blank: $("#addRow_Blank").val() },
             },
             "columns": [
                 {
@@ -224,14 +228,14 @@
                     }
                 },
                 {
-                    "data": "AmountFc", "title": "Amount FC",  "width": "80px",
+                    "data": "AmountFc", "title": "Amount FC",  "width": "100px",
 
                     "render": function (data, type, row) {
-                        return '<input class="form-control form-control-sm"  id="AmountFc" name="AmountFc" type="text"  value = ' + row.AmountFc + '  >';
+                        return '<input class="form-control form-control-sm decimal-two-scale"  id="AmountFc" name="AmountFc" type="text"  value = ' +  row.AmountFc + '  >';
                     }
                 },
-                { "data": "InvoiceType", "title": "Invoice Type", "width": "80px" },
-                { "data": "InvoiceNo", "title": "Invoice No", "width": "80px" },
+                { "data": "InvoiceType", "title": "Invoice Type"},
+                { "data": "InvoiceNo", "title": "Invoice No" },
                 {
                     "data": "Narration", "title": "Narration",
                     "render": function (data, type, row) {

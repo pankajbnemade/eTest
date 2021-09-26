@@ -75,7 +75,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ClosingBalance)
-                                @Html.TextBoxFor(model => model.ClosingBalance, new { @class = "form-control form-control-sm" })
+                                @Html.TextBoxFor(model => model.ClosingBalance, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
                                 @Html.ValidationMessageFor(model => model.ClosingBalance)
                             </div>
                         </div>
