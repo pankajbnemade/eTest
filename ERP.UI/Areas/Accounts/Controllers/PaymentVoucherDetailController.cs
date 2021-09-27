@@ -230,7 +230,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 ParticularLedgerId = particularLedgerId,
                 TransactionTypeId = transactionTypeId,
                 PurchaseInvoiceId = purchaseInvoiceId,
-                CreditNoteId = creditNoteId,
+                //CreditNoteId = creditNoteId,
                 DebitNoteId = debitNoteId,
                 AmountFc = amountFc,
                 Narration = narration,

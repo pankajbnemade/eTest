@@ -34,7 +34,7 @@ namespace ERP.Services.Accounts
             receiptVoucherDetail.Amount = 0;
             receiptVoucherDetail.Narration = receiptVoucherDetailModel.Narration;
             receiptVoucherDetail.SalesInvoiceId = receiptVoucherDetailModel.SalesInvoiceId;
-            receiptVoucherDetail.DebitNoteId = receiptVoucherDetailModel.DebitNoteId;
+            //receiptVoucherDetail.DebitNoteId = receiptVoucherDetailModel.DebitNoteId;
             receiptVoucherDetail.CreditNoteId = receiptVoucherDetailModel.CreditNoteId;
 
             if (receiptVoucherDetailId != 0)
@@ -66,7 +66,7 @@ namespace ERP.Services.Accounts
                 receiptVoucherDetail.Amount = 0;
                 receiptVoucherDetail.Narration = receiptVoucherDetailModel.Narration;
                 receiptVoucherDetail.SalesInvoiceId = receiptVoucherDetailModel.SalesInvoiceId;
-                receiptVoucherDetail.DebitNoteId = receiptVoucherDetailModel.DebitNoteId;
+                //receiptVoucherDetail.DebitNoteId = receiptVoucherDetailModel.DebitNoteId;
                 receiptVoucherDetail.CreditNoteId = receiptVoucherDetailModel.CreditNoteId;
 
                 isUpdated = await Update(receiptVoucherDetail);
@@ -254,7 +254,7 @@ namespace ERP.Services.Accounts
 
                 receiptVoucherDetailModel.SalesInvoiceId = receiptVoucherDetail.SalesInvoiceId;
                 receiptVoucherDetailModel.CreditNoteId = receiptVoucherDetail.CreditNoteId;
-                receiptVoucherDetailModel.DebitNoteId = receiptVoucherDetail.DebitNoteId;
+                //receiptVoucherDetailModel.DebitNoteId = receiptVoucherDetail.DebitNoteId;
 
                 //--####
                 //receiptVoucherDetailModel.TransactionTypeName = null != receiptVoucherDetail.UnitOfMeasurement ? receiptVoucherDetail.UnitOfMeasurement.UnitOfMeasurementName : null;

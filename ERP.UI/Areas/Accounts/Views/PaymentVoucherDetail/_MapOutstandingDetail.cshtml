@@ -94,7 +94,6 @@
                     "data": "Narration", "name": "Narration", "title": "Narration",
                     "render": function (data, type, row) {
                         return '<input id="PurchaseInvoiceId" type="hidden" value="' + row.PurchaseInvoiceId + '">' +
-                            '<input id="CreditNoteId" type="hidden" value="' + row.CreditNoteId + '">' +
                             '<input id="DebitNoteId" type="hidden" value="' + row.DebitNoteId + '">' +
                             '<input id="Narration" name="Narration" type="text" class="form-control form-control-sm" value = ' + '' + '  >';
                     }
@@ -115,10 +114,22 @@
 
         var paymentVoucherId = $('.modal-body #PaymentVoucherId').val();
 
-        $('#outstandingBillGrid tbody tr').each(function () {
+        //$('#outstandingBillGrid tbody tr').each(function () {
+            
+        //        paymentVoucherId: paymentVoucherId,
+        //        particularLedgerId: $('.modal-body #ParticularLedgerId').val(),
+        //        transactionTypeId: 2,
+        //        purchaseInvoiceId: $('#PurchaseInvoiceId', this).val(),
+        //        debitNoteId: $('#DebitNoteId', this).val(),
+        //        amountFc: $('#AmountFc', this).val(),
+        //        narration: $('#Narration', this).val()
 
-            //alert($('.modal-body #PurchaseInvoiceId').val());
-            //alert($('#Narration', this).val());
+
+
+
+        //}); //validation loop
+
+        $('#outstandingBillGrid tbody tr').each(function () {
 
             var model = {
                 paymentVoucherDetId: 0,
@@ -126,7 +137,6 @@
                 particularLedgerId: $('.modal-body #ParticularLedgerId').val(),
                 transactionTypeId: 2,
                 purchaseInvoiceId: $('#PurchaseInvoiceId', this).val(),
-                creditNoteId: $('#CreditNoteId', this).val(),
                 debitNoteId: $('#DebitNoteId', this).val(),
                 amountFc: $('#AmountFc', this).val(),
                 narration: $('#Narration', this).val()
@@ -145,12 +155,18 @@
 
         });
 
-        $('#modal-voucher').modal('hide');
 
         fnSuccessNotify('Record saved sucessfully.');
 
-        dataTableLoad();
-        $("#paymentVoucherDetailGrid").DataTable().ajax.reload();
+        //dataTableLoad();
+        //$("#paymentVoucherDetailGrid").DataTable().ajax.reload();
+
+        $('#modal-voucher').modal('hide');
+
+        var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + paymentVoucherId;
+
+        $('#voucherdetail').empty();
+        $('#voucherdetail').load(tabUrl);
 
     }
 

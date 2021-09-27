@@ -38,6 +38,7 @@ namespace ERP.Models.Accounts
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [DisplayFormat(DataFormatString  = "{0:0.000000}", ApplyFormatInEditMode  = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Cheque No")]

@@ -41,9 +41,9 @@ namespace ERP.Models.Accounts
         //[Required(ErrorMessage = " is required.")]
         public int? CreditNoteId { get; set; }
 
-        [Display(Name = "Debit Note")]
-        //[Required(ErrorMessage = " is required.")]
-        public int? DebitNoteId { get; set; }
+        //[Display(Name = "Debit Note")]
+        ////[Required(ErrorMessage = " is required.")]
+        //public int? DebitNoteId { get; set; }
 
         //###
 

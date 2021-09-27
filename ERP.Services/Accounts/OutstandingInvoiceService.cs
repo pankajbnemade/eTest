@@ -99,9 +99,6 @@ namespace ERP.Services.Accounts
             {
                 foreach (var o in creditNoteModel)
                 {
-                    o.OutstandingAmount = o.OutstandingAmount - (paymentVoucherDetailModel == null ? 0 : paymentVoucherDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
-                                                                                    .Sum(w => w.Amount));
-
                     o.OutstandingAmount = o.OutstandingAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.CreditNoteId == o.CreditNoteId)
                                                                                     .Sum(w => w.DebitAmount));
 
@@ -129,10 +126,7 @@ namespace ERP.Services.Accounts
             {
                 foreach (var o in debitNoteModel)
                 {
-                    o.OutstandingAmount = o.OutstandingAmount - (receiptVoucherDetailModel == null ? 0 : receiptVoucherDetailModel.Where(w => w.DebitNoteId == o.DebitNoteId)
-                                                                                    .Sum(w => w.Amount));
-
-                    o.OutstandingAmount = o.OutstandingAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.DebitNoteId == o.CreditNoteId)
+                     o.OutstandingAmount = o.OutstandingAmount - (journalVoucherDetailModel == null ? 0 : journalVoucherDetailModel.Where(w => w.DebitNoteId == o.CreditNoteId)
                                                                                     .Sum(w => w.CreditAmount));
 
                     o.OutstandingAmount = o.OutstandingAmount - (advanceAdjustmentDetailModel == null ? 0 : advanceAdjustmentDetailModel.Where(w => w.DebitNoteId == o.DebitNoteId)

@@ -1,6 +1,4 @@
-﻿@{
-    ViewBag.Title = "Manage Voucher";
-}
+﻿@{ ViewBag.Title = "Manage Voucher"; }
 
 <section class="content-header">
     <div class="container-fluid">
@@ -29,20 +27,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="detail-tab" data-toggle="tab" href="#voucherdetail" role="tab" aria-controls="voucherdetail" aria-selected="false">Detail</a>
                             </li>
-                            @*<li class="nav-item">
-                                <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#vouchertaxmaster" role="tab" aria-controls="vouchertaxmaster" aria-selected="false">Tax Master</a>
-                            </li>*@
-                            @*<li class="nav-item">
-                                <a class="nav-link" id="summary-tab" data-toggle="tab" href="#vouchersummary" role="tab" aria-controls="vouchersummary" aria-selected="false">Summary</a>
-                            </li>*@
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="vouchermaster" role="tabpanel" aria-labelledby="master-tab"></div>
                             <div class="tab-pane fade" id="voucherdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
-                            @*<div class="tab-pane fade" id="vouchertaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div>
-                            <div class="tab-pane fade" id="vouchersummary" role="tabpanel" aria-labelledby="summary-tab"></div>*@
                         </div>
                     </div>
                 </div>
@@ -52,8 +42,6 @@
 </section>
 <div id="modal-voucher" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
 <div id="modal-voucher-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
-
-@*@{ await Html.RenderPartialAsync("~/Areas/Accounts/Views/PaymentVoucherTaxDetail/_ConfirmDeleteVoucherTaxDetail.cshtml"); }*@
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -66,8 +54,7 @@
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        //console.log(e.target.id);// newly activated tab
-        //console.log(e.relatedTarget); // previous active tab
+
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
         switch ($(e.target).attr('aria-controls')) {
             case 'vouchermaster':
@@ -76,16 +63,58 @@
             case 'voucherdetail':
                 tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
                 break;
-            @*case 'vouchertaxmaster':
-                tabUrl = '@Url.Action("VoucherTaxMaster", "PaymentVoucherTaxMaster", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
-                break;*@
-            @*case 'vouchersummary':
-                tabUrl = '@Url.Action("ViewVoucherSummary", "PaymentVoucher", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
-                break;*@
             default:
                 break;
         }
         $('#' + tabPanel).empty();
         $('#' + tabPanel).load(tabUrl);
     });
+
+
+    @*$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //Custom attribute data_id is used to store the ID
+            //Get the ID
+
+        var tabPanel = $(e.target).attr('aria-controls');
+        var tabUrl = null;
+        var param = null;
+
+        switch (tabPanel) {
+            case 'vouchermaster':
+                tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
+                param = JSON.stringify({ paymentVoucherId: '@ViewBag.PaymentVoucherId' });
+                break;
+            case 'voucherdetail':
+                tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")';
+                param = JSON.stringify({ paymentVoucherId: '@ViewBag.PaymentVoucherId' });
+                break;
+            default:
+                break;
+        }
+
+        //console.log(tabPanel);
+        //console.log(tabUrl);
+        console.log(param);
+
+        param = "@ViewBag.PaymentVoucherId"
+
+        console.log(param);
+
+        $.ajax({
+            url: tabUrl,
+            type: "post",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                //success
+                console.log("data" + data);
+                $('#' + tabPanel).html(padataram); //populate the tab content.
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+
+    });*@
+
+
 </script>

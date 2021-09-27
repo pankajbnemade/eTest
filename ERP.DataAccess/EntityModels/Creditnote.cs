@@ -12,7 +12,6 @@ namespace ERP.DataAccess.EntityModels
             Creditnotedetails = new HashSet<Creditnotedetail>();
             Creditnotetaxes = new HashSet<Creditnotetax>();
             Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
-            Paymentvoucherdetails = new HashSet<Paymentvoucherdetail>();
             Receiptvoucherdetails = new HashSet<Receiptvoucherdetail>();
         }
 
@@ -71,7 +70,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Creditnotedetail> Creditnotedetails { get; set; }
         public virtual ICollection<Creditnotetax> Creditnotetaxes { get; set; }
         public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
-        public virtual ICollection<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
         public virtual ICollection<Receiptvoucherdetail> Receiptvoucherdetails { get; set; }
     }
 }

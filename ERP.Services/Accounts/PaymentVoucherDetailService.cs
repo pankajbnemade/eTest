@@ -40,7 +40,7 @@ namespace ERP.Services.Accounts
             paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
             paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
             paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
-            paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
+            //paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
 
 
             await Create(paymentVoucherDetail);
@@ -74,7 +74,7 @@ namespace ERP.Services.Accounts
                paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
                 paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
                 paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
-                paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
+                //paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
 
                 isUpdated = await Update(paymentVoucherDetail);
             }
@@ -196,7 +196,6 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.Amount = 0;
                 paymentVoucherDetailModel.Narration = "";
                 paymentVoucherDetailModel.PurchaseInvoiceId = 0;
-                paymentVoucherDetailModel.CreditNoteId = 0;
                 paymentVoucherDetailModel.DebitNoteId = 0;
                 paymentVoucherDetailModel.InvoiceNo = "";
                 paymentVoucherDetailModel.InvoiceType = "";
@@ -238,7 +237,7 @@ namespace ERP.Services.Accounts
             // create query.
             IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0)
                                                     .Include(w => w.ParticularLedger)
-                                                    .Include(w => w.PurchaseInvoice).Include(w => w.CreditNote).Include(w => w.DebitNote); ;
+                                                    .Include(w => w.PurchaseInvoice).Include(w => w.DebitNote); ;
 
             // apply filters.
             if (0 != particularLedgerId)
@@ -267,7 +266,7 @@ namespace ERP.Services.Accounts
             // create query.
             IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0)
                                                     .Include(w => w.ParticularLedger)
-                                                    .Include(w => w.PurchaseInvoice).Include(w => w.CreditNote).Include(w => w.DebitNote);
+                                                    .Include(w => w.PurchaseInvoice).Include(w => w.DebitNote);
 
             // apply filters.
             if (0 != paymentVoucherDetailId)
@@ -312,24 +311,19 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.Narration = paymentVoucherDetail.Narration;
 
                 paymentVoucherDetailModel.PurchaseInvoiceId = null != paymentVoucherDetail.PurchaseInvoiceId ? paymentVoucherDetail.PurchaseInvoiceId : 0;
-                paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
+                //paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
                 paymentVoucherDetailModel.DebitNoteId = null != paymentVoucherDetail.DebitNoteId ? paymentVoucherDetail.DebitNoteId : 0;
 
                 //--####
                 paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
                 paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
 
-                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0  && paymentVoucherDetailModel.DebitNoteId == 0)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
                 }
-                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
-                {
-                    paymentVoucherDetailModel.InvoiceType = "Credit Note";
-                    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.CreditNote.CreditNoteNo;
-                }
-                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
+                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0  && paymentVoucherDetailModel.DebitNoteId != 0)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Debit Note";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;

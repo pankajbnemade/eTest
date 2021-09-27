@@ -53,10 +53,10 @@ function fnDangerNotify(alertMessage) {
         // options
         message: alertMessage
     },
-        {
-            // settings
-            type: 'danger',
-        });
+    {
+        // settings
+        type: 'danger',
+    });
 }
 
 // success notification
@@ -65,16 +65,16 @@ function fnSuccessNotify(alertMessage) {
         // options
         message: alertMessage
     },
-        {
-            // settings
-            type: 'success',
-            //placement: {
-            //    from: "top",
-            //    align: "center"
-            //},
-            //delay: 2000000,
-            //timer: 6000,
-        });
+    {
+        // settings
+        type: 'success',
+        //placement: {
+        //    from: "top",
+        //    align: "center"
+        //},
+        //delay: 2000000,
+        //timer: 6000,
+    });
 }
 
 // warning notification
@@ -83,15 +83,16 @@ function fnWarningNotify(alertMessage) {
         // options
         message: alertMessage
     },
-        {
-            // settings
-            type: 'warning'
-        });
+    {
+        // settings
+        type: 'warning'
+    });
 }
 
 // modal popup show.
 $(document).on('show.bs.modal', '.modal', function (event) {
     var zIndex = 1040 + (10 * $('.modal:visible').length);
+   
     $(this).css('z-index', zIndex);
     setTimeout(function () {
         $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');

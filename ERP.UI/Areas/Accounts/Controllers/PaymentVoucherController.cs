@@ -215,14 +215,18 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     if (true == await _paymentVoucher.UpdatePaymentVoucher(paymentVoucherModel))
                     {
                         data.Result.Status = true;
+                        data.Result.Data = paymentVoucherModel.PaymentVoucherId;
                     }
                 }
                 else
                 {
                     // add new record.
-                    if (await _paymentVoucher.CreatePaymentVoucher(paymentVoucherModel) > 0)
+                    paymentVoucherModel.PaymentVoucherId = await _paymentVoucher.CreatePaymentVoucher(paymentVoucherModel);
+
+                    if (paymentVoucherModel.PaymentVoucherId > 0)
                     {
                         data.Result.Status = true;
+                        data.Result.Data = paymentVoucherModel.PaymentVoucherId;
                     }
                 }
             }
@@ -257,6 +261,23 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 return PartialView("_ViewVoucherMaster", paymentVoucherModel);
             });
         }
+
+        //public async Task<IActionResult> ViewVoucherMaster(string param)
+        //{
+        //    // deserilize string search filter.
+        //    SearchFilterPaymentVoucherModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterPaymentVoucherModel>(searchFilter);
+
+        //    // get data.
+        //    DataTableResultModel<PaymentVoucherModel> resultModel = await _paymentVoucher.GetPaymentVoucherList(dataTableAjaxPostModel, searchFilterModel);
+
+
+        //    PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+        //    return await Task.Run(() =>
+        //    {
+        //        return PartialView("_ViewVoucherMaster", paymentVoucherModel);
+        //    });
+        //}
 
         /// <summary>
         /// view voucher summary.

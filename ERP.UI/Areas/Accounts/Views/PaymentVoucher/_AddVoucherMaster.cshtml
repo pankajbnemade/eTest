@@ -6,9 +6,9 @@
             @if (Model.PaymentVoucherId > 0)
             {
 <div class="modal-title">Edit Voucher</div> }
-            else
-            {
-<div class="modal-title">Add Voucher</div>            }
+else
+{
+<div class="modal-title">Add Voucher</div>}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -94,7 +94,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
                                 @Html.ValidationMessageFor(model => model.ExchangeRate)
                             </div>
                         </div>
@@ -295,12 +295,28 @@
             return false;
         }
     }
+
     // success form
     function SuccessVoucherMaster(data) {
         if (data.Result.Status) {
             $('#modal-voucher').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
-            $("#paymentVoucherGrid").DataTable().ajax.reload();
+
+            if (@Model.PaymentVoucherId > 0)
+            {
+                var tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
+
+                $('#vouchermaster').empty();
+                $('#vouchermaster').load(tabUrl);
+            }
+            else
+            {
+                var tabUrl = '@Url.Action("ManageVoucher", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
+                window.location.href = tabUrl;
+
+                @*window.location.href = '@Url.Action("ManageVoucher", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data ;*@
+            }
+
         }
         else {
             fnDangerNotify('Error occured while processing request.');

@@ -18,14 +18,12 @@ namespace ERP.DataAccess.EntityModels
         public string Narration { get; set; }
         public int? SalesInvoiceId { get; set; }
         public int? CreditNoteId { get; set; }
-        public int? DebitNoteId { get; set; }
         public int? PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int? UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Creditnote CreditNote { get; set; }
-        public virtual Debitnote DebitNote { get; set; }
         public virtual Ledger ParticularLedger { get; set; }
         public virtual Aspnetuser PreparedByUser { get; set; }
         public virtual Receiptvoucher ReceiptVoucher { get; set; }

@@ -309,7 +309,7 @@ namespace ERP.Services.Accounts
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
 
             // apply filters.
-            if (0 != paymentVoucherId)
+            //if (0 != paymentVoucherId)
                 query = query.Where(w => w.PaymentVoucherId == paymentVoucherId);
 
             // get records by query.

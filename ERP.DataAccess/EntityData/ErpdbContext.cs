@@ -2595,9 +2595,6 @@ namespace ERP.DataAccess.EntityData
 
                 entity.ToTable("paymentvoucherdetail");
 
-                entity.HasIndex(e => e.CreditNoteId)
-                    .HasName("IX_PaymentVoucherDetails_CreditNoteId");
-
                 entity.HasIndex(e => e.DebitNoteId)
                     .HasName("IX_PaymentVoucherDetails_DebitNoteId");
 
@@ -2630,11 +2627,6 @@ namespace ERP.DataAccess.EntityData
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
-
-                entity.HasOne(d => d.CreditNote)
-                    .WithMany(p => p.Paymentvoucherdetails)
-                    .HasForeignKey(d => d.CreditNoteId)
-                    .HasConstraintName("FK_PaymentVoucherDetails_CreditNote_CreditNoteId");
 
                 entity.HasOne(d => d.DebitNote)
                     .WithMany(p => p.Paymentvoucherdetails)
@@ -3183,9 +3175,6 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.CreditNoteId)
                     .HasName("IX_ReceiptVoucherDetails_CreditNoteId");
 
-                entity.HasIndex(e => e.DebitNoteId)
-                    .HasName("IX_ReceiptVoucherDetails_DebitNoteId");
-
                 entity.HasIndex(e => e.ParticularLedgerId)
                     .HasName("IX_ReceiptVoucherDetails_ParticularLedgerId");
 
@@ -3220,11 +3209,6 @@ namespace ERP.DataAccess.EntityData
                     .WithMany(p => p.Receiptvoucherdetails)
                     .HasForeignKey(d => d.CreditNoteId)
                     .HasConstraintName("FK_ReceiptVoucherDetails_CreditNote_CreditNoteId");
-
-                entity.HasOne(d => d.DebitNote)
-                    .WithMany(p => p.Receiptvoucherdetails)
-                    .HasForeignKey(d => d.DebitNoteId)
-                    .HasConstraintName("FK_ReceiptVoucherDetails_DebitNote_DebitNoteId");
 
                 entity.HasOne(d => d.ParticularLedger)
                     .WithMany(p => p.Receiptvoucherdetails)
