@@ -66,6 +66,7 @@
     <Content Remove="Areas\Master\Views\UnitOfMeasurement\_ConfirmDeleteUnitOfMeasurement.cshtml" />
     <Content Remove="Areas\Master\Views\VoucherSetupDetail\_AddVoucherSetupDetail.cshtml" />
     <Content Remove="Areas\Master\Views\VoucherSetupDetail\_ConfirmDeleteVoucherSetupDetail.cshtml" />
+    <Content Remove="wwwroot\js\validation.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -209,6 +210,7 @@
     <None Include="Areas\Master\Views\MasterDashboard\Index.cshtml" />
     <None Include="wwwroot\js\custom-js\custom-common.js" />
     <None Include="wwwroot\js\custom-js\custom-general.js" />
+    <None Include="wwwroot\js\custom-js\validation.js" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap-datetimepicker\js\bootstrap-datetimepicker.js" />
     <None Include="wwwroot\lib\bootstrap-datetimepicker\js\bootstrap-datetimepicker.min.js" />

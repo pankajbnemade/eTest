@@ -5,6 +5,7 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -116,7 +117,7 @@ namespace ERP.Services.Accounts
         }
 
 
-        public async Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId)
+        public async Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId, DateTime voucherDate)
         {
             LedgerModel ledgerModel = null;
 

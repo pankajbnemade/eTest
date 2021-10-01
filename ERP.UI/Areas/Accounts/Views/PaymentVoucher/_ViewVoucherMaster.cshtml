@@ -79,7 +79,7 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeAmountFc):</span>
-                    @Html.DisplayFor(model => model.ChequeAmountFc)
+                    @Html.DisplayFor(model => model.ChequeAmountFc,new { @class = "form-control form-control-sm decimal-two-scale" })
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
     });
 
     // edit voucher master.

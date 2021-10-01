@@ -50,11 +50,13 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
         $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
 
         dataTableLoad();
 
         $("#paymentVoucherDetailGrid tbody").on('change', '#TransactionTypeId', function (e) {
+            e.preventDefault();
             var currentRow = $(this).closest("tr");
 
             if (currentRow.find("#ParticularLedgerId").val() == "") {
@@ -96,8 +98,38 @@
         // edit voucher detail.
         function fnSaveVoucherDetail() {
             var paymentVoucherId = '@ViewBag.PaymentVoucherId';
+            var isValid = true;
 
-           
+             $('#paymentVoucherDetailGrid tbody tr').each(function () {
+
+                if (parseInt($('#PaymentVoucherDetId', this).val()) != 0) {
+
+                    if ($('#ParticularLedgerId', this).val() == "") {
+                        alert("Please select particular");
+                        $('#ParticularLedgerId', this).focus();
+                        isValid = false;
+                        return false;
+                    }
+                    else if ($('#TransactionTypeId', this).val() == "") {
+                        alert("Please select transaction type");
+                        $('#TransactionTypeId', this).focus();
+                        isValid = false;
+                        return false;
+                    }
+                    else if(isNaN($('#AmountFc', this).val()) || $('#AmountFc', this).val() == "") {
+                        $('#AmountFc', this).val("");
+                        alert("Please eneter amount");
+                        $('#AmountFc', this).focus();
+                        isValid = false;
+                        return false;
+                    }
+                }
+
+            }); //validation loop
+
+            if (isValid == false) {
+                return false;
+            }
 
             $('#paymentVoucherDetailGrid tbody tr').each(function () {
 
@@ -118,7 +150,7 @@
                     else {
                         //console.log(0);
                     }
-                    }, null, true, null, false);
+                }, null, true, null, false);
 
             });
 
@@ -132,10 +164,10 @@
 
     });
 
+
     function dataTableLoad() {
         var particularLedgerList = '@Html.Raw(ViewBag.ParticularLedgerList)';
         var transactionTypeList = '@Html.Raw(ViewBag.TransactionTypeList)';
-
 
         particularLedgerList = JSON.parse(particularLedgerList);
         transactionTypeList = JSON.parse(transactionTypeList);
@@ -161,10 +193,15 @@
             "columns": [
                 {
                     "render": function (data, type, full, meta) {
-                        return '<div class="action_button text-sm-center">' +
-                            '<input id="PaymentVoucherDetId" type="hidden" value="' + full.PaymentVoucherDetId + '">' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal"  title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, ' + full.PaymentVoucherDetId + ')"><span class="fa fa-trash-alt"></span></button>' +
-                            '</div>';
+                        var control = '<div class="action_button text-sm-center">'
+                        control = control + '<input id="PaymentVoucherDetId" type="hidden" value="' + full.PaymentVoucherDetId + '">'
+
+                        if (full.PaymentVoucherDetId != 0) {
+                            control = control + '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal"  title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, ' + full.PaymentVoucherDetId + ')"><span class="fa fa-trash-alt"></span></button>'
+                        }
+                        control = control + '</div>';
+
+                        return control;
                     }
                 },
                 { "data": "PaymentVoucherDetId", "title": "PaymentVoucherDetId", "visible": false, "searchable": true },
@@ -180,8 +217,6 @@
                         ddl = ddl + '>';
 
                         ddl = ddl + '<option value="' + "" + '">' + "Select" + '</option>';
-
-                        //particularLedgerList = full.particularLedgerList;
 
                         for (var i = 0; i < particularLedgerList.length; i++) {
 
@@ -213,10 +248,6 @@
 
                         ddl = ddl + '<option value="' + "" + '">' + "Select" + '</option>';
 
-                        //transactionTypeList = full.transactionTypeList;
-
-                        //console.log(transactionTypeList);
-
                         for (var i = 0; i < transactionTypeList.length ; i++) {
                             ddl = ddl + '<option value="' + transactionTypeList[i].Value + '"'
 
@@ -241,7 +272,7 @@
                             input = input + ' readonly="readonly"';
                         }
 
-                        input = input + '  >';
+                        input = input + ' onkeypress="return fnNumberOnly(event.keyCode, 0, 0);"  >';
 
                         return input;
                     }
@@ -250,16 +281,14 @@
                 { "data": "InvoiceNo", "title": "Invoice No" },
                 {
                     "data": "Narration", "title": "Narration",
-                    "render": function (data, type, row) {
-                        return '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value = ' + row.Narration + '  >';
+                    "render": function (data, type, full, meta) {
+                        return '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value = ' + full.Narration + '  >';
                     }
                 }
             ],
         });
 
     }
-
-
 
 </script>
 

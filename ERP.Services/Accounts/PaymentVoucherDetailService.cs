@@ -71,7 +71,7 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetail.TransactionTypeId = paymentVoucherDetailModel.TransactionTypeId;
                 paymentVoucherDetail.AmountFc = paymentVoucherDetailModel.AmountFc;
                 paymentVoucherDetail.Amount = 0;
-               paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
+                paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
                 paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
                 paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
                 //paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
@@ -318,12 +318,12 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
                 paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
 
-                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0  && paymentVoucherDetailModel.DebitNoteId == 0)
+                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
                 }
-                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0  && paymentVoucherDetailModel.DebitNoteId != 0)
+                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Debit Note";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;

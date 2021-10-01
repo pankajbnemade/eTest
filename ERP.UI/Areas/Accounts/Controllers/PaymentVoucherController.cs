@@ -156,11 +156,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetClosingBalanceByAccountLedgerId(int accountLedgerId)
+        public async Task<JsonResult> GetClosingBalanceByAccountLedgerId(int accountLedgerId, DateTime voucherDate)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId(accountLedgerId);
+            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId(accountLedgerId, voucherDate);
 
             if (null != ledgerModel)
             {
@@ -256,42 +256,23 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
 
+            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId((int)paymentVoucherModel.AccountLedgerId, (DateTime)paymentVoucherModel.VoucherDate);
+
+            if (null != ledgerModel)
+            {
+                paymentVoucherModel.ClosingBalance = ledgerModel.ClosingBalance;
+            }
+            else
+            {
+                paymentVoucherModel.ClosingBalance = 0;
+            }
+
             return await Task.Run(() =>
             {
                 return PartialView("_ViewVoucherMaster", paymentVoucherModel);
             });
         }
 
-        //public async Task<IActionResult> ViewVoucherMaster(string param)
-        //{
-        //    // deserilize string search filter.
-        //    SearchFilterPaymentVoucherModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterPaymentVoucherModel>(searchFilter);
-
-        //    // get data.
-        //    DataTableResultModel<PaymentVoucherModel> resultModel = await _paymentVoucher.GetPaymentVoucherList(dataTableAjaxPostModel, searchFilterModel);
-
-
-        //    PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
-
-        //    return await Task.Run(() =>
-        //    {
-        //        return PartialView("_ViewVoucherMaster", paymentVoucherModel);
-        //    });
-        //}
-
-        /// <summary>
-        /// view voucher summary.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ViewVoucherSummary(int paymentVoucherId)
-        {
-            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
-
-            return await Task.Run(() =>
-            {
-                return PartialView("_ViewVoucherSummary", paymentVoucherModel);
-            });
-        }
 
         /// <summary>
         /// delete voucher master.

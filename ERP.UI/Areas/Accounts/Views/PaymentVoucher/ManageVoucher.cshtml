@@ -46,29 +46,31 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#tab-list li:first-child a').tab('show');
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+            var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+            switch ($(e.target).attr('aria-controls')) {
+                case 'vouchermaster':
+                    tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
+                    break;
+                case 'voucherdetail':
+                    tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
+                    break;
+                default:
+                    break;
+            }
+            $('#' + tabPanel).empty();
+            $('#' + tabPanel).load(tabUrl);
+        });
     });
 
-        // back to index voucher.
+    // back to index voucher.
     function fnBackToIndex() {
         window.location.href = '@Url.Action("Index", "PaymentVoucher")';
     }
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
-        var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
-        switch ($(e.target).attr('aria-controls')) {
-            case 'vouchermaster':
-                tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
-                break;
-            case 'voucherdetail':
-                tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
-                break;
-            default:
-                break;
-        }
-        $('#' + tabPanel).empty();
-        $('#' + tabPanel).load(tabUrl);
-    });
 
 
     @*$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

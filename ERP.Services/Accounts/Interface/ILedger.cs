@@ -2,6 +2,7 @@
 using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DataTableResultModel<LedgerModel>> GetLedgerListByParentGroupId(int parentGroupId);
 
-        Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId);
+        Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId, DateTime voucherDate);
 
         Task<DataTableResultModel<LedgerModel>> GetLedgerList();
 

@@ -243,7 +243,8 @@ else
     // get closing balance by accountLedgerId
     function GetClosingBalance(accountLedgerId) {
         if ('' != accountLedgerId) {
-            var model = { accountLedgerId: accountLedgerId };
+            //var model = { accountLedgerId: accountLedgerId };
+            var model = { accountLedgerId: accountLedgerId , voucherDate: $('#VoucherDate').val() };
 
             AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetClosingBalanceByAccountLedgerId", "PaymentVoucher")', '', model,
             function (response) {

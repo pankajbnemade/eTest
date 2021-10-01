@@ -58,34 +58,39 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#tab-list li:first-child a').tab('show');
-    });
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //console.log(e.target.id);// newly activated tab
+            //console.log(e.relatedTarget); // previous active tab
+            var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+            switch ($(e.target).attr('aria-controls')) {
+                case 'invmaster':
+                    tabUrl = '@Url.Action("ViewInvoiceMaster", "SalesInvoice", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
+                    break;
+                case 'invdetail':
+                    tabUrl = '@Url.Action("InvoiceDetail", "SalesInvoiceDetail", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
+                    break;
+                case 'invtaxmaster':
+                    tabUrl = '@Url.Action("InvoiceTaxMaster", "SalesInvoiceTaxMaster", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
+                    break;
+                case 'invsummary':
+                    tabUrl = '@Url.Action("ViewInvoiceSummary", "SalesInvoice", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
+                    break;
+                default:
+                    break;
+            }
+            $('#' + tabPanel).empty();
+            $('#' + tabPanel).load(tabUrl);
+        });
 
         // back to index invoice.
-    function fnBackToIndex() {
-        window.location.href = '@Url.Action("Index", "SalesInvoice")';
-    }
-
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        //console.log(e.target.id);// newly activated tab
-        //console.log(e.relatedTarget); // previous active tab
-        var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
-        switch ($(e.target).attr('aria-controls')) {
-            case 'invmaster':
-                tabUrl = '@Url.Action("ViewInvoiceMaster", "SalesInvoice", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
-                break;
-            case 'invdetail':
-                tabUrl = '@Url.Action("InvoiceDetail", "SalesInvoiceDetail", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
-                break;
-            case 'invtaxmaster':
-                tabUrl = '@Url.Action("InvoiceTaxMaster", "SalesInvoiceTaxMaster", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
-                break;
-            case 'invsummary':
-                tabUrl = '@Url.Action("ViewInvoiceSummary", "SalesInvoice", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
-                break;
-            default:
-                break;
+        function fnBackToIndex() {
+            window.location.href = '@Url.Action("Index", "SalesInvoice")';
         }
-        $('#' + tabPanel).empty();
-        $('#' + tabPanel).load(tabUrl);
-    });
+
+    }); //document ready
+
+
+
 </script>

@@ -43,9 +43,9 @@ namespace ERP.UI
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Admin/Account/Login";
-                options.LogoutPath = "/Admin/Account/Logout";
-                options.AccessDeniedPath = "/Admin/Account/AccessDenied";
+                options.LoginPath = "/Admin/User/Login";
+                options.LogoutPath = "/Admin/User/Logout";
+                options.AccessDeniedPath = "/Admin/User/AccessDenied";
             });
 
             services.AddControllers();

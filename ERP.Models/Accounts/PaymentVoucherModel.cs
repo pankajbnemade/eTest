@@ -76,13 +76,9 @@ namespace ERP.Models.Accounts
         public string AmountFcinWord { get; set; }
 
         public int? StatusId { get; set; }
-
         public int CompanyId { get; set; }
-
         public int FinancialYearId { get; set; }
-
         public int? MaxNo { get; set; }
-
         public int? VoucherStyleId { get; set; }
 
         //####
