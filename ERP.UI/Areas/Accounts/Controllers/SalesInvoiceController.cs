@@ -45,7 +45,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
+            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
 
             return await Task.Run(() =>
             {
@@ -85,9 +85,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddInvoiceMaster()
         {
-            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
-            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -115,9 +115,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditInvoiceMaster(int salesInvoiceId)
         {
-            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor);
-            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();

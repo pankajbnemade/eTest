@@ -185,7 +185,6 @@ namespace ERP.Services.Accounts
         private async Task<PaymentVoucherDetailModel> AddRow_Blank(int paymentVoucherId)
         {
             PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel();
-            //IList<SelectListModel> particularLedgerList = await ledger.GetLedgerSelectList(0);
 
             return await Task.Run(() =>
             {
@@ -296,8 +295,6 @@ namespace ERP.Services.Accounts
 
         private async Task<PaymentVoucherDetailModel> AssignValueToModel(Paymentvoucherdetail paymentVoucherDetail)
         {
-            //IList<SelectListModel> particularLedgerList = await ledger.GetLedgerSelectList(0);
-
             return await Task.Run(() =>
             {
                 PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel();

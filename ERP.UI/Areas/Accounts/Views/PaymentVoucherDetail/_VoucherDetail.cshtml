@@ -92,11 +92,10 @@
 
          //account invoice dtl.
         $('#save-invoice-dtl').click(function () {
-            fnSaveVoucherDetail();
-        });
+            //console.log("fnSaveVoucherDetail");
 
-        // edit voucher detail.
-        function fnSaveVoucherDetail() {
+            $("#addRow_Blank").val(0);
+
             var paymentVoucherId = '@ViewBag.PaymentVoucherId';
             var isValid = true;
 
@@ -145,10 +144,10 @@
                 AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("SaveVoucherDetailInline", "PaymentVoucherDetail")', '', model,
                 function (response) {
                     if (true == response.Result.Status) {
-                        //console.log(response.Result.Data);
+                        //console.log(model);
                     }
                     else {
-                        //console.log(0);
+                        //console.log(model);
                     }
                 }, null, true, null, false);
 
@@ -160,7 +159,8 @@
 
             $('#voucherdetail').empty();
             $('#voucherdetail').load(tabUrl);
-        }
+        });
+
 
     });
 
@@ -266,13 +266,13 @@
                     "data": "AmountFc", "title": "Amount FC",  "width": "100px",
 
                     "render": function (data, type, full, meta) {
-                        var input = '<input class="form-control form-control-sm decimal-two-scale"  id="AmountFc" name="AmountFc" type="text"  value = ' + full.AmountFc;
+                        var input = '<input class="form-control form-control-sm decimal-two-scale"  id="AmountFc" name="AmountFc" type="text"  value="' + full.AmountFc + '"';
 
                         if (full.TransactionTypeId == 2) {
                             input = input + ' readonly="readonly"';
                         }
 
-                        input = input + ' onkeypress="return fnNumberOnly(event.keyCode, 0, 0);"  >';
+                        input = input + ' onkeypress="return fnNumberOnly(event.keyCode, 1, 0);"  >';
 
                         return input;
                     }
@@ -282,7 +282,8 @@
                 {
                     "data": "Narration", "title": "Narration",
                     "render": function (data, type, full, meta) {
-                        return '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value = ' + full.Narration + '  >';
+                        //console.log(data);
+                        return '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value="' + data + '">';
                     }
                 }
             ],

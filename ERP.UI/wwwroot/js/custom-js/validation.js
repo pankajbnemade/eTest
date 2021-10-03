@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿
 
     //fnNumberOnly : To allowdot : 1 if decimal number, allownegative : 1 if allow negative number
     function fnNumberOnly(eventCode, allowdot, allownegative) {
@@ -18,8 +18,3 @@
     } // chknum
 
 
-
-
-
-
-});

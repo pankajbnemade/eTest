@@ -5,10 +5,12 @@
         <div class="modal-header">
             @if (Model.PaymentVoucherId > 0)
             {
-<div class="modal-title">Edit Voucher</div> }
-else
-{
-<div class="modal-title">Add Voucher</div>}
+                <div class="modal-title">Edit Voucher</div> 
+            }
+            else
+            {
+                <div class="modal-title">Add Voucher</div>
+            }
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -190,17 +192,20 @@ else
 
 
         // TypeCorB change.
-        $(document).on('change', '#TypeCorB', function () {
+        $(document).off('change').on('change', '#TypeCorB', function () {
+            //alert("TypeCorB");
             GetAccountLedger(this.value);
         });
 
         //account ledger change.
         $(document).on('change', '#AccountLedgerId', function () {
+            //alert("AccountLedgerId");
             GetClosingBalance(this.value);
         });
 
         // currency change.
         $(document).on('change', '#CurrencyId', function () {
+            //alert("CurrencyId");
             GetExchangeRateByCurrencyId(this.value);
         });
 

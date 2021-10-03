@@ -45,7 +45,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
             {
@@ -85,8 +85,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddDebitNoteMaster()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -114,8 +114,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditDebitNoteMaster(int debitNoteId)
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();

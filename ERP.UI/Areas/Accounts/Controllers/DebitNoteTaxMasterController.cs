@@ -66,7 +66,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
 
             DebitNoteTaxModel debitNoteTaxModel = new DebitNoteTaxModel();
             debitNoteTaxModel.DebitNoteId = debitNoteId;
@@ -87,7 +87,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
 
             DebitNoteTaxModel debitNoteTaxModel = await _debitNoteTax.GetDebitNoteTaxById(debitNoteTaxId);
 

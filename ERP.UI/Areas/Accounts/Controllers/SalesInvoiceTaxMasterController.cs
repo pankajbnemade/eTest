@@ -62,11 +62,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
+        /// 
         public async Task<IActionResult> AddInvoiceTaxMaster(int salesInvoiceId)
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = new SalesInvoiceTaxModel();
             salesInvoiceTaxModel.SalesInvoiceId = salesInvoiceId;
@@ -87,7 +88,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = await _salesInvoiceTax.GetSalesInvoiceTaxById(salesInvoiceTaxId);
 

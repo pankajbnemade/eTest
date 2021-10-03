@@ -66,7 +66,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
 
             PurchaseInvoiceTaxModel purchaseInvoiceTaxModel = new PurchaseInvoiceTaxModel();
             purchaseInvoiceTaxModel.PurchaseInvoiceId = purchaseInvoiceId;
@@ -87,7 +87,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
 
             PurchaseInvoiceTaxModel purchaseInvoiceTaxModel = await _purchaseInvoiceTax.GetPurchaseInvoiceTaxById(purchaseInvoiceTaxId);
 

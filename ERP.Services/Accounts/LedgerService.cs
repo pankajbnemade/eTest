@@ -189,13 +189,19 @@ namespace ERP.Services.Accounts
             });
         }
 
-        public async Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId)
+        public async Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId, Boolean IsLegderOnly)
         {
             IList<SelectListModel> resultModel = null;
 
             if (await Any(w => w.LedgerId != 0))
             {
                 IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0);
+
+                if (IsLegderOnly == true)
+                {
+                    query = query.Where(w => w.IsGroup == 0);
+                }
+
 
                 // apply filters.
                 if (0 != parentGroupId)

@@ -39,7 +39,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0);
+            ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
             {
@@ -79,7 +79,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddVoucherMaster()
         {
-            //ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
             ViewBag.PaymentTypeList = EnumHelper.GetEnumListFor<PaymentType>();
@@ -106,7 +105,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditVoucherMaster(int paymentVoucherId)
         {
-            //ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0);
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
             ViewBag.PaymentTypeList = EnumHelper.GetEnumListFor<PaymentType>();
@@ -135,11 +133,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (typeCorB == "C")
             {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount);
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount, true);
             }
             else
             {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount);
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
             }
 
             if (null != selectList && selectList.Any())

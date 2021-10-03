@@ -1,14 +1,14 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a.navbar-brand {
+/*a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
-}
+}*/
 
 /* Provide sufficient contrast against white background */
-a {
+/*a {
     color: #0366d6;
 }
 
@@ -22,11 +22,11 @@ a {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
-}
+}*/
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
+/*html {
     font-size: 14px;
 }
 
@@ -51,18 +51,18 @@ html {
 button.accept-policy {
     font-size: 1rem;
     line-height: inherit;
-}
+}*/
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
+/*html {
     position: relative;
     min-height: 100%;
 }
 
-body {
+body {*/
     /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;
 }
 
 .footer {
@@ -70,8 +70,8 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
-}
+    line-height: 60px;*/ /* Vertically center the text there */
+/*}
 
 .field-validation-error {
     color: #dc3545 !important;
@@ -106,12 +106,12 @@ body {
 
 .modal-footer {
     padding: 8px;
-}
+}*/
 
 
 
 /*login*/
-#logreg-forms {
+/*#logreg-forms {
     width: 412px;
     margin: 10vh auto;
     background-color: white;
@@ -203,4 +203,15 @@ body {
 .form-signup .social-login {
     width: 210px !important;
     margin: 0 auto;
+}*/
+
+
+
+
+/*above code commeted as not used */
+
+/*.layout-navbar-fixed .wrapper .main-header BELOW ADDED TO SHOW ALERT ON TOP*/        
+.layout-navbar-fixed .wrapper .main-header {
+    z-index: 600;
 }
+
