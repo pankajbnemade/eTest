@@ -15,10 +15,13 @@ namespace ERP.Services.Accounts
     public class PurchaseInvoiceDetailTaxService : Repository<Purchaseinvoicedetailtax>, IPurchaseInvoiceDetailTax
     {
         IPurchaseInvoiceDetail purchaseInvoiceDetail;
+        private readonly ITaxRegisterDetail taxRegisterDetail;
 
-        public PurchaseInvoiceDetailTaxService(ErpDbContext dbContext, IPurchaseInvoiceDetail _purchaseInvoiceDetail) : base(dbContext)
+
+        public PurchaseInvoiceDetailTaxService(ErpDbContext dbContext, IPurchaseInvoiceDetail _purchaseInvoiceDetail, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
         {
             purchaseInvoiceDetail = _purchaseInvoiceDetail;
+            taxRegisterDetail = _taxRegisterDetail;
         }
 
         /// <summary>
@@ -147,25 +150,25 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        //public async Task<bool> UpdatePurchaseInvoiceDetailTaxAmountOnDetailUpdate(int? purchaseInvoiceDetailId)
-        //{
-        //    bool isUpdated = false;
+        public async Task<bool> UpdatePurchaseInvoiceDetailTaxAmountOnDetailUpdate(int? purchaseInvoiceDetailId)
+        {
+            bool isUpdated = false;
 
-        //    // get record.
-        //    IList<Purchaseinvoicedetailtax> purchaseInvoiceDetailTaxList = await GetQueryByCondition(w => w.PurchaseInvoiceDetId == (int)purchaseInvoiceDetailId).ToListAsync();
+            // get record.
+            IList<Purchaseinvoicedetailtax> purchaseInvoiceDetailTaxList = await GetQueryByCondition(w => w.PurchaseInvoiceDetId == (int)purchaseInvoiceDetailId).ToListAsync();
 
-        //    foreach (Purchaseinvoicedetailtax purchaseInvoiceDetailTax in purchaseInvoiceDetailTaxList)
-        //    {
-        //        isUpdated = await UpdatePurchaseInvoiceDetailTaxAmount(purchaseInvoiceDetailTax.PurchaseInvoiceDetTaxId);
-        //    }
+            foreach (Purchaseinvoicedetailtax purchaseInvoiceDetailTax in purchaseInvoiceDetailTaxList)
+            {
+                isUpdated = await UpdatePurchaseInvoiceDetailTaxAmount(purchaseInvoiceDetailTax.PurchaseInvoiceDetTaxId);
+            }
 
-        //    if (isUpdated != false)
-        //    {
-        //        await purchaseInvoiceDetail.UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailId);
-        //    }
+            if (isUpdated != false)
+            {
+                await purchaseInvoiceDetail.UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailId);
+            }
 
-        //    return isUpdated; // returns.
-        //}
+            return isUpdated; // returns.
+        }
 
         public async Task<bool> DeletePurchaseInvoiceDetailTax(int purchaseInvoiceDetailTaxId)
         {
@@ -186,6 +189,64 @@ namespace ERP.Services.Accounts
 
             return isDeleted; // returns.
         }
+
+        public async Task<bool> AddPurchaseInvoiceDetailTaxByPurchaseInvoiceId(int purchaseInvoiceId, int taxRegisterId)
+        {
+            bool isUpdated = false;
+
+            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await purchaseInvoiceDetail.GetPurchaseInvoiceDetailListByPurchaseInvoiceId(purchaseInvoiceId);
+
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+
+            PurchaseInvoiceDetailTaxModel purchaseInvoiceDetailTaxModel = null;
+
+            if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Count > 0)
+            {
+                foreach (TaxRegisterDetailModel taxRegisterDetailModel in taxRegisterDetailModelList)
+                {
+                    foreach (PurchaseInvoiceDetailModel purchaseInvoiceDetailModel in purchaseInvoiceDetailModelList)
+                    {
+                        purchaseInvoiceDetailTaxModel = new PurchaseInvoiceDetailTaxModel()
+                        {
+                            PurchaseInvoiceDetTaxId = 0,
+                            PurchaseInvoiceDetId = purchaseInvoiceDetailModel.PurchaseInvoiceDetId,
+                            SrNo = taxRegisterDetailModel.SrNo,
+                            TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                            TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
+                            TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                            TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
+                            TaxAmountFc = 0,
+                            TaxAmount = 0,
+                            Remark = ""
+                        };
+
+                        await CreatePurchaseInvoiceDetailTax(purchaseInvoiceDetailTaxModel);
+                    }
+                }
+            }
+
+            return isUpdated; // returns.
+        }
+
+
+        public async Task<bool> DeletePurchaseInvoiceDetailTaxByPurchaseInvoiceId(int purchaseInvoiceId)
+        {
+            bool isDeleted = false;
+
+            // get record.
+            IList<Purchaseinvoicedetailtax> purchaseInvoiceDetailTaxList = await GetQueryByCondition(w => w.PurchaseInvoiceDetTaxId != 0).Include(W => W.PurchaseInvoiceDet)
+                                                                                .Where(W => W.PurchaseInvoiceDet.PurchaseInvoiceId == purchaseInvoiceId)
+                                                                                .ToListAsync();
+
+            foreach (Purchaseinvoicedetailtax purchaseInvoiceDetailTax in purchaseInvoiceDetailTaxList)
+            {
+                isDeleted = await DeletePurchaseInvoiceDetailTax(purchaseInvoiceDetailTax.PurchaseInvoiceDetTaxId);
+            }
+
+            return isDeleted; // returns.
+        }
+
+
 
         public async Task<PurchaseInvoiceDetailTaxModel> GetPurchaseInvoiceDetailTaxById(int purchaseInvoiceDetailTaxId)
         {

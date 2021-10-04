@@ -18,6 +18,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
     public class PurchaseInvoiceController : Controller
     {
         private readonly IPurchaseInvoice _purchaseInvoice;
+        private readonly IPurchaseInvoiceDetailTax _purchaseInvoiceDetailTax;
+        private readonly IPurchaseInvoiceTax _purchaseInvoiceTax;
         private readonly ILedger _ledger;
         private readonly ILedgerAddress _ledgerAddress;
         private readonly ITaxRegister _taxRegister;
@@ -33,7 +35,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ILedgerAddress ledgerAddress,
             ITaxRegister taxRegister,
             ICurrency currency,
-            ICurrencyConversion currencyConversion)
+            ICurrencyConversion currencyConversion,
+            IPurchaseInvoiceDetailTax purchaseInvoiceDetailTax,
+            IPurchaseInvoiceTax purchaseInvoiceTax)
         {
             this._purchaseInvoice = purchaseInvoice;
             this._ledger = ledger;
@@ -41,6 +45,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
             this._taxRegister = taxRegister;
             this._currency = currency;
             this._currencyConversion = currencyConversion;
+            this._purchaseInvoiceDetailTax = purchaseInvoiceDetailTax;
+            this._purchaseInvoiceTax = purchaseInvoiceTax;
         }
 
         public async Task<IActionResult> Index()
@@ -190,9 +196,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
             {
                 if (purchaseInvoiceModel.PurchaseInvoiceId > 0)
                 {
+                    PurchaseInvoiceModel purchaseInvoiceModel_Old = await _purchaseInvoice.GetPurchaseInvoiceById(purchaseInvoiceModel.PurchaseInvoiceId);
+
                     // update record.
                     if (true == await _purchaseInvoice.UpdatePurchaseInvoice(purchaseInvoiceModel))
                     {
+                        if (purchaseInvoiceModel_Old.TaxModelType != purchaseInvoiceModel.TaxModelType)
+                        {
+                            await _purchaseInvoiceDetailTax.DeletePurchaseInvoiceDetailTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId);
+                            await _purchaseInvoiceTax.DeletePurchaseInvoiceTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId);
+
+                            if (purchaseInvoiceModel_Old.TaxModelType == TaxModelType.SubTotal.ToString())
+                            {
+                                await _purchaseInvoiceTax.AddPurchaseInvoiceTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId, (int)purchaseInvoiceModel.TaxRegisterId);
+                            }
+                            else if (purchaseInvoiceModel_Old.TaxModelType == TaxModelType.LineWise.ToString())
+                            {
+                                await _purchaseInvoiceDetailTax.AddPurchaseInvoiceDetailTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId, (int)purchaseInvoiceModel.TaxRegisterId);
+                            }
+                        }
+
                         data.Result.Status = true;
                     }
                 }

@@ -95,6 +95,13 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
+        public async Task<IList<TaxRegisterDetailModel>> GetTaxRegisterDetailListByTaxRegisterId(int taxRegisterId)
+        {
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await GetTaxRegisterDetailList(0, taxRegisterId);
+
+            return taxRegisterDetailModelList; // returns.
+        }
+
         public async Task<DataTableResultModel<TaxRegisterDetailModel>> GetTaxRegisterDetailList()
         {
             DataTableResultModel<TaxRegisterDetailModel> resultModel = new DataTableResultModel<TaxRegisterDetailModel>();

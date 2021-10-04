@@ -160,8 +160,6 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailModel = purchaseInvoiceModelDetailList.FirstOrDefault();
             }
 
-
-
             return purchaseInvoiceDetailModel; // returns.
         }
 
@@ -185,6 +183,13 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        public async Task<IList<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailListByPurchaseInvoiceId(int purchaseInvoiceId)
+        {
+            IList<PurchaseInvoiceDetailModel> purchaseInvoiceDetailModelList = await GetPurchaseInvoiceDetailList(0, purchaseInvoiceId);
+
+            return purchaseInvoiceDetailModelList; // returns.
         }
 
         public async Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList()

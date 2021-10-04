@@ -13,14 +13,18 @@ namespace ERP.UI.Areas.Accounts.Controllers
     public class PurchaseInvoiceDetailController : Controller
     {
         private readonly IPurchaseInvoiceDetail _purchaseInvoiceDetail;
+        private readonly IPurchaseInvoiceDetailTax _purchaseInvoiceDetailTax;
+        private readonly IPurchaseInvoiceTax _purchaseInvoiceTax;
         private readonly IUnitOfMeasurement _unitOfMeasurement;
 
         /// <summary>
         /// constractor.
         /// </summary>
-        public PurchaseInvoiceDetailController(IPurchaseInvoiceDetail purchaseInvoiceDetail, IUnitOfMeasurement unitOfMeasurement)
+        public PurchaseInvoiceDetailController(IPurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceDetailTax purchaseInvoiceDetailTax, IPurchaseInvoiceTax purchaseInvoiceTax, IUnitOfMeasurement unitOfMeasurement)
         {
             this._purchaseInvoiceDetail = purchaseInvoiceDetail;
+            this._purchaseInvoiceDetailTax = purchaseInvoiceDetailTax;
+            this._purchaseInvoiceTax = purchaseInvoiceTax;
             this._unitOfMeasurement = unitOfMeasurement;
         }
 
@@ -29,6 +33,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="purchaseInvoiceId"></param>
         /// <returns></returns>
+        /// 
         public async Task<IActionResult> InvoiceDetail(int purchaseInvoiceId)
         {
             ViewBag.PurchaseInvoiceId = purchaseInvoiceId;
@@ -112,6 +117,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     // update record.
                     if (true == await _purchaseInvoiceDetail.UpdatePurchaseInvoiceDetail(purchaseInvoiceDetailModel))
                     {
+                        await _purchaseInvoiceDetailTax.UpdatePurchaseInvoiceDetailTaxAmountOnDetailUpdate(purchaseInvoiceDetailModel.PurchaseInvoiceDetId);
+                        await _purchaseInvoiceTax.UpdatePurchaseInvoiceTaxAmountAll(purchaseInvoiceDetailModel.PurchaseInvoiceId);
                         data.Result.Status = true;
                     }
                 }
@@ -137,8 +144,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteInvoiceDetail(int purchaseInvoiceDetId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            PurchaseInvoiceDetailModel purchaseInvoiceDetailModel = await _purchaseInvoiceDetail.GetPurchaseInvoiceDetailById(purchaseInvoiceDetId);
+
             if (true == await _purchaseInvoiceDetail.DeletePurchaseInvoiceDetail(purchaseInvoiceDetId))
             {
+                await _purchaseInvoiceTax.UpdatePurchaseInvoiceTaxAmountAll(purchaseInvoiceDetailModel.PurchaseInvoiceId);
                 data.Result.Status = true;
             }
 

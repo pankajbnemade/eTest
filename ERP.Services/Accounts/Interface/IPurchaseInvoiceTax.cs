@@ -13,6 +13,12 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdatePurchaseInvoiceTax(PurchaseInvoiceTaxModel purchaseInvoiceTaxModel);
 
+        Task<bool> UpdatePurchaseInvoiceTaxAmountAll(int? purchaseInvoiceId);
+
+        Task<bool> AddPurchaseInvoiceTaxByPurchaseInvoiceId(int purchaseInvoiceId,int taxRegisterId);
+
+        Task<bool> DeletePurchaseInvoiceTaxByPurchaseInvoiceId(int purchaseInvoiceId);
+
         Task<bool> DeletePurchaseInvoiceTax(int purchaseInvoiceTaxId);
 
         Task<PurchaseInvoiceTaxModel> GetPurchaseInvoiceTaxById(int purchaseInvoiceTaxId);

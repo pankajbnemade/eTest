@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -22,6 +23,8 @@ namespace ERP.Services.Accounts.Interface
         Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailByPurchaseInvoiceId(int purchaseInvoiceId);
 
         Task<DataTableResultModel<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailList();
+
+        Task<IList<PurchaseInvoiceDetailModel>> GetPurchaseInvoiceDetailListByPurchaseInvoiceId(int purchaseInvoiceId);
 
     }
 }
