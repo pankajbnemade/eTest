@@ -53,7 +53,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxPerOrAmountFc, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
+                                @Html.TextBoxFor(model => model.TaxPerOrAmountFc, new { @class = "form-control form-control-sm" })
                                 @Html.ValidationMessageFor(model => model.TaxPerOrAmountFc)
                             </div>
                         </div>
@@ -128,6 +128,7 @@
             $('#modal-invoice-detail').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
             $("#purchaseInvoiceTaxDetailGrid").DataTable().ajax.reload();
+            $("#purchaseInvoiceDetailGrid").DataTable().clear().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

@@ -30,7 +30,6 @@ namespace ERP.UI.Areas.Common.Controllers
 
         public IActionResult Index()
         {
-
             UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
             return View();

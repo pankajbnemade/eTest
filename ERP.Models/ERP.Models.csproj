@@ -5,10 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logger\**" />
+    <EmbeddedResource Remove="Logger\**" />
+    <None Remove="Logger\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Accounts\PurchaseInvoiceChargeModel.cs" />
     <Compile Remove="Accounts\SalesInvoiceChargeModel.cs" />
     <Compile Remove="Accounts\_Model.cs" />
     <Compile Remove="Common\DataTableResultModel.cs" />
+    <Compile Remove="Common\LogModel.cs" />
     <Compile Remove="Master\UserModel.cs" />
     <Compile Remove="Master\_Model.cs" />
   </ItemGroup>

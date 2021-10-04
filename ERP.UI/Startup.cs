@@ -1,9 +1,10 @@
 using ERP.DataAccess.Entity;
 using ERP.DataAccess.EntityData;
 using ERP.Models.Extension;
-using ERP.Models.Logger;
+//using ERP.Models.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,7 @@ namespace ERP.UI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            SeriLogExtensions.ConfigureSeriLog("ERPUI");
+            //SeriLogExtensions.ConfigureSeriLog("ERPUI");
 
             if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Logs")))
             {
@@ -51,7 +52,7 @@ namespace ERP.UI
             services.AddControllers();
             services.AddControllersWithViews(options =>
             {
-                options.Filters.Add<SeriLogFilter>();
+                //options.Filters.Add<SeriLogFilter>();
             }).AddRazorRuntimeCompilation()
               .AddNewtonsoftJson(options =>
               {
@@ -59,6 +60,7 @@ namespace ERP.UI
               });
             services.AddRazorPages();
             services.AddHttpContextAccessor();
+
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);
             services.AddSession(options =>
@@ -90,8 +92,8 @@ namespace ERP.UI
             app.UseAuthentication();
             app.UseAuthorization();
             //app.UseContextAccessor();
-            loggerFactory.AddSeriLog();
-            app.UseSeriLogMiddleware();
+            //loggerFactory.AddSeriLog();
+            //app.UseSeriLogMiddleware();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

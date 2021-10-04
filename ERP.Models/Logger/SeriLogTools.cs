@@ -60,6 +60,8 @@ namespace ERP.Models.Logger
 
                 GetExceptionData(LogEventLevel.Error, exception, ref logModel);
 
+
+
                 if (ContextAccessor.HttpContext != null)
                 {
                     GetRequestData(ContextAccessor.HttpContext, ref logModel);

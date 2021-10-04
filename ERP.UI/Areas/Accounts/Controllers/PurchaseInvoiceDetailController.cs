@@ -4,6 +4,7 @@ using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -87,7 +88,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ViewBag.UnitOfMeasurementList = await _unitOfMeasurement.GetUnitOfMeasurementSelectList();
 
             PurchaseInvoiceDetailModel purchaseInvoiceDetailModel = await _purchaseInvoiceDetail.GetPurchaseInvoiceDetailById(purchaseInvoiceDetId);
-            
+
             return await Task.Run(() =>
             {
                 return PartialView("_AddInvoiceDetail", purchaseInvoiceDetailModel);

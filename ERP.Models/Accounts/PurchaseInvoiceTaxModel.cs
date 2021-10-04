@@ -8,7 +8,7 @@ namespace ERP.Models.Accounts
         public int PurchaseInvoiceTaxId { get; set; }
 
         public int? PurchaseInvoiceId { get; set; }
-        
+
         [Display(Name = "Sr No.")]
         [Required(ErrorMessage = "Sr No. is required.")]
         [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
@@ -24,13 +24,20 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Percentage or Amount FC")]
         [Required(ErrorMessage = "Tax Percentage or Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxPerOrAmountFc { get; set; }
 
         [Display(Name = "Tax Add or Deduct")]
         [Required(ErrorMessage = "Tax Add or Deduct is required.")]
         public string TaxAddOrDeduct { get; set; }
+
+        [Display(Name = "Tax Amount FC")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxAmountFc { get; set; }
+
+        [Display(Name = "Tax Amount")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxAmount { get; set; }
 
         [Display(Name = "Remark")]

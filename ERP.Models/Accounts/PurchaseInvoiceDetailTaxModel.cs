@@ -24,18 +24,24 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Percentage or Amount FC")]
         [Required(ErrorMessage = "Tax Percentage or Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxPerOrAmountFc { get; set; }
 
         [Display(Name = "Tax Add or Deduct")]
         [Required(ErrorMessage = "Tax Add or Deduct is required.")]
         public string TaxAddOrDeduct { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxAmountFc { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxAmount { get; set; }
 
         [Display(Name = "Remark")]
         [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters.")]
         public string Remark { get; set; }
+
         //####
          [Display(Name = "Tax Ledger Name")]
         public string TaxLedgerName { get; set; }

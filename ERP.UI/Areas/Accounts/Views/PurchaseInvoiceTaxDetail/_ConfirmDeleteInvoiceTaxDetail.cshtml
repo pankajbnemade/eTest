@@ -34,12 +34,13 @@
 
     // form confirm (yes/ok) handler, submits form
     $('#modalConfirmInvoiceTaxDetail').find('.modal-footer #delete-invoice-tax-detail').on('click', function () {
-        var model = { purchaseInvoiceDetTaxId: purchaseInvoiceDetTaxId };
+        var model = { purchaseInvoiceDetTaxId: _purchaseInvoiceDetTaxId };
         AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("DeleteInvoiceTaxDetail", "PurchaseInvoiceTaxDetail")', '', model,
         function (data) {
             if (data.Result.Status) {
                 $('#modalConfirmInvoiceTaxDetail').modal('hide');
                 $('#purchaseInvoiceTaxDetailGrid').DataTable().ajax.reload();
+                $("#purchaseInvoiceDetailGrid").DataTable().clear().ajax.reload();
                 fnSuccessNotify('Record deleted.');
             }
             else {

@@ -56,10 +56,10 @@ namespace ERP.Services.Accounts
             if (purchaseInvoiceDetailId != 0)
             {
                 await UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailId);
-                //await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
             await Create(purchaseInvoiceDetail);
+
             purchaseInvoiceDetailId = purchaseInvoiceDetail.PurchaseInvoiceDetId;
 
             return purchaseInvoiceDetailId; // returns.
@@ -96,7 +96,6 @@ namespace ERP.Services.Accounts
             if (isUpdated != false)
             {
                 await UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailModel.PurchaseInvoiceDetId);
-                //await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
             return isUpdated; // returns.

@@ -22,12 +22,13 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? AmountFc { get; set; }
 
         [Display(Name = "Amount")]
-        [Required(ErrorMessage = "Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? Amount { get; set; }
 
         [Display(Name = "Narration")]
@@ -35,15 +36,10 @@ namespace ERP.Models.Accounts
         public string Narration { get; set; }
 
         [Display(Name = "Purchase Invoice")]
-        //[Required(ErrorMessage = " is required.")]
+       
         public int? PurchaseInvoiceId { get; set; }
 
-        //[Display(Name = "Credit Note")]
-        ////[Required(ErrorMessage = " is required.")]
-        //public int? CreditNoteId { get; set; }
-
         [Display(Name = "Debit Note")]
-        //[Required(ErrorMessage = " is required.")]
         public int? DebitNoteId { get; set; }
 
         //###
@@ -52,9 +48,6 @@ namespace ERP.Models.Accounts
         public string ParticularLedgerName { get; set; }
         public string InvoiceType { get; set; }
         public string InvoiceNo { get; set; }
-
-        //public IList<EnumModel> transactionTypeList  { get; set; }
-        //public IList<SelectListModel> particularLedgerList  { get; set; }
 
     }
 }
