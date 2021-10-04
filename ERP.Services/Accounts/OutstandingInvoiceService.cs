@@ -149,47 +149,47 @@ namespace ERP.Services.Accounts
             return outstandingInvoiceModelList; // returns.
         }
 
-        private async Task<OutstandingInvoiceModel> AssignValueToModel(Paymentvoucherdetail paymentVoucherDetail)
-        {
-            return await Task.Run(() =>
-            {
-                OutstandingInvoiceModel outstandingInvoiceModel = new OutstandingInvoiceModel();
+        //private async Task<OutstandingInvoiceModel> AssignValueToModel(Paymentvoucherdetail paymentVoucherDetail)
+        //{
+        //    return await Task.Run(() =>
+        //    {
+        //        OutstandingInvoiceModel outstandingInvoiceModel = new OutstandingInvoiceModel();
 
-                //paymentVoucherDetailModel.PaymentVoucherDetId = paymentVoucherDetail.PaymentVoucherDetId;
-                //paymentVoucherDetailModel.PaymentVoucherId = paymentVoucherDetail.PaymentVoucherId;
-                //paymentVoucherDetailModel.ParticularLedgerId = paymentVoucherDetail.ParticularLedgerId;
-                //paymentVoucherDetailModel.TransactionTypeId = paymentVoucherDetail.TransactionTypeId;
-                //paymentVoucherDetailModel.AmountFc = paymentVoucherDetail.AmountFc;
-                //paymentVoucherDetailModel.Amount = paymentVoucherDetail.Amount;
-                //paymentVoucherDetailModel.Narration = paymentVoucherDetail.Narration;
+        //        //paymentVoucherDetailModel.PaymentVoucherDetId = paymentVoucherDetail.PaymentVoucherDetId;
+        //        //paymentVoucherDetailModel.PaymentVoucherId = paymentVoucherDetail.PaymentVoucherId;
+        //        //paymentVoucherDetailModel.ParticularLedgerId = paymentVoucherDetail.ParticularLedgerId;
+        //        //paymentVoucherDetailModel.TransactionTypeId = paymentVoucherDetail.TransactionTypeId;
+        //        //paymentVoucherDetailModel.AmountFc = paymentVoucherDetail.AmountFc;
+        //        //paymentVoucherDetailModel.Amount = paymentVoucherDetail.Amount;
+        //        //paymentVoucherDetailModel.Narration = paymentVoucherDetail.Narration;
 
-                //paymentVoucherDetailModel.PurchaseInvoiceId = null != paymentVoucherDetail.PurchaseInvoiceId ? paymentVoucherDetail.PurchaseInvoiceId : 0;
-                //paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
-                //paymentVoucherDetailModel.DebitNoteId = null != paymentVoucherDetail.DebitNoteId ? paymentVoucherDetail.DebitNoteId : 0;
+        //        //paymentVoucherDetailModel.PurchaseInvoiceId = null != paymentVoucherDetail.PurchaseInvoiceId ? paymentVoucherDetail.PurchaseInvoiceId : 0;
+        //        //paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
+        //        //paymentVoucherDetailModel.DebitNoteId = null != paymentVoucherDetail.DebitNoteId ? paymentVoucherDetail.DebitNoteId : 0;
 
-                ////--####
-                //paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
-                //paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
+        //        ////--####
+        //        //paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
+        //        //paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
 
-                //if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId == 0)
-                //{
-                //    paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
-                //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
-                //}
-                //else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
-                //{
-                //    paymentVoucherDetailModel.InvoiceType = "Credit Note";
-                //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.CreditNote.CreditNoteNo;
-                //}
-                //else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
-                //{
-                //    paymentVoucherDetailModel.InvoiceType = "Debit Note";
-                //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
-                //}
+        //        //if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+        //        //{
+        //        //    paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
+        //        //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
+        //        //}
+        //        //else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+        //        //{
+        //        //    paymentVoucherDetailModel.InvoiceType = "Credit Note";
+        //        //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.CreditNote.CreditNoteNo;
+        //        //}
+        //        //else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
+        //        //{
+        //        //    paymentVoucherDetailModel.InvoiceType = "Debit Note";
+        //        //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
+        //        //}
 
-                return outstandingInvoiceModel;
-            });
-        }
+        //        return outstandingInvoiceModel;
+        //    });
+        //}
 
     }
 }

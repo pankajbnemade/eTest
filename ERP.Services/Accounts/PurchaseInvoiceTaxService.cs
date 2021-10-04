@@ -73,7 +73,7 @@ namespace ERP.Services.Accounts
 
             purchaseInvoiceTax.TaxAddOrDeduct = purchaseInvoiceTaxModel.TaxAddOrDeduct;
             purchaseInvoiceTax.TaxAmountFc = multiplier * purchaseInvoiceTaxModel.TaxAmountFc;
-            purchaseInvoiceTax.TaxAmount = multiplier * purchaseInvoiceTaxModel.TaxAmount;
+            purchaseInvoiceTax.TaxAmount = 0;
             purchaseInvoiceTax.Remark = purchaseInvoiceTaxModel.Remark;
 
             await Create(purchaseInvoiceTax);
@@ -81,7 +81,7 @@ namespace ERP.Services.Accounts
 
             if (purchaseInvoiceTaxId != 0)
             {
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTaxId);
+                await UpdatePurchaseInvoiceTaxAmount(purchaseInvoiceTaxId);;
             }
 
             return purchaseInvoiceTaxId; // returns.
@@ -122,8 +122,31 @@ namespace ERP.Services.Accounts
 
                 purchaseInvoiceTax.TaxAddOrDeduct = purchaseInvoiceTaxModel.TaxAddOrDeduct;
                 purchaseInvoiceTax.TaxAmountFc = multiplier * purchaseInvoiceTaxModel.TaxAmountFc;
-                purchaseInvoiceTax.TaxAmount = multiplier * purchaseInvoiceTaxModel.TaxAmount;
+                purchaseInvoiceTax.TaxAmount = 0;
                 purchaseInvoiceTax.Remark = purchaseInvoiceTaxModel.Remark;
+
+                isUpdated = await Update(purchaseInvoiceTax);
+            }
+
+            if (isUpdated != false)
+            {
+                await UpdatePurchaseInvoiceTaxAmount(purchaseInvoiceTaxModel.PurchaseInvoiceTaxId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdatePurchaseInvoiceTaxAmount(int? purchaseInvoiceTaxId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Purchaseinvoicetax purchaseInvoiceTax = await GetQueryByCondition(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxId)
+                                                                 .Include(w => w.PurchaseInvoice).FirstOrDefaultAsync();
+
+            if (null != purchaseInvoice)
+            {
+                purchaseInvoiceTax.TaxAmount = purchaseInvoiceTax.TaxAmountFc / purchaseInvoiceTax.PurchaseInvoice.ExchangeRate;
 
                 isUpdated = await Update(purchaseInvoiceTax);
             }

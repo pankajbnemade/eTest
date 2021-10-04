@@ -38,7 +38,7 @@ namespace ERP.Models.Accounts
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        [DisplayFormat(DataFormatString  = "{0:0.000000}", ApplyFormatInEditMode  = true)]
+        [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Cheque No")]
@@ -54,7 +54,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Cheque Amount FC")]
         [Required(ErrorMessage = "Cheque Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? ChequeAmountFc { get; set; }
 
         [Display(Name = "Narration")]
@@ -91,7 +92,10 @@ namespace ERP.Models.Accounts
         public string PreparedByName { get; set; }
 
         [Display(Name = "Closing Balance")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? ClosingBalance { get; set; }
+
+        public int NoOfLineItems { get; set; }
 
     }
 }

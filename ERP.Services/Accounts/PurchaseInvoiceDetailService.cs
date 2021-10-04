@@ -59,7 +59,7 @@ namespace ERP.Services.Accounts
                 //await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
-             await Create(purchaseInvoiceDetail);
+            await Create(purchaseInvoiceDetail);
             purchaseInvoiceDetailId = purchaseInvoiceDetail.PurchaseInvoiceDetId;
 
             return purchaseInvoiceDetailId; // returns.
@@ -107,17 +107,17 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Purchaseinvoicedetail purchaseInvoiceDetail =  await GetQueryByCondition(w => w.PurchaseInvoiceDetId == purchaseInvoiceDetailId)
+            Purchaseinvoicedetail purchaseInvoiceDetail = await GetQueryByCondition(w => w.PurchaseInvoiceDetId == purchaseInvoiceDetailId)
                                                                  .Include(w => w.PurchaseInvoice).Include(w => w.Purchaseinvoicedetailtaxes).FirstOrDefaultAsync();
 
             if (null != purchaseInvoiceDetail)
             {
                 purchaseInvoiceDetail.GrossAmountFc = purchaseInvoiceDetail.Quantity * purchaseInvoiceDetail.PerUnit * purchaseInvoiceDetail.UnitPrice;
-                purchaseInvoiceDetail.GrossAmount = purchaseInvoiceDetail.GrossAmountFc * purchaseInvoiceDetail.PurchaseInvoice.ExchangeRate;
+                purchaseInvoiceDetail.GrossAmount = purchaseInvoiceDetail.GrossAmountFc / purchaseInvoiceDetail.PurchaseInvoice.ExchangeRate;
                 purchaseInvoiceDetail.TaxAmountFc = purchaseInvoiceDetail.Purchaseinvoicedetailtaxes.Sum(s => s.TaxAmountFc);
-                purchaseInvoiceDetail.TaxAmount = purchaseInvoiceDetail.PurchaseInvoice.ExchangeRate * purchaseInvoiceDetail.TaxAmountFc;
+                purchaseInvoiceDetail.TaxAmount = purchaseInvoiceDetail.TaxAmountFc / purchaseInvoiceDetail.PurchaseInvoice.ExchangeRate;
                 purchaseInvoiceDetail.NetAmountFc = purchaseInvoiceDetail.TaxAmountFc + purchaseInvoiceDetail.GrossAmountFc;
-                purchaseInvoiceDetail.NetAmount = purchaseInvoiceDetail.PurchaseInvoice.ExchangeRate * purchaseInvoiceDetail.NetAmountFc;
+                purchaseInvoiceDetail.NetAmount = purchaseInvoiceDetail.NetAmountFc / purchaseInvoiceDetail.PurchaseInvoice.ExchangeRate;
 
                 isUpdated = await Update(purchaseInvoiceDetail);
             }

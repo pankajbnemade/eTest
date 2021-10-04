@@ -16,11 +16,11 @@ namespace ERP.Services.Accounts
     {
         IPurchaseInvoiceDetail purchaseInvoiceDetail;
 
-        public PurchaseInvoiceDetailTaxService(ErpDbContext dbContext,  IPurchaseInvoiceDetail _purchaseInvoiceDetail) : base(dbContext)
+        public PurchaseInvoiceDetailTaxService(ErpDbContext dbContext, IPurchaseInvoiceDetail _purchaseInvoiceDetail) : base(dbContext)
         {
             purchaseInvoiceDetail = _purchaseInvoiceDetail;
         }
-        
+
         /// <summary>
         /// generate sr no based on purchaseInvoiceDetId
         /// </summary>
@@ -73,7 +73,7 @@ namespace ERP.Services.Accounts
 
             purchaseInvoiceDetailTax.TaxAddOrDeduct = purchaseInvoiceDetailTaxModel.TaxAddOrDeduct;
             purchaseInvoiceDetailTax.TaxAmountFc = multiplier * purchaseInvoiceDetailTaxModel.TaxAmountFc;
-            purchaseInvoiceDetailTax.TaxAmount = multiplier * purchaseInvoiceDetailTaxModel.TaxAmount;
+            purchaseInvoiceDetailTax.TaxAmount = 0;
             purchaseInvoiceDetailTax.Remark = purchaseInvoiceDetailTaxModel.Remark;
 
             await Create(purchaseInvoiceDetailTax);
@@ -83,7 +83,7 @@ namespace ERP.Services.Accounts
 
             if (purchaseInvoiceDetailTaxId != 0)
             {
-                await purchaseInvoiceDetail.UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailTax.PurchaseInvoiceDetId);
+                await UpdatePurchaseInvoiceDetailTaxAmount(purchaseInvoiceDetailTaxId);
             }
 
             return purchaseInvoiceDetailTaxId; // returns.
@@ -123,8 +123,31 @@ namespace ERP.Services.Accounts
 
                 purchaseInvoiceDetailTax.TaxAddOrDeduct = purchaseInvoiceDetailTaxModel.TaxAddOrDeduct;
                 purchaseInvoiceDetailTax.TaxAmountFc = multiplier * purchaseInvoiceDetailTaxModel.TaxAmountFc;
-                purchaseInvoiceDetailTax.TaxAmount = multiplier * purchaseInvoiceDetailTaxModel.TaxAmount;
+                purchaseInvoiceDetailTax.TaxAmount =  0;
                 purchaseInvoiceDetailTax.Remark = purchaseInvoiceDetailTaxModel.Remark;
+
+                isUpdated = await Update(purchaseInvoiceDetailTax);
+            }
+
+            if (isUpdated != false)
+            {
+                await UpdatePurchaseInvoiceDetailTaxAmount(purchaseInvoiceDetailTaxModel.PurchaseInvoiceDetTaxId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdatePurchaseInvoiceDetailTaxAmount(int? purchaseInvoiceDetailTaxId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Purchaseinvoicedetailtax purchaseInvoiceDetailTax = await GetQueryByCondition(w => w.PurchaseInvoiceDetTaxId == purchaseInvoiceDetailTaxId)
+                                                                 .Include(w => w.PurchaseInvoiceDet).ThenInclude(w => w.PurchaseInvoice).FirstOrDefaultAsync();
+
+            if (null != purchaseInvoiceDetail)
+            {
+                purchaseInvoiceDetailTax.TaxAmount = purchaseInvoiceDetailTax.TaxAmountFc / purchaseInvoiceDetailTax.PurchaseInvoiceDet.PurchaseInvoice.ExchangeRate;
 
                 isUpdated = await Update(purchaseInvoiceDetailTax);
             }
@@ -261,7 +284,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailTaxModel.TaxAmount = purchaseInvoiceDetailTax.TaxAmount;
                 purchaseInvoiceDetailTaxModel.Remark = purchaseInvoiceDetailTax.Remark;
 
-                purchaseInvoiceDetailTaxModel.TaxLedgerName = null != purchaseInvoiceDetailTax.TaxLedger ? purchaseInvoiceDetailTax.TaxLedger.LedgerName : null;;
+                purchaseInvoiceDetailTaxModel.TaxLedgerName = null != purchaseInvoiceDetailTax.TaxLedger ? purchaseInvoiceDetailTax.TaxLedger.LedgerName : null; ;
 
                 return purchaseInvoiceDetailTaxModel;
             });

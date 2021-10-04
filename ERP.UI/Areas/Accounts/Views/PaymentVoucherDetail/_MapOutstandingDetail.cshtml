@@ -106,7 +106,9 @@
     });
 
     ////account invoice dtl.
-    $('#save-outstanding-dtl').click(function () {
+    $('#save-outstanding-dtl').click(function (e) {
+        e.preventDefault();
+
         $("#addRow_Blank").val(0);
 
         var paymentVoucherId = $('.modal-body #PaymentVoucherId').val();

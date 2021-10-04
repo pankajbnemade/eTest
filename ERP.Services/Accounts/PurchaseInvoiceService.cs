@@ -199,7 +199,7 @@ namespace ERP.Services.Accounts
             if (null != purchaseInvoice)
             {
                 purchaseInvoice.TotalLineItemAmountFc = purchaseInvoice.Purchaseinvoicedetails.Sum(w => w.GrossAmountFc);
-                purchaseInvoice.TotalLineItemAmount = purchaseInvoice.TotalLineItemAmountFc * purchaseInvoice.ExchangeRate;
+                purchaseInvoice.TotalLineItemAmount = purchaseInvoice.TotalLineItemAmountFc / purchaseInvoice.ExchangeRate;
 
                 if (DiscountType.Percentage.ToString() == purchaseInvoice.DiscountPercentageOrAmount)
                 {
@@ -210,10 +210,10 @@ namespace ERP.Services.Accounts
                     purchaseInvoice.DiscountAmountFc = purchaseInvoice.DiscountPerOrAmountFc;
                 }
 
-                purchaseInvoice.DiscountAmount = purchaseInvoice.DiscountAmountFc * purchaseInvoice.ExchangeRate;
+                purchaseInvoice.DiscountAmount = purchaseInvoice.DiscountAmountFc / purchaseInvoice.ExchangeRate;
 
                 purchaseInvoice.GrossAmountFc = purchaseInvoice.TotalLineItemAmountFc + purchaseInvoice.DiscountAmountFc;
-                purchaseInvoice.GrossAmount = purchaseInvoice.GrossAmountFc * purchaseInvoice.ExchangeRate;
+                purchaseInvoice.GrossAmount = purchaseInvoice.GrossAmountFc / purchaseInvoice.ExchangeRate;
 
                 if (TaxModelType.LineWise.ToString() == purchaseInvoice.TaxModelType)
                 {
@@ -224,10 +224,10 @@ namespace ERP.Services.Accounts
                     purchaseInvoice.TaxAmountFc = purchaseInvoice.Purchaseinvoicetaxes.Sum(w => w.TaxAmountFc);
                 }
 
-                purchaseInvoice.TaxAmount = purchaseInvoice.TaxAmountFc * purchaseInvoice.ExchangeRate;
+                purchaseInvoice.TaxAmount = purchaseInvoice.TaxAmountFc / purchaseInvoice.ExchangeRate;
 
                 purchaseInvoice.NetAmountFc = purchaseInvoice.GrossAmountFc + purchaseInvoice.DiscountAmountFc;
-                purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc * purchaseInvoice.ExchangeRate;
+                purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc / purchaseInvoice.ExchangeRate;
 
                 purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
 

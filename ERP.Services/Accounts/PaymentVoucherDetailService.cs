@@ -200,8 +200,6 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.InvoiceType = "";
                 paymentVoucherDetailModel.ParticularLedgerName = "";
                 paymentVoucherDetailModel.TransactionTypeName = "";
-                //paymentVoucherDetailModel.transactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
-                //paymentVoucherDetailModel.particularLedgerList = particularLedgerList;
                 return paymentVoucherDetailModel;
 
             });
@@ -290,8 +288,6 @@ namespace ERP.Services.Accounts
 
             return paymentVoucherDetailModelList; // returns.
         }
-
-
 
         private async Task<PaymentVoucherDetailModel> AssignValueToModel(Paymentvoucherdetail paymentVoucherDetail)
         {

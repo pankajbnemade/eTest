@@ -12,12 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
     public class PaymentVoucherController : Controller
     {
         private readonly IPaymentVoucher _paymentVoucher;
+        private readonly IPaymentVoucherDetail _paymentVoucherDetail;
         private readonly ILedger _ledger;
         private readonly ICurrency _currency;
         private readonly ICurrencyConversion _currencyConversion;
@@ -27,11 +29,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         public PaymentVoucherController(
             IPaymentVoucher paymentVoucher,
+            IPaymentVoucherDetail paymentVoucherDetail,
             ILedger ledger,
             ICurrency currency,
             ICurrencyConversion currencyConversion)
         {
             this._paymentVoucher = paymentVoucher;
+            this._paymentVoucherDetail = paymentVoucherDetail;
             this._ledger = ledger;
             this._currency = currency;
             this._currencyConversion = currencyConversion;
@@ -84,9 +88,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ViewBag.PaymentTypeList = EnumHelper.GetEnumListFor<PaymentType>();
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             PaymentVoucherModel paymentVoucherModel = new PaymentVoucherModel();
             paymentVoucherModel.CompanyId = userSession.CompanyId;
             paymentVoucherModel.FinancialYearId = userSession.FinancialYearId;
+            paymentVoucherModel.NoOfLineItems = 0;
 
             // generate no.
             GenerateNoModel generateNoModel = await _paymentVoucher.GeneratePaymentVoucherNo(userSession.CompanyId, userSession.FinancialYearId);
@@ -110,6 +116,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ViewBag.PaymentTypeList = EnumHelper.GetEnumListFor<PaymentType>();
 
             PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+            DataTableResultModel<PaymentVoucherDetailModel> resultModel = await _paymentVoucherDetail.GetPaymentVoucherDetailByPaymentVoucherId(paymentVoucherId, 0);
+
+            paymentVoucherModel.NoOfLineItems = resultModel.TotalResultCount;
 
             return await Task.Run(() =>
             {

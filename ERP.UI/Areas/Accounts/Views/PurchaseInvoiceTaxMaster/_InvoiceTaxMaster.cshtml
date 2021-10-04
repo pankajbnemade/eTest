@@ -9,9 +9,9 @@
             <thead>
                 <tr>
                     <th>
-                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-tax-master">
+                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-tax-master">
                             <i class="fas fa-plus"></i>
-                        </button> Action
+                        </button>
                     </th>
                     <th>PurchaseInvoiceTaxId</th>
                     <th>PurchaseInvoiceId</th>
@@ -32,6 +32,8 @@
     $(document).ready(function () {
         $("#purchaseInvoiceTaxMasterGrid").DataTable({
             "pageLength": 25,
+            "paging": false,
+            "searching": false,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
