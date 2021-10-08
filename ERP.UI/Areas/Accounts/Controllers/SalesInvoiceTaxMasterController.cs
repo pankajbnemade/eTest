@@ -25,7 +25,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// invoice detail.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
         public async Task<IActionResult> InvoiceTaxMaster(int salesInvoiceId)
         {
@@ -60,9 +60,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// add invoice tax master.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
-        /// 
         public async Task<IActionResult> AddInvoiceTaxMaster(int salesInvoiceId)
         {
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
@@ -82,7 +81,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// edit invoice tax master.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
         public async Task<IActionResult> EditInvoiceTaxMaster(int salesInvoiceTaxId)
         {
@@ -99,7 +98,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// save sale invoice tax master.
+        /// save sales invoice tax master.
         /// </summary>
         /// <param name="salesInvoiceTaxModel"></param>
         /// <returns></returns>
@@ -134,7 +133,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// delete invoice tax master.
         /// </summary>
-        /// <param name="invoiceTaxId"></param>
+        /// <param name="salesInvoiceTaxId"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> DeleteInvoiceTaxMaster(int salesInvoiceTaxId)

@@ -18,6 +18,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
     public class SalesInvoiceController : Controller
     {
         private readonly ISalesInvoice _salesInvoice;
+        private readonly ISalesInvoiceDetailTax _salesInvoiceDetailTax;
+        private readonly ISalesInvoiceTax _salesInvoiceTax;
         private readonly ILedger _ledger;
         private readonly ILedgerAddress _ledgerAddress;
         private readonly ITaxRegister _taxRegister;
@@ -33,7 +35,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ILedgerAddress ledgerAddress,
             ITaxRegister taxRegister,
             ICurrency currency,
-            ICurrencyConversion currencyConversion)
+            ICurrencyConversion currencyConversion,
+            ISalesInvoiceDetailTax salesInvoiceDetailTax,
+            ISalesInvoiceTax salesInvoiceTax)
         {
             this._salesInvoice = salesInvoice;
             this._ledger = ledger;
@@ -41,6 +45,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
             this._taxRegister = taxRegister;
             this._currency = currency;
             this._currencyConversion = currencyConversion;
+            this._salesInvoiceDetailTax = salesInvoiceDetailTax;
+            this._salesInvoiceTax = salesInvoiceTax;
         }
 
         public async Task<IActionResult> Index()
@@ -87,7 +93,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> AddInvoiceMaster()
         {
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
-            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -117,7 +122,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> EditInvoiceMaster(int salesInvoiceId)
         {
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
-            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -145,6 +149,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
             IList<SelectListModel> selectList = await _ledgerAddress.GetLedgerAddressSelectList(ledgerId);
+
             if (null != selectList && selectList.Any())
             {
                 data.Result.Status = true;
@@ -193,18 +198,45 @@ namespace ERP.UI.Areas.Accounts.Controllers
             {
                 if (salesInvoiceModel.SalesInvoiceId > 0)
                 {
+                    SalesInvoiceModel salesInvoiceModel_Old = await _salesInvoice.GetSalesInvoiceById(salesInvoiceModel.SalesInvoiceId);
+
                     // update record.
                     if (true == await _salesInvoice.UpdateSalesInvoice(salesInvoiceModel))
                     {
+                        if (salesInvoiceModel_Old.TaxModelType != salesInvoiceModel.TaxModelType)
+                        {
+                            await _salesInvoiceDetailTax.DeleteSalesInvoiceDetailTaxBySalesInvoiceId(salesInvoiceModel.SalesInvoiceId);
+                            await _salesInvoiceTax.DeleteSalesInvoiceTaxBySalesInvoiceId(salesInvoiceModel.SalesInvoiceId);
+
+                            if (salesInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                            {
+                                await _salesInvoiceTax.AddSalesInvoiceTaxBySalesInvoiceId(salesInvoiceModel.SalesInvoiceId, (int)salesInvoiceModel.TaxRegisterId);
+                            }
+                            else if (salesInvoiceModel.TaxModelType == TaxModelType.LineWise.ToString())
+                            {
+                                await _salesInvoiceDetailTax.AddSalesInvoiceDetailTaxBySalesInvoiceId(salesInvoiceModel.SalesInvoiceId, (int)salesInvoiceModel.TaxRegisterId);
+                            }
+                        }
+                        else
+                        {
+                            await _salesInvoiceTax.UpdateSalesInvoiceTaxAmountAll(salesInvoiceModel.SalesInvoiceId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = salesInvoiceModel.SalesInvoiceId;
                     }
                 }
                 else
                 {
+                    salesInvoiceModel.SalesInvoiceId = await _salesInvoice.CreateSalesInvoice(salesInvoiceModel);
                     // add new record.
-                    if (await _salesInvoice.CreateSalesInvoice(salesInvoiceModel) > 0)
+                    if (salesInvoiceModel.SalesInvoiceId > 0)
                     {
+                        if (salesInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                        {
+                            await _salesInvoiceTax.AddSalesInvoiceTaxBySalesInvoiceId(salesInvoiceModel.SalesInvoiceId, (int)salesInvoiceModel.TaxRegisterId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = salesInvoiceModel.SalesInvoiceId;
                     }
                 }
             }
@@ -218,7 +250,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> ManageInvoice(int salesInvoiceId)
         {
-            ViewBag.salesInvoiceId = salesInvoiceId;
+            ViewBag.SalesInvoiceId = salesInvoiceId;
+
+            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(salesInvoiceId);
+
+            ViewBag.IsTaxMasterVisible = salesInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
+            ViewBag.IsApprovalRequestVisible = salesInvoiceModel.StatusId == 1 || salesInvoiceModel.StatusId == 3 ? true : false;
+            ViewBag.IsApproveVisible = salesInvoiceModel.StatusId == 2 ? true : false;
 
             return await Task.Run(() =>
             {
@@ -240,18 +278,23 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// view invoice summary.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ViewInvoiceSummary(int salesInvoiceId)
+        [HttpPost]
+        public async Task<JsonResult> UpdateStatusInvoiceMaster(int salesInvoiceId, string action)
         {
-            SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(salesInvoiceId);
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            return await Task.Run(() =>
+            int statusId = (int)EnumHelper.GetValueFromDescription<DocumentStatus>(action);
+
+            if (salesInvoiceId > 0)
             {
-                return PartialView("_ViewInvoiceSummary", salesInvoiceModel);
-            });
+                if (true == await _salesInvoice.UpdateStatusSalesInvoice(salesInvoiceId, statusId))
+                {
+                    data.Result.Status = true;
+                    data.Result.Data = salesInvoiceId;
+                }
+            }
+
+            return Json(data);
         }
 
         /// <summary>
@@ -263,6 +306,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteInvoiceMaster(int salesInvoiceId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
             if (true == await _salesInvoice.DeleteSalesInvoice(salesInvoiceId))
             {
                 data.Result.Status = true;

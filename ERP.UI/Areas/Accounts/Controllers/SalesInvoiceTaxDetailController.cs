@@ -113,7 +113,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// save sale invoice tax detail.
+        /// save sales invoice tax detail.
         /// </summary>
         /// <param name="salesInvoiceDetailTaxModel"></param>
         /// <returns></returns>
@@ -154,7 +154,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteInvoiceTaxDetail(int salesInvoiceDetTaxId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-
             if (true == await _salesInvoiceDetailTax.DeleteSalesInvoiceDetailTax(salesInvoiceDetTaxId))
             {
                 data.Result.Status = true;

@@ -1,9 +1,11 @@
 ﻿using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,23 +13,32 @@ namespace ERP.UI.Areas.Accounts.Controllers
 {
     public class SalesInvoiceDetailController : Controller
     {
+        private readonly ISalesInvoice _salesInvoice;
         private readonly ISalesInvoiceDetail _salesInvoiceDetail;
+        private readonly ISalesInvoiceDetailTax _salesInvoiceDetailTax;
+        private readonly ISalesInvoiceTax _salesInvoiceTax;
         private readonly IUnitOfMeasurement _unitOfMeasurement;
 
         /// <summary>
         /// constractor.
         /// </summary>
-        public SalesInvoiceDetailController(ISalesInvoiceDetail salesInvoiceDetail, IUnitOfMeasurement unitOfMeasurement)
+        public SalesInvoiceDetailController(ISalesInvoice salesInvoice, ISalesInvoiceDetail salesInvoiceDetail,
+                                                ISalesInvoiceDetailTax salesInvoiceDetailTax, ISalesInvoiceTax salesInvoiceTax,
+                                                IUnitOfMeasurement unitOfMeasurement)
         {
+            this._salesInvoice = salesInvoice;
             this._salesInvoiceDetail = salesInvoiceDetail;
+            this._salesInvoiceDetailTax = salesInvoiceDetailTax;
+            this._salesInvoiceTax = salesInvoiceTax;
             this._unitOfMeasurement = unitOfMeasurement;
         }
 
         /// <summary>
         /// invoice detail.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
+        /// 
         public async Task<IActionResult> InvoiceDetail(int salesInvoiceId)
         {
             ViewBag.SalesInvoiceId = salesInvoiceId;
@@ -61,14 +72,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// add invoice detail.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
         public async Task<IActionResult> AddInvoiceDetail(int salesInvoiceId)
         {
             ViewBag.UnitOfMeasurementList = await _unitOfMeasurement.GetUnitOfMeasurementSelectList();
 
             SalesInvoiceDetailModel salesInvoiceDetailModel = new SalesInvoiceDetailModel();
-
             salesInvoiceDetailModel.SalesInvoiceId = salesInvoiceId;
             salesInvoiceDetailModel.SrNo = await _salesInvoiceDetail.GenerateSrNo(salesInvoiceId);
 
@@ -96,7 +106,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// save sale invoice detail.
+        /// save sales invoice detail.
         /// </summary>
         /// <param name="salesInvoiceDetailModel"></param>
         /// <returns></returns>
@@ -112,14 +122,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     // update record.
                     if (true == await _salesInvoiceDetail.UpdateSalesInvoiceDetail(salesInvoiceDetailModel))
                     {
+                        await _salesInvoiceDetailTax.UpdateSalesInvoiceDetailTaxAmountOnDetailUpdate(salesInvoiceDetailModel.SalesInvoiceDetId);
+                        await _salesInvoiceTax.UpdateSalesInvoiceTaxAmountAll(salesInvoiceDetailModel.SalesInvoiceId);
                         data.Result.Status = true;
                     }
                 }
                 else
                 {
+                    salesInvoiceDetailModel.SalesInvoiceDetId = await _salesInvoiceDetail.CreateSalesInvoiceDetail(salesInvoiceDetailModel);
+
                     // add new record.
-                    if (await _salesInvoiceDetail.CreateSalesInvoiceDetail(salesInvoiceDetailModel) > 0)
+                    if (salesInvoiceDetailModel.SalesInvoiceDetId > 0)
                     {
+                        SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById((int)salesInvoiceDetailModel.SalesInvoiceId);
+                        
+                        if (salesInvoiceModel.TaxModelType == TaxModelType.LineWise.ToString())
+                        {
+                            await _salesInvoiceDetailTax.AddSalesInvoiceDetailTaxBySalesInvoiceDetId(salesInvoiceDetailModel.SalesInvoiceDetId, (int)salesInvoiceModel.TaxRegisterId);
+                        }
+                        await _salesInvoiceTax.UpdateSalesInvoiceTaxAmountAll(salesInvoiceDetailModel.SalesInvoiceId);
+
                         data.Result.Status = true;
                     }
                 }
@@ -131,15 +153,18 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// delete invoice detail.
         /// </summary>
-        /// <param name="invoiceId"></param>
+        /// <param name="salesInvoiceId"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> DeleteInvoiceDetail(int salesInvoiceDetId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
+            SalesInvoiceDetailModel salesInvoiceDetailModel = await _salesInvoiceDetail.GetSalesInvoiceDetailById(salesInvoiceDetId);
+
             if (true == await _salesInvoiceDetail.DeleteSalesInvoiceDetail(salesInvoiceDetId))
             {
+                await _salesInvoiceTax.UpdateSalesInvoiceTaxAmountAll(salesInvoiceDetailModel.SalesInvoiceId);
                 data.Result.Status = true;
             }
 
