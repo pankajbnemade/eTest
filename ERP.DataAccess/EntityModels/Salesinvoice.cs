@@ -41,7 +41,7 @@ namespace ERP.DataAccess.EntityModels
         public decimal? TaxAmountFc { get; set; }
         public decimal? TaxAmount { get; set; }
         public string DiscountPercentageOrAmount { get; set; }
-        public decimal? DiscountPercentage { get; set; }
+        public decimal? DiscountPerOrAmountFc { get; set; }
         public decimal? DiscountAmountFc { get; set; }
         public decimal? DiscountAmount { get; set; }
         public int? StatusId { get; set; }

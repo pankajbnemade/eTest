@@ -8,13 +8,6 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ISalesInvoiceDetail : IRepository<Salesinvoicedetail>
     {
-        /// <summary>
-        /// generate sr no based on salesInvoiceId
-        /// </summary>
-        /// <param name="salesInvoiceId"></param>
-        /// <returns>
-        /// return sr no.
-        /// </returns>
         Task<int> GenerateSrNo(int salesInvoiceId);
 
         Task<int> CreateSalesInvoiceDetail(SalesInvoiceDetailModel salesInvoiceDetailModel);
@@ -31,7 +24,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DataTableResultModel<SalesInvoiceDetailModel>> GetSalesInvoiceDetailList();
 
-        //Task<IList<SalesInvoiceDetailModel>> GetSalesInvoiceDetailList(int salesInvoiceId);
+        Task<IList<SalesInvoiceDetailModel>> GetSalesInvoiceDetailListBySalesInvoiceId(int salesInvoiceId);
 
     }
 }

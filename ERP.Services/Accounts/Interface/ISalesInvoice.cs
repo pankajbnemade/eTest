@@ -18,44 +18,19 @@ namespace ERP.Services.Accounts.Interface
         /// </returns>
         Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId);
 
-        /// <summary>
-        /// create new sales invoice.
-        /// </summary>
-        /// <param name="salesInvoiceModel"></param>
-        /// <returns>
-        /// return id.
-        /// </returns>
         Task<int> CreateSalesInvoice(SalesInvoiceModel salesInvoiceModel);
 
-        /// <summary>
-        /// update sales invoice.
-        /// </summary>
-        /// <param name="salesInvoiceModel"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
         Task<bool> UpdateSalesInvoice(SalesInvoiceModel salesInvoiceModel);
 
-        /// <summary>
-        /// delete sales invoice.
-        /// </summary>
-        /// <param name="salesInvoiceId"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
         Task<bool> DeleteSalesInvoice(int salesInvoiceId);
+
+        Task<bool> UpdateStatusSalesInvoice(int salesInvoiceId, int action);
 
         Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId);
 
-        /// <summary>
-        /// get sales invoice based on salesInvoiceId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
         Task<SalesInvoiceModel> GetSalesInvoiceById(int salesInvoiceId);
 
-        Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId);
+        Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int custoomerLedgerId);
 
         /// <summary>
         /// get search sales invoice result list.
@@ -66,5 +41,7 @@ namespace ERP.Services.Accounts.Interface
         /// return list.
         /// </returns>
         Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterSalesInvoiceModel searchFilterModel);
+
+        //Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList();
     }
 }

@@ -18,7 +18,7 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceService : Repository<Purchaseinvoice>, IPurchaseInvoice
     {
-        ICommon common;
+        private readonly ICommon common;
         public PurchaseInvoiceService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
         {
             common = _common;
@@ -242,7 +242,7 @@ namespace ERP.Services.Accounts
                 }
 
                 purchaseInvoice.TaxAmount = purchaseInvoice.TaxAmountFc / purchaseInvoice.ExchangeRate;
-                purchaseInvoice.NetAmountFc = purchaseInvoice.GrossAmountFc + purchaseInvoice.DiscountAmountFc;
+                purchaseInvoice.NetAmountFc = purchaseInvoice.GrossAmountFc + purchaseInvoice.TaxAmountFc;
                 purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc / purchaseInvoice.ExchangeRate;
 
                 purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);

@@ -15,10 +15,13 @@ namespace ERP.Services.Accounts
     public class SalesInvoiceDetailTaxService : Repository<Salesinvoicedetailtax>, ISalesInvoiceDetailTax
     {
         ISalesInvoiceDetail salesInvoiceDetail;
+        private readonly ITaxRegisterDetail taxRegisterDetail;
 
-        public SalesInvoiceDetailTaxService(ErpDbContext dbContext,  ISalesInvoiceDetail _salesInvoiceDetail) : base(dbContext)
+
+        public SalesInvoiceDetailTaxService(ErpDbContext dbContext, ISalesInvoiceDetail _salesInvoiceDetail, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
         {
             salesInvoiceDetail = _salesInvoiceDetail;
+            taxRegisterDetail = _taxRegisterDetail;
         }
 
         /// <summary>
@@ -43,10 +46,9 @@ namespace ERP.Services.Accounts
         public async Task<int> CreateSalesInvoiceDetailTax(SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel)
         {
             int salesInvoiceDetailTaxId = 0;
-            int multiplier = 1;
 
-            SalesInvoiceDetailModel salesInvoiceDetailModel = null;
-            salesInvoiceDetailModel = await salesInvoiceDetail.GetSalesInvoiceDetailById((Int32)salesInvoiceDetailTaxModel.SalesInvoiceDetId);
+            //SalesInvoiceDetailModel salesInvoiceDetailModel = null;
+            //salesInvoiceDetailModel = await salesInvoiceDetail.GetSalesInvoiceDetailById((Int32)salesInvoiceDetailTaxModel.SalesInvoiceDetId);
 
             // assign values.
             Salesinvoicedetailtax salesInvoiceDetailTax = new Salesinvoicedetailtax();
@@ -55,36 +57,19 @@ namespace ERP.Services.Accounts
             salesInvoiceDetailTax.SrNo = salesInvoiceDetailTaxModel.SrNo;
             salesInvoiceDetailTax.TaxLedgerId = salesInvoiceDetailTaxModel.TaxLedgerId;
             salesInvoiceDetailTax.TaxPercentageOrAmount = salesInvoiceDetailTaxModel.TaxPercentageOrAmount;
-            salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
-
-            if (DiscountType.Percentage.ToString() == salesInvoiceDetailTaxModel.TaxPercentageOrAmount)
-            {
-                salesInvoiceDetailTaxModel.TaxAmountFc = (salesInvoiceDetailModel.GrossAmountFc * salesInvoiceDetailTaxModel.TaxPerOrAmountFc) / 100;
-            }
-            else
-            {
-                salesInvoiceDetailTaxModel.TaxAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
-            }
-
-            if (TaxAddOrDeduct.Deduct.ToString() == salesInvoiceDetailTaxModel.TaxAddOrDeduct)
-            {
-                multiplier = -1;
-            }
-
+            salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc == null ? 0 : salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
             salesInvoiceDetailTax.TaxAddOrDeduct = salesInvoiceDetailTaxModel.TaxAddOrDeduct;
-            salesInvoiceDetailTax.TaxAmountFc = multiplier * salesInvoiceDetailTaxModel.TaxAmountFc;
-            salesInvoiceDetailTax.TaxAmount = multiplier * salesInvoiceDetailTaxModel.TaxAmount;
+            salesInvoiceDetailTax.TaxAmountFc = 0;
+            salesInvoiceDetailTax.TaxAmount = 0;
             salesInvoiceDetailTax.Remark = salesInvoiceDetailTaxModel.Remark;
 
             await Create(salesInvoiceDetailTax);
 
             salesInvoiceDetailTaxId = salesInvoiceDetailTax.SalesInvoiceDetTaxId;
 
-            //salesInvoiceDetailTaxId = await Create(salesInvoiceDetailTax);
-
             if (salesInvoiceDetailTaxId != 0)
             {
-                await salesInvoiceDetail.UpdateSalesInvoiceDetailAmount(salesInvoiceDetailTax.SalesInvoiceDetId);
+                await UpdateSalesInvoiceDetailTaxAmount(salesInvoiceDetailTaxId);
             }
 
             return salesInvoiceDetailTaxId; // returns.
@@ -93,7 +78,6 @@ namespace ERP.Services.Accounts
         public async Task<bool> UpdateSalesInvoiceDetailTax(SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel)
         {
             bool isUpdated = false;
-            int multiplier = 1;
 
             // get record.
             Salesinvoicedetailtax salesInvoiceDetailTax = await GetQueryByCondition(w => w.SalesInvoiceDetTaxId == salesInvoiceDetailTaxModel.SalesInvoiceDetTaxId)
@@ -106,26 +90,52 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailTax.SrNo = salesInvoiceDetailTaxModel.SrNo;
                 salesInvoiceDetailTax.TaxLedgerId = salesInvoiceDetailTaxModel.TaxLedgerId;
                 salesInvoiceDetailTax.TaxPercentageOrAmount = salesInvoiceDetailTaxModel.TaxPercentageOrAmount;
-                salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
+                salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc == null ? 0 : salesInvoiceDetailTaxModel.TaxPerOrAmountFc;;
+                salesInvoiceDetailTax.TaxAddOrDeduct = salesInvoiceDetailTaxModel.TaxAddOrDeduct;
+                salesInvoiceDetailTax.TaxAmountFc = 0;
+                salesInvoiceDetailTax.TaxAmount = 0;
+                salesInvoiceDetailTax.Remark = salesInvoiceDetailTaxModel.Remark;
 
-                if (DiscountType.Percentage.ToString() == salesInvoiceDetailTaxModel.TaxPercentageOrAmount)
+                isUpdated = await Update(salesInvoiceDetailTax);
+            }
+
+            if (isUpdated != false)
+            {
+                await UpdateSalesInvoiceDetailTaxAmount(salesInvoiceDetailTaxModel.SalesInvoiceDetTaxId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateSalesInvoiceDetailTaxAmount(int? salesInvoiceDetailTaxId)
+        {
+            bool isUpdated = false;
+            int multiplier = 1;
+
+            // get record.
+            Salesinvoicedetailtax salesInvoiceDetailTax = await GetQueryByCondition(w => w.SalesInvoiceDetTaxId == salesInvoiceDetailTaxId)
+                                                                .Include(w => w.SalesInvoiceDet).ThenInclude(w => w.SalesInvoice).FirstOrDefaultAsync();
+
+            if (null != salesInvoiceDetail)
+            {
+                if (DiscountType.Percentage.ToString() == salesInvoiceDetailTax.TaxPercentageOrAmount)
                 {
-                    salesInvoiceDetailTaxModel.TaxAmountFc = (salesInvoiceDetailTax.SalesInvoiceDet.GrossAmountFc * salesInvoiceDetailTaxModel.TaxPerOrAmountFc) / 100;
+                    salesInvoiceDetailTax.TaxAmountFc = (salesInvoiceDetailTax.SalesInvoiceDet.GrossAmountFc * salesInvoiceDetailTax.TaxPerOrAmountFc) / 100;
                 }
                 else
                 {
-                    salesInvoiceDetailTaxModel.TaxAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
+                    salesInvoiceDetailTax.TaxAmountFc = salesInvoiceDetailTax.TaxPerOrAmountFc;
                 }
 
-                if (TaxAddOrDeduct.Deduct.ToString() == salesInvoiceDetailTaxModel.TaxAddOrDeduct)
+                if (TaxAddOrDeduct.Deduct.ToString() == salesInvoiceDetailTax.TaxAddOrDeduct)
                 {
                     multiplier = -1;
                 }
 
-                salesInvoiceDetailTax.TaxAddOrDeduct = salesInvoiceDetailTaxModel.TaxAddOrDeduct;
-                salesInvoiceDetailTax.TaxAmountFc = multiplier * salesInvoiceDetailTaxModel.TaxAmountFc;
-                salesInvoiceDetailTax.TaxAmount = multiplier * salesInvoiceDetailTaxModel.TaxAmount;
-                salesInvoiceDetailTax.Remark = salesInvoiceDetailTaxModel.Remark;
+                salesInvoiceDetailTax.TaxAmountFc = multiplier * salesInvoiceDetailTax.TaxAmountFc;
+
+                salesInvoiceDetailTax.TaxAmount = salesInvoiceDetailTax.TaxAmountFc / salesInvoiceDetailTax.SalesInvoiceDet.SalesInvoice.ExchangeRate;
+
                 isUpdated = await Update(salesInvoiceDetailTax);
             }
 
@@ -137,14 +147,32 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
+        public async Task<bool> UpdateSalesInvoiceDetailTaxAmountOnDetailUpdate(int? salesInvoiceDetailId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            IList<Salesinvoicedetailtax> salesInvoiceDetailTaxList = await GetQueryByCondition(w => w.SalesInvoiceDetId == (int)salesInvoiceDetailId).ToListAsync();
+
+            foreach (Salesinvoicedetailtax salesInvoiceDetailTax in salesInvoiceDetailTaxList)
+            {
+                isUpdated = await UpdateSalesInvoiceDetailTaxAmount(salesInvoiceDetailTax.SalesInvoiceDetTaxId);
+            }
+
+            if (isUpdated != false)
+            {
+                await salesInvoiceDetail.UpdateSalesInvoiceDetailAmount(salesInvoiceDetailId);
+            }
+
+            return isUpdated; // returns.
+        }
+
         public async Task<bool> DeleteSalesInvoiceDetailTax(int salesInvoiceDetailTaxId)
         {
             bool isDeleted = false;
 
             // get record.
-
-            Salesinvoicedetailtax salesInvoiceDetailTax = await GetQueryByCondition(w => w.SalesInvoiceDetTaxId == salesInvoiceDetailTaxId)
-                                                                .FirstOrDefaultAsync();
+            Salesinvoicedetailtax salesInvoiceDetailTax = await GetByIdAsync(w => w.SalesInvoiceDetTaxId == salesInvoiceDetailTaxId);
 
             if (null != salesInvoiceDetailTax)
             {
@@ -158,6 +186,97 @@ namespace ERP.Services.Accounts
 
             return isDeleted; // returns.
         }
+
+        public async Task<bool> AddSalesInvoiceDetailTaxBySalesInvoiceId(int salesInvoiceId, int taxRegisterId)
+        {
+            bool isUpdated = false;
+
+            IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = await salesInvoiceDetail.GetSalesInvoiceDetailListBySalesInvoiceId(salesInvoiceId);
+
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+
+            SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = null;
+
+            if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Count > 0)
+            {
+                foreach (TaxRegisterDetailModel taxRegisterDetailModel in taxRegisterDetailModelList)
+                {
+                    foreach (SalesInvoiceDetailModel salesInvoiceDetailModel in salesInvoiceDetailModelList)
+                    {
+                        salesInvoiceDetailTaxModel = new SalesInvoiceDetailTaxModel()
+                        {
+                            SalesInvoiceDetTaxId = 0,
+                            SalesInvoiceDetId = salesInvoiceDetailModel.SalesInvoiceDetId,
+                            SrNo = taxRegisterDetailModel.SrNo,
+                            TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                            TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
+                            TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                            TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
+                            TaxAmountFc = 0,
+                            TaxAmount = 0,
+                            Remark = ""
+                        };
+
+                        await CreateSalesInvoiceDetailTax(salesInvoiceDetailTaxModel);
+                    }
+                }
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> AddSalesInvoiceDetailTaxBySalesInvoiceDetId(int salesInvoiceDetId, int taxRegisterId)
+        {
+            bool isUpdated = false;
+
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+
+            SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = null;
+
+            if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Count > 0)
+            {
+                foreach (TaxRegisterDetailModel taxRegisterDetailModel in taxRegisterDetailModelList)
+                {
+                    salesInvoiceDetailTaxModel = new SalesInvoiceDetailTaxModel()
+                    {
+                        SalesInvoiceDetTaxId = 0,
+                        SalesInvoiceDetId = salesInvoiceDetId,
+                        SrNo = taxRegisterDetailModel.SrNo,
+                        TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                        TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
+                        TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                        TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
+                        TaxAmountFc = 0,
+                        TaxAmount = 0,
+                        Remark = ""
+                    };
+
+                    await CreateSalesInvoiceDetailTax(salesInvoiceDetailTaxModel);
+                }
+            }
+
+            return isUpdated; // returns.
+        }
+
+
+        public async Task<bool> DeleteSalesInvoiceDetailTaxBySalesInvoiceId(int salesInvoiceId)
+        {
+            bool isDeleted = false;
+
+            // get record.
+            IList<Salesinvoicedetailtax> salesInvoiceDetailTaxList = await GetQueryByCondition(w => w.SalesInvoiceDetTaxId != 0).Include(W => W.SalesInvoiceDet)
+                                                                                .Where(W => W.SalesInvoiceDet.SalesInvoiceId == salesInvoiceId)
+                                                                                .ToListAsync();
+
+            foreach (Salesinvoicedetailtax salesInvoiceDetailTax in salesInvoiceDetailTaxList)
+            {
+                isDeleted = await DeleteSalesInvoiceDetailTax(salesInvoiceDetailTax.SalesInvoiceDetTaxId);
+            }
+
+            return isDeleted; // returns.
+        }
+
+
 
         public async Task<SalesInvoiceDetailTaxModel> GetSalesInvoiceDetailTaxById(int salesInvoiceDetailTaxId)
         {
@@ -199,6 +318,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<SalesInvoiceDetailTaxModel> resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
 
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = await GetSalesInvoiceDetailTaxList(0, 0, 0);
+
             if (null != salesInvoiceDetailTaxModelList && salesInvoiceDetailTaxModelList.Any())
             {
                 resultModel = new DataTableResultModel<SalesInvoiceDetailTaxModel>();
@@ -214,7 +334,9 @@ namespace ERP.Services.Accounts
             IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = null;
 
             // create query.
-            IQueryable<Salesinvoicedetailtax> query = GetQueryByCondition(w => w.SalesInvoiceDetTaxId != 0).Include(w => w.TaxLedger);
+            IQueryable<Salesinvoicedetailtax> query = GetQueryByCondition(w => w.SalesInvoiceDetTaxId != 0)
+                                                        .Include(w => w.TaxLedger);
+
             // apply filters.
             if (0 != salesInvoiceDetailTaxId)
                 query = query.Where(w => w.SalesInvoiceDetTaxId == salesInvoiceDetailTaxId);
@@ -229,9 +351,11 @@ namespace ERP.Services.Accounts
 
             // get records by query.
             List<Salesinvoicedetailtax> salesInvoiceDetailTaxList = await query.ToListAsync();
+
             if (null != salesInvoiceDetailTaxList && salesInvoiceDetailTaxList.Count > 0)
             {
                 salesInvoiceDetailTaxModelList = new List<SalesInvoiceDetailTaxModel>();
+
                 foreach (Salesinvoicedetailtax salesInvoiceDetailTax in salesInvoiceDetailTaxList)
                 {
                     salesInvoiceDetailTaxModelList.Add(await AssignValueToModel(salesInvoiceDetailTax));
@@ -246,6 +370,7 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 SalesInvoiceDetailTaxModel salesInvoiceDetailTaxModel = new SalesInvoiceDetailTaxModel();
+
                 salesInvoiceDetailTaxModel.SalesInvoiceDetTaxId = salesInvoiceDetailTax.SalesInvoiceDetTaxId;
                 salesInvoiceDetailTaxModel.SalesInvoiceDetId = salesInvoiceDetailTax.SalesInvoiceDetId;
                 salesInvoiceDetailTaxModel.SrNo = salesInvoiceDetailTax.SrNo;
@@ -256,8 +381,8 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailTaxModel.TaxAmountFc = salesInvoiceDetailTax.TaxAmountFc;
                 salesInvoiceDetailTaxModel.TaxAmount = salesInvoiceDetailTax.TaxAmount;
                 salesInvoiceDetailTaxModel.Remark = salesInvoiceDetailTax.Remark;
-                // ###
-                salesInvoiceDetailTaxModel.TaxLedgerName = null != salesInvoiceDetailTax.TaxLedger ? salesInvoiceDetailTax.TaxLedger.LedgerName : null;
+
+                salesInvoiceDetailTaxModel.TaxLedgerName = null != salesInvoiceDetailTax.TaxLedger ? salesInvoiceDetailTax.TaxLedger.LedgerName : null; ;
 
                 return salesInvoiceDetailTaxModel;
             });

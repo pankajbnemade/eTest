@@ -88,7 +88,7 @@ namespace ERP.DataAccess.EntityData
 //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        { 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
@@ -3293,7 +3293,9 @@ namespace ERP.DataAccess.EntityData
                     .HasColumnName("DiscountAmount_FC")
                     .HasColumnType("decimal(18,4)");
 
-                entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DiscountPerOrAmountFc)
+                    .HasColumnName("DiscountPerOrAmount_FC")
+                    .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
                     .HasColumnType("varchar(250)")

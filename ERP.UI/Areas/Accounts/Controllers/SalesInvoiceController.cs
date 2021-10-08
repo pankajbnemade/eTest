@@ -94,6 +94,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -123,6 +124,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();

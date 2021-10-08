@@ -165,9 +165,9 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.DiscountPercentage)
-                                @Html.TextBoxFor(model => model.DiscountPercentage, new { @class = "form-control form-control-sm " })
-                                @Html.ValidationMessageFor(model => model.DiscountPercentage, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.DiscountPerOrAmountFc)
+                                @Html.TextBoxFor(model => model.DiscountPerOrAmountFc, new { @class = "form-control form-control-sm " })
+                                @Html.ValidationMessageFor(model => model.DiscountPerOrAmountFc, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -177,8 +177,8 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Remark)
-                                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control form-control-sm" })
-                               
+                                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control form-control-sm", style = "width: 500px; height: 100px;" })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>

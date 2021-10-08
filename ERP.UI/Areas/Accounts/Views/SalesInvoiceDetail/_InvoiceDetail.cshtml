@@ -29,11 +29,14 @@
     $(document).ready(function () {
         $("#salesInvoiceDetailGrid").DataTable({
             "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
-            "scrollX": true,
+            //"scrollX": true,
             "ajax": {
                 "url": "@Url.Action("GetSalesInvoiceDetailList", "SalesInvoiceDetail", new { salesInvoiceId = ViewBag.SalesInvoiceId })",
                 "type": "POST",
