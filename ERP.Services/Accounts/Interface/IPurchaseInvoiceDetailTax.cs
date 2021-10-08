@@ -16,6 +16,8 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> AddPurchaseInvoiceDetailTaxByPurchaseInvoiceId(int purchaseInvoiceId, int taxRegisterId);
 
+        Task<bool> AddPurchaseInvoiceDetailTaxByPurchaseInvoiceDetId(int purchaseInvoiceDetId, int taxRegisterId);
+
         Task<bool> UpdatePurchaseInvoiceDetailTaxAmountOnDetailUpdate(int? purchaseInvoiceDetailId);
 
         Task<bool> DeletePurchaseInvoiceDetailTax(int purchaseInvoiceDetailTaxId);
@@ -27,8 +29,6 @@ namespace ERP.Services.Accounts.Interface
         Task<DataTableResultModel<PurchaseInvoiceDetailTaxModel>> GetPurchaseInvoiceDetailTaxByPurchaseInvoiceDetailId(int purchaseInvoiceDetailId);
 
         Task<DataTableResultModel<PurchaseInvoiceDetailTaxModel>> GetPurchaseInvoiceDetailTaxList();
-
-        
 
     }
 }

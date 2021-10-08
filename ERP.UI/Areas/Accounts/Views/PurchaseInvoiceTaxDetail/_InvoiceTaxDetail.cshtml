@@ -17,20 +17,20 @@
                     <table id="purchaseInvoiceTaxDetailGrid" class="table table-bordered table-striped w-100">
                         <thead>
                             <tr class="table-header">
-                                <th>
-                                    <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-invoice-taxdetl">
+                                <th class="no-sort">
+                                    <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-invoice-taxdetl" title="Add New Line">
                                         <i class="fas fa-plus"></i>
                                     </button>
-                                    
+
                                 </th>
                                 <th>PurchaseInvoiceDetTaxId</th>
                                 <th>PurchaseInvoiceDetId</th>
                                 <th>Sr No</th>
-                                <th>Tax Ledger Name</th>
-                                <th>Tax Percentage or Amount</th>
-                                <th>TaxPer or AmountFc</th>
-                                <th>Tax Add or Deduct</th>
-                                <th>Tax AmountFc</th>
+                                <th>Tax Ledger</th>
+                                <th>Per / Amount</th>
+                                <th>Tax Per Or Amount FC</th>
+                                <th>Add or Deduct</th>
+                                <th>Tax Amount FC</th>
                                 <th>Remark</th>
                             </tr>
                         </thead>
@@ -47,11 +47,12 @@
             "pageLength": 25,
             "paging": false,
             "searching": false,
+            "info": false,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
-            /*"scrollX": true,*/
+            //"scrollX": true,
             "ajax": {
                 "url": "@Url.Action("GetPurchaseInvoiceTaxDetailList", "PurchaseInvoiceTaxDetail", new { PurchaseInvoiceDetId = ViewBag.PurchaseInvoiceDetId })",
                 "type": "POST",
@@ -62,8 +63,8 @@
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceTaxDetail(' + full.PurchaseInvoiceDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxDetail(this, ' + full.PurchaseInvoiceDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditInvoiceTaxDetail(' + full.PurchaseInvoiceDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxDetail(this, ' + full.PurchaseInvoiceDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },

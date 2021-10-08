@@ -138,7 +138,7 @@ namespace ERP.Services.Accounts
                 IQueryable<Currency> query = GetQueryByCondition(w => w.CurrencyId != 0);
                 resultModel = await query.Select(s => new SelectListModel
                 {
-                    DisplayText = s.CurrencyName,
+                    DisplayText = s.CurrencyCode,
                     Value = s.CurrencyId.ToString()
                 }).OrderBy(w => w.DisplayText).ToListAsync();
             }

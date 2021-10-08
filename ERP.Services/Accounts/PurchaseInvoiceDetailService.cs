@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -43,9 +44,9 @@ namespace ERP.Services.Accounts
             purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;
             purchaseInvoiceDetail.Description = purchaseInvoiceDetailModel.Description;
             purchaseInvoiceDetail.UnitOfMeasurementId = purchaseInvoiceDetailModel.UnitOfMeasurementId;
-            purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity;
-            purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit;
-            purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice;
+            purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity == null ? 0 : purchaseInvoiceDetailModel.Quantity;
+            purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit == null ? 0 : purchaseInvoiceDetailModel.PerUnit;
+            purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice == null ? 0 : purchaseInvoiceDetailModel.UnitPrice;
             purchaseInvoiceDetail.GrossAmountFc = 0;
             purchaseInvoiceDetail.GrossAmount = 0;
             purchaseInvoiceDetail.TaxAmountFc = 0;
@@ -53,14 +54,14 @@ namespace ERP.Services.Accounts
             purchaseInvoiceDetail.NetAmountFc = 0;
             purchaseInvoiceDetail.NetAmount = 0;
 
+            await Create(purchaseInvoiceDetail);
+
+            purchaseInvoiceDetailId = purchaseInvoiceDetail.PurchaseInvoiceDetId;
+
             if (purchaseInvoiceDetailId != 0)
             {
                 await UpdatePurchaseInvoiceDetailAmount(purchaseInvoiceDetailId);
             }
-
-            await Create(purchaseInvoiceDetail);
-
-            purchaseInvoiceDetailId = purchaseInvoiceDetail.PurchaseInvoiceDetId;
 
             return purchaseInvoiceDetailId; // returns.
         }
@@ -80,9 +81,9 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;
                 purchaseInvoiceDetail.Description = purchaseInvoiceDetailModel.Description;
                 purchaseInvoiceDetail.UnitOfMeasurementId = purchaseInvoiceDetailModel.UnitOfMeasurementId;
-                purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity;
-                purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit;
-                purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice;
+                purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity == null ? 0 : purchaseInvoiceDetailModel.Quantity;
+                purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit == null ? 0 : purchaseInvoiceDetailModel.PerUnit;
+                purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice == null ? 0 : purchaseInvoiceDetailModel.UnitPrice;
                 purchaseInvoiceDetail.GrossAmountFc = 0;
                 purchaseInvoiceDetail.GrossAmount = 0;
                 purchaseInvoiceDetail.TaxAmountFc = 0;
@@ -214,7 +215,7 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Purchaseinvoicedetail> query = GetQueryByCondition(w => w.PurchaseInvoiceDetId != 0)
-                                                        .Include(w => w.UnitOfMeasurement);
+                                                        .Include(w => w.UnitOfMeasurement).Include(w => w.PurchaseInvoice);
 
             // apply filters.
             if (0 != purchaseInvoiceDetailId)
@@ -263,6 +264,9 @@ namespace ERP.Services.Accounts
 
                 //--####
                 purchaseInvoiceDetailModel.UnitOfMeasurementName = null != purchaseInvoiceDetail.UnitOfMeasurement ? purchaseInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                purchaseInvoiceDetailModel.IsTaxDetVisible = null != purchaseInvoiceDetail.PurchaseInvoice ?
+                                                            (purchaseInvoiceDetail.PurchaseInvoice.TaxModelType == TaxModelType.LineWise.ToString() ? true : false)
+                                                            : false;
 
                 return purchaseInvoiceDetailModel;
             });

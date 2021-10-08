@@ -1,6 +1,6 @@
-﻿@{
-    ViewBag.Title = "Manage Invoice";
-}
+﻿@using ERP.Models.Accounts.Enums;
+
+@{ ViewBag.Title = "Manage Invoice"; }
 
 <section class="content-header">
     <div class="container-fluid">
@@ -9,9 +9,29 @@
                 <h1>Purchase Invoice</h1>
             </div>
             <div class="col-sm-6">
-                <button type="button" class="btn btn-secondary float-right" title="Back" onclick="javascript: fnBackToIndex();">
-                    <i class="fas fa-arrow-left"></i>  Back
-                </button>
+                <div class="float-right">
+                    <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditMaster('@ViewBag.PurchaseInvoiceId');">
+                        <i class="far fa-edit"></i> Edit
+                    </button>
+                    @if (ViewBag.IsApprovalRequestVisible == true)
+                    {
+                        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.ApprovalRequested');">
+                            <i class="fas fa-download"></i> Request
+                        </button>
+                    }
+                    @if (ViewBag.IsApproveVisible == true)
+                    {
+                        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.Approved');">
+                            <i class="far fa-calendar-check"></i> Post
+                        </button>
+                    }
+                    <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintInvoice('@ViewBag.PurchaseInvoiceId');">
+                        <i class="fas fa-file-pdf"></i> Print
+                    </button>
+                    <button type="button" class="btn btn-secondary " title="Back" onclick="javascript: fnBackToIndex();">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -29,20 +49,22 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="detail-tab" data-toggle="tab" href="#invdetail" role="tab" aria-controls="invdetail" aria-selected="false">Detail</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="summary-tab" data-toggle="tab" href="#invsummary" role="tab" aria-controls="invsummary" aria-selected="false">Summary</a>
-                            </li>
+                            @if (ViewBag.IsTaxMasterVisible == true)
+                            {
+                <li class="nav-item">
+                    <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
+                </li> } @*<li class="nav-item">
+                                    <a class="nav-link" id="summary-tab" data-toggle="tab" href="#invsummary" role="tab" aria-controls="invsummary" aria-selected="false">Summary</a>
+                                </li>*@
                         </ul>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-3">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="invmaster" role="tabpanel" aria-labelledby="master-tab"></div>
                             <div class="tab-pane fade" id="invdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
-                            <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div>
-                            <div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>
+                            @if (ViewBag.IsTaxMasterVisible == true)
+                            {
+                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div> } @*<div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>*@
                         </div>
                     </div>
                 </div>
@@ -65,27 +87,59 @@
         window.location.href = '@Url.Action("Index", "PurchaseInvoice")';
     }
 
+    // back to print invoice.
+    function fnPrintInvoice() {
+        @*window.location.href = '@Url.Action("Index", "PurchaseInvoice")';*@
+        alert("Print");
+    }
+
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         //console.log(e.target.id);// newly activated tab
         //console.log(e.relatedTarget); // previous active tab
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
         switch ($(e.target).attr('aria-controls')) {
             case 'invmaster':
+                $('#btn-edit-master').show();
                 tabUrl = '@Url.Action("ViewInvoiceMaster", "PurchaseInvoice", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
                 break;
             case 'invdetail':
+                $('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("InvoiceDetail", "PurchaseInvoiceDetail", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
                 break;
             case 'invtaxmaster':
+                $('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("InvoiceTaxMaster", "PurchaseInvoiceTaxMaster", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
                 break;
-            case 'invsummary':
+            @*case 'invsummary':
                 tabUrl = '@Url.Action("ViewInvoiceSummary", "PurchaseInvoice", new { purchaseInvoiceId = ViewBag.PurchaseInvoiceId })';
-                break;
+                break;*@
             default:
                 break;
         }
         $('#' + tabPanel).empty();
         $('#' + tabPanel).load(tabUrl);
     });
+
+
+    // edit invoice master.
+    function fnUpdateStatusInvoiceMaster(purchaseInvoiceId, action) {
+        var model = {
+            purchaseInvoiceId: purchaseInvoiceId,
+            action: action
+        };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusInvoiceMaster", "PurchaseInvoice")', 'html', model,
+        function (data) {
+            if (data.Result.Status) {
+                fnSuccessNotify('Status updated sucessfully.');
+                var tabUrl = '@Url.Action("ManageInvoice", "PurchaseInvoice")?purchaseInvoiceId=' + data.Result.Data;
+                window.location.href = tabUrl;
+                return false;
+            }
+            else {
+                fnDangerNotify(data.Result.Data);
+                return false;
+            }
+        }, null, true, null, false);
+    }
+
 </script>

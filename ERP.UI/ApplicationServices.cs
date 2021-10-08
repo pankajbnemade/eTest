@@ -58,6 +58,7 @@ namespace ERP.UI
             services.AddTransient<ILedger, LedgerService>();
             services.AddTransient<ILedgerAddress, LedgerAddressService>();
             services.AddTransient<ITaxRegister, TaxRegisterService>();
+            services.AddTransient<ITaxRegisterDetail, TaxRegisterDetailService>();
             services.AddTransient<ICurrency, CurrencyService>();
             services.AddTransient<ICurrencyConversion, CurrencyConversionService>();
             services.AddTransient<IFinancialYear, FinancialYearService>();
@@ -101,7 +102,6 @@ namespace ERP.UI
 
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
             services.AddTransient<IOutstandingInvoice, OutstandingInvoiceService>();
-
 
             #endregion // Accounts
 

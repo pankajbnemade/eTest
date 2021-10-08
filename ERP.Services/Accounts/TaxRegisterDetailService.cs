@@ -159,7 +159,7 @@ namespace ERP.Services.Accounts
                 taxRegisterDetailModel.TaxPercentageOrAmount = taxRegisterDetail.TaxPercentageOrAmount;
                 taxRegisterDetailModel.Rate = taxRegisterDetail.Rate;
                 taxRegisterDetailModel.TaxAddOrDeduct = taxRegisterDetail.TaxAddOrDeduct;
-                taxRegisterDetailModel.TaxLedgerName = taxRegisterDetail.TaxLedger.LedgerName;
+                taxRegisterDetailModel.TaxLedgerName = null != taxRegisterDetail.TaxLedger ? taxRegisterDetail.TaxLedger.LedgerName : null;
 
                 return taxRegisterDetailModel;
             });

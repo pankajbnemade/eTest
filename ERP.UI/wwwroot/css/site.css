@@ -215,3 +215,24 @@ body {*/
     z-index: 600;
 }
 
+/*To change data table font size and row height*/
+
+table.dataTable thead th, table.dataTable tbody td {
+    font-size: 0.9em;
+    padding: 4px 5px; /* e.g. change 8x to 4px here */
+}
+
+/*Table sorting icon hiding*/
+.no-sort::after {
+    display: none !important;
+}
+
+.no-sort::before {
+    display: none !important;
+}
+
+.no-sort {
+    text-align:center;
+   /* pointer-events: none !important;
+    cursor: default !important;*/
+}

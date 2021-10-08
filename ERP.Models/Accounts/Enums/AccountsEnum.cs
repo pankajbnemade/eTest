@@ -3,6 +3,33 @@
 namespace ERP.Models.Accounts.Enums
 {
     /// <summary>
+    /// tax add or deduct
+    /// </summary>
+    public enum DocumentStatus
+    {
+        [Description("Inprocess")]
+        Inprocess = 1,
+
+        [Description("ApprovalRequested")]
+        ApprovalRequested = 2,
+
+        [Description("ApprovalRejected")]
+        ApprovalRejected = 3,
+
+        [Description("Approved")]
+        Approved = 4,
+        
+        [Description("Closed")]
+        Closed = 5,
+
+        [Description("Posted")]
+        Posted = 6,
+        
+        [Description("Cancelled")]
+        Cancelled = 7,
+    }
+
+    /// <summary>
     /// tax total type.
     /// </summary>
     public enum TaxModelType
@@ -37,6 +64,8 @@ namespace ERP.Models.Accounts.Enums
         [Description("Deduct")]
         Deduct = 2,
     }
+
+
 
     /// <summary>
     /// tax add or deduct

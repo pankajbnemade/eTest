@@ -5,12 +5,10 @@
         <div class="modal-header">
             @if (Model.PurchaseInvoiceId > 0)
             {
-                <div class="modal-title">Edit Invoice</div>
-            }
-            else
-            {
-                <div class="modal-title">Add Invoice</div>
-            }
+<h4 class="modal-title">Edit Invoice</h4> }
+else
+{
+<h4 class="modal-title">Add Invoice</h4>}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -30,14 +28,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.InvoiceNo, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.InvoiceNo)
+                                @Html.ValidationMessageFor(model => model.InvoiceNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.InvoiceDate, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.InvoiceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.InvoiceDate)
+                                @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -48,14 +46,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupplierLedgerId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.SupplierLedgerId, new SelectList(ViewBag.SupplierList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.SupplierLedgerId)
+                                @Html.ValidationMessageFor(model => model.SupplierLedgerId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupplierReferenceNo, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.SupplierReferenceNo, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.SupplierReferenceNo)
+                                @Html.ValidationMessageFor(model => model.SupplierReferenceNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -68,14 +66,14 @@
                                 <select class="form-control" asp-for="BillToAddressId">
                                     <option value="">Select</option>
                                 </select>
-                                @Html.ValidationMessageFor(model => model.BillToAddressId)
+                                @Html.ValidationMessageFor(model => model.BillToAddressId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupplierReferenceDate, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.SupplierReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.SupplierReferenceDate)
+                                @Html.ValidationMessageFor(model => model.SupplierReferenceDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -86,47 +84,26 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.AccountLedgerId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.AccountLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.AccountLedgerId)
+                                @Html.ValidationMessageFor(model => model.AccountLedgerId, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.PaymentTerm)
-                                @Html.TextBoxFor(model => model.PaymentTerm, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PaymentTerm)
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">
-                           
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PaymentTerm)
+                                @Html.TextBoxFor(model => model.PaymentTerm, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PaymentTerm, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CreditLimitDays)
                                 @Html.TextBoxFor(model => model.CreditLimitDays, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.CreditLimitDays)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TaxModelType, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.TaxModelType, new SelectList(ViewBag.TaxModelTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.TaxModelType)
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TaxRegisterId)
-                                @Html.DropDownListFor(model => model.TaxRegisterId, new SelectList(ViewBag.TaxRegisterList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.TaxRegisterId)
+                                @Html.ValidationMessageFor(model => model.CreditLimitDays, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -137,14 +114,32 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.CurrencyId)
+                                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.ExchangeRate)
+                                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxModelType, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.TaxModelType, new SelectList(ViewBag.TaxModelTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxModelType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxRegisterId)
+                                @Html.DropDownListFor(model => model.TaxRegisterId, new SelectList(ViewBag.TaxRegisterList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.TaxRegisterId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -155,14 +150,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DiscountPercentageOrAmount)
                                 @Html.DropDownListFor(model => model.DiscountPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.DiscountPercentageOrAmount)
+                                @Html.ValidationMessageFor(model => model.DiscountPercentageOrAmount, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DiscountPerOrAmountFc)
                                 @Html.TextBoxFor(model => model.DiscountPerOrAmountFc, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.DiscountPerOrAmountFc)
+                                @Html.ValidationMessageFor(model => model.DiscountPerOrAmountFc, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -172,16 +167,16 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Remark)
-                                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.Remark)
+                                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control form-control-sm", style = "width: 500px; height: 100px;" })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
-                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
             </div>
         </form>
     </div>
@@ -291,11 +286,16 @@
     }
     // success form
     function SuccessInvoiceMaster(data) {
-       
+
         if (data.Result.Status) {
             $('#modal-invoice').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
-            $("#purchaseInvoiceGrid").DataTable().ajax.reload();
+
+            //$("#purchaseInvoiceGrid").DataTable().ajax.reload();
+
+            var tabUrl = '@Url.Action("ManageInvoice", "PurchaseInvoice")?purchaseInvoiceId=' + data.Result.Data;
+            window.location.href = tabUrl;
+
         }
         else {
             fnDangerNotify('Error occured while processing request.');

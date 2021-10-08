@@ -24,6 +24,8 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> DeletePurchaseInvoice(int purchaseInvoiceId);
 
+        Task<bool> UpdateStatusPurchaseInvoice(int purchaseInvoiceId, int action);
+
         Task<bool> UpdatePurchaseInvoiceMasterAmount(int? purchaseInvoiceId);
 
         Task<PurchaseInvoiceModel> GetPurchaseInvoiceById(int purchaseInvoiceId);

@@ -234,7 +234,7 @@ namespace ERP.Services.Accounts
                 }
 
                 salesInvoice.TaxAmount = salesInvoice.TaxAmountFc * salesInvoice.ExchangeRate;
-                salesInvoice.NetAmountFc = salesInvoice.GrossAmountFc + salesInvoice.DiscountAmountFc;
+                salesInvoice.NetAmountFc = salesInvoice.GrossAmountFc - salesInvoice.DiscountAmountFc;
                 salesInvoice.NetAmount = salesInvoice.NetAmountFc * salesInvoice.ExchangeRate;
 
                 if (null != salesInvoice.Currency)

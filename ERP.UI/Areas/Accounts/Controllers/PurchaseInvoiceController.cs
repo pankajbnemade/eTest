@@ -52,6 +52,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.SupplierList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
             {
@@ -206,25 +207,35 @@ namespace ERP.UI.Areas.Accounts.Controllers
                             await _purchaseInvoiceDetailTax.DeletePurchaseInvoiceDetailTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId);
                             await _purchaseInvoiceTax.DeletePurchaseInvoiceTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId);
 
-                            if (purchaseInvoiceModel_Old.TaxModelType == TaxModelType.SubTotal.ToString())
+                            if (purchaseInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString())
                             {
                                 await _purchaseInvoiceTax.AddPurchaseInvoiceTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId, (int)purchaseInvoiceModel.TaxRegisterId);
                             }
-                            else if (purchaseInvoiceModel_Old.TaxModelType == TaxModelType.LineWise.ToString())
+                            else if (purchaseInvoiceModel.TaxModelType == TaxModelType.LineWise.ToString())
                             {
                                 await _purchaseInvoiceDetailTax.AddPurchaseInvoiceDetailTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId, (int)purchaseInvoiceModel.TaxRegisterId);
                             }
                         }
-
+                        else
+                        {
+                            await _purchaseInvoiceTax.UpdatePurchaseInvoiceTaxAmountAll(purchaseInvoiceModel.PurchaseInvoiceId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = purchaseInvoiceModel.PurchaseInvoiceId;
                     }
                 }
                 else
                 {
+                    purchaseInvoiceModel.PurchaseInvoiceId = await _purchaseInvoice.CreatePurchaseInvoice(purchaseInvoiceModel);
                     // add new record.
-                    if (await _purchaseInvoice.CreatePurchaseInvoice(purchaseInvoiceModel) > 0)
+                    if (purchaseInvoiceModel.PurchaseInvoiceId > 0)
                     {
+                        if (purchaseInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                        {
+                            await _purchaseInvoiceTax.AddPurchaseInvoiceTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId, (int)purchaseInvoiceModel.TaxRegisterId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = purchaseInvoiceModel.PurchaseInvoiceId;
                     }
                 }
             }
@@ -239,6 +250,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> ManageInvoice(int purchaseInvoiceId)
         {
             ViewBag.PurchaseInvoiceId = purchaseInvoiceId;
+
+            PurchaseInvoiceModel purchaseInvoiceModel = await _purchaseInvoice.GetPurchaseInvoiceById(purchaseInvoiceId);
+
+            ViewBag.IsTaxMasterVisible = purchaseInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
+            ViewBag.IsApprovalRequestVisible = purchaseInvoiceModel.StatusId == 1 || purchaseInvoiceModel.StatusId == 3 ? true : false;
+            ViewBag.IsApproveVisible = purchaseInvoiceModel.StatusId == 2 ? true : false;
 
             return await Task.Run(() =>
             {
@@ -260,18 +277,23 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// view invoice summary.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ViewInvoiceSummary(int purchaseInvoiceId)
+        [HttpPost]
+        public async Task<JsonResult> UpdateStatusInvoiceMaster(int purchaseInvoiceId, string action)
         {
-            PurchaseInvoiceModel purchaseInvoiceModel = await _purchaseInvoice.GetPurchaseInvoiceById(purchaseInvoiceId);
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            return await Task.Run(() =>
+            int statusId = (int)EnumHelper.GetValueFromDescription<DocumentStatus>(action);
+
+            if (purchaseInvoiceId > 0)
             {
-                return PartialView("_ViewInvoiceSummary", purchaseInvoiceModel);
-            });
+                if (true == await _purchaseInvoice.UpdateStatusPurchaseInvoice(purchaseInvoiceId, statusId))
+                {
+                    data.Result.Status = true;
+                    data.Result.Data = purchaseInvoiceId;
+                }
+            }
+
+            return Json(data);
         }
 
         /// <summary>
@@ -283,6 +305,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteInvoiceMaster(int purchaseInvoiceId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
             if (true == await _purchaseInvoice.DeletePurchaseInvoice(purchaseInvoiceId))
             {
                 data.Result.Status = true;

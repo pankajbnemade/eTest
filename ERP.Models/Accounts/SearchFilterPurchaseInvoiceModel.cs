@@ -9,10 +9,10 @@ namespace ERP.Models.Accounts
 {
     public class SearchFilterPurchaseInvoiceModel
     {
-        [Display(Name = "Invoice No.")]
+        [Display(Name = "Invoice No")]
         public string InvoiceNo { get; set; }
 
-        [Display(Name = "Supplier Ledger")]
+        [Display(Name = "Supplier")]
         public Nullable<int> SupplierLedgerId { get; set; }
 
         [Display(Name = "From Date")]
@@ -20,5 +20,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "To Date")]
         public Nullable<DateTime> ToDate { get; set; }
+
+        [Display(Name = "Supplier Ref No")]
+        public string SupplierReferenceNo { get; set; }
+
+        [Display(Name = "Account")]
+        public Nullable<int> AccountLedgerId { get; set; }
     }
 }

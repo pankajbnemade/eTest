@@ -25,7 +25,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Up to 2 Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal? Quantity { get; set; }
 
@@ -48,13 +48,13 @@ namespace ERP.Models.Accounts
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? GrossAmount { get; set; }
 
-        [Display(Name = "Tax Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TaxAmount { get; set; }
-
         [Display(Name = "Tax Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? TaxAmountFc { get; set; }
+        
+        [Display(Name = "Tax Amount")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal? TaxAmount { get; set; }
 
         [Display(Name = "Net Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
@@ -64,7 +64,9 @@ namespace ERP.Models.Accounts
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? NetAmount { get; set; }
         //####
-        [Display(Name = "Unit Of Measurement Name")]
+        [Display(Name = "UOM")]
         public string UnitOfMeasurementName { get; set; }
+
+        public bool IsTaxDetVisible { get; set; }
     }
 }

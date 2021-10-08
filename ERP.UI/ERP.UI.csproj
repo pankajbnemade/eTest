@@ -158,7 +158,6 @@
     <None Include="Areas\Accounts\Views\PurchaseInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\PurchaseInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceMaster.cshtml" />
-    <None Include="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceSummary.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_AddInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_ConfirmDeleteInvoiceDetail.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceDetail\_InvoiceDetail.cshtml" />

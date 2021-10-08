@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using ERP.Models.Accounts.Enums;
 
 namespace ERP.Services.Accounts
 {
@@ -86,15 +87,16 @@ namespace ERP.Services.Accounts
             purchaseInvoice.TaxAmount = 0;
 
             purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
-            purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc;
+            purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc == null ? 0 : purchaseInvoiceModel.DiscountPerOrAmountFc;
             purchaseInvoice.DiscountAmountFc = 0;
             purchaseInvoice.DiscountAmount = 0;
 
-            purchaseInvoice.StatusId = 1;
+            purchaseInvoice.StatusId = (int)DocumentStatus.Inprocess;
             purchaseInvoice.CompanyId = purchaseInvoiceModel.CompanyId;
             purchaseInvoice.FinancialYearId = purchaseInvoiceModel.FinancialYearId;
 
             await Create(purchaseInvoice);
+
             purchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId;
 
             if (purchaseInvoiceId != 0)
@@ -149,7 +151,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.TaxAmount = 0;
 
                 purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
-                purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc;
+                purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc == null ? 0 : purchaseInvoiceModel.DiscountPerOrAmountFc;
 
                 purchaseInvoice.DiscountAmountFc = 0;
                 purchaseInvoice.DiscountAmount = 0;
@@ -160,6 +162,22 @@ namespace ERP.Services.Accounts
             if (isUpdated != false)
             {
                 await UpdatePurchaseInvoiceMasterAmount(purchaseInvoice.PurchaseInvoiceId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateStatusPurchaseInvoice(int purchaseInvoiceId, int statusId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Purchaseinvoice purchaseInvoice = await GetByIdAsync(w => w.PurchaseInvoiceId == purchaseInvoiceId);
+
+            if (null != purchaseInvoice)
+            {
+                purchaseInvoice.StatusId = statusId;
+                isUpdated = await Update(purchaseInvoice);
             }
 
             return isUpdated; // returns.
@@ -211,8 +229,7 @@ namespace ERP.Services.Accounts
                 }
 
                 purchaseInvoice.DiscountAmount = purchaseInvoice.DiscountAmountFc / purchaseInvoice.ExchangeRate;
-
-                purchaseInvoice.GrossAmountFc = purchaseInvoice.TotalLineItemAmountFc + purchaseInvoice.DiscountAmountFc;
+                purchaseInvoice.GrossAmountFc = purchaseInvoice.TotalLineItemAmountFc - purchaseInvoice.DiscountAmountFc;
                 purchaseInvoice.GrossAmount = purchaseInvoice.GrossAmountFc / purchaseInvoice.ExchangeRate;
 
                 if (TaxModelType.LineWise.ToString() == purchaseInvoice.TaxModelType)
@@ -225,11 +242,15 @@ namespace ERP.Services.Accounts
                 }
 
                 purchaseInvoice.TaxAmount = purchaseInvoice.TaxAmountFc / purchaseInvoice.ExchangeRate;
-
                 purchaseInvoice.NetAmountFc = purchaseInvoice.GrossAmountFc + purchaseInvoice.DiscountAmountFc;
                 purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc / purchaseInvoice.ExchangeRate;
 
                 purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
+                
+                if(purchaseInvoice.StatusId == (int)DocumentStatus.Approved || purchaseInvoice.StatusId == (int)DocumentStatus.ApprovalRequested)
+                {
+                    purchaseInvoice.StatusId = (int)DocumentStatus.Inprocess;
+                }
 
                 isUpdated = await Update(purchaseInvoice);
             }
@@ -331,8 +352,6 @@ namespace ERP.Services.Accounts
             return outstandingInvoiceModelList; // returns.
         }
 
-
-
         #region Private Methods
 
         /// <summary>
@@ -348,7 +367,21 @@ namespace ERP.Services.Accounts
         {
             DataTableResultModel<PurchaseInvoiceModel> resultModel = new DataTableResultModel<PurchaseInvoiceModel>();
 
-            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0);
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0)
+                                                .Include(w => w.SupplierLedger).Include(w => w.Currency)
+                                                .Include(w=>w.PreparedByUser).Include(w=>w.Status);
+
+           //sortBy
+            if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
+            {
+                sortBy = "InvoiceNo";
+            }
+
+            //sortDir
+            if (string.IsNullOrEmpty(sortDir) || sortDir == "")
+            {
+                sortDir = "asc";
+            }
 
             if (!string.IsNullOrEmpty(searchFilterModel.InvoiceNo))
             {
@@ -370,14 +403,18 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.InvoiceDate <= searchFilterModel.ToDate);
             }
 
+            if (!string.IsNullOrEmpty(searchFilterModel.SupplierReferenceNo))
+            {
+                query = query.Where(w => w.SupplierReferenceNo.Contains(searchFilterModel.SupplierReferenceNo));
+            }
+            
+            if (null != searchFilterModel.AccountLedgerId)
+            {
+                query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
+            }
+
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
-
-            //sorting
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
-            {
-                query = query.OrderBy($"{sortBy} {sortDir}");
-            }
 
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
@@ -385,16 +422,22 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.InvoiceNo.ToLower().Contains(searchBy.ToLower()));
             }
 
-
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
+
             resultModel.ResultList = await query.Select(s => new PurchaseInvoiceModel
             {
                 PurchaseInvoiceId = s.PurchaseInvoiceId,
                 InvoiceNo = s.InvoiceNo,
                 InvoiceDate = s.InvoiceDate,
-                NetAmount = s.NetAmount,
-            }).ToListAsync();
+                NetAmountFc = s.NetAmountFc,
+                SupplierReferenceNo = s.SupplierReferenceNo,
+                SupplierReferenceDate = s.SupplierReferenceDate,
+                SupplierLedgerName=s.SupplierLedger.LedgerName,
+                CurrencyCode=s.Currency.CurrencyCode,
+                PreparedByName=s.Currency.PreparedByUser.UserName,
+                StatusName=s.Status.StatusName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
@@ -460,7 +503,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceModel.GrossAmount = purchaseInvoice.GrossAmount;
                 purchaseInvoiceModel.NetAmountFc = purchaseInvoice.NetAmountFc;
                 purchaseInvoiceModel.NetAmount = purchaseInvoice.NetAmount;
-                purchaseInvoiceModel.NetAmountFcinWord = purchaseInvoice.NetAmountFcinWord;
+                purchaseInvoiceModel.NetAmountFcInWord = purchaseInvoice.NetAmountFcinWord;
                 purchaseInvoiceModel.TaxAmountFc = purchaseInvoice.TaxAmountFc;
                 purchaseInvoiceModel.TaxAmount = purchaseInvoice.TaxAmount;
                 purchaseInvoiceModel.DiscountPercentageOrAmount = purchaseInvoice.DiscountPercentageOrAmount;
@@ -482,7 +525,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceModel.BillToAddress = null != purchaseInvoice.BillToAddress ? purchaseInvoice.BillToAddress.AddressDescription : null;
                 purchaseInvoiceModel.AccountLedgerName = null != purchaseInvoice.AccountLedger ? purchaseInvoice.AccountLedger.LedgerName : null;
                 purchaseInvoiceModel.TaxRegisterName = null != purchaseInvoice.TaxRegister ? purchaseInvoice.TaxRegister.TaxRegisterName : null;
-                purchaseInvoiceModel.CurrencyName = null != purchaseInvoice.Currency ? purchaseInvoice.Currency.CurrencyName : null;
+                purchaseInvoiceModel.CurrencyCode = null != purchaseInvoice.Currency ? purchaseInvoice.Currency.CurrencyCode : null;
                 purchaseInvoiceModel.StatusName = null != purchaseInvoice.Status ? purchaseInvoice.Status.StatusName : null;
                 purchaseInvoiceModel.PreparedByName = null != purchaseInvoice.PreparedByUser ? purchaseInvoice.PreparedByUser.UserName : null;
 

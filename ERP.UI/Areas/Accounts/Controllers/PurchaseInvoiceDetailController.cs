@@ -1,4 +1,5 @@
 ﻿using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
@@ -12,6 +13,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 {
     public class PurchaseInvoiceDetailController : Controller
     {
+        private readonly IPurchaseInvoice _purchaseInvoice;
         private readonly IPurchaseInvoiceDetail _purchaseInvoiceDetail;
         private readonly IPurchaseInvoiceDetailTax _purchaseInvoiceDetailTax;
         private readonly IPurchaseInvoiceTax _purchaseInvoiceTax;
@@ -20,8 +22,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <summary>
         /// constractor.
         /// </summary>
-        public PurchaseInvoiceDetailController(IPurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceDetailTax purchaseInvoiceDetailTax, IPurchaseInvoiceTax purchaseInvoiceTax, IUnitOfMeasurement unitOfMeasurement)
+        public PurchaseInvoiceDetailController(IPurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetail purchaseInvoiceDetail,
+                                                IPurchaseInvoiceDetailTax purchaseInvoiceDetailTax, IPurchaseInvoiceTax purchaseInvoiceTax,
+                                                IUnitOfMeasurement unitOfMeasurement)
         {
+            this._purchaseInvoice = purchaseInvoice;
             this._purchaseInvoiceDetail = purchaseInvoiceDetail;
             this._purchaseInvoiceDetailTax = purchaseInvoiceDetailTax;
             this._purchaseInvoiceTax = purchaseInvoiceTax;
@@ -124,9 +129,19 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 }
                 else
                 {
+                    purchaseInvoiceDetailModel.PurchaseInvoiceDetId = await _purchaseInvoiceDetail.CreatePurchaseInvoiceDetail(purchaseInvoiceDetailModel);
+
                     // add new record.
-                    if (await _purchaseInvoiceDetail.CreatePurchaseInvoiceDetail(purchaseInvoiceDetailModel) > 0)
+                    if (purchaseInvoiceDetailModel.PurchaseInvoiceDetId > 0)
                     {
+                        PurchaseInvoiceModel purchaseInvoiceModel = await _purchaseInvoice.GetPurchaseInvoiceById((int)purchaseInvoiceDetailModel.PurchaseInvoiceId);
+                        
+                        if (purchaseInvoiceModel.TaxModelType == TaxModelType.LineWise.ToString())
+                        {
+                            await _purchaseInvoiceDetailTax.AddPurchaseInvoiceDetailTaxByPurchaseInvoiceDetId(purchaseInvoiceDetailModel.PurchaseInvoiceDetId, (int)purchaseInvoiceModel.TaxRegisterId);
+                        }
+                        await _purchaseInvoiceTax.UpdatePurchaseInvoiceTaxAmountAll(purchaseInvoiceDetailModel.PurchaseInvoiceId);
+
                         data.Result.Status = true;
                     }
                 }
