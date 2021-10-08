@@ -57,7 +57,7 @@ namespace ERP.Services.Accounts
             purchaseInvoiceTax.SrNo = purchaseInvoiceTaxModel.SrNo;
             purchaseInvoiceTax.TaxLedgerId = purchaseInvoiceTaxModel.TaxLedgerId;
             purchaseInvoiceTax.TaxPercentageOrAmount = purchaseInvoiceTaxModel.TaxPercentageOrAmount;
-            purchaseInvoiceTax.TaxPerOrAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc == null ? 0 : purchaseInvoiceTaxModel.TaxPerOrAmountFc;
+            purchaseInvoiceTax.TaxPerOrAmountFc =  purchaseInvoiceTaxModel.TaxPerOrAmountFc;
             purchaseInvoiceTax.TaxAddOrDeduct = purchaseInvoiceTaxModel.TaxAddOrDeduct;
             purchaseInvoiceTax.TaxAmountFc = 0;
             purchaseInvoiceTax.TaxAmount = 0;
@@ -90,7 +90,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceTax.SrNo = purchaseInvoiceTaxModel.SrNo;
                 purchaseInvoiceTax.TaxLedgerId = purchaseInvoiceTaxModel.TaxLedgerId;
                 purchaseInvoiceTax.TaxPercentageOrAmount = purchaseInvoiceTaxModel.TaxPercentageOrAmount;
-                purchaseInvoiceTax.TaxPerOrAmountFc = purchaseInvoiceTaxModel.TaxPerOrAmountFc == null ? 0 : purchaseInvoiceTaxModel.TaxPerOrAmountFc;
+                purchaseInvoiceTax.TaxPerOrAmountFc =  purchaseInvoiceTaxModel.TaxPerOrAmountFc;
                 purchaseInvoiceTax.TaxAddOrDeduct = purchaseInvoiceTaxModel.TaxAddOrDeduct;
                 purchaseInvoiceTax.TaxAmountFc = 0;
                 purchaseInvoiceTax.TaxAmount = 0;
@@ -204,10 +204,10 @@ namespace ERP.Services.Accounts
                     {
                         PurchaseInvoiceTaxId = 0,
                         PurchaseInvoiceId = purchaseInvoiceId,
-                        SrNo = taxRegisterDetailModel.SrNo,
-                        TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                        SrNo = (int)taxRegisterDetailModel.SrNo,
+                        TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
                         TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
-                        TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                        TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
                         TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
                         TaxAmountFc = 0,
                         TaxAmount = 0,

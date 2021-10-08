@@ -47,9 +47,6 @@ namespace ERP.Services.Accounts
         {
             int purchaseInvoiceDetailTaxId = 0;
 
-            //PurchaseInvoiceDetailModel purchaseInvoiceDetailModel = null;
-            //purchaseInvoiceDetailModel = await purchaseInvoiceDetail.GetPurchaseInvoiceDetailById((Int32)purchaseInvoiceDetailTaxModel.PurchaseInvoiceDetId);
-
             // assign values.
             Purchaseinvoicedetailtax purchaseInvoiceDetailTax = new Purchaseinvoicedetailtax();
 
@@ -57,7 +54,7 @@ namespace ERP.Services.Accounts
             purchaseInvoiceDetailTax.SrNo = purchaseInvoiceDetailTaxModel.SrNo;
             purchaseInvoiceDetailTax.TaxLedgerId = purchaseInvoiceDetailTaxModel.TaxLedgerId;
             purchaseInvoiceDetailTax.TaxPercentageOrAmount = purchaseInvoiceDetailTaxModel.TaxPercentageOrAmount;
-            purchaseInvoiceDetailTax.TaxPerOrAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc == null ? 0 : purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;
+            purchaseInvoiceDetailTax.TaxPerOrAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;
             purchaseInvoiceDetailTax.TaxAddOrDeduct = purchaseInvoiceDetailTaxModel.TaxAddOrDeduct;
             purchaseInvoiceDetailTax.TaxAmountFc = 0;
             purchaseInvoiceDetailTax.TaxAmount = 0;
@@ -90,7 +87,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetailTax.SrNo = purchaseInvoiceDetailTaxModel.SrNo;
                 purchaseInvoiceDetailTax.TaxLedgerId = purchaseInvoiceDetailTaxModel.TaxLedgerId;
                 purchaseInvoiceDetailTax.TaxPercentageOrAmount = purchaseInvoiceDetailTaxModel.TaxPercentageOrAmount;
-                purchaseInvoiceDetailTax.TaxPerOrAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc == null ? 0 : purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc;;
+                purchaseInvoiceDetailTax.TaxPerOrAmountFc = purchaseInvoiceDetailTaxModel.TaxPerOrAmountFc; ;
                 purchaseInvoiceDetailTax.TaxAddOrDeduct = purchaseInvoiceDetailTaxModel.TaxAddOrDeduct;
                 purchaseInvoiceDetailTax.TaxAmountFc = 0;
                 purchaseInvoiceDetailTax.TaxAmount = 0;
@@ -207,10 +204,10 @@ namespace ERP.Services.Accounts
                         {
                             PurchaseInvoiceDetTaxId = 0,
                             PurchaseInvoiceDetId = purchaseInvoiceDetailModel.PurchaseInvoiceDetId,
-                            SrNo = taxRegisterDetailModel.SrNo,
-                            TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                            SrNo = (int)taxRegisterDetailModel.SrNo,
+                            TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
                             TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
-                            TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                            TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
                             TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
                             TaxAmountFc = 0,
                             TaxAmount = 0,
@@ -241,10 +238,10 @@ namespace ERP.Services.Accounts
                     {
                         PurchaseInvoiceDetTaxId = 0,
                         PurchaseInvoiceDetId = purchaseInvoiceDetId,
-                        SrNo = taxRegisterDetailModel.SrNo,
-                        TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                        SrNo = (int)taxRegisterDetailModel.SrNo,
+                        TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
                         TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
-                        TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                        TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
                         TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
                         TaxAmountFc = 0,
                         TaxAmount = 0,

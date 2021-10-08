@@ -7,18 +7,18 @@ namespace ERP.DataAccess.EntityModels
     public partial class Purchaseinvoicetax
     {
         public int PurchaseInvoiceTaxId { get; set; }
-        public int? PurchaseInvoiceId { get; set; }
-        public int? SrNo { get; set; }
-        public int? TaxLedgerId { get; set; }
+        public int PurchaseInvoiceId { get; set; }
+        public int SrNo { get; set; }
+        public int TaxLedgerId { get; set; }
         public string TaxPercentageOrAmount { get; set; }
-        public decimal? TaxPerOrAmountFc { get; set; }
+        public decimal TaxPerOrAmountFc { get; set; }
         public string TaxAddOrDeduct { get; set; }
-        public decimal? TaxAmountFc { get; set; }
-        public decimal? TaxAmount { get; set; }
+        public decimal TaxAmountFc { get; set; }
+        public decimal TaxAmount { get; set; }
         public string Remark { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Aspnetuser PreparedByUser { get; set; }

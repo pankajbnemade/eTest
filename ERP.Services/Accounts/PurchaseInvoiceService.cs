@@ -87,7 +87,7 @@ namespace ERP.Services.Accounts
             purchaseInvoice.TaxAmount = 0;
 
             purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
-            purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc == null ? 0 : purchaseInvoiceModel.DiscountPerOrAmountFc;
+            purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc;
             purchaseInvoice.DiscountAmountFc = 0;
             purchaseInvoice.DiscountAmount = 0;
 
@@ -151,7 +151,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.TaxAmount = 0;
 
                 purchaseInvoice.DiscountPercentageOrAmount = purchaseInvoiceModel.DiscountPercentageOrAmount;
-                purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc == null ? 0 : purchaseInvoiceModel.DiscountPerOrAmountFc;
+                purchaseInvoice.DiscountPerOrAmountFc = purchaseInvoiceModel.DiscountPerOrAmountFc;
 
                 purchaseInvoice.DiscountAmountFc = 0;
                 purchaseInvoice.DiscountAmount = 0;

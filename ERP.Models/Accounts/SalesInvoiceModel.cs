@@ -20,20 +20,20 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Customer")]
         [Required(ErrorMessage = "Customer is required.")]
-        public int? CustomerLedgerId { get; set; }
+        public int CustomerLedgerId { get; set; }
 
         [Display(Name = "Bill To Address")]
         [Required(ErrorMessage = "Bill To Address is required.")]
-        public int? BillToAddressId { get; set; }
+        public int BillToAddressId { get; set; }
 
         [Display(Name = "Account")]
         [Required(ErrorMessage = "Account is required.")]
-        public int? AccountLedgerId { get; set; }
+        public int AccountLedgerId { get; set; }
 
         
         [Display(Name = "Bank Account")]
         [Required(ErrorMessage = "Bank Account is required.")]
-        public int? BankLedgerId { get; set; }
+        public int BankLedgerId { get; set; }
 
         [Display(Name = "Customer Ref No")]
         [StringLength(250, ErrorMessage = "250 chars only.")]
@@ -49,7 +49,7 @@ namespace ERP.Models.Accounts
         [Display(Name = "Credit Limit Days")]
         [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
         [Required(ErrorMessage = "Credit Limit Days is required.")]
-        public int? CreditLimitDays { get; set; }
+        public int CreditLimitDays { get; set; }
 
         [Display(Name = "Payment Term")]
         [StringLength(2000, ErrorMessage = "2000 chars only.")]
@@ -66,42 +66,42 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Register")]
         [Required(ErrorMessage = "Tax Register is required.")]
-        public int? TaxRegisterId { get; set; }
+        public int TaxRegisterId { get; set; }
 
         [Display(Name = "Currency")]
         [Required(ErrorMessage = "Currency is required.")]
-        public int? CurrencyId { get; set; }
+        public int CurrencyId { get; set; }
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
         [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
-        public decimal? ExchangeRate { get; set; }
+        public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Line Total Amount FC")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TotalLineItemAmountFc { get; set; }
+        public decimal TotalLineItemAmountFc { get; set; }
 
         [Display(Name = "Line Total Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TotalLineItemAmount { get; set; }
+        public decimal TotalLineItemAmount { get; set; }
 
         [Display(Name = "Gross Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? GrossAmountFc { get; set; }
+        public decimal GrossAmountFc { get; set; }
 
         [Display(Name = "Gross Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? GrossAmount { get; set; }
+        public decimal GrossAmount { get; set; }
 
         [Display(Name = "Net Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? NetAmountFc { get; set; }
+        public decimal NetAmountFc { get; set; }
 
         [Display(Name = "Net Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? NetAmount { get; set; }
+        public decimal NetAmount { get; set; }
 
         [Display(Name = "Net Amount FC In Word")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
@@ -109,11 +109,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TaxAmountFc { get; set; }
+        public decimal TaxAmountFc { get; set; }
 
         [Display(Name = "Tax Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TaxAmount { get; set; }
+        public decimal TaxAmount { get; set; }
 
         [Display(Name = "Discount Type")]
         [Required(ErrorMessage = "Discount Type is required.")]
@@ -122,25 +122,25 @@ namespace ERP.Models.Accounts
         [Display(Name = "Discount Per / Amount")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? DiscountPerOrAmountFc { get; set; }
+        public decimal DiscountPerOrAmountFc { get; set; }
 
         [Display(Name = "Discount Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? DiscountAmountFc { get; set; }
+        public decimal DiscountAmountFc { get; set; }
 
         [Display(Name = "Discount Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? DiscountAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
 
         [Display(Name = "Status")]
-        public int? StatusId { get; set; }
+        public int StatusId { get; set; }
         public int CompanyId { get; set; }
         public int FinancialYearId { get; set; }
-        public int? MaxNo { get; set; }
-        public int? VoucherStyleId { get; set; }
+        public int MaxNo { get; set; }
+        public int VoucherStyleId { get; set; }
 
-        //public int? PreparedByUserId { get; set; }
-        //public int? UpdatedByUserId { get; set; }
+        //public int PreparedByUserId { get; set; }
+        //public int UpdatedByUserId { get; set; }
         //public DateTime? PreparedDateTime { get; set; }
         //public DateTime? UpdatedDateTime { get; set; }
 

@@ -44,9 +44,9 @@ namespace ERP.Services.Accounts
             purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;
             purchaseInvoiceDetail.Description = purchaseInvoiceDetailModel.Description;
             purchaseInvoiceDetail.UnitOfMeasurementId = purchaseInvoiceDetailModel.UnitOfMeasurementId;
-            purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity == null ? 0 : purchaseInvoiceDetailModel.Quantity;
-            purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit == null ? 0 : purchaseInvoiceDetailModel.PerUnit;
-            purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice == null ? 0 : purchaseInvoiceDetailModel.UnitPrice;
+            purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity;
+            purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit;
+            purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice;
             purchaseInvoiceDetail.GrossAmountFc = 0;
             purchaseInvoiceDetail.GrossAmount = 0;
             purchaseInvoiceDetail.TaxAmountFc = 0;
@@ -81,9 +81,9 @@ namespace ERP.Services.Accounts
                 purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;
                 purchaseInvoiceDetail.Description = purchaseInvoiceDetailModel.Description;
                 purchaseInvoiceDetail.UnitOfMeasurementId = purchaseInvoiceDetailModel.UnitOfMeasurementId;
-                purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity == null ? 0 : purchaseInvoiceDetailModel.Quantity;
-                purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit == null ? 0 : purchaseInvoiceDetailModel.PerUnit;
-                purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice == null ? 0 : purchaseInvoiceDetailModel.UnitPrice;
+                purchaseInvoiceDetail.Quantity = purchaseInvoiceDetailModel.Quantity;
+                purchaseInvoiceDetail.PerUnit = purchaseInvoiceDetailModel.PerUnit;
+                purchaseInvoiceDetail.UnitPrice = purchaseInvoiceDetailModel.UnitPrice;
                 purchaseInvoiceDetail.GrossAmountFc = 0;
                 purchaseInvoiceDetail.GrossAmount = 0;
                 purchaseInvoiceDetail.TaxAmountFc = 0;

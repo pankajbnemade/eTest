@@ -12,22 +12,22 @@ namespace ERP.DataAccess.EntityModels
         }
 
         public int PurchaseInvoiceDetId { get; set; }
-        public int? PurchaseInvoiceId { get; set; }
-        public int? SrNo { get; set; }
+        public int PurchaseInvoiceId { get; set; }
+        public int SrNo { get; set; }
         public string Description { get; set; }
-        public int? UnitOfMeasurementId { get; set; }
-        public decimal? Quantity { get; set; }
-        public int? PerUnit { get; set; }
-        public decimal? UnitPrice { get; set; }
-        public decimal? GrossAmountFc { get; set; }
-        public decimal? GrossAmount { get; set; }
-        public decimal? TaxAmountFc { get; set; }
-        public decimal? TaxAmount { get; set; }
-        public decimal? NetAmountFc { get; set; }
-        public decimal? NetAmount { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int UnitOfMeasurementId { get; set; }
+        public decimal Quantity { get; set; }
+        public int PerUnit { get; set; }
+        public decimal UnitPrice { get; set; }
+        public decimal GrossAmountFc { get; set; }
+        public decimal GrossAmount { get; set; }
+        public decimal TaxAmountFc { get; set; }
+        public decimal TaxAmount { get; set; }
+        public decimal NetAmountFc { get; set; }
+        public decimal NetAmount { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Aspnetuser PreparedByUser { get; set; }

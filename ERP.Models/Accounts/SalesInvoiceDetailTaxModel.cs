@@ -7,16 +7,16 @@ namespace ERP.Models.Accounts
     {
         public int SalesInvoiceDetTaxId { get; set; }
 
-        public int? SalesInvoiceDetId { get; set; }
+        public int SalesInvoiceDetId { get; set; }
 
         [Display(Name = "Sr No")]
         [Required(ErrorMessage = "Sr No is required.")]
         [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Numbers only.")]
-        public int? SrNo { get; set; }
+        public int SrNo { get; set; }
 
         [Display(Name = "Tax Ledger")]
         [Required(ErrorMessage = "Tax Ledger is required.")]
-        public int? TaxLedgerId { get; set; }
+        public int TaxLedgerId { get; set; }
 
         [Display(Name = "Per or Amount")]
         [Required(ErrorMessage = "Per or Amount is required.")]
@@ -26,7 +26,7 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Tax Per or Amount FC is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TaxPerOrAmountFc { get; set; }
+        public decimal TaxPerOrAmountFc { get; set; }
 
         [Display(Name = "Add or Deduct")]
         [Required(ErrorMessage = "Add or Deduct is required.")]
@@ -34,11 +34,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TaxAmountFc { get; set; }
+        public decimal TaxAmountFc { get; set; }
 
         [Display(Name = "Tax Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? TaxAmount { get; set; }
+        public decimal TaxAmount { get; set; }
 
         [Display(Name = "Remark")]
         [StringLength(2000, ErrorMessage = "Remark cannot exceed 2000 characters.")]

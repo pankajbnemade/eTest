@@ -204,10 +204,10 @@ namespace ERP.Services.Accounts
                     {
                         SalesInvoiceTaxId = 0,
                         SalesInvoiceId = salesInvoiceId,
-                        SrNo = taxRegisterDetailModel.SrNo,
-                        TaxLedgerId = taxRegisterDetailModel.TaxLedgerId,
+                        SrNo = (int)taxRegisterDetailModel.SrNo,
+                        TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
                         TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
-                        TaxPerOrAmountFc = taxRegisterDetailModel.Rate,
+                        TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
                         TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
                         TaxAmountFc = 0,
                         TaxAmount = 0,
