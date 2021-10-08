@@ -38,6 +38,12 @@
     <Content Remove="Areas\Accounts\Views\PurchaseInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceSummary.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxDetail\_AddInvoiceTaxDetail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxDetail\_ConfirmDeleteInvoiceTaxDetail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxDetail\_InvoiceTaxDetail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_AddInvoiceTaxMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_ConfirmDeleteInvoiceTaxMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_InvoiceTaxMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceSummary.cshtml" />
     <Content Remove="Areas\Master\Views\Company\Index.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_AddCompany.cshtml" />
@@ -171,7 +177,6 @@
     <None Include="Areas\Accounts\Views\SalesInvoice\ManageInvoice.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
-    <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceSummary.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />

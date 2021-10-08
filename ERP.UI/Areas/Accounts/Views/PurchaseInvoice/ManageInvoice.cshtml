@@ -1,12 +1,12 @@
 ﻿@using ERP.Models.Accounts.Enums;
 
-@{ ViewBag.Title = "Manage Invoice"; }
+@{ ViewBag.Title = "Purchase Invoice"; }
 
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Purchase Invoice</h1>
+                <h5>@ViewBag.Title</h5>
             </div>
             <div class="col-sm-6">
                 <div class="float-right">
@@ -89,14 +89,12 @@
 
     // back to print invoice.
     function fnPrintInvoice() {
-        @*window.location.href = '@Url.Action("Index", "PurchaseInvoice")';*@
         alert("Print");
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        //console.log(e.target.id);// newly activated tab
-        //console.log(e.relatedTarget); // previous active tab
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+
         switch ($(e.target).attr('aria-controls')) {
             case 'invmaster':
                 $('#btn-edit-master').show();

@@ -303,14 +303,14 @@ namespace ERP.Services.Accounts
         /// <returns>
         /// return record.
         /// </returns>
-         public async Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId)
+        public async Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId)
         {
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
             // create query.
             IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0);
-                                           
-               // apply filters.
+
+            // apply filters.
             if (0 != customerLedgerId)
                 query = query.Where(w => w.CustomerLedgerId == customerLedgerId);
 
@@ -321,7 +321,7 @@ namespace ERP.Services.Accounts
 
             if (null != salesInvoiceList && salesInvoiceList.Count > 0)
             {
-                
+
                 foreach (Salesinvoice salesInvoice in salesInvoiceList)
                 {
                     outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
@@ -333,7 +333,7 @@ namespace ERP.Services.Accounts
                         InvoiceAmount = salesInvoice.NetAmount,
                         OutstandingAmount = salesInvoice.NetAmount,
                         SalesInvoiceId = salesInvoice.SalesInvoiceId,
-                         PurchaseInvoiceId = 0,
+                        PurchaseInvoiceId = 0,
                         CreditNoteId = 0,
                         DebitNoteId = 0
                     });
@@ -342,7 +342,6 @@ namespace ERP.Services.Accounts
 
             return outstandingInvoiceModelList; // returns.
         }
-
 
         #region Private Methods
 
@@ -359,7 +358,21 @@ namespace ERP.Services.Accounts
         {
             DataTableResultModel<SalesInvoiceModel> resultModel = new DataTableResultModel<SalesInvoiceModel>();
 
-            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0);
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0)
+                                            .Include(w => w.CustomerLedger).Include(w => w.Currency)
+                                            .Include(w => w.PreparedByUser).Include(w => w.Status);
+
+            //sortBy
+            if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
+            {
+                sortBy = "InvoiceNo";
+            }
+
+            //sortDir
+            if (string.IsNullOrEmpty(sortDir) || sortDir == "")
+            {
+                sortDir = "asc";
+            }
 
             if (!string.IsNullOrEmpty(searchFilterModel.InvoiceNo))
             {
@@ -381,14 +394,18 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.InvoiceDate <= searchFilterModel.ToDate);
             }
 
+            if (!string.IsNullOrEmpty(searchFilterModel.CustomerReferenceNo))
+            {
+                query = query.Where(w => w.CustomerReferenceNo.Contains(searchFilterModel.CustomerReferenceNo));
+            }
+
+            if (null != searchFilterModel.AccountLedgerId)
+            {
+                query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
+            }
+
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
-
-            //sorting
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
-            {
-                query = query.OrderBy($"{sortBy} {sortDir}");
-            }
 
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
@@ -404,9 +421,16 @@ namespace ERP.Services.Accounts
                 SalesInvoiceId = s.SalesInvoiceId,
                 InvoiceNo = s.InvoiceNo,
                 InvoiceDate = s.InvoiceDate,
-                NetAmount = s.NetAmount,
-            }).ToListAsync();
+                NetAmountFc = s.NetAmountFc,
+                CustomerReferenceNo = s.CustomerReferenceNo,
+                CustomerReferenceDate = s.CustomerReferenceDate,
+                CustomerLedgerName = s.CustomerLedger.LedgerName,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.Currency.PreparedByUser.UserName,
+                StatusName = s.Status.StatusName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
             // get filter record count.
+
             resultModel.FilterResultCount = await query.CountAsync();
 
             return resultModel; // returns.
@@ -489,7 +513,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.AccountLedgerName = null != salesInvoice.AccountLedger ? salesInvoice.AccountLedger.LedgerName : null;
                 salesInvoiceModel.BankLedgerName = null != salesInvoice.BankLedger ? salesInvoice.BankLedger.LedgerName : null;
                 salesInvoiceModel.TaxRegisterName = null != salesInvoice.TaxRegister ? salesInvoice.TaxRegister.TaxRegisterName : null;
-                salesInvoiceModel.CurrencyName = null != salesInvoice.Currency ? salesInvoice.Currency.CurrencyName : null;
+                salesInvoiceModel.CurrencyCode = null != salesInvoice.Currency ? salesInvoice.Currency.CurrencyCode : null;
                 salesInvoiceModel.StatusName = null != salesInvoice.Status ? salesInvoice.Status.StatusName : null;
                 salesInvoiceModel.PreparedByName = null != salesInvoice.PreparedByUser ? salesInvoice.PreparedByUser.UserName : null;
 

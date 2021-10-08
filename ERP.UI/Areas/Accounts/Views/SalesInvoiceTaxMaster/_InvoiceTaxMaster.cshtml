@@ -1,26 +1,22 @@
-﻿@*<div class="row mb-3">
-        <div class="col-12 text-right">
-
-        </div>
-    </div>*@
+﻿
 <div class="row">
     <div class="col-12">
         <table id="salesInvoiceTaxMasterGrid" class="table table-bordered table-striped w-100">
             <thead>
                 <tr>
-                    <th>
-                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-tax-master">
+                    <th class="no-sort">
+                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-tax-master" title="Add New Line">
                             <i class="fas fa-plus"></i>
-                        </button> Action
+                        </button>
                     </th>
                     <th>SalesInvoiceTaxId</th>
                     <th>SalesInvoiceId</th>
                     <th>Sr No</th>
-                    <th>Tax Ledger Name</th>
-                    <th>Tax Percentage or Amount</th>
-                    <th>Tax Per or AmountFc</th>
-                    <th>Tax Add or Deduct</th>
-                    <th>Tax AmountFc</th>
+                    <th>Tax Ledger</th>
+                    <th>Per / Amount</th>
+                    <th>Tax Per Or Amount FC</th>
+                    <th>Add or Deduct</th>
+                    <th>Tax Amount FC</th>
                     <th>Remark</th>
                 </tr>
             </thead>
@@ -32,11 +28,14 @@
     $(document).ready(function () {
         $("#salesInvoiceTaxMasterGrid").DataTable({
             "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
-            "scrollX": true,
+            //"scrollX": true,
             "ajax": {
                 "url": "@Url.Action("GetSalesInvoiceTaxMasterList", "SalesInvoiceTaxMaster", new { salesInvoiceId = ViewBag.SalesInvoiceId })",
                 "type": "POST",
@@ -47,8 +46,8 @@
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditInvoiceTaxMaster(' + full.SalesInvoiceTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.SalesInvoiceTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditInvoiceTaxMaster(' + full.SalesInvoiceTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteInvoiceTaxMaster(this, ' + full.SalesInvoiceTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },

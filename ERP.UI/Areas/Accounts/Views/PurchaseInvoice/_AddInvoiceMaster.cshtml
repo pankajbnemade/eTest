@@ -5,10 +5,10 @@
         <div class="modal-header">
             @if (Model.PurchaseInvoiceId > 0)
             {
-<h4 class="modal-title">Edit Invoice</h4> }
-else
-{
-<h4 class="modal-title">Add Invoice</h4>}
+            <h4 class="modal-title">Edit Invoice</h4> }
+            else
+            {
+            <h4 class="modal-title">Add Invoice</h4>}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -269,7 +269,6 @@ else
         else {
             $('#ExchangeRate').val(0);
         }
-       /* $('#ExchangeRate').val(currencyId);*/
     }
 
     // begin form

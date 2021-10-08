@@ -12,7 +12,7 @@ namespace ERP.Models.Accounts
         [Display(Name = "Invoice No.")]
         public string InvoiceNo { get; set; }
 
-        [Display(Name = "Customer Ledger")]
+        [Display(Name = "Customer")]
         public Nullable<int> CustomerLedgerId { get; set; }
 
         [Display(Name = "From Date")]
@@ -20,5 +20,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "To Date")]
         public Nullable<DateTime> ToDate { get; set; }
+
+        [Display(Name = "Customer Ref No")]
+        public string CustomerReferenceNo { get; set; }
+
+        [Display(Name = "Account")]
+        public Nullable<int> AccountLedgerId { get; set; }
     }
 }

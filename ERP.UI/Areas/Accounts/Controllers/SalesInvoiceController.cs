@@ -46,6 +46,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
             {

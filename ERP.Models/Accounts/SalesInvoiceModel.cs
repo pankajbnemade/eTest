@@ -29,11 +29,11 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Bill To Address is required.")]
         public int? BillToAddressId { get; set; }
 
-        [Display(Name = "Account Ledger")]
+        [Display(Name = "Account")]
         [Required(ErrorMessage = "Account Ledger is required.")]
         public int? AccountLedgerId { get; set; }
 
-        [Display(Name = "Bank Ledger")]
+        [Display(Name = "Bank Account")]
         public int? BankLedgerId { get; set; }
 
         [Display(Name = "Customer Ref No")]
@@ -70,15 +70,13 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Currency is required.")]
         public int? CurrencyId { get; set; }
 
-        //[RegularExpression(@"^\d+\.\d{0,2}$")]
-        //[Range(0, 9999999999999999.99)]
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
         public decimal? ExchangeRate { get; set; }
 
         [Display(Name = "Line Total Amount FC")]
         public decimal? TotalLineItemAmountFc { get; set; }
-        
+
         [Display(Name = "Line Total Amount")]
         public decimal? TotalLineItemAmount { get; set; }
 
@@ -97,22 +95,22 @@ namespace ERP.Models.Accounts
         [Display(Name = "Net Amount FC In Word")]
         public string NetAmountFcinWord { get; set; }
 
-        [Display(Name = "Tax amount FC")]
+        [Display(Name = "Tax Amount FC")]
         public decimal? TaxAmountFc { get; set; }
 
         [Display(Name = "Tax Amount")]
         public decimal? TaxAmount { get; set; }
-        
+
         [Display(Name = "Discount Type")]
         public string DiscountPercentageOrAmount { get; set; }
 
         [Display(Name = "Discount")]
         public decimal? DiscountPercentage { get; set; }
 
-         [Display(Name = "Discount Amount FC")]
+        [Display(Name = "Discount Amount FC")]
         public decimal? DiscountAmountFc { get; set; }
 
-         [Display(Name = "Discount Amount FC")]
+        [Display(Name = "Discount Amount FC")]
         public decimal? DiscountAmount { get; set; }
 
         public int? StatusId { get; set; }
@@ -137,7 +135,7 @@ namespace ERP.Models.Accounts
 
         public string TaxRegisterName { get; set; }
 
-        public string CurrencyName { get; set; }
+        public string CurrencyCode { get; set; }
 
         public string StatusName { get; set; }
 

@@ -20,9 +20,9 @@
 
 <script>
     // remove element button click.
-    var _invoiceId = null;
+    var _purchaseInvoiceId = null;
     function fnDeleteInvoiceMaster(element, purchaseInvoiceId) {
-        _invoiceId = purchaseInvoiceId;
+        _purchaseInvoiceId = purchaseInvoiceId;
         $(element).attr("data-target", "#modalConfirmInvoiceMaster");
 
         $('#modalConfirmInvoiceMaster').on('show.bs.modal', function (e) {
@@ -34,7 +34,7 @@
 
     // form confirm (yes/ok) handler, submits form
     $('#modalConfirmInvoiceMaster').find('.modal-footer #delete-invoice-master').on('click', function () {
-        var model = { purchaseInvoiceId: _invoiceId };
+        var model = { purchaseInvoiceId: _purchaseInvoiceId };
         AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("DeleteInvoiceMaster", "PurchaseInvoice")', '', model,
         function (data) {
             if (data.Result.Status) {

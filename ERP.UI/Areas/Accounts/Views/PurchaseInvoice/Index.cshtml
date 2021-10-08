@@ -68,7 +68,7 @@
                                 <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
                                     <i class="fas fa-undo"></i> Reset
                                 </button>
-                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddPurchaseInvoice();">
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddInvoice();">
                                     <i class="fas fa-plus"></i> New
                                 </button>
                             </div>
@@ -104,10 +104,6 @@
 </section>
 
 <div id="modal-invoice" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
-
-<style>
-
-</style>
 
 <script type="text/javascript">
     const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
@@ -166,7 +162,7 @@
                     }
                 },
                 { "data": "CurrencyCode", "name": "CurrencyCode" },
-                { "data": "NetAmountFc", "name": "NetAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "NetAmountFc", "name": "NetAmountFc", render: $.fn.dataTable.render.number(',', '.', 4, '') },
                 { "data": "StatusName", "name": "StatusName" },
                 { "data": "PreparedByName", "name": "PreparedByName" }
             ],
@@ -222,7 +218,7 @@
     }
 
     // new button click.
-    function fnAddPurchaseInvoice() {
+    function fnAddInvoice() {
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddInvoiceMaster", "PurchaseInvoice")', 'html', '',
         function (data) {
             $('#modal-invoice').empty();
