@@ -31,9 +31,7 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Creditnote CreditNote { get; set; }
-        public virtual Aspnetuser PreparedByUser { get; set; }
         public virtual Unitofmeasurement UnitOfMeasurement { get; set; }
-        public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual ICollection<Creditnotedetailtax> Creditnotedetailtaxes { get; set; }
     }
 }

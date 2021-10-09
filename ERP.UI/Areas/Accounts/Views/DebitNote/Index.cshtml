@@ -3,58 +3,59 @@
 
 <section class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-9">
-                <h1>Debit Note List</h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
             </div>
-            <div class="col-3"></div>
         </div>
     </div>
 </section>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
+            <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-body" id="searchFilterCriteria">
+                    <div class="card-body p-2" id="searchFilterCriteria">
                         <div class="row">
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
                                     @Html.LabelFor(model => model.DebitNoteNo, new { @class = "" })
                                     @Html.TextBoxFor(model => model.DebitNoteNo, new { @class = "form-control form-control-sm" })
-                                    @Html.ValidationMessageFor(model => model.DebitNoteNo)
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.PartyLedgerId, new { @class = "" })
-                                        @Html.DropDownListFor(model => model.PartyLedgerId, new SelectList(ViewBag.PartyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                        @Html.ValidationMessageFor(model => model.PartyLedgerId)
-                                    </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.PartyLedgerId, new { @class = "" })
+                                    @Html.DropDownListFor(model => model.PartyLedgerId, new SelectList(ViewBag.PartyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.FromDate)
-                                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                        @Html.ValidationMessageFor(model => model.FromDate)
-                                    </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.FromDate)
+                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.ToDate)
-                                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                        @Html.ValidationMessageFor(model => model.ToDate)
-                                    </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ToDate)
+                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.PartyReferenceNo, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.PartyReferenceNo, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.AccountLedgerId, new { @class = "" })
+                                    @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.AccountLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 text-right">
+                            <div class="col-sm-12 pt-2 text-right">
                                 <button class="btn btn-primary" type="button" onclick="javascript: fnSearchDebitNote();">
                                     <i class="fas fa-search"></i> Search
                                 </button>
@@ -71,54 +72,41 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                @*<div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Search Result</h3>
-                    </div>
-                    <div class="card-body">*@
-                <div class="table-responsive">
-                    <table id="debitNoteGrid" class="table table-bordered table-striped w-100">
-                        <thead>
-                            <tr class="table-header">
-                                <th class="no-sort">Action</th>
-                                <th>DebitNoteId</th>
-                                <th>Debit Note No</th>
-                                <th>Debit Note Date</th>
-                                <th>Net Amount</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                @*</div>
-                    </div>*@
+            <div class="col-sm-12">
+                <table id="debitNoteGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort"></th>
+                            <th>Debit NoteId</th>
+                            <th>Debit Note No</th>
+                            <th>Debit Note Date</th>
+                            <th>Party</th>
+                            <th>Party Ref No</th>
+                            <th>Party Ref Date</th>
+                            <th>Currency</th>
+                            <th>Net Amount FC</th>
+                            <th>Status</th>
+                            <th>Prepared By</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
 </section>
+
 <div id="modal-debitnote" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
-<style>
-    .no-sort::after {
-        display: none !important;
-    }
 
-    .no-sort::before {
-        display: none !important;
-    }
-
-    .no-sort {
-        pointer-events: none !important;
-        cursor: default !important;
-    }
-</style>
 <script type="text/javascript">
     const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
     const TO_PATTERN = 'DD/MM/YYYY HH:mm';
     $(document).ready(function () {
         $("#debitNoteGrid").DataTable({
             "processing": true,
+            "scrollX": true,
             "dom": "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",//'lrtip',
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
             "serverSide": true,
             "ajax": {
                 "url": "@Url.Action("GetDebitNoteList", "DebitNote")",
@@ -131,6 +119,8 @@
                             PartyLedgerId: $('#PartyLedgerId').val(),
                             FromDate: $('#FromDate').val(),
                             ToDate: $('#ToDate').val(),
+                            PartyReferenceNo: $('#PartyReferenceNo').val(),
+                            AccountLedgerId: $('#AccountLedgerId').val(),
                         };
 
                         return JSON.stringify(searchFilterModel);
@@ -140,11 +130,10 @@
             "columns": [
                 {
                     "orderable": false ,
-                    "width": "8%",
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditDebitNoteMaster(' + full.DebitNoteId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteMaster(this, ' + full.DebitNoteId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditDebitNoteMaster(' + full.DebitNoteId + ')"><i class="fa fa-pencil-alt"></i></button>' +
+                            /*'<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteMaster(this, ' + full.DebitNoteId + ')"><i class="fa fa-trash-alt"></i></button>' +*/
                             '</div>';
                     }
                 },
@@ -156,7 +145,18 @@
                         return moment(dt).format("DD/MMM/YYYY");
                     }
                 },
-                { "data": "NetAmount", "name": "NetAmount", render: $.fn.dataTable.render.number(',', '.', 2, '') }
+                { "data": "PartyLedgerName", "name": "PartyLedgerName" },
+                { "data": "PartyReferenceNo", "name": "PartyReferenceNo" },
+                {
+                    "data": "PartyReferenceDate", "name": "PartyReferenceDate",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                { "data": "CurrencyCode", "name": "CurrencyCode" },
+                { "data": "NetAmountFc", "name": "NetAmountFc", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "StatusName", "name": "StatusName" },
+                { "data": "PreparedByName", "name": "PreparedByName" }
             ],
         });
 

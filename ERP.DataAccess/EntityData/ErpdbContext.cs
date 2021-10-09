@@ -90,6 +90,7 @@ namespace ERP.DataAccess.EntityData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
              base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
                 entity.ToTable("advanceadjustment");
@@ -906,7 +907,6 @@ namespace ERP.DataAccess.EntityData
                     .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
-                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -1099,23 +1099,11 @@ namespace ERP.DataAccess.EntityData
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CreditNoteDetails_CreditNote_CreditNoteId");
 
-                entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.CreditnotedetailPreparedByUsers)
-                    .HasForeignKey(d => d.PreparedByUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CreditNoteDetails_aspnetusers_PreparedByUserId");
-
                 entity.HasOne(d => d.UnitOfMeasurement)
                     .WithMany(p => p.Creditnotedetails)
                     .HasForeignKey(d => d.UnitOfMeasurementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CreditNoteDetails_UnitOfMeasurement_UnitOfMeasurementId");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.CreditnotedetailUpdatedByUsers)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CreditNoteDetails_aspnetusers_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Creditnotedetailtax>(entity =>
@@ -1485,16 +1473,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.DebitnoteAccountLedgers)
                     .HasForeignKey(d => d.AccountLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_Ledger_AccountLedgerId");
 
                 entity.HasOne(d => d.BillToAddress)
                     .WithMany(p => p.Debitnotes)
                     .HasForeignKey(d => d.BillToAddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_Ledger_BillToAddressId");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Debitnotes)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
@@ -1506,36 +1497,43 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Debitnotes)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PartyLedger)
                     .WithMany(p => p.DebitnotePartyLedgers)
                     .HasForeignKey(d => d.PartyLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_Ledger_PartyLedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DebitnotePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Debitnotes)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_Status_StatusId");
 
                 entity.HasOne(d => d.TaxRegister)
                     .WithMany(p => p.Debitnotes)
                     .HasForeignKey(d => d.TaxRegisterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_TaxRegister_TaxRegisterId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.DebitnoteUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_aspnetusers_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Debitnotes)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNote_VoucherStyle_VoucherStyleId");
             });
 
@@ -1592,21 +1590,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.DebitNote)
                     .WithMany(p => p.Debitnotedetails)
                     .HasForeignKey(d => d.DebitNoteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetails_DebitNote_DebitNoteId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DebitnotedetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetails_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.UnitOfMeasurement)
                     .WithMany(p => p.Debitnotedetails)
                     .HasForeignKey(d => d.UnitOfMeasurementId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetails_UnitOfMeasurement_UnitOfMeasurementId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.DebitnotedetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetails_aspnetusers_UpdatedByUserId");
             });
 
@@ -1661,21 +1663,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.DebitNoteDet)
                     .WithMany(p => p.Debitnotedetailtaxes)
                     .HasForeignKey(d => d.DebitNoteDetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PIDetailTax_InvoiceDetail_DebitNoteDetId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DebitnotedetailtaxPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetailTax_Aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.TaxLedger)
                     .WithMany(p => p.Debitnotedetailtaxes)
                     .HasForeignKey(d => d.TaxLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetailTax_Ledger_TaxLedgerId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.DebitnotedetailtaxUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteDetailTax_Aspnetusers_aspnetusersUpdatedByUserId");
             });
 
@@ -1727,21 +1733,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.DebitNote)
                     .WithMany(p => p.Debitnotetaxes)
                     .HasForeignKey(d => d.DebitNoteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteTax_DebitNote_DebitNoteId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DebitnotetaxPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteTax_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.TaxLedger)
                     .WithMany(p => p.Debitnotetaxes)
                     .HasForeignKey(d => d.TaxLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteTax_Ledger_TaxLedgerId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.DebitnotetaxUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DebitNoteTax_aspnetusers_UpdatedByUserId");
             });
 

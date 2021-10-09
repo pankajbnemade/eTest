@@ -30,8 +30,6 @@ namespace ERP.DataAccess.EntityModels
             CountryUpdatedByUsers = new HashSet<Country>();
             CreditnotePreparedByUsers = new HashSet<Creditnote>();
             CreditnoteUpdatedByUsers = new HashSet<Creditnote>();
-            CreditnotedetailPreparedByUsers = new HashSet<Creditnotedetail>();
-            CreditnotedetailUpdatedByUsers = new HashSet<Creditnotedetail>();
             CreditnotedetailtaxPreparedByUsers = new HashSet<Creditnotedetailtax>();
             CreditnotedetailtaxUpdatedByUsers = new HashSet<Creditnotedetailtax>();
             CreditnotetaxPreparedByUsers = new HashSet<Creditnotetax>();
@@ -154,8 +152,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Country> CountryUpdatedByUsers { get; set; }
         public virtual ICollection<Creditnote> CreditnotePreparedByUsers { get; set; }
         public virtual ICollection<Creditnote> CreditnoteUpdatedByUsers { get; set; }
-        public virtual ICollection<Creditnotedetail> CreditnotedetailPreparedByUsers { get; set; }
-        public virtual ICollection<Creditnotedetail> CreditnotedetailUpdatedByUsers { get; set; }
         public virtual ICollection<Creditnotedetailtax> CreditnotedetailtaxPreparedByUsers { get; set; }
         public virtual ICollection<Creditnotedetailtax> CreditnotedetailtaxUpdatedByUsers { get; set; }
         public virtual ICollection<Creditnotetax> CreditnotetaxPreparedByUsers { get; set; }

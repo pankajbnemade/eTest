@@ -1,17 +1,13 @@
-﻿@*<div class="row mb-3">
-        <div class="col-12 text-right">
-
-        </div>
-    </div>*@
+﻿
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <table id="debitNoteDetailGrid" class="table table-bordered table-striped w-100">
             <thead>
                 <tr class="table-header">
-                    <th>
-                        <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-debitnote-dtl" title="Add New Line">
+                    <th class="no-sort">
+                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-debitnote-dtl" title="Add New Line">
                             <i class="fas fa-plus"></i>
-                        </button>Action
+                        </button>
                     </th>
                     <th>DebitNoteDetId</th>
                     <th>Sr No</th>
@@ -33,6 +29,9 @@
     $(document).ready(function () {
         $("#debitNoteDetailGrid").DataTable({
             "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
@@ -47,11 +46,17 @@
                 {
                     "orderable": false,
                     "render": function (data, type, full, meta) {
-                        return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditDebitNoteDetail(' + full.DebitNoteDetId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteDetail(this, ' + full.DebitNoteDetId + ')"><span class="fa fa-trash-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0" onclick="javascript: fnDebitNoteTaxDetail(' + full.DebitNoteDetId + ')"><span class="fa fa-info-circle"></span></button>' +
-                            '</div>';
+                        var control = '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditDebitNoteDetail(' + full.DebitNoteDetId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteDebitNoteDetail(this, ' + full.DebitNoteDetId + ')"><span class="fa fa-trash-alt"></span></button>';
+
+                            if(full.IsTaxDetVisible == true) {
+                                control = control + '<button type="button" class="border-0 rounded-0" title="Tax Details" onclick="javascript: fnDebitNoteTaxDetail(' + full.DebitNoteDetId + ')"><span class="fa fa-info-circle"></span></button>';
+                            }
+
+                        control = control +'</div>';
+
+                        return control;
                     }
                 },
                 { "data": "DebitNoteDetId", "name": "DebitNoteDetId", "visible": false  },
@@ -60,10 +65,10 @@
                 { "data": "Quantity", "name": "Quantity", render: $.fn.dataTable.render.number(',', '.', 2, '') },
                 { "data": "UnitOfMeasurementName", "name": "UOM" },
                 { "data": "PerUnit", "name": "Per Unit" },
-                { "data": "UnitPrice", "name": "Unit Price", render: $.fn.dataTable.render.number(',', '.', 2, '') },
-                { "data": "GrossAmountFc", "name": "GrossAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
-                { "data": "TaxAmountFc", "name": "TaxAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') },
-                { "data": "NetAmountFc", "name": "NetAmount_FC", render: $.fn.dataTable.render.number(',', '.', 2, '') }
+                { "data": "UnitPrice", "name": "Unit Price", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "GrossAmountFc", "name": "GrossAmount_FC", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "TaxAmountFc", "name": "TaxAmount_FC", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "NetAmountFc", "name": "NetAmount_FC", render: $.fn.dataTable.render.number(',', '.', 4, '') }
             ],
         });
     });
@@ -102,4 +107,5 @@
         }, null, true, null, false);
     }
 </script>
+
 @{ await Html.RenderPartialAsync("_ConfirmDeleteDebitNoteDetail"); }

@@ -9,12 +9,12 @@ namespace ERP.Services.Accounts.Interface
     public interface IDebitNote : IRepository<Debitnote>
     {
         /// <summary>
-        /// generate invoice no.
+        /// generate debitNote no.
         /// </summary>
         /// <param name="companyId"></param>
         /// <param name="financialYearId"></param>
         /// <returns>
-        /// return invoice no.
+        /// return debitNote no.
         /// </returns>
         Task<GenerateNoModel> GenerateDebitNoteNo(int companyId, int financialYearId);
 
@@ -24,14 +24,16 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> DeleteDebitNote(int debitNoteId);
 
+        Task<bool> UpdateStatusDebitNote(int debitNoteId, int action);
+
         Task<bool> UpdateDebitNoteMasterAmount(int? debitNoteId);
 
         Task<DebitNoteModel> GetDebitNoteById(int debitNoteId);
-        
+
         Task<IList<OutstandingInvoiceModel>> GetDebitNoteListByPartyLedgerId(int partyLedgerId);
 
         /// <summary>
-        /// get search sales invoice result list.
+        /// get search purchase debitNote result list.
         /// </summary>
         /// <param name="dataTableAjaxPostModel"></param>
         /// <param name="searchFilterModel"></param>
@@ -39,7 +41,7 @@ namespace ERP.Services.Accounts.Interface
         /// return list.
         /// </returns>
         Task<DataTableResultModel<DebitNoteModel>> GetDebitNoteList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterDebitNoteModel searchFilterModel);
-   
+
         //Task<DataTableResultModel<DebitNoteModel>> GetDebitNoteList();
     }
 }

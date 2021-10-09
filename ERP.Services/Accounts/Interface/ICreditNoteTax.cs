@@ -7,7 +7,7 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ICreditNoteTax : IRepository<Creditnotetax>
     {
-         Task<int> GenerateSrNo(int crediteNoteId);
+         Task<int> GenerateSrNo(int creditNoteId);
 
         Task<int> CreateCreditNoteTax(CreditNoteTaxModel creditNoteTaxModel);
 

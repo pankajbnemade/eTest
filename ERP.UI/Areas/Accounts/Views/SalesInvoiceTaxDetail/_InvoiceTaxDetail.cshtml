@@ -9,7 +9,7 @@
         </div>
         <div class="modal-body">
             <div class="row">
-                <div class="col-12 table-responsive">
+                <div class="col-sm-12">
                     <table id="salesInvoiceTaxDetailGrid" class="table table-bordered table-striped w-100">
                         <thead>
                             <tr class="table-header">
@@ -48,7 +48,7 @@
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
-            //"scrollX": true,
+            "scrollX": true,
             "ajax": {
                 "url": "@Url.Action("GetSalesInvoiceTaxDetailList", "SalesInvoiceTaxDetail", new { SalesInvoiceDetId = ViewBag.SalesInvoiceDetId })",
                 "type": "POST",

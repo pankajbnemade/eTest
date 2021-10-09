@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Content Remove="Areas\Accounts\Views\CreditNote\_ViewCreditNoteSummary.cshtml" />
+    <Content Remove="Areas\Accounts\Views\DebitNote\_ViewDebitNoteSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYear\Index.cshtml" />
@@ -140,7 +141,6 @@
     <None Include="Areas\Accounts\Views\DebitNote\_AddDebitNoteMaster.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNote\_ConfirmDeleteDebitNoteMaster.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNote\_ViewDebitNoteMaster.cshtml" />
-    <None Include="Areas\Accounts\Views\DebitNote\_ViewDebitNoteSummary.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYear\Index.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYear\_AddFinancialYear.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />

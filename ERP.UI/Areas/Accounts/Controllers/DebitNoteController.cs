@@ -18,6 +18,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
     public class DebitNoteController : Controller
     {
         private readonly IDebitNote _debitNote;
+        private readonly IDebitNoteDetailTax _debitNoteDetailTax;
+        private readonly IDebitNoteTax _debitNoteTax;
         private readonly ILedger _ledger;
         private readonly ILedgerAddress _ledgerAddress;
         private readonly ITaxRegister _taxRegister;
@@ -33,7 +35,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ILedgerAddress ledgerAddress,
             ITaxRegister taxRegister,
             ICurrency currency,
-            ICurrencyConversion currencyConversion)
+            ICurrencyConversion currencyConversion,
+            IDebitNoteDetailTax debitNoteDetailTax,
+            IDebitNoteTax debitNoteTax)
         {
             this._debitNote = debitNote;
             this._ledger = ledger;
@@ -41,11 +45,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
             this._taxRegister = taxRegister;
             this._currency = currency;
             this._currencyConversion = currencyConversion;
+            this._debitNoteDetailTax = debitNoteDetailTax;
+            this._debitNoteTax = debitNoteTax;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
             {
@@ -54,7 +61,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// get search debit note result list.
+        /// get search purchase debitNote result list.
         /// </summary>
         /// <returns>
         /// return json.
@@ -80,12 +87,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// add new debit note master.
+        /// add new debitNote master.
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> AddDebitNoteMaster()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -109,12 +116,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// edit debit note master.
+        /// edit debitNote master.
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> EditDebitNoteMaster(int debitNoteId)
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -190,18 +197,45 @@ namespace ERP.UI.Areas.Accounts.Controllers
             {
                 if (debitNoteModel.DebitNoteId > 0)
                 {
+                    DebitNoteModel debitNoteModel_Old = await _debitNote.GetDebitNoteById(debitNoteModel.DebitNoteId);
+
                     // update record.
                     if (true == await _debitNote.UpdateDebitNote(debitNoteModel))
                     {
+                        if (debitNoteModel_Old.TaxModelType != debitNoteModel.TaxModelType)
+                        {
+                            await _debitNoteDetailTax.DeleteDebitNoteDetailTaxByDebitNoteId(debitNoteModel.DebitNoteId);
+                            await _debitNoteTax.DeleteDebitNoteTaxByDebitNoteId(debitNoteModel.DebitNoteId);
+
+                            if (debitNoteModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                            {
+                                await _debitNoteTax.AddDebitNoteTaxByDebitNoteId(debitNoteModel.DebitNoteId, (int)debitNoteModel.TaxRegisterId);
+                            }
+                            else if (debitNoteModel.TaxModelType == TaxModelType.LineWise.ToString())
+                            {
+                                await _debitNoteDetailTax.AddDebitNoteDetailTaxByDebitNoteId(debitNoteModel.DebitNoteId, (int)debitNoteModel.TaxRegisterId);
+                            }
+                        }
+                        else
+                        {
+                            await _debitNoteTax.UpdateDebitNoteTaxAmountAll(debitNoteModel.DebitNoteId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = debitNoteModel.DebitNoteId;
                     }
                 }
                 else
                 {
+                    debitNoteModel.DebitNoteId = await _debitNote.CreateDebitNote(debitNoteModel);
                     // add new record.
-                    if (await _debitNote.CreateDebitNote(debitNoteModel) > 0)
+                    if (debitNoteModel.DebitNoteId > 0)
                     {
+                        if (debitNoteModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                        {
+                            await _debitNoteTax.AddDebitNoteTaxByDebitNoteId(debitNoteModel.DebitNoteId, (int)debitNoteModel.TaxRegisterId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = debitNoteModel.DebitNoteId;
                     }
                 }
             }
@@ -216,6 +250,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> ManageDebitNote(int debitNoteId)
         {
             ViewBag.DebitNoteId = debitNoteId;
+
+            DebitNoteModel debitNoteModel = await _debitNote.GetDebitNoteById(debitNoteId);
+
+            ViewBag.IsTaxMasterVisible = debitNoteModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
+            ViewBag.IsApprovalRequestVisible = debitNoteModel.StatusId == 1 || debitNoteModel.StatusId == 3 ? true : false;
+            ViewBag.IsApproveVisible = debitNoteModel.StatusId == 2 ? true : false;
 
             return await Task.Run(() =>
             {
@@ -237,22 +277,27 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// view debitNote summary.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ViewDebitNoteSummary(int debitNoteId)
+        [HttpPost]
+        public async Task<JsonResult> UpdateStatusDebitNoteMaster(int debitNoteId, string action)
         {
-            DebitNoteModel debitNoteModel = await _debitNote.GetDebitNoteById(debitNoteId);
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            return await Task.Run(() =>
+            int statusId = (int)EnumHelper.GetValueFromDescription<DocumentStatus>(action);
+
+            if (debitNoteId > 0)
             {
-                return PartialView("_ViewDebitNoteSummary", debitNoteModel);
-            });
+                if (true == await _debitNote.UpdateStatusDebitNote(debitNoteId, statusId))
+                {
+                    data.Result.Status = true;
+                    data.Result.Data = debitNoteId;
+                }
+            }
+
+            return Json(data);
         }
 
         /// <summary>
-        /// delete debitNote master.
+        /// delete invoice master.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
@@ -260,6 +305,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteDebitNoteMaster(int debitNoteId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
             if (true == await _debitNote.DeleteDebitNote(debitNoteId))
             {
                 data.Result.Status = true;

@@ -15,10 +15,12 @@ namespace ERP.Services.Accounts
     public class DebitNoteTaxService : Repository<Debitnotetax>, IDebitNoteTax
     {
         private readonly IDebitNote debitNote;
+        private readonly ITaxRegisterDetail taxRegisterDetail;
 
-        public DebitNoteTaxService(ErpDbContext dbContext, IDebitNote _debitNote) : base(dbContext)
+        public DebitNoteTaxService(ErpDbContext dbContext, IDebitNote _debitNote, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
         {
             debitNote = _debitNote;
+            taxRegisterDetail = _taxRegisterDetail;
         }
 
         /// <summary>
@@ -43,7 +45,6 @@ namespace ERP.Services.Accounts
         public async Task<int> CreateDebitNoteTax(DebitNoteTaxModel debitNoteTaxModel)
         {
             int debitNoteTaxId = 0;
-            int multiplier = 1;
 
             // assign values.
             DebitNoteModel debitNoteModel = null;
@@ -51,29 +52,15 @@ namespace ERP.Services.Accounts
             debitNoteModel = await debitNote.GetDebitNoteById((int)debitNoteTaxModel.DebitNoteId);
 
             Debitnotetax debitNoteTax = new Debitnotetax();
+
             debitNoteTax.DebitNoteId = debitNoteTaxModel.DebitNoteId;
             debitNoteTax.SrNo = debitNoteTaxModel.SrNo;
             debitNoteTax.TaxLedgerId = debitNoteTaxModel.TaxLedgerId;
             debitNoteTax.TaxPercentageOrAmount = debitNoteTaxModel.TaxPercentageOrAmount;
-            debitNoteTax.TaxPerOrAmountFc = debitNoteTaxModel.TaxPerOrAmountFc;
-
-            if (DiscountType.Percentage.ToString() == debitNoteTax.TaxPercentageOrAmount)
-            {
-                debitNoteTaxModel.TaxAmountFc = (debitNoteModel.GrossAmountFc * debitNoteTaxModel.TaxPerOrAmountFc) / 100;
-            }
-            else
-            {
-                debitNoteTaxModel.TaxAmountFc = debitNoteTaxModel.TaxPerOrAmountFc;
-            }
-
-            if (TaxAddOrDeduct.Deduct.ToString() == debitNoteTaxModel.TaxAddOrDeduct)
-            {
-                multiplier = -1;
-            }
-
+            debitNoteTax.TaxPerOrAmountFc =  debitNoteTaxModel.TaxPerOrAmountFc;
             debitNoteTax.TaxAddOrDeduct = debitNoteTaxModel.TaxAddOrDeduct;
-            debitNoteTax.TaxAmountFc = multiplier * debitNoteTaxModel.TaxAmountFc;
-            debitNoteTax.TaxAmount = multiplier * debitNoteTaxModel.TaxAmount;
+            debitNoteTax.TaxAmountFc = 0;
+            debitNoteTax.TaxAmount = 0;
             debitNoteTax.Remark = debitNoteTaxModel.Remark;
 
             await Create(debitNoteTax);
@@ -81,7 +68,7 @@ namespace ERP.Services.Accounts
 
             if (debitNoteTaxId != 0)
             {
-                await debitNote.UpdateDebitNoteMasterAmount(debitNoteTaxId);
+                await UpdateDebitNoteTaxAmount(debitNoteTaxId); ;
             }
 
             return debitNoteTaxId; // returns.
@@ -90,7 +77,6 @@ namespace ERP.Services.Accounts
         public async Task<bool> UpdateDebitNoteTax(DebitNoteTaxModel debitNoteTaxModel)
         {
             bool isUpdated = false;
-            int multiplier = 1;
 
             // get record.
             Debitnotetax debitNoteTax = await GetQueryByCondition(w => w.DebitNoteTaxId == debitNoteTaxModel.DebitNoteTaxId)
@@ -104,25 +90,10 @@ namespace ERP.Services.Accounts
                 debitNoteTax.SrNo = debitNoteTaxModel.SrNo;
                 debitNoteTax.TaxLedgerId = debitNoteTaxModel.TaxLedgerId;
                 debitNoteTax.TaxPercentageOrAmount = debitNoteTaxModel.TaxPercentageOrAmount;
-                debitNoteTax.TaxPerOrAmountFc = debitNoteTaxModel.TaxPerOrAmountFc;
-
-                if (DiscountType.Percentage.ToString() == debitNoteTax.TaxPercentageOrAmount)
-                {
-                    debitNoteTaxModel.TaxAmountFc = (debitNoteTax.DebitNote.GrossAmountFc * debitNoteTaxModel.TaxPerOrAmountFc) / 100;
-                }
-                else
-                {
-                    debitNoteTaxModel.TaxAmountFc = debitNoteTaxModel.TaxPerOrAmountFc;
-                }
-
-                if (TaxAddOrDeduct.Deduct.ToString() == debitNoteTaxModel.TaxAddOrDeduct)
-                {
-                    multiplier = -1;
-                }
-
+                debitNoteTax.TaxPerOrAmountFc =  debitNoteTaxModel.TaxPerOrAmountFc;
                 debitNoteTax.TaxAddOrDeduct = debitNoteTaxModel.TaxAddOrDeduct;
-                debitNoteTax.TaxAmountFc = multiplier * debitNoteTaxModel.TaxAmountFc;
-                debitNoteTax.TaxAmount = multiplier * debitNoteTaxModel.TaxAmount;
+                debitNoteTax.TaxAmountFc = 0;
+                debitNoteTax.TaxAmount = 0;
                 debitNoteTax.Remark = debitNoteTaxModel.Remark;
 
                 isUpdated = await Update(debitNoteTax);
@@ -130,7 +101,67 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
+                await UpdateDebitNoteTaxAmount(debitNoteTaxModel.DebitNoteTaxId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateDebitNoteTaxAmount(int? debitNoteTaxId)
+        {
+            bool isUpdated = false;
+            int multiplier = 1;
+
+            // get record.
+            Debitnotetax debitNoteTax = await GetQueryByCondition(w => w.DebitNoteTaxId == debitNoteTaxId)
+                                                                 .Include(w => w.DebitNote).FirstOrDefaultAsync();
+
+            if (null != debitNote)
+            {
+                if (DiscountType.Percentage.ToString() == debitNoteTax.TaxPercentageOrAmount)
+                {
+                    debitNoteTax.TaxAmountFc = (debitNoteTax.DebitNote.GrossAmountFc * debitNoteTax.TaxPerOrAmountFc) / 100;
+                }
+                else
+                {
+                    debitNoteTax.TaxAmountFc = debitNoteTax.TaxPerOrAmountFc;
+                }
+
+                if (TaxAddOrDeduct.Deduct.ToString() == debitNoteTax.TaxAddOrDeduct)
+                {
+                    multiplier = -1;
+                }
+
+                debitNoteTax.TaxAmountFc = multiplier * debitNoteTax.TaxAmountFc;
+
+                debitNoteTax.TaxAmount = debitNoteTax.TaxAmountFc / debitNoteTax.DebitNote.ExchangeRate;
+
+                isUpdated = await Update(debitNoteTax);
+            }
+
+            if (isUpdated != false)
+            {
                 await debitNote.UpdateDebitNoteMasterAmount(debitNoteTax.DebitNoteId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateDebitNoteTaxAmountAll(int? debitNoteId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            IList<Debitnotetax> debitNoteTaxList = await GetQueryByCondition(w => w.DebitNoteId == (int)debitNoteId).ToListAsync();
+
+            foreach (Debitnotetax debitNoteTax in debitNoteTaxList)
+            {
+                isUpdated = await UpdateDebitNoteTaxAmount(debitNoteTax.DebitNoteTaxId);
+            }
+
+            if (isUpdated != false)
+            {
+                await debitNote.UpdateDebitNoteMasterAmount(debitNoteId);
             }
 
             return isUpdated; // returns.
@@ -151,6 +182,55 @@ namespace ERP.Services.Accounts
             if (isDeleted != false)
             {
                 await debitNote.UpdateDebitNoteMasterAmount(debitNoteTax.DebitNoteId);
+            }
+
+            return isDeleted; // returns.
+        }
+
+        public async Task<bool> AddDebitNoteTaxByDebitNoteId(int debitNoteId, int taxRegisterId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+
+            DebitNoteTaxModel debitNoteTaxModel = null;
+
+            if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Count > 0)
+            {
+                foreach (TaxRegisterDetailModel taxRegisterDetailModel in taxRegisterDetailModelList)
+                {
+                    debitNoteTaxModel = new DebitNoteTaxModel()
+                    {
+                        DebitNoteTaxId = 0,
+                        DebitNoteId = debitNoteId,
+                        SrNo = (int)taxRegisterDetailModel.SrNo,
+                        TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
+                        TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
+                        TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
+                        TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
+                        TaxAmountFc = 0,
+                        TaxAmount = 0,
+                        Remark = ""
+                    };
+
+                    await CreateDebitNoteTax(debitNoteTaxModel);
+                }
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> DeleteDebitNoteTaxByDebitNoteId(int debitNoteId)
+        {
+            bool isDeleted = false;
+
+            // get record.
+            IList<Debitnotetax> debitNoteTaxList = await GetQueryByCondition(w => w.DebitNoteId == (int)debitNoteId).ToListAsync();
+
+            foreach (Debitnotetax debitNoteTax in debitNoteTaxList)
+            {
+                isDeleted = await DeleteDebitNoteTax(debitNoteTax.DebitNoteTaxId);
             }
 
             return isDeleted; // returns.

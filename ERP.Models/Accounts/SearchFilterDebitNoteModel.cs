@@ -16,5 +16,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "To Date")]
         public Nullable<DateTime> ToDate { get; set; }
+        
+        [Display(Name = "Party Ref No")]
+        public string PartyReferenceNo { get; set; }
+
+        [Display(Name = "Account")]
+        public Nullable<int> AccountLedgerId { get; set; }
     }
 }

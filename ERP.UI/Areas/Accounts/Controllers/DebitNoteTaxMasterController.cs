@@ -23,7 +23,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// debitNote detail.
+        /// debitnote detail.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
@@ -38,7 +38,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// get  debitNote tax master list.
+        /// get debit note tax master list.
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -58,7 +58,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// add debitNote tax master.
+        /// add debitnote tax master.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
@@ -79,7 +79,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// edit debitNote tax master.
+        /// edit debitnote tax master.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
@@ -98,7 +98,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// save  debitNote tax master.
+        /// save debit note tax master.
         /// </summary>
         /// <param name="debitNoteTaxModel"></param>
         /// <returns></returns>
@@ -131,7 +131,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// delete debitNote tax master.
+        /// delete debitnote tax master.
         /// </summary>
         /// <param name="debitNoteTaxId"></param>
         /// <returns></returns>

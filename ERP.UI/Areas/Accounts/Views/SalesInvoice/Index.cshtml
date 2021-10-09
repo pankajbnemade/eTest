@@ -32,13 +32,13 @@
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.FromDate)
-                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.ToDate)
-                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
@@ -73,6 +73,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
+                @*<div class="col-sm-12 table-responsive">*@
                 <table id="salesInvoiceGrid" class="table table-bordered table-striped w-100">
                     <thead>
                         <tr class="table-header">
@@ -103,6 +104,7 @@
     $(document).ready(function () {
         $("#salesInvoiceGrid").DataTable({
             "processing": true,
+            "scrollX": true,
             "dom": "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
             //'lrtip',

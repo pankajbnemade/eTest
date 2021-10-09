@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -53,14 +54,14 @@ namespace ERP.Services.Accounts
             debitNoteDetail.NetAmountFc = 0;
             debitNoteDetail.NetAmount = 0;
 
+            await Create(debitNoteDetail);
+
+            debitNoteDetailId = debitNoteDetail.DebitNoteDetId;
+
             if (debitNoteDetailId != 0)
             {
                 await UpdateDebitNoteDetailAmount(debitNoteDetailId);
-                //await debitNote.UpdateDebitNoteMasterAmount(debitNoteDetail.DebitNoteId);
             }
-
-             await Create(debitNoteDetail);
-            debitNoteDetailId = debitNoteDetail.DebitNoteDetId;
 
             return debitNoteDetailId; // returns.
         }
@@ -96,7 +97,6 @@ namespace ERP.Services.Accounts
             if (isUpdated != false)
             {
                 await UpdateDebitNoteDetailAmount(debitNoteDetailModel.DebitNoteDetId);
-                //await debitNote.UpdateDebitNoteMasterAmount(debitNoteDetail.DebitNoteId);
             }
 
             return isUpdated; // returns.
@@ -107,17 +107,17 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Debitnotedetail debitNoteDetail =  await GetQueryByCondition(w => w.DebitNoteDetId == debitNoteDetailId)
+            Debitnotedetail debitNoteDetail = await GetQueryByCondition(w => w.DebitNoteDetId == debitNoteDetailId)
                                                                  .Include(w => w.DebitNote).Include(w => w.Debitnotedetailtaxes).FirstOrDefaultAsync();
 
             if (null != debitNoteDetail)
             {
                 debitNoteDetail.GrossAmountFc = debitNoteDetail.Quantity * debitNoteDetail.PerUnit * debitNoteDetail.UnitPrice;
-                debitNoteDetail.GrossAmount = debitNoteDetail.GrossAmountFc * debitNoteDetail.DebitNote.ExchangeRate;
+                debitNoteDetail.GrossAmount = debitNoteDetail.GrossAmountFc / debitNoteDetail.DebitNote.ExchangeRate;
                 debitNoteDetail.TaxAmountFc = debitNoteDetail.Debitnotedetailtaxes.Sum(s => s.TaxAmountFc);
-                debitNoteDetail.TaxAmount = debitNoteDetail.DebitNote.ExchangeRate * debitNoteDetail.TaxAmountFc;
+                debitNoteDetail.TaxAmount = debitNoteDetail.TaxAmountFc / debitNoteDetail.DebitNote.ExchangeRate;
                 debitNoteDetail.NetAmountFc = debitNoteDetail.TaxAmountFc + debitNoteDetail.GrossAmountFc;
-                debitNoteDetail.NetAmount = debitNoteDetail.DebitNote.ExchangeRate * debitNoteDetail.NetAmountFc;
+                debitNoteDetail.NetAmount = debitNoteDetail.NetAmountFc / debitNoteDetail.DebitNote.ExchangeRate;
 
                 isUpdated = await Update(debitNoteDetail);
             }
@@ -176,7 +176,7 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = debitNoteDetailModelList;
                 resultModel.TotalResultCount = debitNoteDetailModelList.Count();
             }
-             else
+            else
             {
                 resultModel = new DataTableResultModel<DebitNoteDetailModel>();
                 resultModel.ResultList = new List<DebitNoteDetailModel>();
@@ -184,6 +184,13 @@ namespace ERP.Services.Accounts
             }
 
             return resultModel; // returns.
+        }
+
+        public async Task<IList<DebitNoteDetailModel>> GetDebitNoteDetailListByDebitNoteId(int debitNoteId)
+        {
+            IList<DebitNoteDetailModel> debitNoteDetailModelList = await GetDebitNoteDetailList(0, debitNoteId);
+
+            return debitNoteDetailModelList; // returns.
         }
 
         public async Task<DataTableResultModel<DebitNoteDetailModel>> GetDebitNoteDetailList()
@@ -208,7 +215,7 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Debitnotedetail> query = GetQueryByCondition(w => w.DebitNoteDetId != 0)
-                                                        .Include(w => w.UnitOfMeasurement);
+                                                        .Include(w => w.UnitOfMeasurement).Include(w => w.DebitNote);
 
             // apply filters.
             if (0 != debitNoteDetailId)
@@ -257,6 +264,9 @@ namespace ERP.Services.Accounts
 
                 //--####
                 debitNoteDetailModel.UnitOfMeasurementName = null != debitNoteDetail.UnitOfMeasurement ? debitNoteDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                debitNoteDetailModel.IsTaxDetVisible = null != debitNoteDetail.DebitNote ?
+                                                            (debitNoteDetail.DebitNote.TaxModelType == TaxModelType.LineWise.ToString() ? true : false)
+                                                            : false;
 
                 return debitNoteDetailModel;
             });

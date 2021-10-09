@@ -35,7 +35,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.InvoiceDate, new { @class = "required" })
-                            @Html.TextBoxFor(model => model.InvoiceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                            @Html.TextBoxFor(model => model.InvoiceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
                             @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.CustomerReferenceDate, new { @class = "required" })
-                            @Html.TextBoxFor(model => model.CustomerReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
+                            @Html.TextBoxFor(model => model.CustomerReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
                             @Html.ValidationMessageFor(model => model.CustomerReferenceDate, "", new { @class = "text-danger" })
                         </div>
                     </div>

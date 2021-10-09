@@ -1,6 +1,6 @@
 ﻿
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <table id="creditNoteDetailGrid" class="table table-bordered table-striped w-100">
             <thead>
                 <tr class="table-header">
@@ -36,7 +36,7 @@
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
-            //"scrollX": true,
+            "scrollX": true,
             "ajax": {
                 "url": "@Url.Action("GetCreditNoteDetailList", "CreditNoteDetail", new { creditNoteId = ViewBag.CreditNoteId })",
                 "type": "POST",

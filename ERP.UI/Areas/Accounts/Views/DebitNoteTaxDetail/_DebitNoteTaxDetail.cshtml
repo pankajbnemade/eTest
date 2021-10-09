@@ -1,36 +1,31 @@
 ﻿<div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Debit WNote Tax Detail</h4>
-            @*<div class="px-4">
-                    <button class="btn btn-primary" type="button" id="add-new-debitnote-taxdetl">
-                        <i class="fas fa-plus"></i>  Add
-                    </button>
-                </div>*@
+            <h4 class="modal-title">Debit Note Tax Detail</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
             <div class="row">
-                <div class="col-12 table-responsive">
+                <div class="col-sm-12">
                     <table id="debitNoteTaxDetailGrid" class="table table-bordered table-striped w-100">
                         <thead>
                             <tr class="table-header">
-                                <th>
-                                    <button class="btn btn-primary mr-1 p-1" type="button" id="add-new-debitnote-taxdetl">
+                                <th class="no-sort">
+                                    <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-debitnote-taxdetl" title="Add New Line">
                                         <i class="fas fa-plus"></i>
                                     </button>
-                                    Action
+
                                 </th>
                                 <th>DebitNoteDetTaxId</th>
                                 <th>DebitNoteDetId</th>
                                 <th>Sr No</th>
-                                <th>Tax Ledger Name</th>
-                                <th>Tax Percentage or Amount</th>
-                                <th>TaxPer or AmountFc</th>
-                                <th>Tax Add or Deduct</th>
-                                <th>Tax AmountFc</th>
+                                <th>Tax Ledger</th>
+                                <th>Per / Amount</th>
+                                <th>Tax Per Or Amount FC</th>
+                                <th>Add or Deduct</th>
+                                <th>Tax Amount FC</th>
                                 <th>Remark</th>
                             </tr>
                         </thead>
@@ -45,11 +40,14 @@
     $(document).ready(function () {
         $("#debitNoteTaxDetailGrid").DataTable({
             "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
             "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
             "bPaginate": true,
-            /*"scrollX": true,*/
+            "scrollX": true,
             "ajax": {
                 "url": "@Url.Action("GetDebitNoteTaxDetailList", "DebitNoteTaxDetail", new { DebitNoteDetId = ViewBag.DebitNoteDetId })",
                 "type": "POST",
@@ -60,8 +58,8 @@
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditDebitNoteTaxDetail(' + full.DebitNoteDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteTaxDetail(this, ' + full.DebitNoteDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditDebitNoteTaxDetail(' + full.DebitNoteDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteTaxDetail(this, ' + full.DebitNoteDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
                             '</div>';
                     }
                 },
@@ -70,9 +68,9 @@
                 { "data": "SrNo", "name": "SrNo" },
                 { "data": "TaxLedgerName", "name": "TaxLedgerName" },
                 { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
-                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+                { "data": "TaxPerOrAmountFc", "name": "TaxPerOrAmountFc", render: $.fn.dataTable.render.number(',', '.', 4, '') },
                 { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" },
-                { "data": "TaxAmountFc", "name": "TaxAmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '')},
+                { "data": "TaxAmountFc", "name": "TaxAmountFc", render: $.fn.dataTable.render.number(',', '.', 4, '')},
                 { "data": "Remark", "name": "Remark" }
             ],
         });

@@ -1,9 +1,11 @@
 ﻿using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,23 +13,32 @@ namespace ERP.UI.Areas.Accounts.Controllers
 {
     public class DebitNoteDetailController : Controller
     {
+        private readonly IDebitNote _debitNote;
         private readonly IDebitNoteDetail _debitNoteDetail;
+        private readonly IDebitNoteDetailTax _debitNoteDetailTax;
+        private readonly IDebitNoteTax _debitNoteTax;
         private readonly IUnitOfMeasurement _unitOfMeasurement;
 
         /// <summary>
         /// constractor.
         /// </summary>
-        public DebitNoteDetailController(IDebitNoteDetail debitNoteDetail, IUnitOfMeasurement unitOfMeasurement)
+        public DebitNoteDetailController(IDebitNote debitNote, IDebitNoteDetail debitNoteDetail,
+                                                IDebitNoteDetailTax debitNoteDetailTax, IDebitNoteTax debitNoteTax,
+                                                IUnitOfMeasurement unitOfMeasurement)
         {
+            this._debitNote = debitNote;
             this._debitNoteDetail = debitNoteDetail;
+            this._debitNoteDetailTax = debitNoteDetailTax;
+            this._debitNoteTax = debitNoteTax;
             this._unitOfMeasurement = unitOfMeasurement;
         }
 
         /// <summary>
-        /// debitNote detail.
+        /// debitnote detail.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
+        /// 
         public async Task<IActionResult> DebitNoteDetail(int debitNoteId)
         {
             ViewBag.DebitNoteId = debitNoteId;
@@ -59,7 +70,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// add debitNote detail.
+        /// add debitnote detail.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
@@ -78,7 +89,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// edit debitNote detail.
+        /// edit debitnote detail.
         /// </summary>
         /// <param name="debitNoteDetId"></param>
         /// <returns></returns>
@@ -87,7 +98,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ViewBag.UnitOfMeasurementList = await _unitOfMeasurement.GetUnitOfMeasurementSelectList();
 
             DebitNoteDetailModel debitNoteDetailModel = await _debitNoteDetail.GetDebitNoteDetailById(debitNoteDetId);
-            
+
             return await Task.Run(() =>
             {
                 return PartialView("_AddDebitNoteDetail", debitNoteDetailModel);
@@ -111,14 +122,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     // update record.
                     if (true == await _debitNoteDetail.UpdateDebitNoteDetail(debitNoteDetailModel))
                     {
+                        await _debitNoteDetailTax.UpdateDebitNoteDetailTaxAmountOnDetailUpdate(debitNoteDetailModel.DebitNoteDetId);
+                        await _debitNoteTax.UpdateDebitNoteTaxAmountAll(debitNoteDetailModel.DebitNoteId);
                         data.Result.Status = true;
                     }
                 }
                 else
                 {
+                    debitNoteDetailModel.DebitNoteDetId = await _debitNoteDetail.CreateDebitNoteDetail(debitNoteDetailModel);
+
                     // add new record.
-                    if (await _debitNoteDetail.CreateDebitNoteDetail(debitNoteDetailModel) > 0)
+                    if (debitNoteDetailModel.DebitNoteDetId > 0)
                     {
+                        DebitNoteModel debitNoteModel = await _debitNote.GetDebitNoteById((int)debitNoteDetailModel.DebitNoteId);
+                        
+                        if (debitNoteModel.TaxModelType == TaxModelType.LineWise.ToString())
+                        {
+                            await _debitNoteDetailTax.AddDebitNoteDetailTaxByDebitNoteDetId(debitNoteDetailModel.DebitNoteDetId, (int)debitNoteModel.TaxRegisterId);
+                        }
+                        await _debitNoteTax.UpdateDebitNoteTaxAmountAll(debitNoteDetailModel.DebitNoteId);
+
                         data.Result.Status = true;
                     }
                 }
@@ -128,7 +151,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// delete debitNote detail.
+        /// delete debitnote detail.
         /// </summary>
         /// <param name="debitNoteId"></param>
         /// <returns></returns>
@@ -136,8 +159,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteDebitNoteDetail(int debitNoteDetId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            DebitNoteDetailModel debitNoteDetailModel = await _debitNoteDetail.GetDebitNoteDetailById(debitNoteDetId);
+
             if (true == await _debitNoteDetail.DeleteDebitNoteDetail(debitNoteDetId))
             {
+                await _debitNoteTax.UpdateDebitNoteTaxAmountAll(debitNoteDetailModel.DebitNoteId);
                 data.Result.Status = true;
             }
 
