@@ -1,9 +1,11 @@
 ﻿using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,23 +13,32 @@ namespace ERP.UI.Areas.Accounts.Controllers
 {
     public class CreditNoteDetailController : Controller
     {
+        private readonly ICreditNote _creditNote;
         private readonly ICreditNoteDetail _creditNoteDetail;
+        private readonly ICreditNoteDetailTax _creditNoteDetailTax;
+        private readonly ICreditNoteTax _creditNoteTax;
         private readonly IUnitOfMeasurement _unitOfMeasurement;
 
         /// <summary>
         /// constractor.
         /// </summary>
-        public CreditNoteDetailController(ICreditNoteDetail creditNoteDetail, IUnitOfMeasurement unitOfMeasurement)
+        public CreditNoteDetailController(ICreditNote creditNote, ICreditNoteDetail creditNoteDetail,
+                                                ICreditNoteDetailTax creditNoteDetailTax, ICreditNoteTax creditNoteTax,
+                                                IUnitOfMeasurement unitOfMeasurement)
         {
+            this._creditNote = creditNote;
             this._creditNoteDetail = creditNoteDetail;
+            this._creditNoteDetailTax = creditNoteDetailTax;
+            this._creditNoteTax = creditNoteTax;
             this._unitOfMeasurement = unitOfMeasurement;
         }
 
         /// <summary>
-        /// creditNote detail.
+        /// creditnote detail.
         /// </summary>
         /// <param name="creditNoteId"></param>
         /// <returns></returns>
+        /// 
         public async Task<IActionResult> CreditNoteDetail(int creditNoteId)
         {
             ViewBag.CreditNoteId = creditNoteId;
@@ -59,7 +70,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// add creditNote detail.
+        /// add creditnote detail.
         /// </summary>
         /// <param name="creditNoteId"></param>
         /// <returns></returns>
@@ -78,7 +89,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// edit creditNote detail.
+        /// edit creditnote detail.
         /// </summary>
         /// <param name="creditNoteDetId"></param>
         /// <returns></returns>
@@ -87,7 +98,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ViewBag.UnitOfMeasurementList = await _unitOfMeasurement.GetUnitOfMeasurementSelectList();
 
             CreditNoteDetailModel creditNoteDetailModel = await _creditNoteDetail.GetCreditNoteDetailById(creditNoteDetId);
-            
+
             return await Task.Run(() =>
             {
                 return PartialView("_AddCreditNoteDetail", creditNoteDetailModel);
@@ -111,14 +122,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     // update record.
                     if (true == await _creditNoteDetail.UpdateCreditNoteDetail(creditNoteDetailModel))
                     {
+                        await _creditNoteDetailTax.UpdateCreditNoteDetailTaxAmountOnDetailUpdate(creditNoteDetailModel.CreditNoteDetId);
+                        await _creditNoteTax.UpdateCreditNoteTaxAmountAll(creditNoteDetailModel.CreditNoteId);
                         data.Result.Status = true;
                     }
                 }
                 else
                 {
+                    creditNoteDetailModel.CreditNoteDetId = await _creditNoteDetail.CreateCreditNoteDetail(creditNoteDetailModel);
+
                     // add new record.
-                    if (await _creditNoteDetail.CreateCreditNoteDetail(creditNoteDetailModel) > 0)
+                    if (creditNoteDetailModel.CreditNoteDetId > 0)
                     {
+                        CreditNoteModel creditNoteModel = await _creditNote.GetCreditNoteById((int)creditNoteDetailModel.CreditNoteId);
+                        
+                        if (creditNoteModel.TaxModelType == TaxModelType.LineWise.ToString())
+                        {
+                            await _creditNoteDetailTax.AddCreditNoteDetailTaxByCreditNoteDetId(creditNoteDetailModel.CreditNoteDetId, (int)creditNoteModel.TaxRegisterId);
+                        }
+                        await _creditNoteTax.UpdateCreditNoteTaxAmountAll(creditNoteDetailModel.CreditNoteId);
+
                         data.Result.Status = true;
                     }
                 }
@@ -128,7 +151,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// delete creditNote detail.
+        /// delete creditnote detail.
         /// </summary>
         /// <param name="creditNoteId"></param>
         /// <returns></returns>
@@ -136,8 +159,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteCreditNoteDetail(int creditNoteDetId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            CreditNoteDetailModel creditNoteDetailModel = await _creditNoteDetail.GetCreditNoteDetailById(creditNoteDetId);
+
             if (true == await _creditNoteDetail.DeleteCreditNoteDetail(creditNoteDetId))
             {
+                await _creditNoteTax.UpdateCreditNoteTaxAmountAll(creditNoteDetailModel.CreditNoteId);
                 data.Result.Status = true;
             }
 

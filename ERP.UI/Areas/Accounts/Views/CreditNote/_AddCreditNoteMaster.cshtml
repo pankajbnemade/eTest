@@ -5,11 +5,11 @@
         <div class="modal-header">
             @if (Model.CreditNoteId > 0)
             {
-                <div class="modal-title">Edit Credit Note</div>
+                <h4 class="modal-title">Edit Credit Note</h4>
             }
             else
             {
-                <div class="modal-title">Add Credit Note</div>
+                <h4 class="modal-title">Add Credit Note</h4>
             }
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -30,14 +30,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CreditNoteNo, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.CreditNoteNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.CreditNoteNo)
+                                @Html.ValidationMessageFor(model => model.CreditNoteNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CreditNoteDate, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.CreditNoteDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.CreditNoteDate)
+                                @Html.ValidationMessageFor(model => model.CreditNoteDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.PartyLedgerId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.PartyLedgerId, new SelectList(ViewBag.PartyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PartyLedgerId)
+                                @Html.ValidationMessageFor(model => model.PartyLedgerId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -57,7 +57,7 @@
                                 <select class="form-control" asp-for="BillToAddressId">
                                     <option value="">Select</option>
                                 </select>
-                                @Html.ValidationMessageFor(model => model.BillToAddressId)
+                                @Html.ValidationMessageFor(model => model.BillToAddressId, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
@@ -69,14 +69,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.PartyReferenceNo, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.PartyReferenceNo, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PartyReferenceNo)
+                                @Html.ValidationMessageFor(model => model.PartyReferenceNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.PartyReferenceDate, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.PartyReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.PartyReferenceDate)
+                                @Html.ValidationMessageFor(model => model.PartyReferenceDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -88,14 +88,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.OurReferenceNo, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.OurReferenceNo, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.OurReferenceNo)
+                                @Html.ValidationMessageFor(model => model.OurReferenceNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.OurReferenceDate, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.OurReferenceDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                @Html.ValidationMessageFor(model => model.OurReferenceDate)
+                                @Html.ValidationMessageFor(model => model.OurReferenceDate, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -107,14 +107,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.AccountLedgerId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.AccountLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.AccountLedgerId)
+                                @Html.ValidationMessageFor(model => model.AccountLedgerId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.PaymentTerm)
                                 @Html.TextBoxFor(model => model.PaymentTerm, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PaymentTerm)
+                                @Html.ValidationMessageFor(model => model.PaymentTerm, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CreditLimitDays)
                                 @Html.TextBoxFor(model => model.CreditLimitDays, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.CreditLimitDays)
+                                @Html.ValidationMessageFor(model => model.CreditLimitDays, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -140,14 +140,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxModelType, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.TaxModelType, new SelectList(ViewBag.TaxModelTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.TaxModelType)
+                                @Html.ValidationMessageFor(model => model.TaxModelType, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxRegisterId)
                                 @Html.DropDownListFor(model => model.TaxRegisterId, new SelectList(ViewBag.TaxRegisterList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.TaxRegisterId)
+                                @Html.ValidationMessageFor(model => model.TaxRegisterId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -158,14 +158,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.CurrencyId)
+                                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm decimal-two-scale" })
-                                @Html.ValidationMessageFor(model => model.ExchangeRate)
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm " })
+                                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -176,14 +176,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DiscountPercentageOrAmount)
                                 @Html.DropDownListFor(model => model.DiscountPercentageOrAmount, new SelectList(ViewBag.DiscountTypeList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.DiscountPercentageOrAmount)
+                                @Html.ValidationMessageFor(model => model.DiscountPercentageOrAmount, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DiscountPerOrAmountFc)
-                                @Html.TextBoxFor(model => model.DiscountPerOrAmountFc, new { @class = "form-control form-control-sm decimal-two-scale" })
-                                @Html.ValidationMessageFor(model => model.DiscountPerOrAmountFc)
+                                @Html.TextBoxFor(model => model.DiscountPerOrAmountFc, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.DiscountPerOrAmountFc, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -194,15 +194,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Remark)
                                 @Html.TextBoxFor(model => model.Remark, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.Remark)
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
-                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
             </div>
         </form>
     </div>
@@ -240,7 +239,7 @@
             }
         });
 
-        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
+        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
 
         if ('@Model.CreditNoteId' > 0 && '@Model.PartyLedgerId' > 0) {
             GetBillToAddressByLedgerId('@Model.PartyLedgerId');
@@ -322,11 +321,14 @@
     }
     // success form
     function SuccessCreditNoteMaster(data) {
-       
+
         if (data.Result.Status) {
             $('#modal-creditnote').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
-            $("#creditNoteGrid").DataTable().ajax.reload();
+            //$("#creditNoteGrid").DataTable().ajax.reload();
+
+            var tabUrl = '@Url.Action("ManageCreditNote", "CreditNote")?creditNoteId=' + data.Result.Data;
+            window.location.href = tabUrl;
         }
         else {
             fnDangerNotify('Error occured while processing request.');

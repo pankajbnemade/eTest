@@ -12,38 +12,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using ERP.Models.Accounts.Enums;
 
 namespace ERP.Services.Accounts
 {
     public class CreditNoteService : Repository<Creditnote>, ICreditNote
     {
-        ICommon common;
+        private readonly ICommon common;
         public CreditNoteService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
         {
             common = _common;
         }
 
         /// <summary>
-        /// generate invoice no.
+        /// generate CreditNote no.
         /// </summary>
         /// <param name="companyId"></param>
         /// <param name="financialYearId"></param>
         /// <returns>
-        /// return invoice no.
+        /// return CreditNote no.
         /// </returns>
         public async Task<GenerateNoModel> GenerateCreditNoteNo(int companyId, int financialYearId)
         {
+            try
+            {
             int voucherSetupId = 4;
             // get maxno.
-            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+            int maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
 
             GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex);
+                throw;
+            }
         }
 
         /// <summary>
-        /// create new purchase invoice.
+        /// create new purchase CreditNote.
         /// </summary>
         /// <param name="creditNoteModel"></param>
         /// <returns>
@@ -66,10 +75,10 @@ namespace ERP.Services.Accounts
             creditNote.PartyLedgerId = creditNoteModel.PartyLedgerId;
             creditNote.BillToAddressId = creditNoteModel.BillToAddressId;
             creditNote.AccountLedgerId = creditNoteModel.AccountLedgerId;
-            creditNote.PartyReferenceNo = creditNoteModel.PartyReferenceNo;
-            creditNote.PartyReferenceDate = creditNoteModel.PartyReferenceDate;
             creditNote.OurReferenceNo = creditNoteModel.OurReferenceNo;
             creditNote.OurReferenceDate = creditNoteModel.OurReferenceDate;
+            creditNote.PartyReferenceNo = creditNoteModel.PartyReferenceNo;
+            creditNote.PartyReferenceDate = creditNoteModel.PartyReferenceDate;
             creditNote.CreditLimitDays = creditNoteModel.CreditLimitDays;
             creditNote.PaymentTerm = creditNoteModel.PaymentTerm;
             creditNote.Remark = creditNoteModel.Remark;
@@ -92,11 +101,12 @@ namespace ERP.Services.Accounts
             creditNote.DiscountAmountFc = 0;
             creditNote.DiscountAmount = 0;
 
-            creditNote.StatusId = 1;
+            creditNote.StatusId = (int)DocumentStatus.Inprocess;
             creditNote.CompanyId = creditNoteModel.CompanyId;
             creditNote.FinancialYearId = creditNoteModel.FinancialYearId;
 
             await Create(creditNote);
+
             creditNoteId = creditNote.CreditNoteId;
 
             if (creditNoteId != 0)
@@ -108,7 +118,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// update purchase invoice.
+        /// update purchase CreditNote.
         /// </summary>
         /// <param name="creditNoteModel"></param>
         /// <returns>
@@ -124,15 +134,15 @@ namespace ERP.Services.Accounts
             if (null != creditNote)
             {
                 // assign values.
-
+                
                 creditNote.CreditNoteDate = creditNoteModel.CreditNoteDate;
                 creditNote.PartyLedgerId = creditNoteModel.PartyLedgerId;
                 creditNote.BillToAddressId = creditNoteModel.BillToAddressId;
                 creditNote.AccountLedgerId = creditNoteModel.AccountLedgerId;
-                creditNote.PartyReferenceNo = creditNoteModel.PartyReferenceNo;
-                creditNote.PartyReferenceDate = creditNoteModel.PartyReferenceDate;
                 creditNote.OurReferenceNo = creditNoteModel.OurReferenceNo;
                 creditNote.OurReferenceDate = creditNoteModel.OurReferenceDate;
+                creditNote.PartyReferenceNo = creditNoteModel.PartyReferenceNo;
+                creditNote.PartyReferenceDate = creditNoteModel.PartyReferenceDate;
                 creditNote.CreditLimitDays = creditNoteModel.CreditLimitDays;
                 creditNote.PaymentTerm = creditNoteModel.PaymentTerm;
                 creditNote.Remark = creditNoteModel.Remark;
@@ -168,19 +178,36 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
+        public async Task<bool> UpdateStatusCreditNote(int creditNoteId, int statusId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Creditnote creditNote = await GetByIdAsync(w => w.CreditNoteId == creditNoteId);
+
+            if (null != creditNote)
+            {
+                creditNote.StatusId = statusId;
+                isUpdated = await Update(creditNote);
+            }
+
+            return isUpdated; // returns.
+        }
+
         /// <summary>
-        /// delete purchase invoice.
+        /// delete purchase CreditNote.
         /// </summary>
-        /// <param name="salesCreditNoteId"></param>
+        /// <param name="creditNoteId"></param>
         /// <returns>
         /// return true if success.
         /// </returns>
-        public async Task<bool> DeleteCreditNote(int salesCreditNoteId)
+        public async Task<bool> DeleteCreditNote(int creditNoteId)
         {
             bool isDeleted = false;
 
             // get record.
-            Creditnote creditNote = await GetByIdAsync(w => w.CreditNoteId == salesCreditNoteId);
+            Creditnote creditNote = await GetByIdAsync(w => w.CreditNoteId == creditNoteId);
+
             if (null != creditNote)
             {
                 isDeleted = await Delete(creditNote);
@@ -201,7 +228,7 @@ namespace ERP.Services.Accounts
             if (null != creditNote)
             {
                 creditNote.TotalLineItemAmountFc = creditNote.Creditnotedetails.Sum(w => w.GrossAmountFc);
-                creditNote.TotalLineItemAmount = creditNote.TotalLineItemAmountFc * creditNote.ExchangeRate;
+                creditNote.TotalLineItemAmount = creditNote.TotalLineItemAmountFc / creditNote.ExchangeRate;
 
                 if (DiscountType.Percentage.ToString() == creditNote.DiscountPercentageOrAmount)
                 {
@@ -212,10 +239,9 @@ namespace ERP.Services.Accounts
                     creditNote.DiscountAmountFc = creditNote.DiscountPerOrAmountFc;
                 }
 
-                creditNote.DiscountAmount = creditNote.DiscountAmountFc * creditNote.ExchangeRate;
-
-                creditNote.GrossAmountFc = creditNote.TotalLineItemAmountFc + creditNote.DiscountAmountFc;
-                creditNote.GrossAmount = creditNote.GrossAmountFc * creditNote.ExchangeRate;
+                creditNote.DiscountAmount = creditNote.DiscountAmountFc / creditNote.ExchangeRate;
+                creditNote.GrossAmountFc = creditNote.TotalLineItemAmountFc - creditNote.DiscountAmountFc;
+                creditNote.GrossAmount = creditNote.GrossAmountFc / creditNote.ExchangeRate;
 
                 if (TaxModelType.LineWise.ToString() == creditNote.TaxModelType)
                 {
@@ -226,12 +252,16 @@ namespace ERP.Services.Accounts
                     creditNote.TaxAmountFc = creditNote.Creditnotetaxes.Sum(w => w.TaxAmountFc);
                 }
 
-                creditNote.TaxAmount = creditNote.TaxAmountFc * creditNote.ExchangeRate;
-
-                creditNote.NetAmountFc = creditNote.GrossAmountFc + creditNote.DiscountAmountFc;
-                creditNote.NetAmount = creditNote.NetAmountFc * creditNote.ExchangeRate;
+                creditNote.TaxAmount = creditNote.TaxAmountFc / creditNote.ExchangeRate;
+                creditNote.NetAmountFc = creditNote.GrossAmountFc + creditNote.TaxAmountFc;
+                creditNote.NetAmount = creditNote.NetAmountFc / creditNote.ExchangeRate;
 
                 creditNote.NetAmountFcinWord = await common.AmountInWord_Million(creditNote.NetAmountFc.ToString(), creditNote.Currency.CurrencyCode, creditNote.Currency.Denomination);
+
+                if (creditNote.StatusId == (int)DocumentStatus.Approved || creditNote.StatusId == (int)DocumentStatus.ApprovalRequested)
+                {
+                    creditNote.StatusId = (int)DocumentStatus.Inprocess;
+                }
 
                 isUpdated = await Update(creditNote);
             }
@@ -240,7 +270,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get purchase invoice based on salesCreditNoteId
+        /// get purchase CreditNote based on creditNoteId
         /// </summary>
         /// <returns>
         /// return record.
@@ -260,7 +290,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get search purchase invoice result list.
+        /// get search purchase CreditNote result list.
         /// </summary>
         /// <param name="dataTableAjaxPostModel"></param>
         /// <param name="searchFilterModel"></param>
@@ -289,7 +319,7 @@ namespace ERP.Services.Accounts
         }
 
         /// <summary>
-        /// get credit note List based on partyLedgerId
+        /// get purchase CreditNote List based on partyLedgerId
         /// </summary>
         /// <returns>
         /// return record.
@@ -308,23 +338,22 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Creditnote> creditNoteList = await query.ToListAsync();
 
-             outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
+            outstandingInvoiceModelList = new List<OutstandingInvoiceModel>();
 
             if (null != creditNoteList && creditNoteList.Count > 0)
             {
-
                 foreach (Creditnote creditNote in creditNoteList)
                 {
                     outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
                     {
                         InvoiceId = creditNote.CreditNoteId,
-                        InvoiceType = "Credit Note",
+                        InvoiceType = "Purchase Invoice",
                         InvoiceNo = creditNote.CreditNoteNo,
                         InvoiceDate = creditNote.CreditNoteDate,
                         InvoiceAmount = creditNote.NetAmount,
                         OutstandingAmount = creditNote.NetAmount,
                         CreditNoteId = creditNote.CreditNoteId,
-                         SalesInvoiceId = 0,
+                        SalesInvoiceId = 0,
                         PurchaseInvoiceId = 0,
                         DebitNoteId = 0
                     });
@@ -333,8 +362,6 @@ namespace ERP.Services.Accounts
 
             return outstandingInvoiceModelList; // returns.
         }
-
-
 
         #region Private Methods
 
@@ -351,7 +378,21 @@ namespace ERP.Services.Accounts
         {
             DataTableResultModel<CreditNoteModel> resultModel = new DataTableResultModel<CreditNoteModel>();
 
-            IQueryable<Creditnote> query = GetQueryByCondition(w => w.CreditNoteId != 0);
+            IQueryable<Creditnote> query = GetQueryByCondition(w => w.CreditNoteId != 0)
+                                                .Include(w => w.PartyLedger).Include(w => w.Currency)
+                                                .Include(w => w.PreparedByUser).Include(w => w.Status);
+
+            //sortBy
+            if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
+            {
+                sortBy = "CreditNoteNo";
+            }
+
+            //sortDir
+            if (string.IsNullOrEmpty(sortDir) || sortDir == "")
+            {
+                sortDir = "asc";
+            }
 
             if (!string.IsNullOrEmpty(searchFilterModel.CreditNoteNo))
             {
@@ -373,14 +414,18 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.CreditNoteDate <= searchFilterModel.ToDate);
             }
 
+            if (!string.IsNullOrEmpty(searchFilterModel.PartyReferenceNo))
+            {
+                query = query.Where(w => w.PartyReferenceNo.Contains(searchFilterModel.PartyReferenceNo));
+            }
+
+            if (null != searchFilterModel.AccountLedgerId)
+            {
+                query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
+            }
+
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
-
-            //sorting
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
-            {
-                query = query.OrderBy($"{sortBy} {sortDir}");
-            }
 
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
@@ -388,16 +433,23 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.CreditNoteNo.ToLower().Contains(searchBy.ToLower()));
             }
 
-
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
+
             resultModel.ResultList = await query.Select(s => new CreditNoteModel
             {
                 CreditNoteId = s.CreditNoteId,
                 CreditNoteNo = s.CreditNoteNo,
                 CreditNoteDate = s.CreditNoteDate,
-                NetAmount = s.NetAmount,
-            }).ToListAsync();
+                NetAmountFc = s.NetAmountFc,
+                PartyReferenceNo = s.PartyReferenceNo,
+                PartyReferenceDate = s.PartyReferenceDate,
+                PartyLedgerName = s.PartyLedger.LedgerName,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.Currency.PreparedByUser.UserName,
+                StatusName = s.Status.StatusName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
+
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
 
@@ -414,8 +466,6 @@ namespace ERP.Services.Accounts
                                             .Include(w => w.AccountLedger)
                                             .Include(w => w.TaxRegister).Include(w => w.Currency)
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
-
-
 
             // apply filters.
             if (0 != creditNoteId)
@@ -451,8 +501,6 @@ namespace ERP.Services.Accounts
                 creditNoteModel.AccountLedgerId = creditNote.AccountLedgerId;
                 creditNoteModel.PartyReferenceNo = creditNote.PartyReferenceNo;
                 creditNoteModel.PartyReferenceDate = creditNote.PartyReferenceDate;
-                creditNoteModel.OurReferenceNo = creditNote.OurReferenceNo;
-                creditNoteModel.OurReferenceDate = creditNote.OurReferenceDate;
                 creditNoteModel.CreditLimitDays = creditNote.CreditLimitDays;
                 creditNoteModel.PaymentTerm = creditNote.PaymentTerm;
                 creditNoteModel.Remark = creditNote.Remark;
@@ -466,7 +514,7 @@ namespace ERP.Services.Accounts
                 creditNoteModel.GrossAmount = creditNote.GrossAmount;
                 creditNoteModel.NetAmountFc = creditNote.NetAmountFc;
                 creditNoteModel.NetAmount = creditNote.NetAmount;
-                creditNoteModel.NetAmountFcinWord = creditNote.NetAmountFcinWord;
+                creditNoteModel.NetAmountFcInWord = creditNote.NetAmountFcinWord;
                 creditNoteModel.TaxAmountFc = creditNote.TaxAmountFc;
                 creditNoteModel.TaxAmount = creditNote.TaxAmount;
                 creditNoteModel.DiscountPercentageOrAmount = creditNote.DiscountPercentageOrAmount;
@@ -488,7 +536,7 @@ namespace ERP.Services.Accounts
                 creditNoteModel.BillToAddress = null != creditNote.BillToAddress ? creditNote.BillToAddress.AddressDescription : null;
                 creditNoteModel.AccountLedgerName = null != creditNote.AccountLedger ? creditNote.AccountLedger.LedgerName : null;
                 creditNoteModel.TaxRegisterName = null != creditNote.TaxRegister ? creditNote.TaxRegister.TaxRegisterName : null;
-                creditNoteModel.CurrencyName = null != creditNote.Currency ? creditNote.Currency.CurrencyName : null;
+                creditNoteModel.CurrencyCode = null != creditNote.Currency ? creditNote.Currency.CurrencyCode : null;
                 creditNoteModel.StatusName = null != creditNote.Status ? creditNote.Status.StatusName : null;
                 creditNoteModel.PreparedByName = null != creditNote.PreparedByUser ? creditNote.PreparedByUser.UserName : null;
 

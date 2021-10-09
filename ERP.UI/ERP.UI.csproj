@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Accounts\Views\CreditNote\_ViewCreditNoteSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYear\Index.cshtml" />
@@ -125,7 +126,6 @@
     <None Include="Areas\Accounts\Views\CreditNote\_AddCreditNoteMaster.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNote\_ConfirmDeleteCreditNoteMaster.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNote\_ViewCreditNoteMaster.cshtml" />
-    <None Include="Areas\Accounts\Views\CreditNote\_ViewCreditNoteSummary.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteDetail\_AddDebitNoteDetail.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteDetail\_ConfirmDeleteDebitNoteDetail.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteDetail\_DebitNoteDetail.cshtml" />

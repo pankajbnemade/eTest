@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -53,14 +54,14 @@ namespace ERP.Services.Accounts
             creditNoteDetail.NetAmountFc = 0;
             creditNoteDetail.NetAmount = 0;
 
+            await Create(creditNoteDetail);
+
+            creditNoteDetailId = creditNoteDetail.CreditNoteDetId;
+
             if (creditNoteDetailId != 0)
             {
                 await UpdateCreditNoteDetailAmount(creditNoteDetailId);
-                //await creditNote.UpdateCreditNoteMasterAmount(creditNoteDetail.CreditNoteId);
             }
-
-             await Create(creditNoteDetail);
-            creditNoteDetailId = creditNoteDetail.CreditNoteDetId;
 
             return creditNoteDetailId; // returns.
         }
@@ -96,7 +97,6 @@ namespace ERP.Services.Accounts
             if (isUpdated != false)
             {
                 await UpdateCreditNoteDetailAmount(creditNoteDetailModel.CreditNoteDetId);
-                //await creditNote.UpdateCreditNoteMasterAmount(creditNoteDetail.CreditNoteId);
             }
 
             return isUpdated; // returns.
@@ -107,17 +107,17 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            Creditnotedetail creditNoteDetail =  await GetQueryByCondition(w => w.CreditNoteDetId == creditNoteDetailId)
+            Creditnotedetail creditNoteDetail = await GetQueryByCondition(w => w.CreditNoteDetId == creditNoteDetailId)
                                                                  .Include(w => w.CreditNote).Include(w => w.Creditnotedetailtaxes).FirstOrDefaultAsync();
 
             if (null != creditNoteDetail)
             {
                 creditNoteDetail.GrossAmountFc = creditNoteDetail.Quantity * creditNoteDetail.PerUnit * creditNoteDetail.UnitPrice;
-                creditNoteDetail.GrossAmount = creditNoteDetail.GrossAmountFc * creditNoteDetail.CreditNote.ExchangeRate;
+                creditNoteDetail.GrossAmount = creditNoteDetail.GrossAmountFc / creditNoteDetail.CreditNote.ExchangeRate;
                 creditNoteDetail.TaxAmountFc = creditNoteDetail.Creditnotedetailtaxes.Sum(s => s.TaxAmountFc);
-                creditNoteDetail.TaxAmount = creditNoteDetail.CreditNote.ExchangeRate * creditNoteDetail.TaxAmountFc;
+                creditNoteDetail.TaxAmount = creditNoteDetail.TaxAmountFc / creditNoteDetail.CreditNote.ExchangeRate;
                 creditNoteDetail.NetAmountFc = creditNoteDetail.TaxAmountFc + creditNoteDetail.GrossAmountFc;
-                creditNoteDetail.NetAmount = creditNoteDetail.CreditNote.ExchangeRate * creditNoteDetail.NetAmountFc;
+                creditNoteDetail.NetAmount = creditNoteDetail.NetAmountFc / creditNoteDetail.CreditNote.ExchangeRate;
 
                 isUpdated = await Update(creditNoteDetail);
             }
@@ -186,6 +186,13 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
+        public async Task<IList<CreditNoteDetailModel>> GetCreditNoteDetailListByCreditNoteId(int creditNoteId)
+        {
+            IList<CreditNoteDetailModel> creditNoteDetailModelList = await GetCreditNoteDetailList(0, creditNoteId);
+
+            return creditNoteDetailModelList; // returns.
+        }
+
         public async Task<DataTableResultModel<CreditNoteDetailModel>> GetCreditNoteDetailList()
         {
             DataTableResultModel<CreditNoteDetailModel> resultModel = new DataTableResultModel<CreditNoteDetailModel>();
@@ -208,7 +215,7 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Creditnotedetail> query = GetQueryByCondition(w => w.CreditNoteDetId != 0)
-                                                        .Include(w => w.UnitOfMeasurement);
+                                                        .Include(w => w.UnitOfMeasurement).Include(w => w.CreditNote);
 
             // apply filters.
             if (0 != creditNoteDetailId)
@@ -257,6 +264,9 @@ namespace ERP.Services.Accounts
 
                 //--####
                 creditNoteDetailModel.UnitOfMeasurementName = null != creditNoteDetail.UnitOfMeasurement ? creditNoteDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                creditNoteDetailModel.IsTaxDetVisible = null != creditNoteDetail.CreditNote ?
+                                                            (creditNoteDetail.CreditNote.TaxModelType == TaxModelType.LineWise.ToString() ? true : false)
+                                                            : false;
 
                 return creditNoteDetailModel;
             });

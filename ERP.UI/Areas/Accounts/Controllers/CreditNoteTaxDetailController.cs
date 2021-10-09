@@ -23,7 +23,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// creditNote tax detail.
+        /// creditnote tax detail.
         /// </summary>
         /// <param name="creditNoteDetId"></param>
         /// <returns></returns>
@@ -38,7 +38,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         ///// <summary>
-        ///// view creditNote tax detail.
+        ///// view creditnote tax detail.
         ///// </summary>
         ///// <param name="creditNoteDetId"></param>
         ///// <returns></returns>
@@ -53,7 +53,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         //}
 
         /// <summary>
-        /// get  creditNote tax detail list.
+        /// get credit note tax detail list.
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -73,7 +73,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// add creditNote tax detail.
+        /// add creditnote tax detail.
         /// </summary>
         /// <param name="creditNoteDetId"></param>
         /// <returns></returns>
@@ -94,7 +94,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// edit creditNote tax detail.
+        /// edit creditnote tax detail.
         /// </summary>
         /// <param name="creditNoteDetTaxId"></param>
         /// <returns></returns>
@@ -146,7 +146,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// delete creditNote tax detail.
+        /// delete creditnote tax detail.
         /// </summary>
         /// <param name="creditNoteDetTaxId"></param>
         /// <returns></returns>

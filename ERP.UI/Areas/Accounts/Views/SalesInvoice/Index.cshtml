@@ -21,42 +21,36 @@
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.InvoiceNo, new { @class = "" })
                                     @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control form-control-sm" })
-                                    @Html.ValidationMessageFor(model => model.InvoiceNo)
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
                                     @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                    @Html.ValidationMessageFor(model => model.CustomerLedgerId)
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.FromDate)
                                     @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                    @Html.ValidationMessageFor(model => model.FromDate)
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.ToDate)
                                     @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                    @Html.ValidationMessageFor(model => model.ToDate)
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.CustomerReferenceNo, new { @class = "" })
                                     @Html.TextBoxFor(model => model.CustomerReferenceNo, new { @class = "form-control form-control-sm" })
-                                    @Html.ValidationMessageFor(model => model.CustomerReferenceNo)
                                 </div>
                             </div>
                             <div class="col-6 col-sm-2">
                                 <div class="form-group-sm">
                                     @Html.LabelFor(model => model.AccountLedgerId, new { @class = "" })
                                     @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.AccountLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                    @Html.ValidationMessageFor(model => model.AccountLedgerId)
                                 </div>
                             </div>
                         </div>

@@ -15,12 +15,15 @@ namespace ERP.Services.Accounts
     public class CreditNoteDetailTaxService : Repository<Creditnotedetailtax>, ICreditNoteDetailTax
     {
         ICreditNoteDetail creditNoteDetail;
+        private readonly ITaxRegisterDetail taxRegisterDetail;
 
-        public CreditNoteDetailTaxService(ErpDbContext dbContext,  ICreditNoteDetail _creditNoteDetail) : base(dbContext)
+
+        public CreditNoteDetailTaxService(ErpDbContext dbContext, ICreditNoteDetail _creditNoteDetail, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
         {
             creditNoteDetail = _creditNoteDetail;
+            taxRegisterDetail = _taxRegisterDetail;
         }
-        
+
         /// <summary>
         /// generate sr no based on creditNoteDetId
         /// </summary>
@@ -43,10 +46,6 @@ namespace ERP.Services.Accounts
         public async Task<int> CreateCreditNoteDetailTax(CreditNoteDetailTaxModel creditNoteDetailTaxModel)
         {
             int creditNoteDetailTaxId = 0;
-            int multiplier = 1;
-
-            CreditNoteDetailModel creditNoteDetailModel = null;
-            creditNoteDetailModel = await creditNoteDetail.GetCreditNoteDetailById((Int32)creditNoteDetailTaxModel.CreditNoteDetId);
 
             // assign values.
             Creditnotedetailtax creditNoteDetailTax = new Creditnotedetailtax();
@@ -56,34 +55,18 @@ namespace ERP.Services.Accounts
             creditNoteDetailTax.TaxLedgerId = creditNoteDetailTaxModel.TaxLedgerId;
             creditNoteDetailTax.TaxPercentageOrAmount = creditNoteDetailTaxModel.TaxPercentageOrAmount;
             creditNoteDetailTax.TaxPerOrAmountFc = creditNoteDetailTaxModel.TaxPerOrAmountFc;
-
-            if (DiscountType.Percentage.ToString() == creditNoteDetailTaxModel.TaxPercentageOrAmount)
-            {
-                creditNoteDetailTaxModel.TaxAmountFc = (creditNoteDetailModel.GrossAmountFc * creditNoteDetailTaxModel.TaxPerOrAmountFc) / 100;
-            }
-            else
-            {
-                creditNoteDetailTaxModel.TaxAmountFc = creditNoteDetailTaxModel.TaxPerOrAmountFc;
-            }
-
-            if (TaxAddOrDeduct.Deduct.ToString() == creditNoteDetailTaxModel.TaxAddOrDeduct)
-            {
-                multiplier = -1;
-            }
-
             creditNoteDetailTax.TaxAddOrDeduct = creditNoteDetailTaxModel.TaxAddOrDeduct;
-            creditNoteDetailTax.TaxAmountFc = multiplier * creditNoteDetailTaxModel.TaxAmountFc;
-            creditNoteDetailTax.TaxAmount = multiplier * creditNoteDetailTaxModel.TaxAmount;
+            creditNoteDetailTax.TaxAmountFc = 0;
+            creditNoteDetailTax.TaxAmount = 0;
             creditNoteDetailTax.Remark = creditNoteDetailTaxModel.Remark;
 
             await Create(creditNoteDetailTax);
 
             creditNoteDetailTaxId = creditNoteDetailTax.CreditNoteDetTaxId;
 
-
             if (creditNoteDetailTaxId != 0)
             {
-                await creditNoteDetail.UpdateCreditNoteDetailAmount(creditNoteDetailTax.CreditNoteDetId);
+                await UpdateCreditNoteDetailTaxAmount(creditNoteDetailTaxId);
             }
 
             return creditNoteDetailTaxId; // returns.
@@ -92,7 +75,6 @@ namespace ERP.Services.Accounts
         public async Task<bool> UpdateCreditNoteDetailTax(CreditNoteDetailTaxModel creditNoteDetailTaxModel)
         {
             bool isUpdated = false;
-            int multiplier = 1;
 
             // get record.
             Creditnotedetailtax creditNoteDetailTax = await GetQueryByCondition(w => w.CreditNoteDetTaxId == creditNoteDetailTaxModel.CreditNoteDetTaxId)
@@ -105,25 +87,10 @@ namespace ERP.Services.Accounts
                 creditNoteDetailTax.SrNo = creditNoteDetailTaxModel.SrNo;
                 creditNoteDetailTax.TaxLedgerId = creditNoteDetailTaxModel.TaxLedgerId;
                 creditNoteDetailTax.TaxPercentageOrAmount = creditNoteDetailTaxModel.TaxPercentageOrAmount;
-                creditNoteDetailTax.TaxPerOrAmountFc = creditNoteDetailTaxModel.TaxPerOrAmountFc;
-
-                if (DiscountType.Percentage.ToString() == creditNoteDetailTaxModel.TaxPercentageOrAmount)
-                {
-                    creditNoteDetailTaxModel.TaxAmountFc = (creditNoteDetailTax.CreditNoteDet.GrossAmountFc * creditNoteDetailTaxModel.TaxPerOrAmountFc) / 100;
-                }
-                else
-                {
-                    creditNoteDetailTaxModel.TaxAmountFc = creditNoteDetailTaxModel.TaxPerOrAmountFc;
-                }
-
-                if (TaxAddOrDeduct.Deduct.ToString() == creditNoteDetailTaxModel.TaxAddOrDeduct)
-                {
-                    multiplier = -1;
-                }
-
+                creditNoteDetailTax.TaxPerOrAmountFc = creditNoteDetailTaxModel.TaxPerOrAmountFc; ;
                 creditNoteDetailTax.TaxAddOrDeduct = creditNoteDetailTaxModel.TaxAddOrDeduct;
-                creditNoteDetailTax.TaxAmountFc = multiplier * creditNoteDetailTaxModel.TaxAmountFc;
-                creditNoteDetailTax.TaxAmount = multiplier * creditNoteDetailTaxModel.TaxAmount;
+                creditNoteDetailTax.TaxAmountFc = 0;
+                creditNoteDetailTax.TaxAmount = 0;
                 creditNoteDetailTax.Remark = creditNoteDetailTaxModel.Remark;
 
                 isUpdated = await Update(creditNoteDetailTax);
@@ -131,7 +98,67 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
+                await UpdateCreditNoteDetailTaxAmount(creditNoteDetailTaxModel.CreditNoteDetTaxId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateCreditNoteDetailTaxAmount(int? creditNoteDetailTaxId)
+        {
+            bool isUpdated = false;
+            int multiplier = 1;
+
+            // get record.
+            Creditnotedetailtax creditNoteDetailTax = await GetQueryByCondition(w => w.CreditNoteDetTaxId == creditNoteDetailTaxId)
+                                                                .Include(w => w.CreditNoteDet).ThenInclude(w => w.CreditNote).FirstOrDefaultAsync();
+
+            if (null != creditNoteDetail)
+            {
+                if (DiscountType.Percentage.ToString() == creditNoteDetailTax.TaxPercentageOrAmount)
+                {
+                    creditNoteDetailTax.TaxAmountFc = (creditNoteDetailTax.CreditNoteDet.GrossAmountFc * creditNoteDetailTax.TaxPerOrAmountFc) / 100;
+                }
+                else
+                {
+                    creditNoteDetailTax.TaxAmountFc = creditNoteDetailTax.TaxPerOrAmountFc;
+                }
+
+                if (TaxAddOrDeduct.Deduct.ToString() == creditNoteDetailTax.TaxAddOrDeduct)
+                {
+                    multiplier = -1;
+                }
+
+                creditNoteDetailTax.TaxAmountFc = multiplier * creditNoteDetailTax.TaxAmountFc;
+
+                creditNoteDetailTax.TaxAmount = creditNoteDetailTax.TaxAmountFc / creditNoteDetailTax.CreditNoteDet.CreditNote.ExchangeRate;
+
+                isUpdated = await Update(creditNoteDetailTax);
+            }
+
+            if (isUpdated != false)
+            {
                 await creditNoteDetail.UpdateCreditNoteDetailAmount(creditNoteDetailTax.CreditNoteDetId);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> UpdateCreditNoteDetailTaxAmountOnDetailUpdate(int? creditNoteDetailId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            IList<Creditnotedetailtax> creditNoteDetailTaxList = await GetQueryByCondition(w => w.CreditNoteDetId == (int)creditNoteDetailId).ToListAsync();
+
+            foreach (Creditnotedetailtax creditNoteDetailTax in creditNoteDetailTaxList)
+            {
+                isUpdated = await UpdateCreditNoteDetailTaxAmount(creditNoteDetailTax.CreditNoteDetTaxId);
+            }
+
+            if (isUpdated != false)
+            {
+                await creditNoteDetail.UpdateCreditNoteDetailAmount(creditNoteDetailId);
             }
 
             return isUpdated; // returns.
@@ -156,6 +183,97 @@ namespace ERP.Services.Accounts
 
             return isDeleted; // returns.
         }
+
+        public async Task<bool> AddCreditNoteDetailTaxByCreditNoteId(int creditNoteId, int taxRegisterId)
+        {
+            bool isUpdated = false;
+
+            IList<CreditNoteDetailModel> creditNoteDetailModelList = await creditNoteDetail.GetCreditNoteDetailListByCreditNoteId(creditNoteId);
+
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+
+            CreditNoteDetailTaxModel creditNoteDetailTaxModel = null;
+
+            if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Count > 0)
+            {
+                foreach (TaxRegisterDetailModel taxRegisterDetailModel in taxRegisterDetailModelList)
+                {
+                    foreach (CreditNoteDetailModel creditNoteDetailModel in creditNoteDetailModelList)
+                    {
+                        creditNoteDetailTaxModel = new CreditNoteDetailTaxModel()
+                        {
+                            CreditNoteDetTaxId = 0,
+                            CreditNoteDetId = creditNoteDetailModel.CreditNoteDetId,
+                            SrNo = (int)taxRegisterDetailModel.SrNo,
+                            TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
+                            TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
+                            TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
+                            TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
+                            TaxAmountFc = 0,
+                            TaxAmount = 0,
+                            Remark = ""
+                        };
+
+                        await CreateCreditNoteDetailTax(creditNoteDetailTaxModel);
+                    }
+                }
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> AddCreditNoteDetailTaxByCreditNoteDetId(int creditNoteDetId, int taxRegisterId)
+        {
+            bool isUpdated = false;
+
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+
+            CreditNoteDetailTaxModel creditNoteDetailTaxModel = null;
+
+            if (null != taxRegisterDetailModelList && taxRegisterDetailModelList.Count > 0)
+            {
+                foreach (TaxRegisterDetailModel taxRegisterDetailModel in taxRegisterDetailModelList)
+                {
+                    creditNoteDetailTaxModel = new CreditNoteDetailTaxModel()
+                    {
+                        CreditNoteDetTaxId = 0,
+                        CreditNoteDetId = creditNoteDetId,
+                        SrNo = (int)taxRegisterDetailModel.SrNo,
+                        TaxLedgerId = (int)taxRegisterDetailModel.TaxLedgerId,
+                        TaxPercentageOrAmount = taxRegisterDetailModel.TaxPercentageOrAmount,
+                        TaxPerOrAmountFc = (decimal)taxRegisterDetailModel.Rate,
+                        TaxAddOrDeduct = taxRegisterDetailModel.TaxAddOrDeduct,
+                        TaxAmountFc = 0,
+                        TaxAmount = 0,
+                        Remark = ""
+                    };
+
+                    await CreateCreditNoteDetailTax(creditNoteDetailTaxModel);
+                }
+            }
+
+            return isUpdated; // returns.
+        }
+
+
+        public async Task<bool> DeleteCreditNoteDetailTaxByCreditNoteId(int creditNoteId)
+        {
+            bool isDeleted = false;
+
+            // get record.
+            IList<Creditnotedetailtax> creditNoteDetailTaxList = await GetQueryByCondition(w => w.CreditNoteDetTaxId != 0).Include(W => W.CreditNoteDet)
+                                                                                .Where(W => W.CreditNoteDet.CreditNoteId == creditNoteId)
+                                                                                .ToListAsync();
+
+            foreach (Creditnotedetailtax creditNoteDetailTax in creditNoteDetailTaxList)
+            {
+                isDeleted = await DeleteCreditNoteDetailTax(creditNoteDetailTax.CreditNoteDetTaxId);
+            }
+
+            return isDeleted; // returns.
+        }
+
+
 
         public async Task<CreditNoteDetailTaxModel> GetCreditNoteDetailTaxById(int creditNoteDetailTaxId)
         {
@@ -261,7 +379,7 @@ namespace ERP.Services.Accounts
                 creditNoteDetailTaxModel.TaxAmount = creditNoteDetailTax.TaxAmount;
                 creditNoteDetailTaxModel.Remark = creditNoteDetailTax.Remark;
 
-                creditNoteDetailTaxModel.TaxLedgerName = null != creditNoteDetailTax.TaxLedger ? creditNoteDetailTax.TaxLedger.LedgerName : null;;
+                creditNoteDetailTaxModel.TaxLedgerName = null != creditNoteDetailTax.TaxLedger ? creditNoteDetailTax.TaxLedger.LedgerName : null; ;
 
                 return creditNoteDetailTaxModel;
             });

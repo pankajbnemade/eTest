@@ -7,11 +7,17 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ICreditNoteTax : IRepository<Creditnotetax>
     {
-         Task<int> GenerateSrNo(int salesCreditNoteId);
+         Task<int> GenerateSrNo(int crediteNoteId);
 
         Task<int> CreateCreditNoteTax(CreditNoteTaxModel creditNoteTaxModel);
 
         Task<bool> UpdateCreditNoteTax(CreditNoteTaxModel creditNoteTaxModel);
+
+        Task<bool> UpdateCreditNoteTaxAmountAll(int? creditNoteId);
+
+        Task<bool> AddCreditNoteTaxByCreditNoteId(int creditNoteId,int taxRegisterId);
+
+        Task<bool> DeleteCreditNoteTaxByCreditNoteId(int creditNoteId);
 
         Task<bool> DeleteCreditNoteTax(int creditNoteTaxId);
 

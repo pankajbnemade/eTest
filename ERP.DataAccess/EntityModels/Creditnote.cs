@@ -18,41 +18,41 @@ namespace ERP.DataAccess.EntityModels
         public int CreditNoteId { get; set; }
         public string CreditNoteNo { get; set; }
         public DateTime? CreditNoteDate { get; set; }
-        public int? PartyLedgerId { get; set; }
-        public int? BillToAddressId { get; set; }
-        public int? AccountLedgerId { get; set; }
+        public int PartyLedgerId { get; set; }
+        public int BillToAddressId { get; set; }
+        public int AccountLedgerId { get; set; }
         public string PartyReferenceNo { get; set; }
         public DateTime? PartyReferenceDate { get; set; }
         public string OurReferenceNo { get; set; }
         public DateTime? OurReferenceDate { get; set; }
-        public int? CreditLimitDays { get; set; }
+        public int CreditLimitDays { get; set; }
         public string PaymentTerm { get; set; }
         public string Remark { get; set; }
         public string TaxModelType { get; set; }
-        public int? TaxRegisterId { get; set; }
+        public int TaxRegisterId { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
-        public decimal? TotalLineItemAmountFc { get; set; }
-        public decimal? TotalLineItemAmount { get; set; }
-        public decimal? GrossAmountFc { get; set; }
-        public decimal? GrossAmount { get; set; }
+        public decimal TotalLineItemAmountFc { get; set; }
+        public decimal TotalLineItemAmount { get; set; }
+        public decimal GrossAmountFc { get; set; }
+        public decimal GrossAmount { get; set; }
         public string DiscountPercentageOrAmount { get; set; }
-        public decimal? DiscountPerOrAmountFc { get; set; }
-        public decimal? DiscountAmountFc { get; set; }
-        public decimal? DiscountAmount { get; set; }
-        public decimal? TaxAmountFc { get; set; }
-        public decimal? TaxAmount { get; set; }
-        public decimal? NetAmountFc { get; set; }
-        public decimal? NetAmount { get; set; }
+        public decimal DiscountPerOrAmountFc { get; set; }
+        public decimal DiscountAmountFc { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal TaxAmountFc { get; set; }
+        public decimal TaxAmount { get; set; }
+        public decimal NetAmountFc { get; set; }
+        public decimal NetAmount { get; set; }
         public string NetAmountFcinWord { get; set; }
-        public int? StatusId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
-        public int? MaxNo { get; set; }
-        public int? VoucherStyleId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int StatusId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
+        public int MaxNo { get; set; }
+        public int VoucherStyleId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Ledger AccountLedger { get; set; }

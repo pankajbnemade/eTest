@@ -82,6 +82,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Remark)
                                 @Html.TextBoxFor(model => model.Remark, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>

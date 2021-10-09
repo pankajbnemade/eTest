@@ -5,12 +5,10 @@
         <div class="modal-header">
             @if (Model.CreditNoteDetId > 0)
             {
-                <h4 class="modal-title">Edit CreditNote Detail</h4>
-            }
-            else
-            {
-                <h4 class="modal-title">Add CreditNote Detail</h4>
-            }
+<h4 class="modal-title">Edit Credit Note Detail</h4> }
+else
+{
+<h4 class="modal-title">Add Credit Note Detail</h4>}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -28,14 +26,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SrNo, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.SrNo, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.SrNo)
+                                @Html.ValidationMessageFor(model => model.SrNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Description, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.Description, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -45,15 +43,15 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Quantity, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control form-control-sm decimal-two-scale" })
-                                @Html.ValidationMessageFor(model => model.Quantity)
+                                @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.UnitOfMeasurementId, new { @class = "required" })
                                 @Html.DropDownListFor(model => model.UnitOfMeasurementId, new SelectList(ViewBag.UnitOfMeasurementList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.UnitOfMeasurementId)
+                                @Html.ValidationMessageFor(model => model.UnitOfMeasurementId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -64,14 +62,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.PerUnit, new { @class = "required" })
                                 @Html.TextBoxFor(model => model.PerUnit, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PerUnit)
+                                @Html.ValidationMessageFor(model => model.PerUnit, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.UnitPrice, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control form-control-sm decimal-two-scale" })
-                                @Html.ValidationMessageFor(model => model.UnitPrice)
+                                @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -82,58 +80,34 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.GrossAmountFc)
                                 @Html.TextBoxFor(model => model.GrossAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.GrossAmountFc)
+                                @Html.ValidationMessageFor(model => model.GrossAmountFc, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.GrossAmount)
-                                @Html.TextBoxFor(model => model.GrossAmount, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.GrossAmount)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxAmountFc)
                                 @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.TaxAmountFc)
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TaxAmount)
-                                @Html.TextBoxFor(model => model.TaxAmount, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.TaxAmount)
+                                @Html.ValidationMessageFor(model => model.TaxAmountFc, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.NetAmountFc)
                                 @Html.TextBoxFor(model => model.NetAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.NetAmountFc)
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.NetAmount)
-                                @Html.TextBoxFor(model => model.NetAmount, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.NetAmount)
+                                @Html.ValidationMessageFor(model => model.NetAmountFc, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Cancel">Cancel</button>
-                <button type="submit" class="btn btn-primary" title="Submit">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
             </div>
         </form>
     </div>
@@ -141,7 +115,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
     });
 
     // begin form
@@ -161,7 +135,7 @@
         if (data.Result.Status) {
             $('#modal-creditnote').modal('hide');
             fnSuccessNotify('Record saved sucessfully.');
-            $("#creditNoteDetailGrid").DataTable().ajax.reload();
+            $("#creditNoteDetailGrid").DataTable().clear().ajax.reload();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

@@ -9,12 +9,12 @@ namespace ERP.Services.Accounts.Interface
     public interface ICreditNote : IRepository<Creditnote>
     {
         /// <summary>
-        /// generate invoice no.
+        /// generate creditNote no.
         /// </summary>
         /// <param name="companyId"></param>
         /// <param name="financialYearId"></param>
         /// <returns>
-        /// return invoice no.
+        /// return creditNote no.
         /// </returns>
         Task<GenerateNoModel> GenerateCreditNoteNo(int companyId, int financialYearId);
 
@@ -24,14 +24,16 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> DeleteCreditNote(int creditNoteId);
 
+        Task<bool> UpdateStatusCreditNote(int creditNoteId, int action);
+
         Task<bool> UpdateCreditNoteMasterAmount(int? creditNoteId);
 
         Task<CreditNoteModel> GetCreditNoteById(int creditNoteId);
-        
+
         Task<IList<OutstandingInvoiceModel>> GetCreditNoteListByPartyLedgerId(int partyLedgerId);
 
         /// <summary>
-        /// get search sales invoice result list.
+        /// get search purchase creditNote result list.
         /// </summary>
         /// <param name="dataTableAjaxPostModel"></param>
         /// <param name="searchFilterModel"></param>
@@ -39,7 +41,7 @@ namespace ERP.Services.Accounts.Interface
         /// return list.
         /// </returns>
         Task<DataTableResultModel<CreditNoteModel>> GetCreditNoteList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterCreditNoteModel searchFilterModel);
-   
+
         //Task<DataTableResultModel<CreditNoteModel>> GetCreditNoteList();
     }
 }

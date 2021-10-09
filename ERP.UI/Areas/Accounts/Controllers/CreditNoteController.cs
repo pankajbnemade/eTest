@@ -18,6 +18,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
     public class CreditNoteController : Controller
     {
         private readonly ICreditNote _creditNote;
+        private readonly ICreditNoteDetailTax _creditNoteDetailTax;
+        private readonly ICreditNoteTax _creditNoteTax;
         private readonly ILedger _ledger;
         private readonly ILedgerAddress _ledgerAddress;
         private readonly ITaxRegister _taxRegister;
@@ -33,7 +35,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ILedgerAddress ledgerAddress,
             ITaxRegister taxRegister,
             ICurrency currency,
-            ICurrencyConversion currencyConversion)
+            ICurrencyConversion currencyConversion,
+            ICreditNoteDetailTax creditNoteDetailTax,
+            ICreditNoteTax creditNoteTax)
         {
             this._creditNote = creditNote;
             this._ledger = ledger;
@@ -41,11 +45,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
             this._taxRegister = taxRegister;
             this._currency = currency;
             this._currencyConversion = currencyConversion;
+            this._creditNoteDetailTax = creditNoteDetailTax;
+            this._creditNoteTax = creditNoteTax;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
             {
@@ -54,7 +61,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// get search credit note result list.
+        /// get search purchase creditNote result list.
         /// </summary>
         /// <returns>
         /// return json.
@@ -80,12 +87,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// add new credit note master.
+        /// add new creditNote master.
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> AddCreditNoteMaster()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -109,12 +116,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         /// <summary>
-        /// edit credit note master.
+        /// edit creditNote master.
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> EditCreditNoteMaster(int creditNoteId)
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, true);
             ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -190,18 +197,45 @@ namespace ERP.UI.Areas.Accounts.Controllers
             {
                 if (creditNoteModel.CreditNoteId > 0)
                 {
+                    CreditNoteModel creditNoteModel_Old = await _creditNote.GetCreditNoteById(creditNoteModel.CreditNoteId);
+
                     // update record.
                     if (true == await _creditNote.UpdateCreditNote(creditNoteModel))
                     {
+                        if (creditNoteModel_Old.TaxModelType != creditNoteModel.TaxModelType)
+                        {
+                            await _creditNoteDetailTax.DeleteCreditNoteDetailTaxByCreditNoteId(creditNoteModel.CreditNoteId);
+                            await _creditNoteTax.DeleteCreditNoteTaxByCreditNoteId(creditNoteModel.CreditNoteId);
+
+                            if (creditNoteModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                            {
+                                await _creditNoteTax.AddCreditNoteTaxByCreditNoteId(creditNoteModel.CreditNoteId, (int)creditNoteModel.TaxRegisterId);
+                            }
+                            else if (creditNoteModel.TaxModelType == TaxModelType.LineWise.ToString())
+                            {
+                                await _creditNoteDetailTax.AddCreditNoteDetailTaxByCreditNoteId(creditNoteModel.CreditNoteId, (int)creditNoteModel.TaxRegisterId);
+                            }
+                        }
+                        else
+                        {
+                            await _creditNoteTax.UpdateCreditNoteTaxAmountAll(creditNoteModel.CreditNoteId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = creditNoteModel.CreditNoteId;
                     }
                 }
                 else
                 {
+                    creditNoteModel.CreditNoteId = await _creditNote.CreateCreditNote(creditNoteModel);
                     // add new record.
-                    if (await _creditNote.CreateCreditNote(creditNoteModel) > 0)
+                    if (creditNoteModel.CreditNoteId > 0)
                     {
+                        if (creditNoteModel.TaxModelType == TaxModelType.SubTotal.ToString())
+                        {
+                            await _creditNoteTax.AddCreditNoteTaxByCreditNoteId(creditNoteModel.CreditNoteId, (int)creditNoteModel.TaxRegisterId);
+                        }
                         data.Result.Status = true;
+                        data.Result.Data = creditNoteModel.CreditNoteId;
                     }
                 }
             }
@@ -216,6 +250,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> ManageCreditNote(int creditNoteId)
         {
             ViewBag.CreditNoteId = creditNoteId;
+
+            CreditNoteModel creditNoteModel = await _creditNote.GetCreditNoteById(creditNoteId);
+
+            ViewBag.IsTaxMasterVisible = creditNoteModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
+            ViewBag.IsApprovalRequestVisible = creditNoteModel.StatusId == 1 || creditNoteModel.StatusId == 3 ? true : false;
+            ViewBag.IsApproveVisible = creditNoteModel.StatusId == 2 ? true : false;
 
             return await Task.Run(() =>
             {
@@ -237,22 +277,27 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// view creditNote summary.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ViewCreditNoteSummary(int creditNoteId)
+        [HttpPost]
+        public async Task<JsonResult> UpdateStatusCreditNoteMaster(int creditNoteId, string action)
         {
-            CreditNoteModel creditNoteModel = await _creditNote.GetCreditNoteById(creditNoteId);
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            return await Task.Run(() =>
+            int statusId = (int)EnumHelper.GetValueFromDescription<DocumentStatus>(action);
+
+            if (creditNoteId > 0)
             {
-                return PartialView("_ViewCreditNoteSummary", creditNoteModel);
-            });
+                if (true == await _creditNote.UpdateStatusCreditNote(creditNoteId, statusId))
+                {
+                    data.Result.Status = true;
+                    data.Result.Data = creditNoteId;
+                }
+            }
+
+            return Json(data);
         }
 
         /// <summary>
-        /// delete creditNote master.
+        /// delete invoice master.
         /// </summary>
         /// <param name="creditNoteId"></param>
         /// <returns></returns>
@@ -260,6 +305,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> DeleteCreditNoteMaster(int creditNoteId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
             if (true == await _creditNote.DeleteCreditNote(creditNoteId))
             {
                 data.Result.Status = true;
