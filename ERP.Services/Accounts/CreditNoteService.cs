@@ -3,16 +3,14 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
-using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using ERP.Models.Accounts.Enums;
+using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
 {
@@ -34,21 +32,15 @@ namespace ERP.Services.Accounts
         /// </returns>
         public async Task<GenerateNoModel> GenerateCreditNoteNo(int companyId, int financialYearId)
         {
-            try
-            {
             int voucherSetupId = 4;
-            // get maxno.
-            int maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
+
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex);
-                throw;
-            }
         }
 
         /// <summary>
@@ -62,58 +54,66 @@ namespace ERP.Services.Accounts
         {
             int creditNoteId = 0;
 
-            GenerateNoModel generateNoModel = await GenerateCreditNoteNo(creditNoteModel.CompanyId, creditNoteModel.FinancialYearId);
-
-            // assign values.
-            Creditnote creditNote = new Creditnote();
-
-            creditNote.CreditNoteNo = generateNoModel.VoucherNo;
-            creditNote.MaxNo = generateNoModel.MaxNo;
-            creditNote.VoucherStyleId = generateNoModel.VoucherStyleId;
-
-            creditNote.CreditNoteDate = creditNoteModel.CreditNoteDate;
-            creditNote.PartyLedgerId = creditNoteModel.PartyLedgerId;
-            creditNote.BillToAddressId = creditNoteModel.BillToAddressId;
-            creditNote.AccountLedgerId = creditNoteModel.AccountLedgerId;
-            creditNote.OurReferenceNo = creditNoteModel.OurReferenceNo;
-            creditNote.OurReferenceDate = creditNoteModel.OurReferenceDate;
-            creditNote.PartyReferenceNo = creditNoteModel.PartyReferenceNo;
-            creditNote.PartyReferenceDate = creditNoteModel.PartyReferenceDate;
-            creditNote.CreditLimitDays = creditNoteModel.CreditLimitDays;
-            creditNote.PaymentTerm = creditNoteModel.PaymentTerm;
-            creditNote.Remark = creditNoteModel.Remark;
-            creditNote.TaxModelType = creditNoteModel.TaxModelType;
-            creditNote.TaxRegisterId = creditNoteModel.TaxRegisterId;
-            creditNote.CurrencyId = creditNoteModel.CurrencyId;
-            creditNote.ExchangeRate = creditNoteModel.ExchangeRate;
-            creditNote.TotalLineItemAmountFc = 0;
-            creditNote.TotalLineItemAmount = 0;
-            creditNote.GrossAmountFc = 0;
-            creditNote.GrossAmount = 0;
-            creditNote.NetAmountFc = 0;
-            creditNote.NetAmount = 0;
-            creditNote.NetAmountFcinWord = "";
-            creditNote.TaxAmountFc = 0;
-            creditNote.TaxAmount = 0;
-
-            creditNote.DiscountPercentageOrAmount = creditNoteModel.DiscountPercentageOrAmount;
-            creditNote.DiscountPerOrAmountFc = creditNoteModel.DiscountPerOrAmountFc;
-            creditNote.DiscountAmountFc = 0;
-            creditNote.DiscountAmount = 0;
-
-            creditNote.StatusId = (int)DocumentStatus.Inprocess;
-            creditNote.CompanyId = creditNoteModel.CompanyId;
-            creditNote.FinancialYearId = creditNoteModel.FinancialYearId;
-
-            await Create(creditNote);
-
-            creditNoteId = creditNote.CreditNoteId;
-
-            if (creditNoteId != 0)
+            try
             {
-                await UpdateCreditNoteMasterAmount(creditNoteId);
-            }
 
+                GenerateNoModel generateNoModel = await GenerateCreditNoteNo(creditNoteModel.CompanyId, creditNoteModel.FinancialYearId);
+
+                // assign values.
+                Creditnote creditNote = new Creditnote();
+
+                creditNote.CreditNoteNo = generateNoModel.VoucherNo;
+                creditNote.MaxNo = generateNoModel.MaxNo;
+                creditNote.VoucherStyleId = generateNoModel.VoucherStyleId;
+
+                creditNote.CreditNoteDate = creditNoteModel.CreditNoteDate;
+                creditNote.PartyLedgerId = creditNoteModel.PartyLedgerId;
+                creditNote.BillToAddressId = creditNoteModel.BillToAddressId;
+                creditNote.AccountLedgerId = creditNoteModel.AccountLedgerId;
+                creditNote.OurReferenceNo = creditNoteModel.OurReferenceNo;
+                creditNote.OurReferenceDate = creditNoteModel.OurReferenceDate;
+                creditNote.PartyReferenceNo = creditNoteModel.PartyReferenceNo;
+                creditNote.PartyReferenceDate = creditNoteModel.PartyReferenceDate;
+                creditNote.CreditLimitDays = creditNoteModel.CreditLimitDays;
+                creditNote.PaymentTerm = creditNoteModel.PaymentTerm;
+                creditNote.Remark = creditNoteModel.Remark;
+                creditNote.TaxModelType = creditNoteModel.TaxModelType;
+                creditNote.TaxRegisterId = creditNoteModel.TaxRegisterId;
+                creditNote.CurrencyId = creditNoteModel.CurrencyId;
+                creditNote.ExchangeRate = creditNoteModel.ExchangeRate;
+                creditNote.TotalLineItemAmountFc = 0;
+                creditNote.TotalLineItemAmount = 0;
+                creditNote.GrossAmountFc = 0;
+                creditNote.GrossAmount = 0;
+                creditNote.NetAmountFc = 0;
+                creditNote.NetAmount = 0;
+                creditNote.NetAmountFcinWord = "";
+                creditNote.TaxAmountFc = 0;
+                creditNote.TaxAmount = 0;
+
+                creditNote.DiscountPercentageOrAmount = creditNoteModel.DiscountPercentageOrAmount;
+                creditNote.DiscountPerOrAmountFc = creditNoteModel.DiscountPerOrAmountFc;
+                creditNote.DiscountAmountFc = 0;
+                creditNote.DiscountAmount = 0;
+
+                creditNote.StatusId = (int)DocumentStatus.Inprocess;
+                creditNote.CompanyId = creditNoteModel.CompanyId;
+                creditNote.FinancialYearId = creditNoteModel.FinancialYearId;
+
+                await Create(creditNote);
+
+                creditNoteId = creditNote.CreditNoteId;
+
+                if (creditNoteId != 0)
+                {
+                    await UpdateCreditNoteMasterAmount(creditNoteId);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex);
+            }
             return creditNoteId; // returns.
         }
 
@@ -134,7 +134,7 @@ namespace ERP.Services.Accounts
             if (null != creditNote)
             {
                 // assign values.
-                
+
                 creditNote.CreditNoteDate = creditNoteModel.CreditNoteDate;
                 creditNote.PartyLedgerId = creditNoteModel.PartyLedgerId;
                 creditNote.BillToAddressId = creditNoteModel.BillToAddressId;
@@ -501,6 +501,8 @@ namespace ERP.Services.Accounts
                 creditNoteModel.AccountLedgerId = creditNote.AccountLedgerId;
                 creditNoteModel.PartyReferenceNo = creditNote.PartyReferenceNo;
                 creditNoteModel.PartyReferenceDate = creditNote.PartyReferenceDate;
+                creditNoteModel.OurReferenceNo = creditNote.OurReferenceNo;
+                creditNoteModel.OurReferenceDate = creditNote.OurReferenceDate;
                 creditNoteModel.CreditLimitDays = creditNote.CreditLimitDays;
                 creditNoteModel.PaymentTerm = creditNote.PaymentTerm;
                 creditNoteModel.Remark = creditNote.Remark;

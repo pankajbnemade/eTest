@@ -35,10 +35,12 @@ namespace ERP.Services.Accounts
         public async Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId)
         {
             int voucherSetupId = 3;
-            // get maxno.
-            int maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+            
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -246,8 +248,8 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc / purchaseInvoice.ExchangeRate;
 
                 purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
-                
-                if(purchaseInvoice.StatusId == (int)DocumentStatus.Approved || purchaseInvoice.StatusId == (int)DocumentStatus.ApprovalRequested)
+
+                if (purchaseInvoice.StatusId == (int)DocumentStatus.Approved || purchaseInvoice.StatusId == (int)DocumentStatus.ApprovalRequested)
                 {
                     purchaseInvoice.StatusId = (int)DocumentStatus.Inprocess;
                 }
@@ -369,9 +371,9 @@ namespace ERP.Services.Accounts
 
             IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0)
                                                 .Include(w => w.SupplierLedger).Include(w => w.Currency)
-                                                .Include(w=>w.PreparedByUser).Include(w=>w.Status);
+                                                .Include(w => w.PreparedByUser).Include(w => w.Status);
 
-           //sortBy
+            //sortBy
             if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
             {
                 sortBy = "InvoiceNo";
@@ -407,7 +409,7 @@ namespace ERP.Services.Accounts
             {
                 query = query.Where(w => w.SupplierReferenceNo.Contains(searchFilterModel.SupplierReferenceNo));
             }
-            
+
             if (null != searchFilterModel.AccountLedgerId)
             {
                 query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
@@ -433,10 +435,10 @@ namespace ERP.Services.Accounts
                 NetAmountFc = s.NetAmountFc,
                 SupplierReferenceNo = s.SupplierReferenceNo,
                 SupplierReferenceDate = s.SupplierReferenceDate,
-                SupplierLedgerName=s.SupplierLedger.LedgerName,
-                CurrencyCode=s.Currency.CurrencyCode,
-                PreparedByName=s.Currency.PreparedByUser.UserName,
-                StatusName=s.Status.StatusName,
+                SupplierLedgerName = s.SupplierLedger.LedgerName,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.Currency.PreparedByUser.UserName,
+                StatusName = s.Status.StatusName,
             }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 
             // get filter record count.

@@ -78,12 +78,12 @@
                         <thead>
                             <tr class="table-header">
                                 <th class="no-sort"></th>
-                                <th>CreditNoteId</th>
-                                <th>CreditNote No</th>
-                                <th>CreditNote Date</th>
-                                <th>Supplier</th>
-                                <th>Supplier Ref No</th>
-                                <th>Supplier Ref Date</th>
+                                <th>Credit NoteId</th>
+                                <th>Credit Note No</th>
+                                <th>Credit Note Date</th>
+                                <th>Party</th>
+                                <th>Party Ref No</th>
+                                <th>Party Ref Date</th>
                                 <th>Currency</th>
                                 <th>Net Amount FC</th>
                                 <th>Status</th>
@@ -118,10 +118,10 @@
                     searchFilter: function () {
                         var searchFilterModel = {
                             CreditNoteNo: $('#CreditNoteNo').val(),
-                            SupplierLedgerId: $('#SupplierLedgerId').val(),
+                            PartyLedgerId: $('#PartyLedgerId').val(),
                             FromDate: $('#FromDate').val(),
                             ToDate: $('#ToDate').val(),
-                            SupplierReferenceNo: $('#SupplierReferenceNo').val(),
+                            PartyReferenceNo: $('#PartyReferenceNo').val(),
                             AccountLedgerId: $('#AccountLedgerId').val(),
                         };
 
@@ -147,10 +147,10 @@
                         return moment(dt).format("DD/MMM/YYYY");
                     }
                 },
-                { "data": "SupplierLedgerName", "name": "SupplierLedgerName" },
-                { "data": "SupplierReferenceNo", "name": "SupplierReferenceNo" },
+                { "data": "PartyLedgerName", "name": "PartyLedgerName" },
+                { "data": "PartyReferenceNo", "name": "PartyReferenceNo" },
                 {
-                    "data": "SupplierReferenceDate", "name": "SupplierReferenceDate",
+                    "data": "PartyReferenceDate", "name": "PartyReferenceDate",
                     "render": function (dt) {
                         return moment(dt).format("DD/MMM/YYYY");
                     }

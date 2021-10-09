@@ -37,39 +37,39 @@ namespace ERP.DataAccess.EntityData
         /// <returns></returns>
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
-            try
+            //try
+            //{
+            UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(_session, "UserSession");
+            var changeSet = ChangeTracker.Entries<IAuditable>();
+            if (null != changeSet)
             {
-                UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(_session, "UserSession");
-                var changeSet = ChangeTracker.Entries<IAuditable>();
-                if (null != changeSet)
+                foreach (var entry in changeSet.Where(c => c.State != EntityState.Unchanged))
                 {
-                    foreach (var entry in changeSet.Where(c => c.State != EntityState.Unchanged))
+                    switch (entry.State)
                     {
-                        switch (entry.State)
-                        {
-                            case EntityState.Added:
-                                if (entry.Entity.GetType().GetProperty("PreparedByUserId") != null) entry.Property("PreparedByUserId").CurrentValue = userSessionModel.UserId;
-                                if (entry.Entity.GetType().GetProperty("PreparedDateTime") != null) entry.Property("PreparedDateTime").CurrentValue = DateTime.Now;
-                                if (entry.Entity.GetType().GetProperty("UpdatedByUserId") != null) entry.Property("UpdatedByUserId").CurrentValue = userSessionModel.UserId;
-                                if (entry.Entity.GetType().GetProperty("UpdatedDateTime") != null) entry.Property("UpdatedDateTime").CurrentValue = DateTime.Now;
-                                break;
-                            case EntityState.Modified:
-                                if (entry.Entity.GetType().GetProperty("UpdatedByUserId") != null) entry.Property("UpdatedByUserId").CurrentValue = userSessionModel.UserId;
-                                if (entry.Entity.GetType().GetProperty("UpdatedDateTime") != null) entry.Property("UpdatedDateTime").CurrentValue = DateTime.Now;
-                                break;
-                            default:
-                                // dont' update anything.
-                                break;
-                        }
+                        case EntityState.Added:
+                            if (entry.Entity.GetType().GetProperty("PreparedByUserId") != null) entry.Property("PreparedByUserId").CurrentValue = userSessionModel.UserId;
+                            if (entry.Entity.GetType().GetProperty("PreparedDateTime") != null) entry.Property("PreparedDateTime").CurrentValue = DateTime.Now;
+                            if (entry.Entity.GetType().GetProperty("UpdatedByUserId") != null) entry.Property("UpdatedByUserId").CurrentValue = userSessionModel.UserId;
+                            if (entry.Entity.GetType().GetProperty("UpdatedDateTime") != null) entry.Property("UpdatedDateTime").CurrentValue = DateTime.Now;
+                            break;
+                        case EntityState.Modified:
+                            if (entry.Entity.GetType().GetProperty("UpdatedByUserId") != null) entry.Property("UpdatedByUserId").CurrentValue = userSessionModel.UserId;
+                            if (entry.Entity.GetType().GetProperty("UpdatedDateTime") != null) entry.Property("UpdatedDateTime").CurrentValue = DateTime.Now;
+                            break;
+                        default:
+                            // dont' update anything.
+                            break;
                     }
                 }
+            }
 
-                return await base.SaveChangesAsync(true, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return await base.SaveChangesAsync(true, cancellationToken);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw;
+            //}
         }
     }
 }

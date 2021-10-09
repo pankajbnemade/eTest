@@ -20,87 +20,77 @@ else
             <div class="modal-body">
                 @Html.HiddenFor(model => model.CreditNoteDetId)
                 @Html.HiddenFor(model => model.CreditNoteId)
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.SrNo, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.SrNo, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.SrNo, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Description, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.Description, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Quantity, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.UnitOfMeasurementId, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.UnitOfMeasurementId, new SelectList(ViewBag.UnitOfMeasurementList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.UnitOfMeasurementId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.PerUnit, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.PerUnit, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PerUnit, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.UnitPrice, new { @class = "required" })
-                                @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.GrossAmountFc)
-                                @Html.TextBoxFor(model => model.GrossAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.GrossAmountFc, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TaxAmountFc)
-                                @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.TaxAmountFc, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.NetAmountFc)
-                                @Html.TextBoxFor(model => model.NetAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
-                                @Html.ValidationMessageFor(model => model.NetAmountFc, "", new { @class = "text-danger" })
-                            </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SrNo, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.SrNo, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.SrNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Description, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.Description, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Quantity, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UnitOfMeasurementId, new { @class = "required" })
+                            @Html.DropDownListFor(model => model.UnitOfMeasurementId, new SelectList(ViewBag.UnitOfMeasurementList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.UnitOfMeasurementId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PerUnit, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.PerUnit, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.PerUnit, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UnitPrice, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.GrossAmountFc)
+                            @Html.TextBoxFor(model => model.GrossAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
+                            @Html.ValidationMessageFor(model => model.GrossAmountFc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TaxAmountFc)
+                            @Html.TextBoxFor(model => model.TaxAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
+                            @Html.ValidationMessageFor(model => model.TaxAmountFc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NetAmountFc)
+                            @Html.TextBoxFor(model => model.NetAmountFc, new { @class = "form-control form-control-sm", @readonly = "@readonly" })
+                            @Html.ValidationMessageFor(model => model.NetAmountFc, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>

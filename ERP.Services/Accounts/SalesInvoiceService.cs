@@ -36,10 +36,12 @@ namespace ERP.Services.Accounts
         public async Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId)
         {
             int voucherSetupId = 2;
-            // get maxno.
-            int maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
+
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -528,7 +530,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.CustomerLedgerName = null != salesInvoice.CustomerLedger ? salesInvoice.CustomerLedger.LedgerName : null;
                 salesInvoiceModel.BillToAddress = null != salesInvoice.BillToAddress ? salesInvoice.BillToAddress.AddressDescription : null;
                 salesInvoiceModel.AccountLedgerName = null != salesInvoice.AccountLedger ? salesInvoice.AccountLedger.LedgerName : null;
-                 salesInvoiceModel.BankLedgerName = null != salesInvoice.BankLedger ? salesInvoice.BankLedger.LedgerName : null;
+                salesInvoiceModel.BankLedgerName = null != salesInvoice.BankLedger ? salesInvoice.BankLedger.LedgerName : null;
                 salesInvoiceModel.TaxRegisterName = null != salesInvoice.TaxRegister ? salesInvoice.TaxRegister.TaxRegisterName : null;
                 salesInvoiceModel.CurrencyCode = null != salesInvoice.Currency ? salesInvoice.Currency.CurrencyCode : null;
                 salesInvoiceModel.StatusName = null != salesInvoice.Status ? salesInvoice.Status.StatusName : null;
