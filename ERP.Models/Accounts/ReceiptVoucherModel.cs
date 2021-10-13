@@ -37,7 +37,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Cheque No")]
@@ -53,7 +54,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Cheque Amount FC")]
         [Required(ErrorMessage = "Cheque Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? ChequeAmountFc { get; set; }
 
         [Display(Name = "Narration")]
@@ -61,19 +63,17 @@ namespace ERP.Models.Accounts
         public string Narration { get; set; }
 
         [Display(Name = "Amount FC")]
-        [Required(ErrorMessage = "Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? AmountFc { get; set; }
 
         [Display(Name = "Amount")]
-        [Required(ErrorMessage = "Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal? Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
-        [Required(ErrorMessage = "Amount FC in word is required.")]
-        public string AmountFcinWord { get; set; }
+        public string AmountFcInWord { get; set; }
 
+        [Display(Name = "Status")]
         public int? StatusId { get; set; }
 
         public int CompanyId { get; set; }

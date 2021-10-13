@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
@@ -24,9 +23,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         private readonly ICurrency _currency;
         private readonly ICurrencyConversion _currencyConversion;
 
-        /// <summary>
-        /// constractor.
-        /// </summary>
         public PaymentVoucherController(
             IPaymentVoucher paymentVoucher,
             IPaymentVoucherDetail paymentVoucherDetail,
@@ -51,12 +47,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// get search payment voucher result list.
-        /// </summary>
-        /// <returns>
-        /// return json.
-        /// </returns>
         [HttpPost]
         public async Task<IActionResult> GetPaymentVoucherList(DataTableAjaxPostModel dataTableAjaxPostModel, string searchFilter)
         {
@@ -77,10 +67,42 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// add new voucher master.
-        /// </summary>
-        /// <returns></returns>
+        public async Task<IActionResult> ManageVoucher(int paymentVoucherId)
+        {
+            ViewBag.PaymentVoucherId = paymentVoucherId;
+
+            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+            ViewBag.IsApprovalRequestVisible = paymentVoucherModel.StatusId == 1 || paymentVoucherModel.StatusId == 3 ? true : false;
+            ViewBag.IsApproveVisible = paymentVoucherModel.StatusId == 2 ? true : false;
+
+            return await Task.Run(() =>
+            {
+                return View();
+            });
+        }
+
+        public async Task<IActionResult> ViewVoucherMaster(int paymentVoucherId)
+        {
+            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId((int)paymentVoucherModel.AccountLedgerId, (DateTime)paymentVoucherModel.VoucherDate);
+
+            if (null != ledgerModel)
+            {
+                paymentVoucherModel.ClosingBalance = ledgerModel.ClosingBalance;
+            }
+            else
+            {
+                paymentVoucherModel.ClosingBalance = 0;
+            }
+
+            return await Task.Run(() =>
+            {
+                return PartialView("_ViewVoucherMaster", paymentVoucherModel);
+            });
+        }
+
         public async Task<IActionResult> AddVoucherMaster()
         {
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -105,10 +127,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// edit voucher master.
-        /// </summary>
-        /// <returns></returns>
         public async Task<IActionResult> EditVoucherMaster(int paymentVoucherId)
         {
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
@@ -127,13 +145,70 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// get ledger list by cash or bank
-        /// </summary>
-        /// <param name="typeCorB"></param>
-        /// <returns>
-        /// return json.
-        /// </returns>
+        [HttpPost]
+        public async Task<JsonResult> SaveVoucherMaster(PaymentVoucherModel paymentVoucherModel)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            if (ModelState.IsValid)
+            {
+                if (paymentVoucherModel.PaymentVoucherId > 0)
+                {
+                    // update record.
+                    if (true == await _paymentVoucher.UpdatePaymentVoucher(paymentVoucherModel))
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = paymentVoucherModel.PaymentVoucherId;
+                    }
+                }
+                else
+                {
+                    // add new record.
+                    paymentVoucherModel.PaymentVoucherId = await _paymentVoucher.CreatePaymentVoucher(paymentVoucherModel);
+
+                    if (paymentVoucherModel.PaymentVoucherId > 0)
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = paymentVoucherModel.PaymentVoucherId;
+                    }
+                }
+            }
+
+            return Json(data);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateStatusVoucherMaster(int paymentVoucherId, string action)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            int statusId = (int)EnumHelper.GetValueFromDescription<DocumentStatus>(action);
+
+            if (paymentVoucherId > 0)
+            {
+                if (true == await _paymentVoucher.UpdateStatusPaymentVoucher(paymentVoucherId, statusId))
+                {
+                    data.Result.Status = true;
+                    data.Result.Data = paymentVoucherId;
+                }
+            }
+
+            return Json(data);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteVoucherMaster(int paymentVoucherId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            if (true == await _paymentVoucher.DeletePaymentVoucher(paymentVoucherId))
+            {
+                data.Result.Status = true;
+            }
+
+            return Json(data); // returns.
+        }
+
         [HttpPost]
         public async Task<JsonResult> GetAccountLedgerByTypeCorB(string typeCorB)
         {
@@ -204,99 +279,5 @@ namespace ERP.UI.Areas.Accounts.Controllers
             return Json(data); // returns.
         }
 
-
-        /// <summary>
-        /// save sale voucher master.
-        /// </summary>
-        /// <param name="paymentVoucherModel"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> SaveVoucherMaster(PaymentVoucherModel paymentVoucherModel)
-        {
-            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-
-            if (ModelState.IsValid)
-            {
-                if (paymentVoucherModel.PaymentVoucherId > 0)
-                {
-                    // update record.
-                    if (true == await _paymentVoucher.UpdatePaymentVoucher(paymentVoucherModel))
-                    {
-                        data.Result.Status = true;
-                        data.Result.Data = paymentVoucherModel.PaymentVoucherId;
-                    }
-                }
-                else
-                {
-                    // add new record.
-                    paymentVoucherModel.PaymentVoucherId = await _paymentVoucher.CreatePaymentVoucher(paymentVoucherModel);
-
-                    if (paymentVoucherModel.PaymentVoucherId > 0)
-                    {
-                        data.Result.Status = true;
-                        data.Result.Data = paymentVoucherModel.PaymentVoucherId;
-                    }
-                }
-            }
-
-            return Json(data);
-        }
-
-        /// <summary>
-        /// manage voucher.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ManageVoucher(int paymentVoucherId)
-        {
-            ViewBag.PaymentVoucherId = paymentVoucherId;
-
-            return await Task.Run(() =>
-            {
-                return View();
-            });
-        }
-
-        /// <summary>
-        /// view voucher master.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> ViewVoucherMaster(int paymentVoucherId)
-        {
-            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
-
-            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId((int)paymentVoucherModel.AccountLedgerId, (DateTime)paymentVoucherModel.VoucherDate);
-
-            if (null != ledgerModel)
-            {
-                paymentVoucherModel.ClosingBalance = ledgerModel.ClosingBalance;
-            }
-            else
-            {
-                paymentVoucherModel.ClosingBalance = 0;
-            }
-
-            return await Task.Run(() =>
-            {
-                return PartialView("_ViewVoucherMaster", paymentVoucherModel);
-            });
-        }
-
-
-        /// <summary>
-        /// delete voucher master.
-        /// </summary>
-        /// <param name="paymentVoucherId"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> DeleteVoucherMaster(int paymentVoucherId)
-        {
-            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-            if (true == await _paymentVoucher.DeletePaymentVoucher(paymentVoucherId))
-            {
-                data.Result.Status = true;
-            }
-
-            return Json(data); // returns.
-        }
     }
 }

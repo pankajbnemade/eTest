@@ -1,78 +1,217 @@
-﻿@*<div class="row mb-3">
-        <div class="col-12 text-right">
+﻿@model IList<PaymentVoucherDetailModel>
 
+<form id="frmVoucherDetail" class="width100" method="post"
+      asp-action="SaveVoucherDetail" asp-controller="PaymentVoucherDetail" asp-area="Accounts"
+      data-ajax-begin="return BeginVoucherDetail();" data-ajax-success="SuccessVoucherDetail"
+      data-ajax="true" data-ajax-method="post">
+
+    <div class="row">
+        <div class="col-sm-12 table-responsive">
+            <input id="addRow_Blank" type="hidden" value="0">
+
+            <table id="paymentVoucherDetailGrid" class="table table-bordered table-striped w-100">
+                <thead>
+                    <tr class="table-header">
+                        <th class="no-sort">
+                            <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-voucher-dtl" title="Add New Line"
+                                    onclick="javascript: fnAddRow('@ViewBag.PaymentVoucherId')">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </th>
+                        <th>Particular</th>
+                        <th>Transaction Type</th>
+                        <th>Amount FC</th>
+                        <th>Invoice Type</th>
+                        <th>Invoice No</th>
+                        <th>Narration</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (var item = 0; item < Model.Count(); item++)
+                    {
+                        <tr>
+                            <td style="width:20px;">
+                                @if (Model[item].PaymentVoucherDetId != 0)
+                                {
+                                    <button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, @Model[item].PaymentVoucherDetId)"><span class="fa fa-trash-alt"></span></button>
+                                }
+                                @Html.HiddenFor(modelItem => Model[item].PaymentVoucherDetId)
+                                @Html.HiddenFor(modelItem => Model[item].PaymentVoucherId)
+                                @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                                @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
+                            </td>
+                            <td>
+                                @if (Model[item].TransactionTypeId == 2)
+                                {
+                                    @Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId,
+                                                                       new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select",
+                                                                       new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId,
+                                                                       new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select",
+                                                                       new { @class = "form-control form-control-sm" })
+                                }
+
+                                @Html.ValidationMessageFor(modelItem => Model[item].ParticularLedgerId, "", new { @class = "text-danger" })
+                            </td>
+                            <td style="width:120px;">
+                                @if (Model[item].PaymentVoucherDetId != 0)
+                                {
+                                    @Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
+                                  "Select", new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
+                                  "Select", new { @class = "form-control form-control-sm" })
+                                }
+                                @Html.ValidationMessageFor(modelItem => Model[item].TransactionTypeId, "", new { @class = "text-danger" })
+                            </td>
+                            <td style="width:100px;">
+                                @if (Model[item].TransactionTypeId == 2)
+                                {
+                                    @Html.TextBoxFor(modelItem => Model[item].AmountFc, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(modelItem => Model[item].AmountFc, new { @class = "form-control form-control-sm" })
+                                }
+
+                                @Html.ValidationMessageFor(modelItem => Model[item].AmountFc, "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Model[item].InvoiceType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Model[item].InvoiceNo)
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(modelItem => Model[item].Narration, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(modelItem => Model[item].Narration, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-    </div>*@
-<div class="row">
-    <div class="col-sm-12">
-        <input id="addRow_Blank" type="hidden" value="0">
-
-        <table id="paymentVoucherDetailGrid" class="table table-bordered table-striped w-100">
-            <thead>
-                <tr class="table-header">
-                    <th>
-                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-invoice-dtl" title="Add New Line">
-                            <i class="fas fa-plus"></i>
-                        </button> @*Action*@
-                    </th>
-                    <th>PaymentVoucherDetId</th>
-                    <th>Particular</th>
-                    <th>Transaction Type</th>
-                    <th>Amount Fc</th>
-                    <th>Invoice Type</th>
-                    <th>Invoice No</th>
-                    <th>Narration</th>
-                </tr>
-            </thead>
-        </table>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 p-2">
-        <button class="btn btn-primary" type="button" id="save-invoice-dtl" title="Save Detail">
-            Save Detail
-        </button>
-    </div>
-</div>
 
+    <div class="row">
+        <div class="col-sm-12 p-2">
+            <button type="submit" class="btn btn-primary" id="save-new-voucher-dtl" title="Save"><i class="fas fa-save"></i> Save</button>
+        </div>
+    </div>
+
+</form>
 <style>
-    table.dataTable td {
-        padding: 0px;
+    .table th {
+        font-size: 0.9em;
+        padding: 4px 5px; /* e.g. change 8x to 4px here */
     }
 
-    table.dataTable th {
-        padding: 2px;
-        vertical-align: top;
-        text-align: center;
+    .table td {
+        font-size: 0.9em;
+        padding: 1px 1px; /* e.g. change 8x to 4px here */
     }
 </style>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+
+    //// begin form
+    function BeginVoucherDetail() {
+        var form = $("#frmVoucherDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+
+    //// success form
+    function SuccessVoucherDetail(data) {
+        if (data.Result.Status) {
+           /* $('#modal-voucher').modal('hide');*/
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + data.Result.Data + '&addRow_Blank=0';
+
+            $('#voucherdetail').empty();
+            $('#voucherdetail').load(tabUrl);
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    function fnAddRow(paymentVoucherId) {
+        var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + paymentVoucherId + '&addRow_Blank=1';
+
+        $('#voucherdetail').empty();
+        $('#voucherdetail').load(tabUrl);
+    }
+
+    @*//account ledger change.
+    $('#add-new-voucher-dtl').click(function () {
+        var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + paymentVoucherId + '&addRow_Blank=1';
+
+        $('#voucherdetail').empty();
+        $('#voucherdetail').load(tabUrl);
+    });*@
+
+
+    //////account ledger change.
+    //$('#add-new-voucher-dtl').click(function () {
+    //    //alert('add-new-voucher-dtl');
+
+    //    var $tableBody = $('#paymentVoucherDetailGrid').find("tbody"),
+    //        $trLast = $tableBody.find("tr:last"),
+    //        $trNew = $trLast.clone();
+
+    //    $trNew.find('select[id*=ParticularLedgerId]').val('');
+    //    $trNew.find('select[id*=TransactionTypeId]').val('');
+    //    $trNew.find('input[id*=AmountFc]').val('');
+    //    $trNew.find('input[id*=Narration]').val('');
+    //    $trNew.find('input[id*=PaymentVoucherDetId]').val(0);
+    //    $trNew.find('input[id*=DebitNoteId]').val(0);
+    //    $trNew.find('input[id*=PurchaseInvoiceId]').val(0);
+    //    $trNew.find('label[id*=InvoiceType]').val('');
+    //    $trNew.find('label[id*=InvoiceNo]').val('');
+
+    //    $trLast.after($trNew).show();
+    //});
+
 
     $(document).ready(function () {
 
-        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
-
-        dataTableLoad();
-
-        $("#paymentVoucherDetailGrid tbody").on('change', '#TransactionTypeId', function (e) {
-            e.preventDefault();
+        $("#paymentVoucherDetailGrid").on('change', 'select[id*=TransactionTypeId]', function (e) {
             var currentRow = $(this).closest("tr");
 
-            if (currentRow.find("#ParticularLedgerId").val() == "") {
-                currentRow.find("#TransactionTypeId").val("");
+            if (currentRow.find("select[id*=ParticularLedgerId]").val() == "") {
+                currentRow.find("select[id*=TransactionTypeId]").val("");
                 alert("Please select Particular");
-                currentRow.find("#ParticularLedgerId").focus();
+                currentRow.find("select[id*=ParticularLedgerId]").focus();
                 return false;
             }
 
-            if (currentRow.find("#TransactionTypeId").val() == 2) {
+            if (currentRow.find("select[id*=TransactionTypeId]").val() == 2) {
                 var paymentVoucherId = '@ViewBag.PaymentVoucherId';
 
                 var model = {
                     paymentVoucherId: paymentVoucherId,
-                    particularLedgerId: currentRow.find("#ParticularLedgerId").val()
+                    particularLedgerId: currentRow.find("select[id*=ParticularLedgerId]").val()
                 };
+
+                $("#save-new-voucher-dtl").attr("disabled", "disabled");
 
                 AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("MapOutstandingDetail", "PaymentVoucherDetail")', 'html', model,
                     function (data) {
@@ -84,217 +223,9 @@
 
         });
 
-        //account ledger change.
-        $('#add-new-invoice-dtl').click(function () {
-            $("#addRow_Blank").val(1);
-            dataTableLoad();
-        });
-
-         //account invoice dtl.
-        $('#save-invoice-dtl').click(function (e) {
-            //console.log("fnSaveVoucherDetail");
-
-            e.preventDefault();
-
-            $("#addRow_Blank").val(0);
-
-            var paymentVoucherId = '@ViewBag.PaymentVoucherId';
-            var isValid = true;
-
-             $('#paymentVoucherDetailGrid tbody tr').each(function () {
-
-                if (parseInt($('#PaymentVoucherDetId', this).val()) != 0) {
-
-                    if ($('#ParticularLedgerId', this).val() == "") {
-                        alert("Please select particular");
-                        $('#ParticularLedgerId', this).focus();
-                        isValid = false;
-                        return false;
-                    }
-                    else if ($('#TransactionTypeId', this).val() == "") {
-                        alert("Please select transaction type");
-                        $('#TransactionTypeId', this).focus();
-                        isValid = false;
-                        return false;
-                    }
-                    else if(isNaN($('#AmountFc', this).val()) || $('#AmountFc', this).val() == "") {
-                        $('#AmountFc', this).val("");
-                        alert("Please eneter amount");
-                        $('#AmountFc', this).focus();
-                        isValid = false;
-                        return false;
-                    }
-                }
-
-            }); //validation loop
-
-            if (isValid == false) {
-                return false;
-            }
-
-            $('#paymentVoucherDetailGrid tbody tr').each(function () {
-
-                var model = {
-                    paymentVoucherDetId: $('#PaymentVoucherDetId', this).val(),
-                    paymentVoucherId: paymentVoucherId,
-                    particularLedgerId: $('#ParticularLedgerId', this).val(),
-                    transactionTypeId: $('#TransactionTypeId', this).val(),
-                    amountFc: $('#AmountFc', this).val(),
-                    narration: $('#Narration', this).val()
-                };
-
-                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("SaveVoucherDetailInline", "PaymentVoucherDetail")', '', model,
-                function (response) {
-                    if (true == response.Result.Status) {
-                        //console.log(model);
-                    }
-                    else {
-                        //console.log(model);
-                    }
-                }, null, true, null, false);
-
-            });
-
-            fnSuccessNotify('Record saved.');
-
-            var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + paymentVoucherId;
-
-            $('#voucherdetail').empty();
-            $('#voucherdetail').load(tabUrl);
-        });
-
-
     });
 
 
-    function dataTableLoad() {
-        var particularLedgerList = '@Html.Raw(ViewBag.ParticularLedgerList)';
-        var transactionTypeList = '@Html.Raw(ViewBag.TransactionTypeList)';
-
-        particularLedgerList = JSON.parse(particularLedgerList);
-        transactionTypeList = JSON.parse(transactionTypeList);
-
-        
-
-        $("#paymentVoucherDetailGrid").DataTable({
-            "destroy": true,
-            "pageLength": 25,
-            "paging":false,
-            "ordering": false,
-            "searching": false,
-            "info":false,
-            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
-            "bPaginate": true,
-            "scrollX": true,
-            "ajax": {
-                "url": "@Url.Action("GetPaymentVoucherDetailList", "PaymentVoucherDetail")",
-                "type": "POST",
-                "cache": "false",
-                "datatype": "json",
-                "data": { paymentVoucherId: '@ViewBag.PaymentVoucherId', addRow_Blank: $("#addRow_Blank").val() },
-            },
-            "columns": [
-                {
-                    "render": function (data, type, full, meta) {
-                        var control = '<div class="action_button text-sm-center">'
-                        control = control + '<input id="PaymentVoucherDetId" type="hidden" value="' + full.PaymentVoucherDetId + '">'
-
-                        if (full.PaymentVoucherDetId != 0) {
-                            control = control + '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal"  title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, ' + full.PaymentVoucherDetId + ')"><span class="fa fa-trash-alt"></span></button>'
-                        }
-                        control = control + '</div>';
-
-                        return control;
-                    }
-                },
-                { "data": "PaymentVoucherDetId", "title": "PaymentVoucherDetId", "visible": false, "searchable": true },
-                {
-                    "data": "ParticularLedgerId", "title": "Particular",
-                    "render": function (data, type, full, meta) {
-                        var ddl = '<select size="1" id="ParticularLedgerId" name="ParticularLedgerId" class="form-control form-control-sm"';
-
-                        if (full.TransactionTypeId == 2) {
-                            ddl = ddl + ' disabled="disabled"';
-                        }
-
-                        ddl = ddl + '>';
-
-                        ddl = ddl + '<option value="' + "" + '">' + "Select" + '</option>';
-
-                        for (var i = 0; i < particularLedgerList.length; i++) {
-
-                            ddl = ddl + '<option value="' + particularLedgerList[i].Value + '"'
-
-                            if (data == particularLedgerList[i].Value) {
-                                ddl = ddl + ' selected="selected"';
-                            }
-
-                            ddl = ddl + '>' + particularLedgerList[i].DisplayText + '</option>';
-                        }
-
-                        ddl += '</select>';
-
-                        return ddl;
-                    }
-                },
-                {
-                    "data": "TransactionTypeId", "title": "Trans Type",
-                    "width": "110px",
-                    "render": function (data, type, full, meta) {
-                        var ddl = '<select size="1" id="TransactionTypeId" name="TransactionTypeId" class="form-control form-control-sm"';
-
-                        if (full.PaymentVoucherDetId != 0) {
-                            ddl = ddl + ' disabled="disabled"';
-                        }
-
-                        ddl = ddl + '>';
-
-                        ddl = ddl + '<option value="' + "" + '">' + "Select" + '</option>';
-
-                        for (var i = 0; i < transactionTypeList.length ; i++) {
-                            ddl = ddl + '<option value="' + transactionTypeList[i].Value + '"'
-
-                            if (data == transactionTypeList[i].Value) {
-                                ddl = ddl + ' selected="selected"';
-                            }
-
-                            ddl = ddl + '>' + transactionTypeList[i].Description + '</option>';
-                        }
-                        ddl += '</select>';
-
-                        return ddl;
-                    }
-                },
-                {
-                    "data": "AmountFc", "title": "Amount FC",  "width": "100px",
-
-                    "render": function (data, type, full, meta) {
-                        var input = '<input class="form-control form-control-sm decimal-two-scale"  id="AmountFc" name="AmountFc" type="text"  value="' + full.AmountFc + '"';
-
-                        if (full.TransactionTypeId == 2) {
-                            input = input + ' readonly="readonly"';
-                        }
-
-                        input = input + ' onkeypress="return fnNumberOnly(event.keyCode, 1, 0);"  >';
-
-                        return input;
-                    }
-                },
-                { "data": "InvoiceType", "title": "Invoice Type"},
-                { "data": "InvoiceNo", "title": "Invoice No" },
-                {
-                    "data": "Narration", "title": "Narration",
-                    "render": function (data, type, full, meta) {
-                        //console.log(data);
-                        return '<input class="form-control form-control-sm" id="Narration" name="Narration" type="text"  value="' + data + '">';
-                    }
-                }
-            ],
-        });
-
-    }
 
 </script>
 

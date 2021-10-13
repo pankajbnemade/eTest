@@ -1,11 +1,8 @@
 ﻿using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
-using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
-using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,9 +17,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         private readonly IOutstandingInvoice _outstandingInvoice;
         private readonly IPaymentVoucher _paymentVoucher;
 
-        /// <summary>
-        /// constractor.
-        /// </summary>
         public PaymentVoucherDetailController(IPaymentVoucherDetail paymentVoucherDetail, ILedger ledger, ICurrencyConversion currencyConversion,
             IOutstandingInvoice outstandingInvoice,
             IPaymentVoucher paymentVoucher)
@@ -39,60 +33,22 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// </summary>
         /// <param name="paymentVoucherId"></param>
         /// <returns></returns>
-        public async Task<IActionResult> VoucherDetail(int paymentVoucherId)
+        public async Task<IActionResult> VoucherDetail(int paymentVoucherId, int addRow_Blank)
         {
             ViewBag.PaymentVoucherId = paymentVoucherId;
-           
-            ViewBag.ParticularLedgerList = JsonConvert.SerializeObject(await _ledger.GetLedgerSelectList(0, true));
-            ViewBag.TransactionTypeList = JsonConvert.SerializeObject(EnumHelper.GetEnumListFor<TransactionType>());
+
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
+
+            IList<PaymentVoucherDetailModel> paymentVoucherDetailModelList = await _paymentVoucherDetail.GetPaymentVoucherDetailByVoucherId(paymentVoucherId, addRow_Blank);
 
             return await Task.Run(() =>
             {
-                return PartialView("_VoucherDetail");
+                return PartialView("_VoucherDetail", paymentVoucherDetailModelList);
             });
         }
 
-        /// <summary>
-        /// get payment voucher details list.
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> GetPaymentVoucherDetailList(int paymentVoucherId, int addRow_Blank)
-        {
-            
-            DataTableResultModel<PaymentVoucherDetailModel> resultModel = await _paymentVoucherDetail.GetPaymentVoucherDetailByPaymentVoucherId(paymentVoucherId, addRow_Blank);
-
-            return await Task.Run(() =>
-            {
-                return Json(new
-                {
-                    draw = "1",
-                    recordsTotal = resultModel.TotalResultCount,
-                    data = resultModel.ResultList
-                });
-            });
-        }
-
-        /// <summary>
-        /// add voucher detail.
-        /// </summary>
-        /// <param name="paymentVoucherId"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> MapOutstandingDetail(Int32 paymentVoucherId, Int32 particularLedgerId)
-        {
-            PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel();
-
-            paymentVoucherDetailModel.PaymentVoucherId = paymentVoucherId;
-            paymentVoucherDetailModel.ParticularLedgerId = particularLedgerId;
-
-            return await Task.Run(() =>
-            {
-                return PartialView("_MapOutstandingDetail", paymentVoucherDetailModel);
-            });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> GetOutstandingInvoiceList(int ledgerId, int paymentVoucherId)
+        public async Task<IActionResult> MapOutstandingDetail(int particularLedgerId, int paymentVoucherId)
         {
             PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
 
@@ -108,45 +64,67 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             //################
 
-            DataTableResultModel<OutstandingInvoiceModel> resultModel = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(ledgerId, "Payment Voucher", ExchangeRate);
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(particularLedgerId, "Payment Voucher", ExchangeRate);
+
+            IList<PaymentVoucherOutstandingInvoiceModel> paymentVoucherOutstandingInvoiceModelList = new List<PaymentVoucherOutstandingInvoiceModel>(); ;
+
+            foreach (OutstandingInvoiceModel outstandingInvoiceModel in outstandingInvoiceModelList)
+            {
+                paymentVoucherOutstandingInvoiceModelList.Add(new PaymentVoucherOutstandingInvoiceModel
+                {
+                    PaymentVoucherId = paymentVoucherId,
+                    ParticularLedgerId = particularLedgerId,
+                    TransactionTypeId = (int)TransactionType.Outstanding,
+                    InvoiceId = outstandingInvoiceModel.InvoiceId,
+                    InvoiceType = outstandingInvoiceModel.InvoiceType,
+                    InvoiceNo = outstandingInvoiceModel.InvoiceNo,
+                    InvoiceDate = outstandingInvoiceModel.InvoiceDate,
+                    InvoiceAmount = outstandingInvoiceModel.InvoiceAmount,
+                    OutstandingAmount = outstandingInvoiceModel.OutstandingAmount,
+                    InvoiceAmount_FC = outstandingInvoiceModel.InvoiceAmount_FC,
+                    OutstandingAmount_FC = outstandingInvoiceModel.OutstandingAmount_FC,
+                    PurchaseInvoiceId = (int)outstandingInvoiceModel.PurchaseInvoiceId,
+                    SalesInvoiceId = (int)outstandingInvoiceModel.SalesInvoiceId,
+                    CreditNoteId = (int)outstandingInvoiceModel.CreditNoteId,
+                    DebitNoteId = (int)outstandingInvoiceModel.DebitNoteId,
+                    AmountFc = null,
+                    Narration = "",
+                });
+            }
 
             return await Task.Run(() =>
             {
-                return Json(new
-                {
-                    draw = "1",
-                    recordsTotal = resultModel.TotalResultCount,
-                    data = resultModel.ResultList
-                });
+                return PartialView("_MapOutstandingDetail", paymentVoucherOutstandingInvoiceModelList);
             });
         }
 
-        /// <summary>
-        /// save payment voucher detail.
-        /// </summary>
-        /// <param name="paymentVoucherDetailModel"></param>
-        /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> SaveVoucherDetail(PaymentVoucherDetailModel paymentVoucherDetailModel)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SaveVoucherDetail(List<PaymentVoucherDetailModel> paymentVoucherDetailModelList)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
             if (ModelState.IsValid)
             {
-                if (paymentVoucherDetailModel.PaymentVoucherDetId > 0)
+                foreach (PaymentVoucherDetailModel paymentVoucherDetailModel in paymentVoucherDetailModelList)
                 {
-                    // update record.
-                    if (true == await _paymentVoucherDetail.UpdatePaymentVoucherDetail(paymentVoucherDetailModel))
+                    if (paymentVoucherDetailModel.PaymentVoucherDetId > 0)
                     {
-                        data.Result.Status = true;
+                        // update record.
+                        if (true == await _paymentVoucherDetail.UpdatePaymentVoucherDetail(paymentVoucherDetailModel))
+                        {
+                            data.Result.Status = true;
+                            data.Result.Data = paymentVoucherDetailModel.PaymentVoucherId;
+                        }
                     }
-                }
-                else
-                {
-                    // add new record.
-                    if (await _paymentVoucherDetail.CreatePaymentVoucherDetail(paymentVoucherDetailModel) > 0)
+                    else
                     {
-                        data.Result.Status = true;
+                        // add new record.
+                        if (await _paymentVoucherDetail.CreatePaymentVoucherDetail(paymentVoucherDetailModel) > 0)
+                        {
+                            data.Result.Status = true;
+                            data.Result.Data = paymentVoucherDetailModel.PaymentVoucherId;
+                        }
                     }
                 }
             }
@@ -154,110 +132,57 @@ namespace ERP.UI.Areas.Accounts.Controllers
             return Json(data);
         }
 
+
         [HttpPost]
-        public async Task<JsonResult> SaveVoucherDetailInline(Int32 paymentVoucherDetId, Int32 paymentVoucherId, Int32 particularLedgerId, Int32 transactionTypeId, decimal amountFc, string narration)
+        public async Task<JsonResult> SaveOutstandingDetail(List<PaymentVoucherOutstandingInvoiceModel> paymentVoucherOutstandingInvoiceModelList)
         {
+
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            PaymentVoucherDetailModel paymentVoucherDetailModel = null;
-            Console.Write(paymentVoucherDetId);
-
-            if (paymentVoucherId > 0 && particularLedgerId > 0 && transactionTypeId > 0 && amountFc > 0)
+            if (ModelState.IsValid)
             {
-                if (paymentVoucherDetId > 0)
-                {
-                    paymentVoucherDetailModel = await _paymentVoucherDetail.GetPaymentVoucherDetailById(paymentVoucherDetId, paymentVoucherId);
+                PaymentVoucherDetailModel paymentVoucherDetailModel = null;
 
-                    paymentVoucherDetailModel.ParticularLedgerId = particularLedgerId;
-                    paymentVoucherDetailModel.TransactionTypeId = transactionTypeId;
-                    paymentVoucherDetailModel.AmountFc = amountFc;
-                    paymentVoucherDetailModel.Narration = narration;
-
-                    // update record.
-                    if (true == await _paymentVoucherDetail.UpdatePaymentVoucherDetail(paymentVoucherDetailModel))
-                    {
-                        data.Result.Status = true;
-                        data.Result.Data = 1;
-                    }
-                }
-                else
+                foreach (PaymentVoucherOutstandingInvoiceModel paymentVoucherOutstandingInvoiceModel in paymentVoucherOutstandingInvoiceModelList)
                 {
                     paymentVoucherDetailModel = new PaymentVoucherDetailModel
                     {
-                        PaymentVoucherDetId = paymentVoucherDetId,
-                        PaymentVoucherId = paymentVoucherId,
-                        ParticularLedgerId = particularLedgerId,
-                        TransactionTypeId = transactionTypeId,
-                        AmountFc = amountFc,
-                        Narration = narration,
+                        PaymentVoucherDetId = 0,
+                        PaymentVoucherId = paymentVoucherOutstandingInvoiceModel.PaymentVoucherId,
+                        ParticularLedgerId = paymentVoucherOutstandingInvoiceModel.ParticularLedgerId,
+                        TransactionTypeId = paymentVoucherOutstandingInvoiceModel.TransactionTypeId,
+                        PurchaseInvoiceId = paymentVoucherOutstandingInvoiceModel.PurchaseInvoiceId,
+                        DebitNoteId = paymentVoucherOutstandingInvoiceModel.DebitNoteId,
+                        AmountFc = paymentVoucherOutstandingInvoiceModel.AmountFc,
+                        Narration = paymentVoucherOutstandingInvoiceModel.Narration,
                     };
 
+                    if (paymentVoucherOutstandingInvoiceModel.PaymentVoucherId == 0
+                        || paymentVoucherOutstandingInvoiceModel.ParticularLedgerId == 0
+                        || paymentVoucherOutstandingInvoiceModel.TransactionTypeId == 0
+                        || (paymentVoucherOutstandingInvoiceModel.PurchaseInvoiceId == 0 && paymentVoucherOutstandingInvoiceModel.DebitNoteId == 0)
+                        || paymentVoucherOutstandingInvoiceModel.AmountFc == 0
+                        || paymentVoucherOutstandingInvoiceModel.AmountFc == null
+                        )
+                    {
+                        // skip as all required fields are not entered
+                        continue; // Skip the remainder of this iteration. go back to foreach
+                    }
+
                     // add new record.
                     if (await _paymentVoucherDetail.CreatePaymentVoucherDetail(paymentVoucherDetailModel) > 0)
                     {
                         data.Result.Status = true;
-                        data.Result.Data = "0";
+                        data.Result.Data = paymentVoucherDetailModel.PaymentVoucherId;
                     }
+
                 }
+
             }
 
             return Json(data);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> SaveVoucherDetailOutstanding(Int32 paymentVoucherDetId, Int32 paymentVoucherId, Int32 particularLedgerId,
-                Int32 transactionTypeId, Int32 purchaseInvoiceId,  Int32 debitNoteId, decimal amountFc, string narration)
-        {
-            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-
-            // deserilize string search filter
-
-            PaymentVoucherDetailModel paymentVoucherDetailModel = new PaymentVoucherDetailModel
-            {
-
-                PaymentVoucherDetId = paymentVoucherDetId,
-                PaymentVoucherId = paymentVoucherId,
-                ParticularLedgerId = particularLedgerId,
-                TransactionTypeId = transactionTypeId,
-                PurchaseInvoiceId = purchaseInvoiceId,
-                //CreditNoteId = creditNoteId,
-                DebitNoteId = debitNoteId,
-                AmountFc = amountFc,
-                Narration = narration,
-            };
-
-
-            if (paymentVoucherId > 0 && particularLedgerId > 0 && transactionTypeId > 0 && amountFc > 0)
-            {
-                if (paymentVoucherDetailModel.PaymentVoucherDetId > 0)
-                {
-                    // update record.
-                    if (true == await _paymentVoucherDetail.UpdatePaymentVoucherDetail(paymentVoucherDetailModel))
-                    {
-                        data.Result.Status = true;
-                        data.Result.Data = 1;
-                    }
-                }
-                else
-                {
-                    // add new record.
-                    if (await _paymentVoucherDetail.CreatePaymentVoucherDetail(paymentVoucherDetailModel) > 0)
-                    {
-                        data.Result.Status = true;
-                        data.Result.Data = "0";
-                    }
-                }
-            }
-
-            return Json(data);
-        }
-
-
-        /// <summary>
-        /// delete voucher detail.
-        /// </summary>
-        /// <param name="paymentVoucherId"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> DeleteVoucherDetail(int paymentVoucherDetId)
         {

@@ -253,7 +253,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             PurchaseInvoiceModel purchaseInvoiceModel = await _purchaseInvoice.GetPurchaseInvoiceById(purchaseInvoiceId);
 
-            ViewBag.IsTaxMasterVisible = purchaseInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
             ViewBag.IsApprovalRequestVisible = purchaseInvoiceModel.StatusId == 1 || purchaseInvoiceModel.StatusId == 3 ? true : false;
             ViewBag.IsApproveVisible = purchaseInvoiceModel.StatusId == 2 ? true : false;
 

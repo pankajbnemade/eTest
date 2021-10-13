@@ -32,11 +32,9 @@ namespace ERP.Models.Accounts
         public decimal? Amount { get; set; }
 
         [Display(Name = "Narration")]
-        [Required(ErrorMessage = "Narration is required.")]
         public string Narration { get; set; }
 
         [Display(Name = "Purchase Invoice")]
-       
         public int? PurchaseInvoiceId { get; set; }
 
         [Display(Name = "Debit Note")]

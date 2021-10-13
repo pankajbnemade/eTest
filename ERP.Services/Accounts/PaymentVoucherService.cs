@@ -24,32 +24,19 @@ namespace ERP.Services.Accounts
             common = _common;
         }
 
-        /// <summary>
-        /// generate voucher no.
-        /// </summary>
-        /// <param name="companyId"></param>
-        /// <param name="financialYearId"></param>
-        /// <returns>
-        /// return voucher no.
-        /// </returns>
         public async Task<GenerateNoModel> GeneratePaymentVoucherNo(int companyId, int financialYearId)
         {
             int voucherSetupId = 7;
             // get maxno.
-            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
 
-        /// <summary>
-        /// create new payment voucher.
-        /// </summary>
-        /// <param name="paymentVoucherModel"></param>
-        /// <returns>
-        /// return id.
-        /// </returns>
         public async Task<int> CreatePaymentVoucher(PaymentVoucherModel paymentVoucherModel)
         {
             int paymentVoucherId = 0;
@@ -79,7 +66,7 @@ namespace ERP.Services.Accounts
             paymentVoucher.Amount = 0;
             paymentVoucher.AmountFcinWord = "";
 
-            paymentVoucher.StatusId = 1;
+            paymentVoucher.StatusId = (int)DocumentStatus.Inprocess;
             paymentVoucher.CompanyId = paymentVoucherModel.CompanyId;
             paymentVoucher.FinancialYearId = paymentVoucherModel.FinancialYearId;
 
@@ -94,13 +81,6 @@ namespace ERP.Services.Accounts
             return paymentVoucherId; // returns.
         }
 
-        /// <summary>
-        /// update payment voucher.
-        /// </summary>
-        /// <param name="paymentVoucherModel"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
         public async Task<bool> UpdatePaymentVoucher(PaymentVoucherModel paymentVoucherModel)
         {
             bool isUpdated = false;
@@ -137,13 +117,22 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        /// <summary>
-        /// delete payment voucher.
-        /// </summary>
-        /// <param name="paymentVoucherId"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
+        public async Task<bool> UpdateStatusPaymentVoucher(int paymentVoucherId, int statusId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Paymentvoucher paymentVoucher = await GetByIdAsync(w => w.PaymentVoucherId == paymentVoucherId);
+
+            if (null != paymentVoucher)
+            {
+                paymentVoucher.StatusId = statusId;
+                isUpdated = await Update(paymentVoucher);
+            }
+
+            return isUpdated; // returns.
+        }
+
         public async Task<bool> DeletePaymentVoucher(int PaymentVoucherId)
         {
             bool isDeleted = false;
@@ -175,18 +164,17 @@ namespace ERP.Services.Accounts
 
                 paymentVoucher.AmountFcinWord = await common.AmountInWord_Million(paymentVoucher.AmountFc.ToString(), paymentVoucher.Currency.CurrencyCode, paymentVoucher.Currency.Denomination);
 
+                if (paymentVoucher.StatusId == (int)DocumentStatus.Approved || paymentVoucher.StatusId == (int)DocumentStatus.ApprovalRequested)
+                {
+                    paymentVoucher.StatusId = (int)DocumentStatus.Inprocess;
+                }
+
                 isUpdated = await Update(paymentVoucher);
             }
 
             return isUpdated; // returns.
         }
 
-        /// <summary>
-        /// get payment voucher based on PaymentVoucherId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
         public async Task<PaymentVoucherModel> GetPaymentVoucherById(int paymentVoucherId)
         {
             PaymentVoucherModel paymentVoucherModel = null;
@@ -201,14 +189,6 @@ namespace ERP.Services.Accounts
             return paymentVoucherModel; // returns.
         }
 
-        /// <summary>
-        /// get search payment voucher result list.
-        /// </summary>
-        /// <param name="dataTableAjaxPostModel"></param>
-        /// <param name="searchFilterModel"></param>
-        /// <returns>
-        /// return list.
-        /// </returns>
         public async Task<DataTableResultModel<PaymentVoucherModel>> GetPaymentVoucherList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterPaymentVoucherModel searchFilterModel)
         {
             string searchBy = dataTableAjaxPostModel.search?.value;
@@ -232,15 +212,6 @@ namespace ERP.Services.Accounts
 
         #region Private Methods
 
-        /// <summary>
-        /// get records from database.
-        /// </summary>
-        /// <param name="searchBy"></param>
-        /// <param name="take"></param>
-        /// <param name="skip"></param>
-        /// <param name="sortBy"></param>
-        /// <param name="sortDir"></param>
-        /// <returns></returns>
         private async Task<DataTableResultModel<PaymentVoucherModel>> GetDataFromDbase(SearchFilterPaymentVoucherModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
         {
             DataTableResultModel<PaymentVoucherModel> resultModel = new DataTableResultModel<PaymentVoucherModel>();
@@ -310,7 +281,7 @@ namespace ERP.Services.Accounts
 
             // apply filters.
             //if (0 != paymentVoucherId)
-                query = query.Where(w => w.PaymentVoucherId == paymentVoucherId);
+            query = query.Where(w => w.PaymentVoucherId == paymentVoucherId);
 
             // get records by query.
             List<Paymentvoucher> paymentVoucherList = await query.ToListAsync();
@@ -348,7 +319,7 @@ namespace ERP.Services.Accounts
                 paymentVoucherModel.Narration = paymentVoucher.Narration;
                 paymentVoucherModel.AmountFc = paymentVoucher.AmountFc;
                 paymentVoucherModel.Amount = paymentVoucher.Amount;
-                paymentVoucherModel.AmountFcinWord = paymentVoucher.AmountFcinWord;
+                paymentVoucherModel.AmountFcInWord = paymentVoucher.AmountFcinWord;
 
                 paymentVoucherModel.StatusId = paymentVoucher.StatusId;
                 paymentVoucherModel.CompanyId = Convert.ToInt32(paymentVoucher.CompanyId);
@@ -358,11 +329,9 @@ namespace ERP.Services.Accounts
 
                 // ###
                 paymentVoucherModel.AccountLedgerName = null != paymentVoucher.AccountLedger ? paymentVoucher.AccountLedger.LedgerName : null;
-                paymentVoucherModel.CurrencyName = null != paymentVoucher.Currency ? paymentVoucher.Currency.CurrencyName : null;
+                paymentVoucherModel.CurrencyCode = null != paymentVoucher.Currency ? paymentVoucher.Currency.CurrencyCode : null;
                 paymentVoucherModel.StatusName = null != paymentVoucher.Status ? paymentVoucher.Status.StatusName : null;
                 paymentVoucherModel.PreparedByName = null != paymentVoucher.PreparedByUser ? paymentVoucher.PreparedByUser.UserName : null;
-
-                //paymentVoucherModel.TypeCorBName = EnumHelper.GetDescription(paymentVoucher.TypeCorB);
 
                 paymentVoucherModel.TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(paymentVoucher.TypeCorB);
                 paymentVoucherModel.PaymentTypeName = EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)paymentVoucher.PaymentTypeId).ToString());

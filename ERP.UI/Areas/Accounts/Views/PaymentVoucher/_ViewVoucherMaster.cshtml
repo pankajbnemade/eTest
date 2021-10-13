@@ -1,105 +1,107 @@
 ﻿@model PaymentVoucherModel
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.VoucherNo):</span>
-
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.VoucherNo, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.VoucherNo)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.VoucherDate):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.VoucherDate, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.VoucherDate)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.TypeCorB):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.TypeCorB, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.TypeCorBName)
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.PaymentTypeId):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.PaymentTypeId, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.PaymentTypeName)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.AccountLedgerId):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.AccountLedgerId, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.AccountLedgerName)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.ClosingBalance):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.ClosingBalance, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.ClosingBalance)
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.CurrencyId):</span>
-                    @Html.DisplayFor(model => model.CurrencyName)
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.CurrencyId, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.CurrencyCode)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.ExchangeRate):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.ExchangeRate, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.ExchangeRate)
                 </div>
-            </div>
-            <div class="col-sm-4">
-                @*<div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.BankLedgerId):</span>
-                    @Html.DisplayFor(model => model.BankLedgerName)
-                </div>*@
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeNo):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.ChequeNo, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.ChequeNo)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeDate):</span>
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.ChequeDate, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.ChequeDate)
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.ChequeAmountFc):</span>
-                    @Html.DisplayFor(model => model.ChequeAmountFc,new { @class = "form-control form-control-sm decimal-two-scale" })
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.ChequeAmountFc, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.ChequeAmountFc, new { @class = "form-control form-control-sm" })
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <span class="text-bold">@Html.DisplayNameFor(model => model.Narration):</span>
+            <div class="col-sm-8">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.Narration, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.Narration)
                 </div>
             </div>
-        </div>
-        
-        <div class="row">
             <div class="col-sm-4">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditVoucherMaster('@Model.PaymentVoucherId');">
-                        <i class="far fa-edit"></i>  Edit
-                    </button>
-                   
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.AmountFc, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.AmountFc, new { @class = "form-control form-control-sm" })
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.AmountFcInWord, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.AmountFcInWord)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                @*<div class="form-group-sm">
+                    @Html.LabelFor(model => model.AmountFc, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.AmountFc, new { @class = "form-control form-control-sm" })
+                </div>*@
             </div>
         </div>
     </div>
@@ -107,7 +109,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
+        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
     });
 
     // edit voucher master.
@@ -120,6 +122,5 @@
             return false;
         }, null, true, null, false);
     }
-
 
 </script>

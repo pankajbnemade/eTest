@@ -14,7 +14,7 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body" id="searchFilterCriteria">
                         <div class="row">
@@ -71,46 +71,24 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                @*<div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Search Result</h3>
-                    </div>
-                    <div class="card-body">*@
-                <div class="table-responsive">
-                    <table id="paymentVoucherGrid" class="table table-bordered table-striped w-100">
-                        <thead>
-                            <tr class="table-header">
-                                <th class="no-sort">Action</th>
-                                <th>PaymentVoucherId</th>
-                                <th>Voucher No</th>
-                                <th>Voucher Date</th>
-                                <th>Amount FC</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                @*</div>
-                    </div>*@
+            <div class="col-sm-12">
+                <table id="paymentVoucherGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort">Action</th>
+                            <th>PaymentVoucherId</th>
+                            <th>Voucher No</th>
+                            <th>Voucher Date</th>
+                            <th>Amount FC</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
 </section>
 <div id="modal-voucher" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
-<style>
-    .no-sort::after {
-        display: none !important;
-    }
 
-    .no-sort::before {
-        display: none !important;
-    }
-
-    .no-sort {
-        pointer-events: none !important;
-        cursor: default !important;
-    }
-</style>
 <script type="text/javascript">
     const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
     const TO_PATTERN = 'DD/MM/YYYY HH:mm';

@@ -347,7 +347,7 @@ namespace ERP.Services.Accounts
                 receiptVoucherModel.Narration = receiptVoucher.Narration;
                 receiptVoucherModel.AmountFc = receiptVoucher.AmountFc;
                 receiptVoucherModel.Amount = receiptVoucher.Amount;
-                receiptVoucherModel.AmountFcinWord = receiptVoucher.AmountFcinWord;
+                receiptVoucherModel.AmountFcInWord = receiptVoucher.AmountFcinWord;
 
                 receiptVoucherModel.StatusId = receiptVoucher.StatusId;
                 receiptVoucherModel.CompanyId = Convert.ToInt32(receiptVoucher.CompanyId);

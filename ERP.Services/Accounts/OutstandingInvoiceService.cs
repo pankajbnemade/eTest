@@ -38,27 +38,34 @@ namespace ERP.Services.Accounts
             advanceAdjustmentDetail = _advanceAdjustmentDetail;
         }
 
-        public async Task<DataTableResultModel<OutstandingInvoiceModel>> GetOutstandingInvoiceListByLedgerId(int ledgerId, string VoucherType, decimal ExchangeRate)
+        public async Task<IList<OutstandingInvoiceModel>> GetOutstandingInvoiceListByLedgerId(int ledgerId, string VoucherType, decimal ExchangeRate)
         {
-            DataTableResultModel<OutstandingInvoiceModel> resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
-
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await GetOutstandingInvoiceList(ledgerId, VoucherType, ExchangeRate);
 
-            if (null != outstandingInvoiceModelList && outstandingInvoiceModelList.Any())
-            {
-                resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
-                resultModel.ResultList = outstandingInvoiceModelList;
-                resultModel.TotalResultCount = outstandingInvoiceModelList.Count();
-            }
-            else
-            {
-                resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
-                resultModel.ResultList = new List<OutstandingInvoiceModel>();
-                resultModel.TotalResultCount = 0;
-            }
-
-            return resultModel; // returns.
+            return outstandingInvoiceModelList; // returns.
         }
+
+        //public async Task<DataTableResultModel<OutstandingInvoiceModel>> GetOutstandingInvoiceListByLedgerId(int ledgerId, string VoucherType, decimal ExchangeRate)
+        //{
+        //    DataTableResultModel<OutstandingInvoiceModel> resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
+
+        //    IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await GetOutstandingInvoiceList(ledgerId, VoucherType, ExchangeRate);
+
+        //    if (null != outstandingInvoiceModelList && outstandingInvoiceModelList.Any())
+        //    {
+        //        resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
+        //        resultModel.ResultList = outstandingInvoiceModelList;
+        //        resultModel.TotalResultCount = outstandingInvoiceModelList.Count();
+        //    }
+        //    else
+        //    {
+        //        resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
+        //        resultModel.ResultList = new List<OutstandingInvoiceModel>();
+        //        resultModel.TotalResultCount = 0;
+        //    }
+
+        //    return resultModel; // returns.
+        //}
 
         private async Task<IList<OutstandingInvoiceModel>> GetOutstandingInvoiceList(int ledgerId, string VoucherType, decimal ExchangeRate)
         {

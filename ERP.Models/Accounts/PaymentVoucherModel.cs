@@ -37,7 +37,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
@@ -71,8 +71,9 @@ namespace ERP.Models.Accounts
         public decimal? Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
-        public string AmountFcinWord { get; set; }
+        public string AmountFcInWord { get; set; }
 
+        [Display(Name = "Status")]
         public int? StatusId { get; set; }
         public int CompanyId { get; set; }
         public int FinancialYearId { get; set; }
@@ -84,7 +85,7 @@ namespace ERP.Models.Accounts
         public string AccountLedgerName { get; set; }
         public string TypeCorBName { get; set; }
         public string PaymentTypeName { get; set; }
-        public string CurrencyName { get; set; }
+        public string CurrencyCode { get; set; }
         public string StatusName { get; set; }
         public string PreparedByName { get; set; }
 

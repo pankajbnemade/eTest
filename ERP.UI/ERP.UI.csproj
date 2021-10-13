@@ -20,6 +20,8 @@
     <Content Remove="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucherDetail\_MapOutstandingDetail_Old.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucherDetail\_VoucherDetail_Old.cshtml" />
     <Content Remove="Areas\Accounts\Views\PaymentVoucher\ManageInvoice.cshtml" />
     <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ConfirmDeleteInvoiceMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewInvoiceMaster.cshtml" />
