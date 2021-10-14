@@ -27,7 +27,6 @@ namespace ERP.Services.Accounts
         {
             int paymentVoucherDetailId = 0;
 
-            // assign values.
             Paymentvoucherdetail paymentVoucherDetail = new Paymentvoucherdetail();
 
             paymentVoucherDetail.PaymentVoucherId = paymentVoucherDetailModel.PaymentVoucherId;
@@ -36,11 +35,9 @@ namespace ERP.Services.Accounts
             paymentVoucherDetail.AmountFc = paymentVoucherDetailModel.AmountFc;
             paymentVoucherDetail.Amount = 0;
 
-            paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
-            paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
-            paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
-            //paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
-
+            paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration;
+            paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId;
+            paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId;
 
             await Create(paymentVoucherDetail);
 
@@ -50,7 +47,6 @@ namespace ERP.Services.Accounts
             {
                 await UpdatePaymentVoucherDetailAmount(paymentVoucherDetailId);
             }
-
 
             return paymentVoucherDetailId; // returns.
         }
@@ -64,16 +60,13 @@ namespace ERP.Services.Accounts
 
             if (null != paymentVoucherDetail)
             {
-
-                // assign values.
                 paymentVoucherDetail.ParticularLedgerId = paymentVoucherDetailModel.ParticularLedgerId;
                 paymentVoucherDetail.TransactionTypeId = paymentVoucherDetailModel.TransactionTypeId;
                 paymentVoucherDetail.AmountFc = paymentVoucherDetailModel.AmountFc;
                 paymentVoucherDetail.Amount = 0;
                 paymentVoucherDetail.Narration = paymentVoucherDetailModel.Narration == null ? "" : paymentVoucherDetailModel.Narration;
-                paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId == 0 ? null : paymentVoucherDetailModel.PurchaseInvoiceId;
-                paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId == 0 ? null : paymentVoucherDetailModel.DebitNoteId;
-                //paymentVoucherDetail.CreditNoteId = paymentVoucherDetailModel.CreditNoteId == 0 ? null : paymentVoucherDetailModel.CreditNoteId;
+                paymentVoucherDetail.PurchaseInvoiceId = paymentVoucherDetailModel.PurchaseInvoiceId;
+                paymentVoucherDetail.DebitNoteId = paymentVoucherDetailModel.DebitNoteId;
 
                 isUpdated = await Update(paymentVoucherDetail);
             }
@@ -168,9 +161,6 @@ namespace ERP.Services.Accounts
                 {
                     paymentVoucherDetailModelList.Add(await AddRow_Blank(paymentVoucherId));
                 }
-                //resultModel = new DataTableResultModel<PaymentVoucherDetailModel>();
-                //resultModel.ResultList = new List<PaymentVoucherDetailModel>();
-                //resultModel.TotalResultCount = 0;
 
                 resultModel = new DataTableResultModel<PaymentVoucherDetailModel>();
                 resultModel.ResultList = paymentVoucherDetailModelList;
@@ -219,12 +209,13 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.AmountFc = 0;
                 paymentVoucherDetailModel.Amount = 0;
                 paymentVoucherDetailModel.Narration = "";
-                paymentVoucherDetailModel.PurchaseInvoiceId = 0;
-                paymentVoucherDetailModel.DebitNoteId = 0;
+                paymentVoucherDetailModel.PurchaseInvoiceId = null;
+                paymentVoucherDetailModel.DebitNoteId = null;
                 paymentVoucherDetailModel.InvoiceNo = "";
                 paymentVoucherDetailModel.InvoiceType = "";
                 paymentVoucherDetailModel.ParticularLedgerName = "";
                 paymentVoucherDetailModel.TransactionTypeName = "";
+
                 return paymentVoucherDetailModel;
             });
         }
@@ -305,11 +296,9 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.Amount = paymentVoucherDetail.Amount;
                 paymentVoucherDetailModel.Narration = paymentVoucherDetail.Narration;
 
-                paymentVoucherDetailModel.PurchaseInvoiceId = null != paymentVoucherDetail.PurchaseInvoiceId ? paymentVoucherDetail.PurchaseInvoiceId : 0;
-                //paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
-                paymentVoucherDetailModel.DebitNoteId = null != paymentVoucherDetail.DebitNoteId ? paymentVoucherDetail.DebitNoteId : 0;
+                paymentVoucherDetailModel.PurchaseInvoiceId = paymentVoucherDetail.PurchaseInvoiceId;
+                paymentVoucherDetailModel.DebitNoteId = paymentVoucherDetail.DebitNoteId;
 
-                //--####
                 paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
                 paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
 
@@ -323,10 +312,6 @@ namespace ERP.Services.Accounts
                     paymentVoucherDetailModel.InvoiceType = "Debit Note";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
                 }
-
-                //paymentVoucherDetailModel.transactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
-                //paymentVoucherDetailModel.particularLedgerList = particularLedgerList;
-
 
                 return paymentVoucherDetailModel;
             });

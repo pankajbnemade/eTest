@@ -7,21 +7,21 @@ namespace ERP.DataAccess.EntityModels
     public partial class Journalvoucherdetail
     {
         public int JournalVoucherDetId { get; set; }
-        public int? JournalVoucherId { get; set; }
-        public int? ParticularLedgerId { get; set; }
-        public int? TransactionTypeId { get; set; }
+        public int JournalVoucherId { get; set; }
+        public int ParticularLedgerId { get; set; }
+        public int TransactionTypeId { get; set; }
         public string Narration { get; set; }
         public int? SalesInvoiceId { get; set; }
         public int? PurchaseInvoiceId { get; set; }
         public int? CreditNoteId { get; set; }
         public int? DebitNoteId { get; set; }
-        public decimal? DebitAmountFc { get; set; }
-        public decimal? DebitAmount { get; set; }
-        public decimal? CreditAmountFc { get; set; }
-        public decimal? CreditAmount { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public decimal DebitAmountFc { get; set; }
+        public decimal DebitAmount { get; set; }
+        public decimal CreditAmountFc { get; set; }
+        public decimal CreditAmount { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Creditnote CreditNote { get; set; }

@@ -44,7 +44,7 @@ namespace ERP.Models.Accounts
 
         //######
         [Display(Name = "Closing Balance")]
-        public decimal? ClosingBalance { get; set; }
+        public decimal ClosingBalance { get; set; }
 
     }
 }

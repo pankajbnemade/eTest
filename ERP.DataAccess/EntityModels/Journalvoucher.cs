@@ -17,21 +17,21 @@ namespace ERP.DataAccess.EntityModels
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
         public string Narration { get; set; }
-        public decimal? AmountFc { get; set; }
-        public decimal? Amount { get; set; }
+        public decimal AmountFc { get; set; }
+        public decimal Amount { get; set; }
         public string AmountFcinWord { get; set; }
-        public decimal? DebitAmountFc { get; set; }
-        public decimal? DebitAmount { get; set; }
-        public decimal? CreditAmountFc { get; set; }
-        public decimal? CreditAmount { get; set; }
-        public int? StatusId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
-        public int? MaxNo { get; set; }
-        public int? VoucherStyleId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public decimal DebitAmountFc { get; set; }
+        public decimal DebitAmount { get; set; }
+        public decimal CreditAmountFc { get; set; }
+        public decimal CreditAmount { get; set; }
+        public int StatusId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
+        public int MaxNo { get; set; }
+        public int VoucherStyleId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Company Company { get; set; }

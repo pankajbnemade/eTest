@@ -21,15 +21,15 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Particular Ledger")]
         [Required(ErrorMessage = "Particular Ledger is required.")]
-        public int? ParticularLedgerId { get; set; }
+        public int ParticularLedgerId { get; set; }
 
         [Display(Name = "Payment Voucher")]
         [Required(ErrorMessage = "Payment Voucher is required.")]
-        public int? PaymentVoucherId { get; set; }
+        public int PaymentVoucherId { get; set; }
 
         [Display(Name = "Receipt Voucher")]
         [Required(ErrorMessage = "Receipt Voucher is required.")]
-        public int? ReceiptVoucherId { get; set; }
+        public int ReceiptVoucherId { get; set; }
 
         [Display(Name = "Narration")]
         [StringLength(2000, ErrorMessage = "Narration cannot exceed 2000 characters.")]
@@ -46,26 +46,26 @@ namespace ERP.Models.Accounts
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? AmountFc { get; set; }
+        public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
         [Required(ErrorMessage = "Amount is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
         [Required(ErrorMessage = "Amount FC in word is required.")]
         public string AmountFcinWord { get; set; }
 
-        public int? StatusId { get; set; }
+        public int StatusId { get; set; }
 
         public int CompanyId { get; set; }
 
         public int FinancialYearId { get; set; }
 
-        public int? MaxNo { get; set; }
+        public int MaxNo { get; set; }
 
-        public int? VoucherStyleId { get; set; }
+        public int VoucherStyleId { get; set; }
 
         //####
 

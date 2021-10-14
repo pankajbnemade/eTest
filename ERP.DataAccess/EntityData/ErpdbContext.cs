@@ -78,18 +78,18 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
-//            }
-//        }
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        //                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
+        //            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
@@ -162,6 +162,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
@@ -173,41 +174,49 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.ParticularLedger)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.ParticularLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_Ledger_ParticularLedgerId");
 
                 entity.HasOne(d => d.PaymentVoucher)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.PaymentVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_PaymentVoucher_CompanyId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.AdvanceadjustmentPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.ReceiptVoucher)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.ReceiptVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_ReceiptVoucher_CompanyId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_Status_StatusId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.AdvanceadjustmentUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_aspnetusers_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Advanceadjustments)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_VoucherStyle_VoucherStyleId");
             });
 
@@ -257,6 +266,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.AdvanceAdjustment)
                     .WithMany(p => p.Advanceadjustmentdetails)
                     .HasForeignKey(d => d.AdvanceAdjustmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustmentDetails_AdvanceAdj_AdvanceAdjustmentId");
 
                 entity.HasOne(d => d.CreditNote)
@@ -272,6 +282,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.AdvanceadjustmentdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustmentDetails_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.PurchaseInvoice)
@@ -287,6 +298,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.AdvanceadjustmentdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustmentDetails_aspnetusers_UpdatedByUserId");
             });
 
@@ -2087,6 +2099,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Journalvouchers)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucher_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
@@ -2098,26 +2111,31 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Journalvouchers)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucher_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.JournalvoucherPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucher_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Journalvouchers)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucher_Status_StatusId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.JournalvoucherUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucher_aspnetusers_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Journalvouchers)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucher_VoucherStyle_VoucherStyleId");
             });
 
@@ -2186,16 +2204,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.JournalVoucher)
                     .WithMany(p => p.Journalvoucherdetails)
                     .HasForeignKey(d => d.JournalVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucherDetails_JournalVoucher_JournalVoucherId");
 
                 entity.HasOne(d => d.ParticularLedger)
                     .WithMany(p => p.Journalvoucherdetails)
                     .HasForeignKey(d => d.ParticularLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucherDetails_Ledger_ParticularLedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.JournalvoucherdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucherDetails_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.PurchaseInvoice)
@@ -2211,6 +2232,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.JournalvoucherdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JournalVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 
@@ -2582,11 +2604,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.Paymentvouchers)
                     .HasForeignKey(d => d.AccountLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_Ledger_AccountLedgerId");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Paymentvouchers)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
@@ -2598,26 +2622,31 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Paymentvouchers)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.PaymentvoucherPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Paymentvouchers)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_Status_StatusId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.PaymentvoucherUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_aspnetusers_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Paymentvouchers)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucher_VoucherStyle_VoucherStyleId");
             });
 
@@ -2669,16 +2698,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.ParticularLedger)
                     .WithMany(p => p.Paymentvoucherdetails)
                     .HasForeignKey(d => d.ParticularLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucherDetails_Ledger_ParticularLedgerId");
 
                 entity.HasOne(d => d.PaymentVoucher)
                     .WithMany(p => p.Paymentvoucherdetails)
                     .HasForeignKey(d => d.PaymentVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucherDetails_PaymentVoucher_PaymentVoucherId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.PaymentvoucherdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucherDetails_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.PurchaseInvoice)
@@ -2689,6 +2721,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.PaymentvoucherdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PaymentVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 
@@ -3183,11 +3216,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.AccountLedger)
                     .WithMany(p => p.Receiptvouchers)
                     .HasForeignKey(d => d.AccountLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_Ledger_AccountLedgerId");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Receiptvouchers)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
@@ -3199,26 +3234,31 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Receiptvouchers)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ReceiptvoucherPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Receiptvouchers)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_Status_StatusId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.ReceiptvoucherUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_aspnetusers_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Receiptvouchers)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucher_VoucherStyle_VoucherStyleId");
             });
 
@@ -3272,16 +3312,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.ParticularLedger)
                     .WithMany(p => p.Receiptvoucherdetails)
                     .HasForeignKey(d => d.ParticularLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucherDetails_Ledger_ParticularLedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ReceiptvoucherdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucherDetails_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.ReceiptVoucher)
                     .WithMany(p => p.Receiptvoucherdetails)
                     .HasForeignKey(d => d.ReceiptVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucherDetails_ReceiptVoucher_ReceiptVoucherId");
 
                 entity.HasOne(d => d.SalesInvoice)
@@ -3292,6 +3335,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.ReceiptvoucherdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ReceiptVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 

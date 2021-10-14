@@ -15,26 +15,26 @@ namespace ERP.DataAccess.EntityModels
         public int ReceiptVoucherId { get; set; }
         public string VoucherNo { get; set; }
         public DateTime? VoucherDate { get; set; }
-        public int? AccountLedgerId { get; set; }
+        public int AccountLedgerId { get; set; }
         public string TypeCorB { get; set; }
-        public int? PaymentTypeId { get; set; }
+        public int PaymentTypeId { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
         public string ChequeNo { get; set; }
         public DateTime? ChequeDate { get; set; }
-        public decimal? ChequeAmountFc { get; set; }
+        public decimal ChequeAmountFc { get; set; }
         public string Narration { get; set; }
-        public decimal? AmountFc { get; set; }
-        public decimal? Amount { get; set; }
+        public decimal AmountFc { get; set; }
+        public decimal Amount { get; set; }
         public string AmountFcinWord { get; set; }
-        public int? StatusId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
-        public int? MaxNo { get; set; }
-        public int? VoucherStyleId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int StatusId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
+        public int MaxNo { get; set; }
+        public int VoucherStyleId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Ledger AccountLedger { get; set; }

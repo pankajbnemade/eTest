@@ -9,15 +9,15 @@ namespace ERP.Models.Accounts
     {
         public int JournalVoucherDetId { get; set; }
 
-        public int? JournalVoucherId { get; set; }
+        public int JournalVoucherId { get; set; }
 
         [Display(Name = "Particular")]
         [Required(ErrorMessage = "Particular is required.")]
-        public int? ParticularLedgerId { get; set; }
+        public int ParticularLedgerId { get; set; }
 
         [Display(Name = "Transaction Type")]
         [Required(ErrorMessage = "Transaction Type is required.")]
-        public int? TransactionTypeId { get; set; }
+        public int TransactionTypeId { get; set; }
 
         [Display(Name = "Narration")]
         [Required(ErrorMessage = "Narration is required.")]
@@ -42,22 +42,22 @@ namespace ERP.Models.Accounts
         [Display(Name = "Debit Amount FC")]
         [Required(ErrorMessage = "Debit Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmountFc { get; set; }
+        public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
         [Required(ErrorMessage = "Debit Amount is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmount { get; set; }
+        public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
         [Required(ErrorMessage = "Credit Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmountFc { get; set; }
+        public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
         [Required(ErrorMessage = "Credit Amount is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmount { get; set; }
+        public decimal CreditAmount { get; set; }
 
         //###
 

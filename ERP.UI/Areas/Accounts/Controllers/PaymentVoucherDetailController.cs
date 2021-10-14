@@ -28,11 +28,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
             this._paymentVoucher = paymentVoucher;
         }
 
-        /// <summary>
-        /// voucher detail.
-        /// </summary>
-        /// <param name="paymentVoucherId"></param>
-        /// <returns></returns>
         public async Task<IActionResult> VoucherDetail(int paymentVoucherId, int addRow_Blank)
         {
             ViewBag.PaymentVoucherId = paymentVoucherId;
@@ -83,11 +78,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     OutstandingAmount = outstandingInvoiceModel.OutstandingAmount,
                     InvoiceAmount_FC = outstandingInvoiceModel.InvoiceAmount_FC,
                     OutstandingAmount_FC = outstandingInvoiceModel.OutstandingAmount_FC,
-                    PurchaseInvoiceId = (int)outstandingInvoiceModel.PurchaseInvoiceId,
-                    SalesInvoiceId = (int)outstandingInvoiceModel.SalesInvoiceId,
-                    CreditNoteId = (int)outstandingInvoiceModel.CreditNoteId,
-                    DebitNoteId = (int)outstandingInvoiceModel.DebitNoteId,
-                    AmountFc = null,
+                    PurchaseInvoiceId = outstandingInvoiceModel.PurchaseInvoiceId,
+                    SalesInvoiceId = outstandingInvoiceModel.SalesInvoiceId,
+                    CreditNoteId = outstandingInvoiceModel.CreditNoteId,
+                    DebitNoteId = outstandingInvoiceModel.DebitNoteId,
+                    AmountFc = 0,
                     Narration = "",
                 });
             }
@@ -131,7 +126,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             return Json(data);
         }
-
 
         [HttpPost]
         public async Task<JsonResult> SaveOutstandingDetail(List<PaymentVoucherOutstandingInvoiceModel> paymentVoucherOutstandingInvoiceModelList)
@@ -195,5 +189,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             return Json(data); // returns.
         }
+
     }
 }

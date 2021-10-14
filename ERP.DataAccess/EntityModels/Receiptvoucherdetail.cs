@@ -10,17 +10,17 @@ namespace ERP.DataAccess.EntityModels
     public partial class Receiptvoucherdetail
     {
         public int ReceiptVoucherDetId { get; set; }
-        public int? ReceiptVoucherId { get; set; }
-        public int? ParticularLedgerId { get; set; }
-        public int? TransactionTypeId { get; set; }
-        public decimal? AmountFc { get; set; }
-        public decimal? Amount { get; set; }
+        public int ReceiptVoucherId { get; set; }
+        public int ParticularLedgerId { get; set; }
+        public int TransactionTypeId { get; set; }
+        public decimal AmountFc { get; set; }
+        public decimal Amount { get; set; }
         public string Narration { get; set; }
         public int? SalesInvoiceId { get; set; }
         public int? CreditNoteId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Creditnote CreditNote { get; set; }

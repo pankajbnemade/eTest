@@ -14,23 +14,23 @@ namespace ERP.DataAccess.EntityModels
         public int AdvanceAdjustmentId { get; set; }
         public string AdvanceAdjustmentNo { get; set; }
         public DateTime? AdvanceAdjustmentDate { get; set; }
-        public int? ParticularLedgerId { get; set; }
-        public int? PaymentVoucherId { get; set; }
-        public int? ReceiptVoucherId { get; set; }
+        public int ParticularLedgerId { get; set; }
+        public int PaymentVoucherId { get; set; }
+        public int ReceiptVoucherId { get; set; }
         public string Narration { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
-        public decimal? AmountFc { get; set; }
-        public decimal? Amount { get; set; }
+        public decimal AmountFc { get; set; }
+        public decimal Amount { get; set; }
         public string AmountFcinWord { get; set; }
-        public int? StatusId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
-        public int? MaxNo { get; set; }
-        public int? VoucherStyleId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int StatusId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
+        public int MaxNo { get; set; }
+        public int VoucherStyleId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Company Company { get; set; }

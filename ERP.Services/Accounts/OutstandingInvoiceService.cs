@@ -1,12 +1,5 @@
-﻿using ERP.DataAccess.EntityData;
-using ERP.DataAccess.EntityModels;
-using ERP.Models.Accounts;
-using ERP.Models.Accounts.Enums;
-using ERP.Models.Common;
-using ERP.Models.Helpers;
+﻿using ERP.Models.Accounts;
 using ERP.Services.Accounts.Interface;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,28 +37,6 @@ namespace ERP.Services.Accounts
 
             return outstandingInvoiceModelList; // returns.
         }
-
-        //public async Task<DataTableResultModel<OutstandingInvoiceModel>> GetOutstandingInvoiceListByLedgerId(int ledgerId, string VoucherType, decimal ExchangeRate)
-        //{
-        //    DataTableResultModel<OutstandingInvoiceModel> resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
-
-        //    IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await GetOutstandingInvoiceList(ledgerId, VoucherType, ExchangeRate);
-
-        //    if (null != outstandingInvoiceModelList && outstandingInvoiceModelList.Any())
-        //    {
-        //        resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
-        //        resultModel.ResultList = outstandingInvoiceModelList;
-        //        resultModel.TotalResultCount = outstandingInvoiceModelList.Count();
-        //    }
-        //    else
-        //    {
-        //        resultModel = new DataTableResultModel<OutstandingInvoiceModel>();
-        //        resultModel.ResultList = new List<OutstandingInvoiceModel>();
-        //        resultModel.TotalResultCount = 0;
-        //    }
-
-        //    return resultModel; // returns.
-        //}
 
         private async Task<IList<OutstandingInvoiceModel>> GetOutstandingInvoiceList(int ledgerId, string VoucherType, decimal ExchangeRate)
         {
@@ -155,48 +126,6 @@ namespace ERP.Services.Accounts
 
             return outstandingInvoiceModelList; // returns.
         }
-
-        //private async Task<OutstandingInvoiceModel> AssignValueToModel(Paymentvoucherdetail paymentVoucherDetail)
-        //{
-        //    return await Task.Run(() =>
-        //    {
-        //        OutstandingInvoiceModel outstandingInvoiceModel = new OutstandingInvoiceModel();
-
-        //        //paymentVoucherDetailModel.PaymentVoucherDetId = paymentVoucherDetail.PaymentVoucherDetId;
-        //        //paymentVoucherDetailModel.PaymentVoucherId = paymentVoucherDetail.PaymentVoucherId;
-        //        //paymentVoucherDetailModel.ParticularLedgerId = paymentVoucherDetail.ParticularLedgerId;
-        //        //paymentVoucherDetailModel.TransactionTypeId = paymentVoucherDetail.TransactionTypeId;
-        //        //paymentVoucherDetailModel.AmountFc = paymentVoucherDetail.AmountFc;
-        //        //paymentVoucherDetailModel.Amount = paymentVoucherDetail.Amount;
-        //        //paymentVoucherDetailModel.Narration = paymentVoucherDetail.Narration;
-
-        //        //paymentVoucherDetailModel.PurchaseInvoiceId = null != paymentVoucherDetail.PurchaseInvoiceId ? paymentVoucherDetail.PurchaseInvoiceId : 0;
-        //        //paymentVoucherDetailModel.CreditNoteId = null != paymentVoucherDetail.CreditNoteId ? paymentVoucherDetail.CreditNoteId : 0;
-        //        //paymentVoucherDetailModel.DebitNoteId = null != paymentVoucherDetail.DebitNoteId ? paymentVoucherDetail.DebitNoteId : 0;
-
-        //        ////--####
-        //        //paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
-        //        //paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
-
-        //        //if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId == 0)
-        //        //{
-        //        //    paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
-        //        //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
-        //        //}
-        //        //else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
-        //        //{
-        //        //    paymentVoucherDetailModel.InvoiceType = "Credit Note";
-        //        //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.CreditNote.CreditNoteNo;
-        //        //}
-        //        //else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.CreditNoteId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
-        //        //{
-        //        //    paymentVoucherDetailModel.InvoiceType = "Debit Note";
-        //        //    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
-        //        //}
-
-        //        return outstandingInvoiceModel;
-        //    });
-        //}
 
     }
 }

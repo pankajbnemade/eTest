@@ -35,12 +35,12 @@ namespace ERP.Models.Accounts
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? AmountFc { get; set; }
+        public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
         [Required(ErrorMessage = "Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? Amount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
         [Required(ErrorMessage = "Amount FC in word is required.")]
@@ -48,33 +48,33 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Debit Amount FC")]
         [Required(ErrorMessage = "Debit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmountFc { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
         [Required(ErrorMessage = "Debit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
         [Required(ErrorMessage = "Credit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmountFc { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
         [Required(ErrorMessage = "Credit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmount { get; set; }
 
-        public int? StatusId { get; set; }
+        public int StatusId { get; set; }
 
         public int CompanyId { get; set; }
 
         public int FinancialYearId { get; set; }
 
-        public int? MaxNo { get; set; }
+        public int MaxNo { get; set; }
 
-        public int? VoucherStyleId { get; set; }
+        public int VoucherStyleId { get; set; }
 
         //####
 

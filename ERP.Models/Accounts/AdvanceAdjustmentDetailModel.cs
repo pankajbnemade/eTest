@@ -9,17 +9,17 @@ namespace ERP.Models.Accounts
     {
         public int AdvanceAdjustmentDetId { get; set; }
 
-        public int? AdvanceAdjustmentId { get; set; }
+        public int AdvanceAdjustmentId { get; set; }
 
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? AmountFc { get; set; }
+        public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
         [Required(ErrorMessage = "Amount is required.")]
         //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Display(Name = "Narration")]
         [Required(ErrorMessage = "Narration is required.")]

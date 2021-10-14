@@ -57,11 +57,14 @@
 
                                 @Html.ValidationMessageFor(modelItem => Model[item].ParticularLedgerId, "", new { @class = "text-danger" })
                             </td>
-                            <td style="width:120px;">
+                            <td style="width:120px;" class="text-center">
                                 @if (Model[item].PaymentVoucherDetId != 0)
                                 {
-                                    @Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
-                                  "Select", new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                    @*@Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
+            "Select", new { @class = "form-control form-control-sm", @readonly = "readonly" })*@
+
+                                    @Html.DisplayFor(modelItem => Model[item].TransactionTypeName)
+                                    @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
                                 }
                                 else
                                 {

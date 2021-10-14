@@ -7,17 +7,17 @@ namespace ERP.DataAccess.EntityModels
     public partial class Advanceadjustmentdetail
     {
         public int AdvanceAdjustmentDetId { get; set; }
-        public int? AdvanceAdjustmentId { get; set; }
-        public decimal? AmountFc { get; set; }
-        public decimal? Amount { get; set; }
+        public int AdvanceAdjustmentId { get; set; }
+        public decimal AmountFc { get; set; }
+        public decimal Amount { get; set; }
         public string Narration { get; set; }
         public int? SalesInvoiceId { get; set; }
         public int? PurchaseInvoiceId { get; set; }
         public int? CreditNoteId { get; set; }
         public int? DebitNoteId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Advanceadjustment AdvanceAdjustment { get; set; }

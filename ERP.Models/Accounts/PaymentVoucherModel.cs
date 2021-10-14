@@ -21,7 +21,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Account Ledger")]
         [Required(ErrorMessage = "Account Ledger is required.")]
-        public int? AccountLedgerId { get; set; }
+        public int AccountLedgerId { get; set; }
 
         [Display(Name = "Cash/Bank")]
         [Required(ErrorMessage = "Cash/Bank is required.")]
@@ -29,7 +29,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Payment Type")]
         [Required(ErrorMessage = "Payment Type is required.")]
-        public int? PaymentTypeId { get; set; }
+        public int PaymentTypeId { get; set; }
 
         [Display(Name = "Currency")]
         [Required(ErrorMessage = "Currency is required.")]
@@ -56,7 +56,7 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Cheque Amount FC is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? ChequeAmountFc { get; set; }
+        public decimal ChequeAmountFc { get; set; }
 
         [Display(Name = "Narration")]
         [StringLength(2000, ErrorMessage = "Narration cannot exceed 2000 characters.")]
@@ -64,21 +64,21 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? AmountFc { get; set; }
+        public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
         public string AmountFcInWord { get; set; }
 
         [Display(Name = "Status")]
-        public int? StatusId { get; set; }
+        public int StatusId { get; set; }
         public int CompanyId { get; set; }
         public int FinancialYearId { get; set; }
-        public int? MaxNo { get; set; }
-        public int? VoucherStyleId { get; set; }
+        public int MaxNo { get; set; }
+        public int VoucherStyleId { get; set; }
 
         //####
 
@@ -91,7 +91,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Closing Balance")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? ClosingBalance { get; set; }
+        public decimal ClosingBalance { get; set; }
 
         public int NoOfLineItems { get; set; }
 
