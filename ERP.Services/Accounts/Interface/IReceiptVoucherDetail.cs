@@ -16,13 +16,13 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> DeleteReceiptVoucherDetail(int receiptVoucherDetailId);
 
-        Task<ReceiptVoucherDetailModel> GetReceiptVoucherDetailById(int receiptVoucherDetailId);
+        Task<ReceiptVoucherDetailModel> GetReceiptVoucherDetailById(int receiptVoucherDetailId,int receiptVoucherId);
 
         Task<IList<ReceiptVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId);
 
-        Task<DataTableResultModel<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByReceiptVoucherId(int receiptVoucherId);
+        Task<DataTableResultModel<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByReceiptVoucherId(int receiptVoucherId, int addRow);
 
-        Task<DataTableResultModel<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailList();
+        Task<IList<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByVoucherId(int receiptVoucherId, int addRow_Blank);
 
     }
 }

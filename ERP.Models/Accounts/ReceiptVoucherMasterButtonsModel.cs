@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
-    public partial class PaymentVoucherMasterButtonsModel
+    public partial class ReceiptVoucherMasterButtonsModel
     {
-        public int PaymentVoucherId { get; set; }
+        public int ReceiptVoucherId { get; set; }
         public bool IsApprovalRequestVisible { get; set; }
         public bool IsApproveVisible { get; set; }
         public bool IsCancelVisible { get; set; }

@@ -1,0 +1,126 @@
+﻿@model IList<ReceiptVoucherOutstandingInvoiceModel>
+
+<form id="frmOutstandingDetail" class="width100" method="post"
+      asp-action="SaveOutstandingDetail" asp-controller="ReceiptVoucherDetail" asp-area="Accounts"
+      data-ajax-begin="return BeginOutstandingDetail();" data-ajax-success="SuccessOutstandingDetail"
+      data-ajax="true" data-ajax-method="post">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Map Outstanding Invoice</h5>
+                <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="col-sm-12 table-responsive">
+                    <table id="outstandingInvoiceGrid" class="table table-bordered table-striped w-100">
+                        <thead>
+                            <tr class="table-header">
+                                <th>Invoice Type</th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Invoice Amount FC</th>
+                                <th>Outstanding Amount FC</th>
+                                <th>Amount FC</th>
+                                <th>Narration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var item = 0; item < Model.Count(); item++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.HiddenFor(modelItem => Model[item].ReceiptVoucherId)
+                                        @Html.HiddenFor(modelItem => Model[item].ParticularLedgerId)
+                                        @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
+                                        @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
+                                        @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceAmount_FC)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].OutstandingAmount_FC)
+                                    </td>
+                                    <td style="width:100px;">
+                                        @Html.TextBoxFor(modelItem => Model[item].AmountFc, new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(modelItem => Model[item].AmountFc, "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model[item].Narration, new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(modelItem => Model[item].Narration, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" id="save-new-voucher-dtl" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    //// begin form
+    function BeginOutstandingDetail() {
+        var form = $("#frmOutstandingDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+
+    //// success form
+    function SuccessOutstandingDetail(data) {
+        if (data.Result.Status) {
+            $('#modal-voucher').modal('hide');
+
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("VoucherDetail", "ReceiptVoucherDetail")?receiptVoucherId=' + data.Result.Data + '&addRow_Blank=0';
+
+            $('#voucherdetail').empty();
+            $('#voucherdetail').load(tabUrl);
+
+            fnShowHideMasterButtons();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    $(document).ready(function () {
+
+        $("#receiptVoucherDetailGrid").on('change', 'select[id*=AmountFc]', function (e) {
+            var currentRow = $(this).closest("tr");
+
+            alert(currentRow.find("input[id*=AmountFc]").val());
+
+        });
+
+    });
+
+
+</script>

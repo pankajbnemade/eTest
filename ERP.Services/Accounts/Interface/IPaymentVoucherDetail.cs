@@ -24,7 +24,5 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<PaymentVoucherDetailModel>> GetPaymentVoucherDetailByVoucherId(int paymentVoucherId, int addRow_Blank);
 
-        //Task<DataTableResultModel<PaymentVoucherDetailModel>> GetPaymentVoucherDetailList();
-
     }
 }

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
-    public partial class PaymentVoucherOutstandingInvoiceModel
+    public partial class ReceiptVoucherOutstandingInvoiceModel
     {
-        public int PaymentVoucherId { get; set; }
+        public int ReceiptVoucherId { get; set; }
 
         public int ParticularLedgerId { get; set; }
 

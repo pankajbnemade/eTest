@@ -1,10 +1,11 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,17 +15,18 @@ namespace ERP.Services.Accounts
     public class ReceiptVoucherDetailService : Repository<Receiptvoucherdetail>, IReceiptVoucherDetail
     {
         IReceiptVoucher receiptVoucher;
+        ILedger ledger;
 
-        public ReceiptVoucherDetailService(ErpDbContext dbContext, IReceiptVoucher _receiptVoucher) : base(dbContext)
+        public ReceiptVoucherDetailService(ErpDbContext dbContext, IReceiptVoucher _receiptVoucher, ILedger _ledger) : base(dbContext)
         {
             receiptVoucher = _receiptVoucher;
+            ledger = _ledger;
         }
 
         public async Task<int> CreateReceiptVoucherDetail(ReceiptVoucherDetailModel receiptVoucherDetailModel)
         {
             int receiptVoucherDetailId = 0;
 
-            // assign values.
             Receiptvoucherdetail receiptVoucherDetail = new Receiptvoucherdetail();
 
             receiptVoucherDetail.ReceiptVoucherId = receiptVoucherDetailModel.ReceiptVoucherId;
@@ -32,19 +34,19 @@ namespace ERP.Services.Accounts
             receiptVoucherDetail.TransactionTypeId = receiptVoucherDetailModel.TransactionTypeId;
             receiptVoucherDetail.AmountFc = receiptVoucherDetailModel.AmountFc;
             receiptVoucherDetail.Amount = 0;
+
             receiptVoucherDetail.Narration = receiptVoucherDetailModel.Narration;
             receiptVoucherDetail.SalesInvoiceId = receiptVoucherDetailModel.SalesInvoiceId;
-            //receiptVoucherDetail.DebitNoteId = receiptVoucherDetailModel.DebitNoteId;
             receiptVoucherDetail.CreditNoteId = receiptVoucherDetailModel.CreditNoteId;
+
+            await Create(receiptVoucherDetail);
+
+            receiptVoucherDetailId = receiptVoucherDetail.ReceiptVoucherDetId;
 
             if (receiptVoucherDetailId != 0)
             {
                 await UpdateReceiptVoucherDetailAmount(receiptVoucherDetailId);
             }
-
-            await Create(receiptVoucherDetail);
-
-            receiptVoucherDetailId = receiptVoucherDetail.ReceiptVoucherDetId;
 
             return receiptVoucherDetailId; // returns.
         }
@@ -58,15 +60,12 @@ namespace ERP.Services.Accounts
 
             if (null != receiptVoucherDetail)
             {
-
-                // assign values.
                 receiptVoucherDetail.ParticularLedgerId = receiptVoucherDetailModel.ParticularLedgerId;
                 receiptVoucherDetail.TransactionTypeId = receiptVoucherDetailModel.TransactionTypeId;
                 receiptVoucherDetail.AmountFc = receiptVoucherDetailModel.AmountFc;
                 receiptVoucherDetail.Amount = 0;
-                receiptVoucherDetail.Narration = receiptVoucherDetailModel.Narration;
+                receiptVoucherDetail.Narration = receiptVoucherDetailModel.Narration == null ? "" : receiptVoucherDetailModel.Narration;
                 receiptVoucherDetail.SalesInvoiceId = receiptVoucherDetailModel.SalesInvoiceId;
-                //receiptVoucherDetail.DebitNoteId = receiptVoucherDetailModel.DebitNoteId;
                 receiptVoucherDetail.CreditNoteId = receiptVoucherDetailModel.CreditNoteId;
 
                 isUpdated = await Update(receiptVoucherDetail);
@@ -95,10 +94,10 @@ namespace ERP.Services.Accounts
                 isUpdated = await Update(receiptVoucherDetail);
             }
 
-            if (isUpdated != false)
-            {
-                await receiptVoucher.UpdateReceiptVoucherMasterAmount(receiptVoucherDetail.ReceiptVoucherId);
-            }
+            //if (isUpdated != false)
+            //{
+            //    await receiptVoucher.UpdateReceiptVoucherMasterAmount(receiptVoucherDetail.ReceiptVoucherId);
+            //}
 
             return isUpdated; // returns.
         }
@@ -123,11 +122,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-        public async Task<ReceiptVoucherDetailModel> GetReceiptVoucherDetailById(int receiptVoucherDetailId)
+        public async Task<ReceiptVoucherDetailModel> GetReceiptVoucherDetailById(int receiptVoucherDetailId, int receiptVoucherId)
         {
             ReceiptVoucherDetailModel receiptVoucherDetailModel = null;
 
-            IList<ReceiptVoucherDetailModel> receiptVoucherModelDetailList = await GetReceiptVoucherDetailList(receiptVoucherDetailId, 0);
+            IList<ReceiptVoucherDetailModel> receiptVoucherModelDetailList = await GetReceiptVoucherDetailList(receiptVoucherDetailId, receiptVoucherId);
 
             if (null != receiptVoucherModelDetailList && receiptVoucherModelDetailList.Any())
             {
@@ -137,7 +136,7 @@ namespace ERP.Services.Accounts
             return receiptVoucherDetailModel; // returns.
         }
 
-        public async Task<DataTableResultModel<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByReceiptVoucherId(int receiptVoucherId)
+        public async Task<DataTableResultModel<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByReceiptVoucherId(int receiptVoucherId, int addRow_Blank)
         {
             DataTableResultModel<ReceiptVoucherDetailModel> resultModel = new DataTableResultModel<ReceiptVoucherDetailModel>();
 
@@ -145,48 +144,89 @@ namespace ERP.Services.Accounts
 
             if (null != receiptVoucherDetailModelList && receiptVoucherDetailModelList.Any())
             {
+                if (addRow_Blank == 1)
+                {
+                    receiptVoucherDetailModelList.Add(await AddRow_Blank(receiptVoucherId));
+                }
+
                 resultModel = new DataTableResultModel<ReceiptVoucherDetailModel>();
                 resultModel.ResultList = receiptVoucherDetailModelList;
                 resultModel.TotalResultCount = receiptVoucherDetailModelList.Count();
             }
             else
             {
-                resultModel = new DataTableResultModel<ReceiptVoucherDetailModel>();
-                resultModel.ResultList = new List<ReceiptVoucherDetailModel>();
-                resultModel.TotalResultCount = 0;
-            }
+                receiptVoucherDetailModelList = new List<ReceiptVoucherDetailModel>();
 
-            return resultModel; // returns.
-        }
+                if (addRow_Blank == 1)
+                {
+                    receiptVoucherDetailModelList.Add(await AddRow_Blank(receiptVoucherId));
+                }
 
-        public async Task<DataTableResultModel<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailList()
-        {
-            DataTableResultModel<ReceiptVoucherDetailModel> resultModel = new DataTableResultModel<ReceiptVoucherDetailModel>();
-
-            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = await GetReceiptVoucherDetailList(0, 0);
-
-            if (null != receiptVoucherDetailModelList && receiptVoucherDetailModelList.Any())
-            {
                 resultModel = new DataTableResultModel<ReceiptVoucherDetailModel>();
                 resultModel.ResultList = receiptVoucherDetailModelList;
                 resultModel.TotalResultCount = receiptVoucherDetailModelList.Count();
             }
 
+
             return resultModel; // returns.
         }
 
-        /// <summary>
-        /// get receipt voucher List based on particularLedgerId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
+        public async Task<IList<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByVoucherId(int receiptVoucherId, int addRow_Blank)
+        {
+            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = await GetReceiptVoucherDetailList(0, receiptVoucherId);
+
+            if (null != receiptVoucherDetailModelList && receiptVoucherDetailModelList.Any())
+            {
+                if (addRow_Blank == 1)
+                {
+                    receiptVoucherDetailModelList.Add(await AddRow_Blank(receiptVoucherId));
+                }
+            }
+            else
+            {
+                receiptVoucherDetailModelList = new List<ReceiptVoucherDetailModel>();
+
+                if (addRow_Blank == 1)
+                {
+                    receiptVoucherDetailModelList.Add(await AddRow_Blank(receiptVoucherId));
+                }
+
+            }
+
+            return receiptVoucherDetailModelList; // returns.
+        }
+
+        private async Task<ReceiptVoucherDetailModel> AddRow_Blank(int receiptVoucherId)
+        {
+            ReceiptVoucherDetailModel receiptVoucherDetailModel = new ReceiptVoucherDetailModel();
+
+            return await Task.Run(() =>
+            {
+                receiptVoucherDetailModel.ReceiptVoucherId = receiptVoucherId;
+                receiptVoucherDetailModel.ParticularLedgerId = 0;
+                receiptVoucherDetailModel.TransactionTypeId = 0;
+                receiptVoucherDetailModel.AmountFc = 0;
+                receiptVoucherDetailModel.Amount = 0;
+                receiptVoucherDetailModel.Narration = "";
+                receiptVoucherDetailModel.SalesInvoiceId = null;
+                receiptVoucherDetailModel.CreditNoteId = null;
+                receiptVoucherDetailModel.InvoiceNo = "";
+                receiptVoucherDetailModel.InvoiceType = "";
+                receiptVoucherDetailModel.ParticularLedgerName = "";
+                receiptVoucherDetailModel.TransactionTypeName = "";
+
+                return receiptVoucherDetailModel;
+            });
+        }
+
         public async Task<IList<ReceiptVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
         {
             IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = null;
 
             // create query.
-            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0);
+            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0)
+                                                    .Include(w => w.ParticularLedger)
+                                                    .Include(w => w.SalesInvoice).Include(w => w.CreditNote); ;
 
             // apply filters.
             if (0 != particularLedgerId)
@@ -213,14 +253,17 @@ namespace ERP.Services.Accounts
             IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = null;
 
             // create query.
-            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0);
+            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0)
+                                                    .Include(w => w.ParticularLedger)
+                                                    .Include(w => w.SalesInvoice).Include(w => w.CreditNote);
 
             // apply filters.
             if (0 != receiptVoucherDetailId)
                 query = query.Where(w => w.ReceiptVoucherDetId == receiptVoucherDetailId);
 
-            if (0 != receiptVoucherId)
-                query = query.Where(w => w.ReceiptVoucherId == receiptVoucherId);
+            query = query.Where(w => w.ReceiptVoucherId == receiptVoucherId);
+
+            query = query.OrderBy(w => w.ParticularLedger.LedgerName);
 
             // get records by query.
             List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
@@ -254,10 +297,20 @@ namespace ERP.Services.Accounts
 
                 receiptVoucherDetailModel.SalesInvoiceId = receiptVoucherDetail.SalesInvoiceId;
                 receiptVoucherDetailModel.CreditNoteId = receiptVoucherDetail.CreditNoteId;
-                //receiptVoucherDetailModel.DebitNoteId = receiptVoucherDetail.DebitNoteId;
 
-                //--####
-                //receiptVoucherDetailModel.TransactionTypeName = null != receiptVoucherDetail.UnitOfMeasurement ? receiptVoucherDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                receiptVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)receiptVoucherDetail.TransactionTypeId).ToString());
+                receiptVoucherDetailModel.ParticularLedgerName = null != receiptVoucherDetail.ParticularLedger ? receiptVoucherDetail.ParticularLedger.LedgerName : null;
+
+                if (receiptVoucherDetailModel.SalesInvoiceId != 0 && receiptVoucherDetailModel.SalesInvoiceId == 0)
+                {
+                    receiptVoucherDetailModel.InvoiceType = "Sales Invoice";
+                    receiptVoucherDetailModel.InvoiceNo = receiptVoucherDetail.SalesInvoice.InvoiceNo;
+                }
+                else if (receiptVoucherDetailModel.SalesInvoiceId == 0 && receiptVoucherDetailModel.CreditNoteId != 0)
+                {
+                    receiptVoucherDetailModel.InvoiceType = "Credit Note";
+                    receiptVoucherDetailModel.InvoiceNo = receiptVoucherDetail.CreditNote.CreditNoteNo;
+                }
 
                 return receiptVoucherDetailModel;
             });

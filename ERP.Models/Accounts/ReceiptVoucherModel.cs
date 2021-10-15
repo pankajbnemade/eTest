@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
-    public partial class PaymentVoucherModel
+    public partial class ReceiptVoucherModel
     {
-        public int PaymentVoucherId { get; set; }
+        public int ReceiptVoucherId { get; set; }
 
         [Display(Name = "Voucher No")]
         [Required(ErrorMessage = "Vocuher No is required.")]

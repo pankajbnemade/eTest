@@ -3,6 +3,7 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
@@ -18,37 +19,25 @@ namespace ERP.Services.Accounts
     public class ReceiptVoucherService : Repository<Receiptvoucher>, IReceiptVoucher
     {
         ICommon common;
+
         public ReceiptVoucherService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
         {
             common = _common;
         }
 
-        /// <summary>
-        /// generate invoice no.
-        /// </summary>
-        /// <param name="companyId"></param>
-        /// <param name="financialYearId"></param>
-        /// <returns>
-        /// return invoice no.
-        /// </returns>
         public async Task<GenerateNoModel> GenerateReceiptVoucherNo(int companyId, int financialYearId)
         {
-            int voucherSetupId = 7;
+            int voucherSetupId = 6;
             // get maxno.
-            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
 
-        /// <summary>
-        /// create new purchase invoice.
-        /// </summary>
-        /// <param name="receiptVoucherModel"></param>
-        /// <returns>
-        /// return id.
-        /// </returns>
         public async Task<int> CreateReceiptVoucher(ReceiptVoucherModel receiptVoucherModel)
         {
             int receiptVoucherId = 0;
@@ -78,7 +67,7 @@ namespace ERP.Services.Accounts
             receiptVoucher.Amount = 0;
             receiptVoucher.AmountFcinWord = "";
 
-            receiptVoucher.StatusId = 1;
+            receiptVoucher.StatusId = (int)DocumentStatus.Inprocess;
             receiptVoucher.CompanyId = receiptVoucherModel.CompanyId;
             receiptVoucher.FinancialYearId = receiptVoucherModel.FinancialYearId;
 
@@ -93,13 +82,6 @@ namespace ERP.Services.Accounts
             return receiptVoucherId; // returns.
         }
 
-        /// <summary>
-        /// update purchase invoice.
-        /// </summary>
-        /// <param name="receiptVoucherModel"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
         public async Task<bool> UpdateReceiptVoucher(ReceiptVoucherModel receiptVoucherModel)
         {
             bool isUpdated = false;
@@ -136,20 +118,29 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        /// <summary>
-        /// delete purchase invoice.
-        /// </summary>
-        /// <param name="receiptVoucherId"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
+        public async Task<bool> UpdateStatusReceiptVoucher(int receiptVoucherId, int statusId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Receiptvoucher receiptVoucher = await GetByIdAsync(w => w.ReceiptVoucherId == receiptVoucherId);
+
+            if (null != receiptVoucher)
+            {
+                receiptVoucher.StatusId = statusId;
+                isUpdated = await Update(receiptVoucher);
+            }
+
+            return isUpdated; // returns.
+        }
+
         public async Task<bool> DeleteReceiptVoucher(int ReceiptVoucherId)
         {
             bool isDeleted = false;
 
             // get record.
             Receiptvoucher receiptVoucher = await GetByIdAsync(w => w.ReceiptVoucherId == ReceiptVoucherId);
-            
+
             if (null != receiptVoucher)
             {
                 isDeleted = await Delete(receiptVoucher);
@@ -158,14 +149,17 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-        public async Task<bool> UpdateReceiptVoucherMasterAmount(int? receiptVoucherId)
+        public async Task<bool> UpdateReceiptVoucherMasterAmount(int receiptVoucherId)
         {
             bool isUpdated = false;
 
-            // get record.
-            Receiptvoucher receiptVoucher = await GetQueryByCondition(w => w.ReceiptVoucherId == receiptVoucherId)
-                                                    .Include(w => w.Receiptvoucherdetails)
-                                                    .Include(w => w.Currency).FirstOrDefaultAsync();
+            Receiptvoucher receiptVoucher = null;
+
+            //////// get record.
+
+            receiptVoucher = await GetQueryByCondition(w => w.ReceiptVoucherId == receiptVoucherId)
+                                                       .Include(w => w.Receiptvoucherdetails)
+                                                       .Include(w => w.Currency).FirstOrDefaultAsync();
 
             if (null != receiptVoucher)
             {
@@ -174,18 +168,17 @@ namespace ERP.Services.Accounts
 
                 receiptVoucher.AmountFcinWord = await common.AmountInWord_Million(receiptVoucher.AmountFc.ToString(), receiptVoucher.Currency.CurrencyCode, receiptVoucher.Currency.Denomination);
 
+                if (receiptVoucher.StatusId == (int)DocumentStatus.Approved || receiptVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || receiptVoucher.StatusId == (int)DocumentStatus.Cancelled)
+                {
+                    receiptVoucher.StatusId = (int)DocumentStatus.Inprocess;
+                }
+
                 isUpdated = await Update(receiptVoucher);
             }
 
             return isUpdated; // returns.
         }
 
-        /// <summary>
-        /// get purchase invoice based on ReceiptVoucherId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
         public async Task<ReceiptVoucherModel> GetReceiptVoucherById(int receiptVoucherId)
         {
             ReceiptVoucherModel receiptVoucherModel = null;
@@ -200,14 +193,6 @@ namespace ERP.Services.Accounts
             return receiptVoucherModel; // returns.
         }
 
-        /// <summary>
-        /// get search purchase invoice result list.
-        /// </summary>
-        /// <param name="dataTableAjaxPostModel"></param>
-        /// <param name="searchFilterModel"></param>
-        /// <returns>
-        /// return list.
-        /// </returns>
         public async Task<DataTableResultModel<ReceiptVoucherModel>> GetReceiptVoucherList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterReceiptVoucherModel searchFilterModel)
         {
             string searchBy = dataTableAjaxPostModel.search?.value;
@@ -231,29 +216,17 @@ namespace ERP.Services.Accounts
 
         #region Private Methods
 
-        /// <summary>
-        /// get records from database.
-        /// </summary>
-        /// <param name="searchBy"></param>
-        /// <param name="take"></param>
-        /// <param name="skip"></param>
-        /// <param name="sortBy"></param>
-        /// <param name="sortDir"></param>
-        /// <returns></returns>
         private async Task<DataTableResultModel<ReceiptVoucherModel>> GetDataFromDbase(SearchFilterReceiptVoucherModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
         {
             DataTableResultModel<ReceiptVoucherModel> resultModel = new DataTableResultModel<ReceiptVoucherModel>();
 
-            IQueryable<Receiptvoucher> query = GetQueryByCondition(w => w.ReceiptVoucherId != 0);
+            IQueryable<Receiptvoucher> query = GetQueryByCondition(w => w.ReceiptVoucherId != 0)
+                                                .Include(w => w.AccountLedger).Include(w => w.Currency)
+                                                .Include(w => w.PreparedByUser).Include(w => w.Status); ;
 
             if (!string.IsNullOrEmpty(searchFilterModel.VoucherNo))
             {
                 query = query.Where(w => w.VoucherNo.Contains(searchFilterModel.VoucherNo));
-            }
-
-            if (null != searchFilterModel.AccountLedgerId)
-            {
-                query = query.Where(w => w.AccountLedgerId == searchFilterModel.AccountLedgerId);
             }
 
             if (null != searchFilterModel.FromDate)
@@ -265,32 +238,51 @@ namespace ERP.Services.Accounts
             {
                 query = query.Where(w => w.VoucherDate <= searchFilterModel.ToDate);
             }
+            
+            if (!string.IsNullOrEmpty(searchFilterModel.TypeCorB))
+            {
+                query = query.Where(w => w.TypeCorB == searchFilterModel.TypeCorB);
+            }
+
+            if (null != searchFilterModel.LedgerId)
+            {
+                query = query.Where(w => w.AccountLedgerId == searchFilterModel.LedgerId);
+            }
+
+
+            if (!string.IsNullOrEmpty(searchFilterModel.ChequeNo))
+            {
+                query = query.Where(w => w.ChequeNo.Contains(searchFilterModel.ChequeNo));
+            }
+
 
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
 
-            //sorting
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
-            {
-                query = query.OrderBy($"{sortBy} {sortDir}");
-            }
-
+            
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
             {
                 query = query.Where(w => w.VoucherNo.ToLower().Contains(searchBy.ToLower()));
             }
 
-
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
+
             resultModel.ResultList = await query.Select(s => new ReceiptVoucherModel
             {
                 ReceiptVoucherId = s.ReceiptVoucherId,
                 VoucherNo = s.VoucherNo,
                 VoucherDate = s.VoucherDate,
                 AmountFc = s.AmountFc,
-            }).ToListAsync();
+                TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(s.TypeCorB),
+                AccountLedgerName = s.AccountLedger.LedgerName,
+                ChequeNo = s.ChequeNo,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.Currency.PreparedByUser.UserName,
+                StatusName = s.Status.StatusName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
+
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
 
@@ -308,8 +300,8 @@ namespace ERP.Services.Accounts
                                             .Include(w => w.Status).Include(w => w.PreparedByUser);
 
             // apply filters.
-            if (0 != receiptVoucherId)
-                query = query.Where(w => w.ReceiptVoucherId == receiptVoucherId);
+            //if (0 != receiptVoucherId)
+            query = query.Where(w => w.ReceiptVoucherId == receiptVoucherId);
 
             // get records by query.
             List<Receiptvoucher> receiptVoucherList = await query.ToListAsync();
@@ -354,14 +346,15 @@ namespace ERP.Services.Accounts
                 receiptVoucherModel.FinancialYearId = Convert.ToInt32(receiptVoucher.FinancialYearId);
                 receiptVoucherModel.MaxNo = receiptVoucher.MaxNo;
                 receiptVoucherModel.VoucherStyleId = receiptVoucher.VoucherStyleId;
-                
+
                 // ###
                 receiptVoucherModel.AccountLedgerName = null != receiptVoucher.AccountLedger ? receiptVoucher.AccountLedger.LedgerName : null;
-                receiptVoucherModel.CurrencyName = null != receiptVoucher.Currency ? receiptVoucher.Currency.CurrencyName : null;
+                receiptVoucherModel.CurrencyCode = null != receiptVoucher.Currency ? receiptVoucher.Currency.CurrencyCode : null;
                 receiptVoucherModel.StatusName = null != receiptVoucher.Status ? receiptVoucher.Status.StatusName : null;
                 receiptVoucherModel.PreparedByName = null != receiptVoucher.PreparedByUser ? receiptVoucher.PreparedByUser.UserName : null;
-                //receiptVoucherModel.ReceiptTypeName = null != receiptVoucher.PreparedByUser ? receiptVoucher.PreparedByUser.UserName : null;
-                receiptVoucherModel.TypeCorB = "C" != receiptVoucher.TypeCorB ? "Cash" : "Bank";
+
+                receiptVoucherModel.TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(receiptVoucher.TypeCorB);
+                receiptVoucherModel.PaymentTypeName = EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)receiptVoucher.PaymentTypeId).ToString());
 
                 return receiptVoucherModel;
             });
