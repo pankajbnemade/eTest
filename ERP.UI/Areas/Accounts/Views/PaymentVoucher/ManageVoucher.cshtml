@@ -61,11 +61,11 @@
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
         switch ($(e.target).attr('aria-controls')) {
             case 'vouchermaster':
-                $('#btn-edit-master').show();
+                //$('#btn-edit-master').show();
                 tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
                 break;
             case 'voucherdetail':
-                $('#btn-edit-master').hide();
+                //$('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId, addRow_Blank=0 })';
                 break;
             default:

@@ -9,9 +9,9 @@
 else
 {
 <h5 class="modal-title">Add Voucher</h5>}
-        <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-        </button>
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <form id="frmVoucherMaster" class="width100" method="post"
               asp-action="SaveVoucherMaster" asp-controller="ReceiptVoucher" asp-area="Accounts"
@@ -82,15 +82,15 @@ else
         <div class="col-sm-6">
             <div class="form-group">
                 @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
-                @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select",
-                                   new { @class = "form-control form-control-sm" })
+                @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem> { new SelectListItem { Text = Model.CurrencyCode, Value = Model.CurrencyId.ToString() } },
+                                              new { @class = "form-control form-control-sm", @readonly = "readonly" })
                 @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
                 @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
+                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm", @readonly = "readonly" })
                 @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
             </div>
         </div>
