@@ -25,6 +25,6 @@ namespace ERP.Models.Accounts
         public string CustomerReferenceNo { get; set; }
 
         [Display(Name = "Account")]
-        public Nullable<int> AccountLedgerId { get; set; }
+        public int? AccountLedgerId { get; set; }
     }
 }

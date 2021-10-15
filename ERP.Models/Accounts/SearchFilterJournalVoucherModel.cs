@@ -12,8 +12,8 @@ namespace ERP.Models.Accounts
         [Display(Name = "Voucher No.")]
         public string VoucherNo { get; set; }
 
-        [Display(Name = "Account Ledger")]
-        public Nullable<int> AccountLedgerId { get; set; }
+        //[Display(Name = "Account Ledger")]
+        //public Nullable<int> AccountLedgerId { get; set; }
 
         [Display(Name = "From Date")]
         public Nullable<DateTime> FromDate { get; set; }

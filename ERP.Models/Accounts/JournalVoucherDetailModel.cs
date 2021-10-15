@@ -24,44 +24,41 @@ namespace ERP.Models.Accounts
         public string Narration { get; set; }
 
         [Display(Name = "Sales Invoice")]
-        //[Required(ErrorMessage = "Sales Invoice is required.")]
         public int? SalesInvoiceId { get; set; }
 
         [Display(Name = "Purchase Invoice")]
-        //[Required(ErrorMessage = "Purchase Invoice is required.")]
         public int? PurchaseInvoiceId { get; set; }
 
         [Display(Name = "Credit Note")]
-        //[Required(ErrorMessage = "Credit Note is required.")]
         public int? CreditNoteId { get; set; }
 
         [Display(Name = "Debit Note")]
-        //[Required(ErrorMessage = "Debit Note is required.")]
         public int? DebitNoteId { get; set; }
 
         [Display(Name = "Debit Amount FC")]
         [Required(ErrorMessage = "Debit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [Required(ErrorMessage = "Debit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
         [Required(ErrorMessage = "Credit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [Required(ErrorMessage = "Credit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal CreditAmount { get; set; }
 
         //###
 
         public string TransactionTypeName { get; set; }
+        public string ParticularLedgerName { get; set; }
+        public string InvoiceType { get; set; }
+        public string InvoiceNo { get; set; }
 
     }
 }

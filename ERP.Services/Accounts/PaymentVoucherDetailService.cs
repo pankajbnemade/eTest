@@ -79,7 +79,7 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        public async Task<bool> UpdatePaymentVoucherDetailAmount(int? paymentVoucherDetailId)
+        public async Task<bool> UpdatePaymentVoucherDetailAmount(int paymentVoucherDetailId)
         {
             bool isUpdated = false;
 
@@ -301,12 +301,12 @@ namespace ERP.Services.Accounts
                 paymentVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)paymentVoucherDetail.TransactionTypeId).ToString());
                 paymentVoucherDetailModel.ParticularLedgerName = null != paymentVoucherDetail.ParticularLedger ? paymentVoucherDetail.ParticularLedger.LedgerName : null;
 
-                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+                if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.PurchaseInvoiceId != null)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
                 }
-                else if (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.DebitNoteId != 0)
+                else if (paymentVoucherDetailModel.DebitNoteId != 0 && paymentVoucherDetailModel.DebitNoteId != null)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Debit Note";
                     paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;

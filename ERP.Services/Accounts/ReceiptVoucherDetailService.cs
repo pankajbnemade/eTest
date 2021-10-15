@@ -79,7 +79,7 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        public async Task<bool> UpdateReceiptVoucherDetailAmount(int? receiptVoucherDetailId)
+        public async Task<bool> UpdateReceiptVoucherDetailAmount(int receiptVoucherDetailId)
         {
             bool isUpdated = false;
 
@@ -301,12 +301,12 @@ namespace ERP.Services.Accounts
                 receiptVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)receiptVoucherDetail.TransactionTypeId).ToString());
                 receiptVoucherDetailModel.ParticularLedgerName = null != receiptVoucherDetail.ParticularLedger ? receiptVoucherDetail.ParticularLedger.LedgerName : null;
 
-                if (receiptVoucherDetailModel.SalesInvoiceId != 0 && receiptVoucherDetailModel.SalesInvoiceId == 0)
+                if (receiptVoucherDetailModel.SalesInvoiceId != 0 && receiptVoucherDetailModel.SalesInvoiceId  != null)
                 {
                     receiptVoucherDetailModel.InvoiceType = "Sales Invoice";
                     receiptVoucherDetailModel.InvoiceNo = receiptVoucherDetail.SalesInvoice.InvoiceNo;
                 }
-                else if (receiptVoucherDetailModel.SalesInvoiceId == 0 && receiptVoucherDetailModel.CreditNoteId != 0)
+                else if (receiptVoucherDetailModel.CreditNoteId != 0 && receiptVoucherDetailModel.CreditNoteId  != null)
                 {
                     receiptVoucherDetailModel.InvoiceType = "Credit Note";
                     receiptVoucherDetailModel.InvoiceNo = receiptVoucherDetail.CreditNote.CreditNoteNo;

@@ -25,7 +25,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Narration")]
@@ -34,38 +35,35 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal AmountFc { get; set; }
-
-        [Display(Name = "Amount")]
-        [Required(ErrorMessage = "Amount is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
-        public decimal Amount { get; set; }
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount FC in word")]
         [Required(ErrorMessage = "Amount FC in word is required.")]
-        public string AmountFcinWord { get; set; }
+        public string AmountFcInWord { get; set; }
+
+        [Display(Name = "Amount")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal Amount { get; set; }
 
         [Display(Name = "Debit Amount FC")]
-        [Required(ErrorMessage = "Debit Amount FC is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [Required(ErrorMessage = "Debit Amount is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
-        [Required(ErrorMessage = "Credit Amount FC is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [Required(ErrorMessage = "Credit Amount is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         public decimal CreditAmount { get; set; }
 
+        [Display(Name = "Status")]
         public int StatusId { get; set; }
 
         public int CompanyId { get; set; }
@@ -78,8 +76,10 @@ namespace ERP.Models.Accounts
 
         //####
 
-        public string CurrencyName { get; set; }
+        public string CurrencyCode { get; set; }
+
         public string StatusName { get; set; }
+
         public string PreparedByName { get; set; }
 
     }

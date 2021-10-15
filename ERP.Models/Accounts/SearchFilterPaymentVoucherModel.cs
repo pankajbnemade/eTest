@@ -22,7 +22,7 @@ namespace ERP.Models.Accounts
         public string TypeCorB { get; set; }
         
         [Display(Name = "Account")]
-        public Nullable<int> LedgerId { get; set; }
+        public int? LedgerId { get; set; }
 
         [Display(Name = "Cheque/Trans. No")]
         public string ChequeNo { get; set; }

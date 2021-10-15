@@ -1,10 +1,11 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,40 +15,42 @@ namespace ERP.Services.Accounts
     public class JournalVoucherDetailService : Repository<Journalvoucherdetail>, IJournalVoucherDetail
     {
         IJournalVoucher journalVoucher;
+        ILedger ledger;
 
-        public JournalVoucherDetailService(ErpDbContext dbContext, IJournalVoucher _journalVoucher) : base(dbContext)
+        public JournalVoucherDetailService(ErpDbContext dbContext, IJournalVoucher _journalVoucher, ILedger _ledger) : base(dbContext)
         {
             journalVoucher = _journalVoucher;
+            ledger = _ledger;
         }
 
         public async Task<int> CreateJournalVoucherDetail(JournalVoucherDetailModel journalVoucherDetailModel)
         {
             int journalVoucherDetailId = 0;
 
-            // assign values.
             Journalvoucherdetail journalVoucherDetail = new Journalvoucherdetail();
 
             journalVoucherDetail.JournalVoucherId = journalVoucherDetailModel.JournalVoucherId;
             journalVoucherDetail.ParticularLedgerId = journalVoucherDetailModel.ParticularLedgerId;
             journalVoucherDetail.TransactionTypeId = journalVoucherDetailModel.TransactionTypeId;
-            journalVoucherDetail.DebitAmountFc = journalVoucherDetailModel.DebitAmountFc;
-            journalVoucherDetail.DebitAmount = 0;
             journalVoucherDetail.CreditAmountFc = journalVoucherDetailModel.CreditAmountFc;
             journalVoucherDetail.CreditAmount = 0;
+            journalVoucherDetail.DebitAmountFc = journalVoucherDetailModel.DebitAmountFc;
+            journalVoucherDetail.DebitAmount = 0;
+
             journalVoucherDetail.Narration = journalVoucherDetailModel.Narration;
             journalVoucherDetail.SalesInvoiceId = journalVoucherDetailModel.SalesInvoiceId;
+            journalVoucherDetail.CreditNoteId = journalVoucherDetailModel.CreditNoteId;
             journalVoucherDetail.PurchaseInvoiceId = journalVoucherDetailModel.PurchaseInvoiceId;
             journalVoucherDetail.DebitNoteId = journalVoucherDetailModel.DebitNoteId;
-            journalVoucherDetail.CreditNoteId = journalVoucherDetailModel.CreditNoteId;
+
+            await Create(journalVoucherDetail);
+
+            journalVoucherDetailId = journalVoucherDetail.JournalVoucherDetId;
 
             if (journalVoucherDetailId != 0)
             {
                 await UpdateJournalVoucherDetailAmount(journalVoucherDetailId);
             }
-
-            await Create(journalVoucherDetail);
-
-            journalVoucherDetailId = journalVoucherDetail.JournalVoucherDetId;
 
             return journalVoucherDetailId; // returns.
         }
@@ -61,19 +64,18 @@ namespace ERP.Services.Accounts
 
             if (null != journalVoucherDetail)
             {
-
-                // assign values.
                 journalVoucherDetail.ParticularLedgerId = journalVoucherDetailModel.ParticularLedgerId;
                 journalVoucherDetail.TransactionTypeId = journalVoucherDetailModel.TransactionTypeId;
-                journalVoucherDetail.DebitAmountFc = journalVoucherDetailModel.DebitAmountFc;
-                journalVoucherDetail.DebitAmount = 0;
                 journalVoucherDetail.CreditAmountFc = journalVoucherDetailModel.CreditAmountFc;
                 journalVoucherDetail.CreditAmount = 0;
+                journalVoucherDetail.DebitAmountFc = journalVoucherDetailModel.DebitAmountFc;
+                journalVoucherDetail.DebitAmount = 0;
+
                 journalVoucherDetail.Narration = journalVoucherDetailModel.Narration;
                 journalVoucherDetail.SalesInvoiceId = journalVoucherDetailModel.SalesInvoiceId;
+                journalVoucherDetail.CreditNoteId = journalVoucherDetailModel.CreditNoteId;
                 journalVoucherDetail.PurchaseInvoiceId = journalVoucherDetailModel.PurchaseInvoiceId;
                 journalVoucherDetail.DebitNoteId = journalVoucherDetailModel.DebitNoteId;
-                journalVoucherDetail.CreditNoteId = journalVoucherDetailModel.CreditNoteId;
 
                 isUpdated = await Update(journalVoucherDetail);
             }
@@ -86,7 +88,7 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        public async Task<bool> UpdateJournalVoucherDetailAmount(int? journalVoucherDetailId)
+        public async Task<bool> UpdateJournalVoucherDetailAmount(int journalVoucherDetailId)
         {
             bool isUpdated = false;
 
@@ -102,10 +104,10 @@ namespace ERP.Services.Accounts
                 isUpdated = await Update(journalVoucherDetail);
             }
 
-            if (isUpdated != false)
-            {
-                await journalVoucher.UpdateJournalVoucherMasterAmount(journalVoucherDetail.JournalVoucherId);
-            }
+            //if (isUpdated != false)
+            //{
+            //    await journalVoucher.UpdateJournalVoucherMasterAmount(journalVoucherDetail.JournalVoucherId);
+            //}
 
             return isUpdated; // returns.
         }
@@ -130,11 +132,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-        public async Task<JournalVoucherDetailModel> GetJournalVoucherDetailById(int journalVoucherDetailId)
+        public async Task<JournalVoucherDetailModel> GetJournalVoucherDetailById(int journalVoucherDetailId, int journalVoucherId)
         {
             JournalVoucherDetailModel journalVoucherDetailModel = null;
 
-            IList<JournalVoucherDetailModel> journalVoucherModelDetailList = await GetJournalVoucherDetailList(journalVoucherDetailId, 0);
+            IList<JournalVoucherDetailModel> journalVoucherModelDetailList = await GetJournalVoucherDetailList(journalVoucherDetailId, journalVoucherId);
 
             if (null != journalVoucherModelDetailList && journalVoucherModelDetailList.Any())
             {
@@ -144,7 +146,7 @@ namespace ERP.Services.Accounts
             return journalVoucherDetailModel; // returns.
         }
 
-        public async Task<DataTableResultModel<JournalVoucherDetailModel>> GetJournalVoucherDetailByJournalVoucherId(int journalVoucherId)
+        public async Task<DataTableResultModel<JournalVoucherDetailModel>> GetJournalVoucherDetailByJournalVoucherId(int journalVoucherId, int addRow_Blank)
         {
             DataTableResultModel<JournalVoucherDetailModel> resultModel = new DataTableResultModel<JournalVoucherDetailModel>();
 
@@ -152,42 +154,87 @@ namespace ERP.Services.Accounts
 
             if (null != journalVoucherDetailModelList && journalVoucherDetailModelList.Any())
             {
+                if (addRow_Blank == 1)
+                {
+                    journalVoucherDetailModelList.Add(await AddRow_Blank(journalVoucherId));
+                }
+
                 resultModel = new DataTableResultModel<JournalVoucherDetailModel>();
                 resultModel.ResultList = journalVoucherDetailModelList;
                 resultModel.TotalResultCount = journalVoucherDetailModelList.Count();
             }
             else
             {
-                resultModel = new DataTableResultModel<JournalVoucherDetailModel>();
-                resultModel.ResultList = new List<JournalVoucherDetailModel>();
-                resultModel.TotalResultCount = 0;
-            }
+                journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
 
-            return resultModel; // returns.
-        }
+                if (addRow_Blank == 1)
+                {
+                    journalVoucherDetailModelList.Add(await AddRow_Blank(journalVoucherId));
+                }
 
-        public async Task<DataTableResultModel<JournalVoucherDetailModel>> GetJournalVoucherDetailList()
-        {
-            DataTableResultModel<JournalVoucherDetailModel> resultModel = new DataTableResultModel<JournalVoucherDetailModel>();
-
-            IList<JournalVoucherDetailModel> journalVoucherDetailModelList = await GetJournalVoucherDetailList(0, 0);
-
-            if (null != journalVoucherDetailModelList && journalVoucherDetailModelList.Any())
-            {
                 resultModel = new DataTableResultModel<JournalVoucherDetailModel>();
                 resultModel.ResultList = journalVoucherDetailModelList;
                 resultModel.TotalResultCount = journalVoucherDetailModelList.Count();
             }
 
+
             return resultModel; // returns.
         }
 
-        /// <summary>
-        /// get journal voucher List based on particularLedgerId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
+        public async Task<IList<JournalVoucherDetailModel>> GetJournalVoucherDetailByVoucherId(int journalVoucherId, int addRow_Blank)
+        {
+            IList<JournalVoucherDetailModel> journalVoucherDetailModelList = await GetJournalVoucherDetailList(0, journalVoucherId);
+
+            if (null != journalVoucherDetailModelList && journalVoucherDetailModelList.Any())
+            {
+                if (addRow_Blank == 1)
+                {
+                    journalVoucherDetailModelList.Add(await AddRow_Blank(journalVoucherId));
+                }
+            }
+            else
+            {
+                journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
+
+                if (addRow_Blank == 1)
+                {
+                    journalVoucherDetailModelList.Add(await AddRow_Blank(journalVoucherId));
+                }
+
+            }
+
+            return journalVoucherDetailModelList; // returns.
+        }
+
+
+
+        private async Task<JournalVoucherDetailModel> AddRow_Blank(int journalVoucherId)
+        {
+            JournalVoucherDetailModel journalVoucherDetailModel = new JournalVoucherDetailModel();
+
+            return await Task.Run(() =>
+            {
+                journalVoucherDetailModel.JournalVoucherId = journalVoucherId;
+                journalVoucherDetailModel.ParticularLedgerId = 0;
+                journalVoucherDetailModel.TransactionTypeId = 0;
+                journalVoucherDetailModel.CreditAmountFc = 0;
+                journalVoucherDetailModel.CreditAmount = 0;
+                journalVoucherDetailModel.DebitAmountFc = 0;
+                journalVoucherDetailModel.DebitAmount = 0;
+                journalVoucherDetailModel.Narration = "";
+                journalVoucherDetailModel.SalesInvoiceId = null;
+                journalVoucherDetailModel.PurchaseInvoiceId = null;
+                journalVoucherDetailModel.CreditNoteId = null;
+                journalVoucherDetailModel.DebitNoteId = null;
+                journalVoucherDetailModel.InvoiceNo = "";
+                journalVoucherDetailModel.InvoiceType = "";
+                journalVoucherDetailModel.ParticularLedgerName = "";
+                journalVoucherDetailModel.TransactionTypeName = "";
+
+                return journalVoucherDetailModel;
+            });
+        }
+
         public async Task<IList<JournalVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
         {
             IList<JournalVoucherDetailModel> journalVoucherDetailModelList = null;
@@ -202,7 +249,7 @@ namespace ERP.Services.Accounts
             // get records by query.
             List<Journalvoucherdetail> journalVoucherDetailList = await query.ToListAsync();
 
-             journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
+            journalVoucherDetailModelList = new List<JournalVoucherDetailModel>();
 
             if (null != journalVoucherDetailList && journalVoucherDetailList.Count > 0)
             {
@@ -220,7 +267,10 @@ namespace ERP.Services.Accounts
             IList<JournalVoucherDetailModel> journalVoucherDetailModelList = null;
 
             // create query.
-            IQueryable<Journalvoucherdetail> query = GetQueryByCondition(w => w.JournalVoucherDetId != 0);
+            IQueryable<Journalvoucherdetail> query = GetQueryByCondition(w => w.JournalVoucherDetId != 0)
+                                                    .Include(w => w.ParticularLedger)
+                                                    .Include(w => w.SalesInvoice).Include(w => w.CreditNote)
+                                                    .Include(w => w.PurchaseInvoice).Include(w => w.DebitNote);
 
             // apply filters.
             if (0 != journalVoucherDetailId)
@@ -267,7 +317,29 @@ namespace ERP.Services.Accounts
                 journalVoucherDetailModel.DebitNoteId = journalVoucherDetail.DebitNoteId;
 
                 //--####
-                //journalVoucherDetailModel.TransactionTypeName = null != journalVoucherDetail.UnitOfMeasurement ? journalVoucherDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                journalVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)journalVoucherDetail.TransactionTypeId).ToString());
+                journalVoucherDetailModel.ParticularLedgerName = null != journalVoucherDetail.ParticularLedger ? journalVoucherDetail.ParticularLedger.LedgerName : null;
+
+                if (journalVoucherDetailModel.SalesInvoiceId != 0 && journalVoucherDetailModel.SalesInvoiceId != null)
+                {
+                    journalVoucherDetailModel.InvoiceType = "Sales Invoice";
+                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.SalesInvoice.InvoiceNo;
+                }
+                else if (journalVoucherDetailModel.PurchaseInvoiceId != 0 && journalVoucherDetailModel.PurchaseInvoiceId != null)
+                {
+                    journalVoucherDetailModel.InvoiceType = "Purchase Invoice";
+                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.PurchaseInvoice.InvoiceNo;
+                }
+                else if (journalVoucherDetailModel.CreditNoteId != 0 && journalVoucherDetailModel.CreditNoteId != null)
+                {
+                    journalVoucherDetailModel.InvoiceType = "Credit Note";
+                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.CreditNote.CreditNoteNo;
+                }
+                else if (journalVoucherDetailModel.DebitNoteId != 0 && journalVoucherDetailModel.DebitNoteId != null)
+                {
+                    journalVoucherDetailModel.InvoiceType = "Debit Note";
+                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.DebitNote.DebitNoteNo;
+                }
 
                 return journalVoucherDetailModel;
             });

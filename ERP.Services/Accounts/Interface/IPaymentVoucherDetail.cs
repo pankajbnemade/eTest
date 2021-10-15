@@ -12,7 +12,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdatePaymentVoucherDetail(PaymentVoucherDetailModel paymentVoucherDetailModel);
 
-        Task<bool> UpdatePaymentVoucherDetailAmount(int? paymentVoucherDetailId);
+        Task<bool> UpdatePaymentVoucherDetailAmount(int paymentVoucherDetailId);
 
         Task<bool> DeletePaymentVoucherDetail(int paymentVoucherDetailId);
 
