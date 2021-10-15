@@ -15,14 +15,19 @@
                     </button>
                     @if (ViewBag.IsApprovalRequestVisible == true)
                     {
-        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.ApprovalRequested');">
-            <i class="fas fa-download"></i> Request
-        </button>}
+                <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.ApprovalRequested');">
+                    <i class="fas fa-download"></i> Request
+                </button>}
                     @if (ViewBag.IsApproveVisible == true)
                     {
-        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Approved');">
-            <i class="far fa-calendar-check"></i> Post
-        </button>}
+                <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Approved');">
+                    <i class="far fa-calendar-check"></i> Approve
+                </button>}
+                    @if (ViewBag.IsCancelVisible == true)
+                    {
+                <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Cancelled');">
+                    <i class="far fa-times-circle"></i> Cancel
+                </button>}
                     <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintCreditNote('@ViewBag.CreditNoteId');">
                         <i class="fas fa-file-pdf"></i> Print
                     </button>

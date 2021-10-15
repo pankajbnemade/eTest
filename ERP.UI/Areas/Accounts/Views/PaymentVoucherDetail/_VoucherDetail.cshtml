@@ -34,7 +34,7 @@
                             <td style="width:20px;">
                                 @if (Model[item].PaymentVoucherDetId != 0)
                                 {
-                                    <button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, @Model[item].PaymentVoucherDetId)"><span class="fa fa-trash-alt"></span></button>
+                                    <button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, @Model[item].PaymentVoucherDetId)"><i class="fa fa-trash-alt"></i></button>
                                 }
                                 @Html.HiddenFor(modelItem => Model[item].PaymentVoucherDetId)
                                 @Html.HiddenFor(modelItem => Model[item].PaymentVoucherId)
@@ -44,9 +44,12 @@
                             <td>
                                 @if (Model[item].TransactionTypeId == 2)
                                 {
-                                    @Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId,
-                                                                       new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select",
-                                                                       new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                    @*@Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId,
+                                        new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select",
+                                        new { @class = "form-control form-control-sm", @readonly = "readonly" })*@
+
+                                    @Html.DisplayFor(modelItem => Model[item].ParticularLedgerName)
+                                    @Html.HiddenFor(modelItem => Model[item].ParticularLedgerId)
                                 }
                                 else
                                 {
@@ -61,7 +64,7 @@
                                 @if (Model[item].PaymentVoucherDetId != 0)
                                 {
                                     @*@Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
-            "Select", new { @class = "form-control form-control-sm", @readonly = "readonly" })*@
+                                        "Select", new { @class = "form-control form-control-sm", @readonly = "readonly" })*@
 
                                     @Html.DisplayFor(modelItem => Model[item].TransactionTypeName)
                                     @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
@@ -142,13 +145,14 @@
     //// success form
     function SuccessVoucherDetail(data) {
         if (data.Result.Status) {
-           /* $('#modal-voucher').modal('hide');*/
             fnSuccessNotify('Record saved sucessfully.');
 
             var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + data.Result.Data + '&addRow_Blank=0';
 
             $('#voucherdetail').empty();
             $('#voucherdetail').load(tabUrl);
+
+            fnShowHideMasterButtons();
         }
         else {
             fnDangerNotify('Error occured while processing request.');
@@ -161,38 +165,9 @@
 
         $('#voucherdetail').empty();
         $('#voucherdetail').load(tabUrl);
+
+        
     }
-
-    @*//account ledger change.
-    $('#add-new-voucher-dtl').click(function () {
-        var tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail")?paymentVoucherId=' + paymentVoucherId + '&addRow_Blank=1';
-
-        $('#voucherdetail').empty();
-        $('#voucherdetail').load(tabUrl);
-    });*@
-
-
-    //////account ledger change.
-    //$('#add-new-voucher-dtl').click(function () {
-    //    //alert('add-new-voucher-dtl');
-
-    //    var $tableBody = $('#paymentVoucherDetailGrid').find("tbody"),
-    //        $trLast = $tableBody.find("tr:last"),
-    //        $trNew = $trLast.clone();
-
-    //    $trNew.find('select[id*=ParticularLedgerId]').val('');
-    //    $trNew.find('select[id*=TransactionTypeId]').val('');
-    //    $trNew.find('input[id*=AmountFc]').val('');
-    //    $trNew.find('input[id*=Narration]').val('');
-    //    $trNew.find('input[id*=PaymentVoucherDetId]').val(0);
-    //    $trNew.find('input[id*=DebitNoteId]').val(0);
-    //    $trNew.find('input[id*=PurchaseInvoiceId]').val(0);
-    //    $trNew.find('label[id*=InvoiceType]').val('');
-    //    $trNew.find('label[id*=InvoiceNo]').val('');
-
-    //    $trLast.after($trNew).show();
-    //});
-
 
     $(document).ready(function () {
 

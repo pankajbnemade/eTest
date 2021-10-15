@@ -47,11 +47,11 @@
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         var control = '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditInvoiceDetail(' + full.SalesInvoiceDetId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteInvoiceDetail(this, ' + full.SalesInvoiceDetId + ')"><span class="fa fa-trash-alt"></span></button>';
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditInvoiceDetail(' + full.SalesInvoiceDetId + ')"><i class="far fa-edit"></i></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteInvoiceDetail(this, ' + full.SalesInvoiceDetId + ')"><i class="fa fa-trash-alt"></i></button>';
 
                         if (full.IsTaxDetVisible == true) {
-                            control = control + '<button type="button" class="border-0 rounded-0" title="Tax Details" onclick="javascript: fnInvoiceTaxDetail(' + full.SalesInvoiceDetId + ')"><span class="fa fa-info-circle"></span></button>';
+                            control = control + '<button type="button" class="border-0 rounded-0" title="Tax Details" onclick="javascript: fnInvoiceTaxDetail(' + full.SalesInvoiceDetId + ')"><i class="fa fa-info-circle"></i></button>';
                         }
 
                         control = control + '</div>';

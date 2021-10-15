@@ -249,7 +249,7 @@ namespace ERP.Services.Accounts
 
                 purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
 
-                if (purchaseInvoice.StatusId == (int)DocumentStatus.Approved || purchaseInvoice.StatusId == (int)DocumentStatus.ApprovalRequested)
+                if (purchaseInvoice.StatusId == (int)DocumentStatus.Approved || purchaseInvoice.StatusId == (int)DocumentStatus.ApprovalRequested || purchaseInvoice.StatusId == (int)DocumentStatus.Cancelled)
                 {
                     purchaseInvoice.StatusId = (int)DocumentStatus.Inprocess;
                 }
@@ -344,9 +344,9 @@ namespace ERP.Services.Accounts
                         InvoiceAmount = purchaseInvoice.NetAmount,
                         OutstandingAmount = purchaseInvoice.NetAmount,
                         PurchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId,
-                        SalesInvoiceId = 0,
-                        CreditNoteId = 0,
-                        DebitNoteId = 0
+                        SalesInvoiceId = null,
+                        CreditNoteId = null,
+                        DebitNoteId = null
                     });
                 }
             }

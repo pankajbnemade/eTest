@@ -99,10 +99,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
+            int paymentVoucherId = 0;
+
             if (ModelState.IsValid)
             {
                 foreach (PaymentVoucherDetailModel paymentVoucherDetailModel in paymentVoucherDetailModelList)
                 {
+                    paymentVoucherId = paymentVoucherDetailModel.PaymentVoucherId;
+
                     if (paymentVoucherDetailModel.PaymentVoucherDetId > 0)
                     {
                         // update record.
@@ -121,7 +125,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
                             data.Result.Data = paymentVoucherDetailModel.PaymentVoucherId;
                         }
                     }
+
                 }
+
+                await _paymentVoucher.UpdatePaymentVoucherMasterAmount(paymentVoucherId);
+
             }
 
             return Json(data);
@@ -133,12 +141,16 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
+            int paymentVoucherId = 0;
+
             if (ModelState.IsValid)
             {
                 PaymentVoucherDetailModel paymentVoucherDetailModel = null;
 
                 foreach (PaymentVoucherOutstandingInvoiceModel paymentVoucherOutstandingInvoiceModel in paymentVoucherOutstandingInvoiceModelList)
                 {
+                    paymentVoucherId = paymentVoucherOutstandingInvoiceModel.PaymentVoucherId;
+
                     paymentVoucherDetailModel = new PaymentVoucherDetailModel
                     {
                         PaymentVoucherDetId = 0,
@@ -171,6 +183,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     }
 
                 }
+
+                await _paymentVoucher.UpdatePaymentVoucherMasterAmount(paymentVoucherId);
 
             }
 

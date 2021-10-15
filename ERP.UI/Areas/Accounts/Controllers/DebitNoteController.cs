@@ -254,8 +254,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
             DebitNoteModel debitNoteModel = await _debitNote.GetDebitNoteById(debitNoteId);
 
             ViewBag.IsTaxMasterVisible = debitNoteModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
-            ViewBag.IsApprovalRequestVisible = debitNoteModel.StatusId == 1 || debitNoteModel.StatusId == 3 ? true : false;
-            ViewBag.IsApproveVisible = debitNoteModel.StatusId == 2 ? true : false;
+            //ViewBag.IsApprovalRequestVisible = debitNoteModel.StatusId == 1 || debitNoteModel.StatusId == 3 ? true : false;
+            //ViewBag.IsApproveVisible = debitNoteModel.StatusId == 2 ? true : false;
+
+            ViewBag.IsApprovalRequestVisible = debitNoteModel.StatusId == (int)DocumentStatus.Inprocess || debitNoteModel.StatusId == (int)DocumentStatus.ApprovalRejected ? true : false;
+            ViewBag.IsApproveVisible = debitNoteModel.StatusId == (int)DocumentStatus.ApprovalRequested ? true : false;
+            ViewBag.IsCancelVisible = debitNoteModel.StatusId != (int)DocumentStatus.Cancelled ? true : false;
 
             return await Task.Run(() =>
             {

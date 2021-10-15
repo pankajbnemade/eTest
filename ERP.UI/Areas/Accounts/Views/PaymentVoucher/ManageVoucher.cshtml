@@ -1,41 +1,19 @@
-﻿@using ERP.Models.Accounts.Enums;
-
+﻿
 @{ ViewBag.Title = "Payment Voucher"; }
 
-<section class="content-header">
+<section class="content-header p-1">
     <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row">
             <div class="col-sm-6">
                 <h5>@ViewBag.Title</h5>
             </div>
             <div class="col-sm-6">
-                <div class="float-right">
-                    <button type="button" class="btn btn-primary" title="Edit" onclick="javascript: fnEditVoucherMaster('@ViewBag.PaymentVoucherId');">
-                        <i class="far fa-edit"></i>  Edit
-                    </button>
-                    @if (ViewBag.IsApprovalRequestVisible == true)
-                    {
-        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusVoucherMaster('@ViewBag.PaymentVoucherId','@DocumentStatus.ApprovalRequested');">
-            <i class="fas fa-download"></i> Request
-        </button>}
-                    @if (ViewBag.IsApproveVisible == true)
-                    {
-        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusVoucherMaster('@ViewBag.PaymentVoucherId','@DocumentStatus.Approved');">
-            <i class="far fa-calendar-check"></i> Post
-        </button>}
-                    <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintVoucher('@ViewBag.PaymentVoucherId');">
-                        <i class="fas fa-file-pdf"></i> Print
-                    </button>
-                    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">
-                        <i class="fas fa-arrow-left"></i>  Back
-                    </button>
-
-                </div>
+                <div id="masterbuttons"></div>
             </div>
         </div>
     </div>
 </section>
-<section class="content">
+<section class="content p-1">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
@@ -67,26 +45,27 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        fnShowHideMasterButtons();
+
         $('#tab-list li:first-child a').tab('show');
     });
 
-    // back to index voucher.
-    function fnBackToIndex() {
-        window.location.href = '@Url.Action("Index", "PaymentVoucher")';
-    }
-
-    // back to print voucher.
-    function fnPrintVoucher() {
-        alert("Print");
+    function fnShowHideMasterButtons() {
+        var tabUrl = '@Url.Action("MasterButtons", "PaymentVoucher")?paymentVoucherId=' + '@ViewBag.PaymentVoucherId';
+        /*console.log(tabUrl);*/
+        $('#masterbuttons').empty();
+        $('#masterbuttons').load(tabUrl);
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
         switch ($(e.target).attr('aria-controls')) {
             case 'vouchermaster':
+                $('#btn-edit-master').show();
                 tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher", new { paymentVoucherId = ViewBag.PaymentVoucherId })';
                 break;
             case 'voucherdetail':
+                $('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("VoucherDetail", "PaymentVoucherDetail", new { paymentVoucherId = ViewBag.PaymentVoucherId, addRow_Blank=0 })';
                 break;
             default:
@@ -95,27 +74,5 @@
         $('#' + tabPanel).empty();
         $('#' + tabPanel).load(tabUrl);
     });
-
-    // edit voucher master.
-    function fnUpdateStatusVoucherMaster(paymentVoucherId, action) {
-        var model = {
-            paymentVoucherId: paymentVoucherId,
-            action: action
-        };
-        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusVoucherMaster", "PaymentVoucher")', 'html', model,
-        function (data) {
-            if (data.Result.Status) {
-                fnSuccessNotify('Status updated sucessfully.');
-                var tabUrl = '@Url.Action("ManageVoucher", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
-                window.location.href = tabUrl;
-                return false;
-            }
-            else {
-                fnDangerNotify(data.Result.Data);
-                return false;
-            }
-        }, null, true, null, false);
-    }
-
 
 </script>

@@ -19,6 +19,7 @@ namespace ERP.Services.Accounts
     public class PaymentVoucherService : Repository<Paymentvoucher>, IPaymentVoucher
     {
         ICommon common;
+
         public PaymentVoucherService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
         {
             common = _common;
@@ -148,14 +149,17 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-        public async Task<bool> UpdatePaymentVoucherMasterAmount(int? paymentVoucherId)
+        public async Task<bool> UpdatePaymentVoucherMasterAmount(int paymentVoucherId)
         {
             bool isUpdated = false;
 
-            // get record.
-            Paymentvoucher paymentVoucher = await GetQueryByCondition(w => w.PaymentVoucherId == paymentVoucherId)
-                                                    .Include(w => w.Paymentvoucherdetails)
-                                                    .Include(w => w.Currency).FirstOrDefaultAsync();
+            Paymentvoucher paymentVoucher = null;
+
+            //////// get record.
+
+            paymentVoucher = await GetQueryByCondition(w => w.PaymentVoucherId == paymentVoucherId)
+                                                       .Include(w => w.Paymentvoucherdetails)
+                                                       .Include(w => w.Currency).FirstOrDefaultAsync();
 
             if (null != paymentVoucher)
             {
@@ -164,7 +168,7 @@ namespace ERP.Services.Accounts
 
                 paymentVoucher.AmountFcinWord = await common.AmountInWord_Million(paymentVoucher.AmountFc.ToString(), paymentVoucher.Currency.CurrencyCode, paymentVoucher.Currency.Denomination);
 
-                if (paymentVoucher.StatusId == (int)DocumentStatus.Approved || paymentVoucher.StatusId == (int)DocumentStatus.ApprovalRequested)
+                if (paymentVoucher.StatusId == (int)DocumentStatus.Approved || paymentVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || paymentVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {
                     paymentVoucher.StatusId = (int)DocumentStatus.Inprocess;
                 }
@@ -216,16 +220,13 @@ namespace ERP.Services.Accounts
         {
             DataTableResultModel<PaymentVoucherModel> resultModel = new DataTableResultModel<PaymentVoucherModel>();
 
-            IQueryable<Paymentvoucher> query = GetQueryByCondition(w => w.PaymentVoucherId != 0);
+            IQueryable<Paymentvoucher> query = GetQueryByCondition(w => w.PaymentVoucherId != 0)
+                                                .Include(w => w.AccountLedger).Include(w => w.Currency)
+                                                .Include(w => w.PreparedByUser).Include(w => w.Status); ;
 
             if (!string.IsNullOrEmpty(searchFilterModel.VoucherNo))
             {
                 query = query.Where(w => w.VoucherNo.Contains(searchFilterModel.VoucherNo));
-            }
-
-            if (null != searchFilterModel.LedgerId)
-            {
-                query = query.Where(w => w.AccountLedgerId == searchFilterModel.LedgerId);
             }
 
             if (null != searchFilterModel.FromDate)
@@ -237,32 +238,51 @@ namespace ERP.Services.Accounts
             {
                 query = query.Where(w => w.VoucherDate <= searchFilterModel.ToDate);
             }
+            
+            if (!string.IsNullOrEmpty(searchFilterModel.TypeCorB))
+            {
+                query = query.Where(w => w.TypeCorB == searchFilterModel.TypeCorB);
+            }
+
+            if (null != searchFilterModel.LedgerId)
+            {
+                query = query.Where(w => w.AccountLedgerId == searchFilterModel.LedgerId);
+            }
+
+
+            if (!string.IsNullOrEmpty(searchFilterModel.ChequeNo))
+            {
+                query = query.Where(w => w.ChequeNo.Contains(searchFilterModel.ChequeNo));
+            }
+
 
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
 
-            //sorting
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDir))
-            {
-                query = query.OrderBy($"{sortBy} {sortDir}");
-            }
-
+            
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
             {
                 query = query.Where(w => w.VoucherNo.ToLower().Contains(searchBy.ToLower()));
             }
 
-
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
+
             resultModel.ResultList = await query.Select(s => new PaymentVoucherModel
             {
                 PaymentVoucherId = s.PaymentVoucherId,
                 VoucherNo = s.VoucherNo,
                 VoucherDate = s.VoucherDate,
                 AmountFc = s.AmountFc,
-            }).ToListAsync();
+                TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(s.TypeCorB),
+                AccountLedgerName = s.AccountLedger.LedgerName,
+                ChequeNo = s.ChequeNo,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.Currency.PreparedByUser.UserName,
+                StatusName = s.Status.StatusName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
+
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
 

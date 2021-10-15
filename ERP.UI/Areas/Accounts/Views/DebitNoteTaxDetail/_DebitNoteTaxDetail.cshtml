@@ -1,9 +1,9 @@
 ﻿<div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Debit Note Tax Detail</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+            <h5 class="modal-title">Debit Note Tax Detail</h5>
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="modal-body">
@@ -58,8 +58,8 @@
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditDebitNoteTaxDetail(' + full.DebitNoteDetTaxId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteTaxDetail(this, ' + full.DebitNoteDetTaxId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditDebitNoteTaxDetail(' + full.DebitNoteDetTaxId + ')"><i class="far fa-edit"></i></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteDebitNoteTaxDetail(this, ' + full.DebitNoteDetTaxId + ')"><i class="fa fa-trash-alt"></i></button>' +
                             '</div>';
                     }
                 },

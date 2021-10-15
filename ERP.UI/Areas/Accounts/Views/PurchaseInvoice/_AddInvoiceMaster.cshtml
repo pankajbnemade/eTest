@@ -5,12 +5,12 @@
         <div class="modal-header">
             @if (Model.PurchaseInvoiceId > 0)
             {
-<h4 class="modal-title">Edit Invoice</h4> }
+<h5 class="modal-title">Edit Invoice</h5> }
 else
 {
-<h4 class="modal-title">Add Invoice</h4>}
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+<h5 class="modal-title">Add Invoice</h5>}
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         <form id="frmInvoiceMaster" class="width100" method="post"
@@ -194,7 +194,7 @@ else
     });
 
     // customer change.
-    $(document).on('change', '#SupplierLedgerId', function () {
+    $(document).off('change').on('change', '#SupplierLedgerId', function () {
         GetBillToAddressByLedgerId(this.value);
     });
 

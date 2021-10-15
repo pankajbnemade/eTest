@@ -5,13 +5,13 @@
         <div class="modal-header">
             @if (Model.CreditNoteDetId > 0)
             {
-<h4 class="modal-title">Edit Credit Note Detail</h4> }
+<h5 class="modal-title">Edit Credit Note Detail</h5> }
 else
 {
-<h4 class="modal-title">Add Credit Note Detail</h4>}
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+<h5 class="modal-title">Add Credit Note Detail</h5>}
+        <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
         </div>
         <form id="frmCreditNoteDetail" class="width100" method="post"
               asp-action="SaveCreditNoteDetail" asp-controller="CreditNoteDetail" asp-area="Accounts"

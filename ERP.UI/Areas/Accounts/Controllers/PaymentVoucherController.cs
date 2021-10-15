@@ -39,6 +39,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
             ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             return await Task.Run(() =>
@@ -71,14 +72,37 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.PaymentVoucherId = paymentVoucherId;
 
-            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+            //PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
 
-            ViewBag.IsApprovalRequestVisible = paymentVoucherModel.StatusId == 1 || paymentVoucherModel.StatusId == 3 ? true : false;
-            ViewBag.IsApproveVisible = paymentVoucherModel.StatusId == 2 ? true : false;
+            //ViewBag.IsApprovalRequestVisible = paymentVoucherModel.StatusId == 1 || paymentVoucherModel.StatusId == 3 ? true : false;
+            //ViewBag.IsApproveVisible = paymentVoucherModel.StatusId == 2 ? true : false;
 
             return await Task.Run(() =>
             {
                 return View();
+            });
+        }
+
+        public async Task<IActionResult> MasterButtons(int paymentVoucherId)
+        {
+            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+            PaymentVoucherMasterButtonsModel paymentVoucherMasterButtonsModel = null;
+
+            paymentVoucherMasterButtonsModel = new PaymentVoucherMasterButtonsModel()
+            {
+                PaymentVoucherId = paymentVoucherId,
+                IsApprovalRequestVisible = paymentVoucherModel.StatusId == (int)DocumentStatus.Inprocess || paymentVoucherModel.StatusId == (int)DocumentStatus.ApprovalRejected ? true : false,
+                IsApproveVisible = paymentVoucherModel.StatusId == (int)DocumentStatus.ApprovalRequested ? true : false,
+                IsCancelVisible = paymentVoucherModel.StatusId != (int)DocumentStatus.Cancelled ? true : false,
+            };
+
+            //ViewBag.IsApprovalRequestVisible = paymentVoucherModel.StatusId == 1 || paymentVoucherModel.StatusId == 3 ? true : false;
+            //ViewBag.IsApproveVisible = paymentVoucherModel.StatusId == 2 ? true : false;
+
+            return await Task.Run(() =>
+            {
+                return PartialView("_MasterButtons", paymentVoucherMasterButtonsModel);
             });
         }
 
@@ -186,10 +210,21 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (paymentVoucherId > 0)
             {
-                if (true == await _paymentVoucher.UpdateStatusPaymentVoucher(paymentVoucherId, statusId))
+                PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+                if (paymentVoucherModel.ChequeAmountFc != paymentVoucherModel.AmountFc
+                    && (statusId == (int)DocumentStatus.Approved || statusId == (int)DocumentStatus.ApprovalRequested)
+                    )
                 {
-                    data.Result.Status = true;
-                    data.Result.Data = paymentVoucherId;
+                    data.Result.Data = "Cheque Amount FC != Amount FC. Please update particular details Amount FC Or change cheque Amount FC";
+                }
+                else
+                {
+                    if (true == await _paymentVoucher.UpdateStatusPaymentVoucher(paymentVoucherId, statusId))
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = paymentVoucherId;
+                    }
                 }
             }
 

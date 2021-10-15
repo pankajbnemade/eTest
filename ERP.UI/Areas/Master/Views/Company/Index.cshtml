@@ -72,8 +72,8 @@ $(document).ready(function () {
             {
                 "render": function (data, type, full, meta) {
                     return '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCompany(' + full.CompanyId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCompany(this, ' + full.CompanyId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCompany(' + full.CompanyId + ')"><i class="far fa-edit"></i></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCompany(this, ' + full.CompanyId + ')"><i class="fa fa-trash-alt"></i></button>' +
                         '</div>';
                 }, "orderable": false
             },

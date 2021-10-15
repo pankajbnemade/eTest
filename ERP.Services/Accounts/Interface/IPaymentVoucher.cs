@@ -15,7 +15,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> DeletePaymentVoucher(int paymentVoucherId);
 
-        Task<bool> UpdatePaymentVoucherMasterAmount(int? paymentVoucherId);
+        Task<bool> UpdatePaymentVoucherMasterAmount(int paymentVoucherId);
 
          Task<bool> UpdateStatusPaymentVoucher(int paymentVoucherId, int action);
 

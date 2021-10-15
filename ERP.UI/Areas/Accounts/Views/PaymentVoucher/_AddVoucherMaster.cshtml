@@ -5,13 +5,13 @@
         <div class="modal-header">
             @if (Model.PaymentVoucherId > 0)
             {
-<div class="modal-title">Edit Voucher</div> }
+<h5 class="modal-title">Edit Voucher</h5> }
 else
 {
-<div class="modal-title">Add Voucher</div>}
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+<h5 class="modal-title">Add Voucher</h5>}
+        <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
         </div>
         <form id="frmVoucherMaster" class="width100" method="post"
               asp-action="SaveVoucherMaster" asp-controller="PaymentVoucher" asp-area="Accounts"
@@ -143,7 +143,7 @@ else
                     <div class="col-sm-12">
                         <div class="form-group">
                             @Html.LabelFor(model => model.Narration)
-                            @Html.TextBoxFor(model => model.Narration, new { @class = "form-control form-control-sm col-sm-12" })
+                            @Html.TextAreaFor(model => model.Narration, new { @class = "form-control form-control-sm col-sm-12" })
                             @Html.ValidationMessageFor(model => model.Narration, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -305,20 +305,8 @@ else
     function SuccessVoucherMaster(data) {
         if (data.Result.Status) {
             $('#modal-voucher').modal('hide');
+
             fnSuccessNotify('Record saved sucessfully.');
-
-            @*if (@Model.PaymentVoucherId > 0)
-            {
-                var tabUrl = '@Url.Action("ViewVoucherMaster", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
-
-                $('#vouchermaster').empty();
-                $('#vouchermaster').load(tabUrl);
-            }
-            else
-            {
-                var tabUrl = '@Url.Action("ManageVoucher", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
-                window.location.href = tabUrl;
-            }*@
 
             var tabUrl = '@Url.Action("ManageVoucher", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
             window.location.href = tabUrl;

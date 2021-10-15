@@ -3,11 +3,10 @@
 
 <section class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-9">
-                <h1>Payment Voucher List</h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
             </div>
-            <div class="col-3"></div>
         </div>
     </div>
 </section>
@@ -15,46 +14,54 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body" id="searchFilterCriteria">
+                <div class="card m-0">
+                    <div class="card-body p-2" id="searchFilterCriteria">
                         <div class="row">
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
                                     @Html.LabelFor(model => model.VoucherNo, new { @class = "" })
                                     @Html.TextBoxFor(model => model.VoucherNo, new { @class = "form-control form-control-sm" })
                                     @Html.ValidationMessageFor(model => model.VoucherNo)
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.LedgerId, new { @class = "" })
-                                        @Html.DropDownListFor(model => model.LedgerId, new SelectList(ViewBag.LedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-                                        @Html.ValidationMessageFor(model => model.LedgerId)
-                                    </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.FromDate)
+                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                    @Html.ValidationMessageFor(model => model.FromDate)
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.FromDate)
-                                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                        @Html.ValidationMessageFor(model => model.FromDate)
-                                    </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ToDate)
+                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                    @Html.ValidationMessageFor(model => model.ToDate)
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-3">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.ToDate)
-                                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", @placeholder = "DD/MMM/YYYY" })
-                                        @Html.ValidationMessageFor(model => model.ToDate)
-                                    </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.TypeCorB, new { @class = "required" })
+                                    @Html.DropDownListFor(model => model.TypeCorB, new SelectList(ViewBag.TypeCorBList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.TypeCorB, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.LedgerId, new { @class = "" })
+                                    @Html.DropDownListFor(model => model.LedgerId, new SelectList(ViewBag.LedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.LedgerId)
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ChequeNo, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.ChequeNo, new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.ChequeNo)
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 text-right">
+                            <div class="col-sm-12 pt-2 text-right">
                                 <button class="btn btn-primary" type="button" onclick="javascript: fnSearchVoucher();">
                                     <i class="fas fa-search"></i> Search
                                 </button>
@@ -75,11 +82,17 @@
                 <table id="paymentVoucherGrid" class="table table-bordered table-striped w-100">
                     <thead>
                         <tr class="table-header">
-                            <th class="no-sort">Action</th>
+                            <th class="no-sort"></th>
                             <th>PaymentVoucherId</th>
                             <th>Voucher No</th>
                             <th>Voucher Date</th>
+                            <th class="no-sort">Cash/Bank</th>
+                            <th>Account</th>
+                            <th>Cheque/Trans. No</th>
+                            <th>Currency</th>
                             <th>Amount FC</th>
+                            <th>Status</th>
+                            <th>Prepared By</th>
                         </tr>
                     </thead>
                 </table>
@@ -95,8 +108,10 @@
     $(document).ready(function () {
         $("#paymentVoucherGrid").DataTable({
             "processing": true,
+            "scrollX": true,
             "dom": "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",//'lrtip',
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
             "serverSide": true,
             "ajax": {
                 "url": "@Url.Action("GetPaymentVoucherList", "PaymentVoucher")",
@@ -106,9 +121,11 @@
                     searchFilter: function () {
                         var searchFilterModel = {
                             VoucherNo: $('#VoucherNo').val(),
-                            LedgerId: $('#LedgerId').val(),
                             FromDate: $('#FromDate').val(),
                             ToDate: $('#ToDate').val(),
+                            TypeCorB: $('#TypeCorB').val(),
+                            LedgerId: $('#LedgerId').val(),
+                            ChequeNo: $('#ChequeNo').val(),
                         };
 
                         return JSON.stringify(searchFilterModel);
@@ -117,12 +134,11 @@
             },
             "columns": [
                 {
-                    "orderable": false ,
-                    "width": "8%",
+                    "orderable": false,
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditVoucherMaster(' + full.PaymentVoucherId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteVoucherMaster(this, ' + full.PaymentVoucherId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditVoucherMaster(' + full.PaymentVoucherId + ')"><i class="far fa-edit"></i></button>' +
+                            /*'<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteVoucherMaster(this, ' + full.PaymentVoucherId + ')"><i class="fa fa-trash-alt"></i></button>' +*/
                             '</div>';
                     }
                 },
@@ -134,7 +150,13 @@
                         return moment(dt).format("DD/MMM/YYYY");
                     }
                 },
-                { "data": "AmountFc", "name": "AmountFc", render: $.fn.dataTable.render.number(',', '.', 2, '') }
+                { "data": "TypeCorBName", "name": "TypeCorBName", "orderable": false },
+                { "data": "AccountLedgerName", "name": "AccountLedgerName" },
+                { "data": "ChequeNo", "name": "ChequeNo" },
+                { "data": "CurrencyCode", "name": "CurrencyCode" },
+                { "data": "AmountFc", "name": "AmountFc", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "StatusName", "name": "StatusName" },
+                { "data": "PreparedByName", "name": "PreparedByName" }
             ],
         });
 

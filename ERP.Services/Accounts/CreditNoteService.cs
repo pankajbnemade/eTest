@@ -258,7 +258,7 @@ namespace ERP.Services.Accounts
 
                 creditNote.NetAmountFcinWord = await common.AmountInWord_Million(creditNote.NetAmountFc.ToString(), creditNote.Currency.CurrencyCode, creditNote.Currency.Denomination);
 
-                if (creditNote.StatusId == (int)DocumentStatus.Approved || creditNote.StatusId == (int)DocumentStatus.ApprovalRequested)
+                if (creditNote.StatusId == (int)DocumentStatus.Approved || creditNote.StatusId == (int)DocumentStatus.ApprovalRequested || creditNote.StatusId == (int)DocumentStatus.Cancelled)
                 {
                     creditNote.StatusId = (int)DocumentStatus.Inprocess;
                 }
@@ -353,9 +353,9 @@ namespace ERP.Services.Accounts
                         InvoiceAmount = creditNote.NetAmount,
                         OutstandingAmount = creditNote.NetAmount,
                         CreditNoteId = creditNote.CreditNoteId,
-                        SalesInvoiceId = 0,
-                        PurchaseInvoiceId = 0,
-                        DebitNoteId = 0
+                        SalesInvoiceId = null,
+                        PurchaseInvoiceId = null,
+                        DebitNoteId = null
                     });
                 }
             }

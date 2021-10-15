@@ -8,9 +8,9 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Map Invoice</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title">Map Outstanding Invoice</h5>
+                <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
 
@@ -102,6 +102,8 @@
 
             $('#voucherdetail').empty();
             $('#voucherdetail').load(tabUrl);
+
+            fnShowHideMasterButtons();
         }
         else {
             fnDangerNotify('Error occured while processing request.');

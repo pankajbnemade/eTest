@@ -253,8 +253,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             PurchaseInvoiceModel purchaseInvoiceModel = await _purchaseInvoice.GetPurchaseInvoiceById(purchaseInvoiceId);
 
-            ViewBag.IsApprovalRequestVisible = purchaseInvoiceModel.StatusId == 1 || purchaseInvoiceModel.StatusId == 3 ? true : false;
-            ViewBag.IsApproveVisible = purchaseInvoiceModel.StatusId == 2 ? true : false;
+            ViewBag.IsTaxMasterVisible = purchaseInvoiceModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
+            //ViewBag.IsApprovalRequestVisible = purchaseInvoiceModel.StatusId == 1 || purchaseInvoiceModel.StatusId == 3 ? true : false;
+            //ViewBag.IsApproveVisible = purchaseInvoiceModel.StatusId == 2 ? true : false;
+
+            ViewBag.IsApprovalRequestVisible = purchaseInvoiceModel.StatusId == (int)DocumentStatus.Inprocess || purchaseInvoiceModel.StatusId == (int)DocumentStatus.ApprovalRejected ? true : false;
+            ViewBag.IsApproveVisible = purchaseInvoiceModel.StatusId == (int)DocumentStatus.ApprovalRequested ? true : false;
+            ViewBag.IsCancelVisible = purchaseInvoiceModel.StatusId != (int)DocumentStatus.Cancelled ? true : false;
 
             return await Task.Run(() =>
             {

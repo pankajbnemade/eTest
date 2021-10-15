@@ -254,8 +254,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
             CreditNoteModel creditNoteModel = await _creditNote.GetCreditNoteById(creditNoteId);
 
             ViewBag.IsTaxMasterVisible = creditNoteModel.TaxModelType == TaxModelType.SubTotal.ToString() ? true : false;
-            ViewBag.IsApprovalRequestVisible = creditNoteModel.StatusId == 1 || creditNoteModel.StatusId == 3 ? true : false;
-            ViewBag.IsApproveVisible = creditNoteModel.StatusId == 2 ? true : false;
+            //ViewBag.IsApprovalRequestVisible = creditNoteModel.StatusId == 1 || creditNoteModel.StatusId == 3 ? true : false;
+            //ViewBag.IsApproveVisible = creditNoteModel.StatusId == 2 ? true : false;
+
+            ViewBag.IsApprovalRequestVisible = creditNoteModel.StatusId == (int)DocumentStatus.Inprocess || creditNoteModel.StatusId == (int)DocumentStatus.ApprovalRejected ? true : false;
+            ViewBag.IsApproveVisible = creditNoteModel.StatusId == (int)DocumentStatus.ApprovalRequested ? true : false;
+            ViewBag.IsCancelVisible = creditNoteModel.StatusId != (int)DocumentStatus.Cancelled ? true : false;
 
             return await Task.Run(() =>
             {

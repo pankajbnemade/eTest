@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
-    public partial class ReceiptVoucherDetailModel
+    public partial class PaymentVoucherDetailModel
     {
-        public int ReceiptVoucherDetId { get; set; }
+        public int PaymentVoucherDetId { get; set; }
 
-        public int ReceiptVoucherId { get; set; }
+        public int PaymentVoucherId { get; set; }
 
         [Display(Name = "Particular")]
         [Required(ErrorMessage = "Particular is required.")]
@@ -32,11 +32,11 @@ namespace ERP.Models.Accounts
         [Display(Name = "Narration")]
         public string Narration { get; set; }
 
-        [Display(Name = "Sales Invoice")]
-        public int? SalesInvoiceId { get; set; }
+        [Display(Name = "Purchase Invoice")]
+        public int? PurchaseInvoiceId { get; set; }
 
-        [Display(Name = "Credit Note")]
-        public int? CreditNoteId { get; set; }
+        [Display(Name = "Debit Note")]
+        public int? DebitNoteId { get; set; }
 
         //###
 

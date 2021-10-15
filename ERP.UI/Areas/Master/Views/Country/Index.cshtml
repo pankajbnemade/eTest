@@ -71,8 +71,8 @@ $(document).ready(function () {
             {
                 "render": function (data, type, full, meta) {
                     return '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCountry(' + full.CountryId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCountry(this, ' + full.CountryId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCountry(' + full.CountryId + ')"><i class="far fa-edit"></i></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCountry(this, ' + full.CountryId + ')"><i class="fa fa-trash-alt"></i></button>' +
                         '</div>';
                 }, "orderable": false
             },

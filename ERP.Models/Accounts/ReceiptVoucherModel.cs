@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
-    public partial class ReceiptVoucherModel
+    public partial class PaymentVoucherModel
     {
-        public int ReceiptVoucherId { get; set; }
+        public int PaymentVoucherId { get; set; }
 
         [Display(Name = "Voucher No")]
         [Required(ErrorMessage = "Vocuher No is required.")]
@@ -19,13 +19,13 @@ namespace ERP.Models.Accounts
         [Required(ErrorMessage = "Voucher Date is required.")]
         public DateTime? VoucherDate { get; set; }
 
-        [Display(Name = "Account Ledger")]
-        [Required(ErrorMessage = "Account Ledger is required.")]
-        public int AccountLedgerId { get; set; }
-
         [Display(Name = "Cash/Bank")]
         [Required(ErrorMessage = "Cash/Bank is required.")]
         public string TypeCorB { get; set; }
+        
+        [Display(Name = "Account")]
+        [Required(ErrorMessage = "Account is required.")]
+        public int AccountLedgerId { get; set; }
 
         [Display(Name = "Payment Type")]
         [Required(ErrorMessage = "Payment Type is required.")]
@@ -41,19 +41,19 @@ namespace ERP.Models.Accounts
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
-        [Display(Name = "Cheque No")]
+        [Display(Name = "Cheque/Trans. No")]
         [StringLength(250, ErrorMessage = "50 chars only.")]
-        [Required(ErrorMessage = "Cheque No is required.")]
+        [Required(ErrorMessage = "Cheque/Trans. No is required.")]
         public string ChequeNo { get; set; }
 
         [DataType(DataType.DateTime)]
-        [Display(Name = "Cheque Date")]
+        [Display(Name = "Cheque/Trans. Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}", ApplyFormatInEditMode = true)]
-        [Required(ErrorMessage = "Cheque Date is required.")]
+        [Required(ErrorMessage = "Cheque/Trans. Date is required.")]
         public DateTime? ChequeDate { get; set; }
 
-        [Display(Name = "Cheque Amount FC")]
-        [Required(ErrorMessage = "Cheque Amount FC is required.")]
+        [Display(Name = "Cheque/Trans. Amount FC")]
+        [Required(ErrorMessage = "Cheque/Trans. Amount FC is required.")]
         [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal ChequeAmountFc { get; set; }
@@ -75,13 +75,9 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Status")]
         public int StatusId { get; set; }
-
         public int CompanyId { get; set; }
-
         public int FinancialYearId { get; set; }
-
         public int MaxNo { get; set; }
-
         public int VoucherStyleId { get; set; }
 
         //####
@@ -89,9 +85,15 @@ namespace ERP.Models.Accounts
         public string AccountLedgerName { get; set; }
         public string TypeCorBName { get; set; }
         public string PaymentTypeName { get; set; }
-        public string CurrencyName { get; set; }
+        public string CurrencyCode { get; set; }
         public string StatusName { get; set; }
         public string PreparedByName { get; set; }
+
+        [Display(Name = "Closing Balance")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal ClosingBalance { get; set; }
+
+        public int NoOfLineItems { get; set; }
 
     }
 }

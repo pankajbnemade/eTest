@@ -2,9 +2,9 @@
 
 @{ ViewBag.Title = "Purchase Invoice"; }
 
-<section class="content-header">
+<section class="content-header p-1">
     <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row">
             <div class="col-sm-6">
                 <h5>@ViewBag.Title</h5>
             </div>
@@ -15,16 +15,19 @@
                     </button>
                     @if (ViewBag.IsApprovalRequestVisible == true)
                     {
-                        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.ApprovalRequested');">
-                            <i class="fas fa-download"></i> Request
-                        </button>
-                    }
+                <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.ApprovalRequested');">
+                    <i class="fas fa-download"></i> Request
+                </button>}
                     @if (ViewBag.IsApproveVisible == true)
                     {
-                        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.Approved');">
-                            <i class="far fa-calendar-check"></i> Post
-                        </button>
-                    }
+                <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.Approved');">
+                    <i class="far fa-calendar-check"></i> Approve
+                </button>}
+                    @if (ViewBag.IsCancelVisible == true)
+                    {
+                <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.PurchaseInvoiceId','@DocumentStatus.Cancelled');">
+                    <i class="far fa-times-circle"></i> Cancel
+                </button>}
                     <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintInvoice('@ViewBag.PurchaseInvoiceId');">
                         <i class="fas fa-file-pdf"></i> Print
                     </button>
@@ -36,7 +39,7 @@
         </div>
     </div>
 </section>
-<section class="content">
+<section class="content p-1">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">

@@ -73,8 +73,8 @@ $(document).ready(function () {
             {
                 "render": function (data, type, full, meta) {
                     return '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditEmployee(' + full.EmployeeId + ')"><span class="fa fa-pencil-alt"></span></button>' +
-                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteEmployee(this, ' + full.EmployeeId + ')"><span class="fa fa-trash-alt"></span></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditEmployee(' + full.EmployeeId + ')"><i class="far fa-edit"></i></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteEmployee(this, ' + full.EmployeeId + ')"><i class="fa fa-trash-alt"></i></button>' +
                         '</div>';
                 }, "orderable": false
             },

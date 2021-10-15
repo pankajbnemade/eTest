@@ -94,10 +94,10 @@ namespace ERP.Services.Accounts
                 isUpdated = await Update(paymentVoucherDetail);
             }
 
-            if (isUpdated != false)
-            {
-                await paymentVoucher.UpdatePaymentVoucherMasterAmount(paymentVoucherDetail.PaymentVoucherId);
-            }
+            //if (isUpdated != false)
+            //{
+            //    await paymentVoucher.UpdatePaymentVoucherMasterAmount(paymentVoucherDetail.PaymentVoucherId);
+            //}
 
             return isUpdated; // returns.
         }
@@ -195,7 +195,6 @@ namespace ERP.Services.Accounts
 
             return paymentVoucherDetailModelList; // returns.
         }
-
 
         private async Task<PaymentVoucherDetailModel> AddRow_Blank(int paymentVoucherId)
         {
