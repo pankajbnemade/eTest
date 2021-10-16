@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DebitNoteModel> GetDebitNoteById(int debitNoteId);
 
-        Task<IList<OutstandingInvoiceModel>> GetDebitNoteListByPartyLedgerId(int partyLedgerId);
+        Task<IList<OutstandingInvoiceModel>> GetDebitNoteListByPartyLedgerId(int partyLedgerId, DateTime? voucherDate);
 
         /// <summary>
         /// get search purchase debitNote result list.

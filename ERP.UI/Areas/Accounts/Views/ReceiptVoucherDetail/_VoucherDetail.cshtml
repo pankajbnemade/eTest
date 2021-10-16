@@ -44,12 +44,8 @@
                             <td>
                                 @if (Model[item].TransactionTypeId == 2)
                                 {
-                                    @*@Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId,
-                                        new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select",
-                                        new { @class = "form-control form-control-sm", @readonly = "readonly" })*@
-
-                                    @Html.DisplayFor(modelItem => Model[item].ParticularLedgerName)
-                                    @Html.HiddenFor(modelItem => Model[item].ParticularLedgerId)
+                                    @Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId, new List<SelectListItem> { new SelectListItem { Text = Model[item].ParticularLedgerName, Value = Model[item].ParticularLedgerId.ToString() } },
+                                             new { @class = "form-control form-control-sm", @readonly = "readonly" })
                                 }
                                 else
                                 {
@@ -63,11 +59,8 @@
                             <td style="width:120px;" class="text-center">
                                 @if (Model[item].ReceiptVoucherDetId != 0)
                                 {
-                                    @*@Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
-                                        "Select", new { @class = "form-control form-control-sm", @readonly = "readonly" })*@
-
-                                    @Html.DisplayFor(modelItem => Model[item].TransactionTypeName)
-                                    @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
+                                    @Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new List<SelectListItem> { new SelectListItem { Text = Model[item].TransactionTypeName, Value = Model[item].TransactionTypeId.ToString() } },
+                                             new { @class = "form-control form-control-sm", @readonly = "readonly" })
                                 }
                                 else
                                 {
@@ -166,7 +159,7 @@
         $('#voucherdetail').empty();
         $('#voucherdetail').load(tabUrl);
 
-        
+
     }
 
     $(document).ready(function () {

@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<SalesInvoiceModel> GetSalesInvoiceById(int salesInvoiceId);
 
-        Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int custoomerLedgerId);
+        Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int custoomerLedgerId, DateTime? voucherDate);
 
         /// <summary>
         /// get search sales invoice result list.

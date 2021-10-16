@@ -47,19 +47,19 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ReceiptVoucherModel receiptVoucherModel = await _receiptVoucher.GetReceiptVoucherById(receiptVoucherId);
 
-            Decimal ExchangeRate = 0;
+            Decimal exchangeRate = 0;
             Int32 currencyId = receiptVoucherModel.CurrencyId;
             DateTime voucherDate = (DateTime)receiptVoucherModel.VoucherDate;
 
             CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetExchangeRateByCurrencyId(currencyId, voucherDate);
 
-            ExchangeRate = null != currencyConversionModel ? (decimal)currencyConversionModel.ExchangeRate : 0;
+            exchangeRate = null != currencyConversionModel ? (decimal)currencyConversionModel.ExchangeRate : 0;
 
-            ExchangeRate = 0 != ExchangeRate ? 1 / ExchangeRate : 0;
+            exchangeRate = 0 != exchangeRate ? 1 / exchangeRate : 0;
 
             //################
 
-            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(particularLedgerId, "Receipt Voucher", ExchangeRate);
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(particularLedgerId, "Receipt Voucher", receiptVoucherId, voucherDate, exchangeRate);
 
             IList<ReceiptVoucherOutstandingInvoiceModel> receiptVoucherOutstandingInvoiceModelList = new List<ReceiptVoucherOutstandingInvoiceModel>(); ;
 
@@ -82,7 +82,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     SalesInvoiceId = outstandingInvoiceModel.SalesInvoiceId,
                     CreditNoteId = outstandingInvoiceModel.CreditNoteId,
                     DebitNoteId = outstandingInvoiceModel.DebitNoteId,
-                    AmountFc = 0,
+                    AmountFc = null,
                     Narration = "",
                 });
             }
@@ -138,7 +138,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         [HttpPost]
         public async Task<JsonResult> SaveOutstandingDetail(List<ReceiptVoucherOutstandingInvoiceModel> receiptVoucherOutstandingInvoiceModelList)
         {
-
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
             int receiptVoucherId = 0;
@@ -157,18 +156,17 @@ namespace ERP.UI.Areas.Accounts.Controllers
                         ReceiptVoucherId = receiptVoucherOutstandingInvoiceModel.ReceiptVoucherId,
                         ParticularLedgerId = receiptVoucherOutstandingInvoiceModel.ParticularLedgerId,
                         TransactionTypeId = receiptVoucherOutstandingInvoiceModel.TransactionTypeId,
-                        SalesInvoiceId = receiptVoucherOutstandingInvoiceModel.PurchaseInvoiceId,
-                        CreditNoteId = receiptVoucherOutstandingInvoiceModel.DebitNoteId,
-                        AmountFc = receiptVoucherOutstandingInvoiceModel.AmountFc,
+                        SalesInvoiceId = receiptVoucherOutstandingInvoiceModel.SalesInvoiceId,
+                        CreditNoteId = receiptVoucherOutstandingInvoiceModel.CreditNoteId,
+                        AmountFc = receiptVoucherOutstandingInvoiceModel.AmountFc == null ? 0 : (decimal)receiptVoucherOutstandingInvoiceModel.AmountFc,
                         Narration = receiptVoucherOutstandingInvoiceModel.Narration,
                     };
 
-                    if (receiptVoucherOutstandingInvoiceModel.ReceiptVoucherId == 0
-                        || receiptVoucherOutstandingInvoiceModel.ParticularLedgerId == 0
-                        || receiptVoucherOutstandingInvoiceModel.TransactionTypeId == 0
-                        || (receiptVoucherOutstandingInvoiceModel.PurchaseInvoiceId == 0 && receiptVoucherOutstandingInvoiceModel.DebitNoteId == 0)
-                        || receiptVoucherOutstandingInvoiceModel.AmountFc == 0
-                        || receiptVoucherOutstandingInvoiceModel.AmountFc == null
+                    if (receiptVoucherDetailModel.ReceiptVoucherId == 0
+                        || receiptVoucherDetailModel.ParticularLedgerId == 0
+                        || receiptVoucherDetailModel.TransactionTypeId == 0
+                        || (receiptVoucherDetailModel.SalesInvoiceId == 0 && receiptVoucherOutstandingInvoiceModel.CreditNoteId == 0)
+                        || receiptVoucherDetailModel.AmountFc == 0
                         )
                     {
                         // skip as all required fields are not entered

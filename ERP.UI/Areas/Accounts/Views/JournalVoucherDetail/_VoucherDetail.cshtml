@@ -1,0 +1,234 @@
+﻿@model IList<JournalVoucherDetailModel>
+
+<form id="frmVoucherDetail" class="width100" method="post"
+      asp-action="SaveVoucherDetail" asp-controller="JournalVoucherDetail" asp-area="Accounts"
+      data-ajax-begin="return BeginVoucherDetail();" data-ajax-success="SuccessVoucherDetail"
+      data-ajax="true" data-ajax-method="post">
+
+    <div class="row">
+        <div class="col-sm-12 table-responsive">
+            <input id="addRow_Blank" type="hidden" value="0">
+
+            <table id="journalVoucherDetailGrid" class="table table-bordered table-striped w-100">
+                <thead>
+                    <tr class="table-header">
+                        <th class="no-sort">
+                            <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-voucher-dtl" title="Add New Line"
+                                    onclick="javascript: fnAddRow('@ViewBag.JournalVoucherId')">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </th>
+                        <th>Particular</th>
+                        <th>Transaction Type</th>
+                        <th>Credit Amount FC</th>
+                        <th>Debit Amount FC</th>
+                        <th>Invoice Type</th>
+                        <th>Invoice No</th>
+                        <th>Narration</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (var item = 0; item < Model.Count(); item++)
+                    {
+                    <tr>
+                        <td style="width:20px;">
+                            @if (Model[item].JournalVoucherDetId != 0)
+                            {
+                                <button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteVoucherDetail(this, @Model[item].JournalVoucherDetId)"><i class="fa fa-trash-alt"></i></button>
+                            }
+                            @Html.HiddenFor(modelItem => Model[item].JournalVoucherDetId)
+                            @Html.HiddenFor(modelItem => Model[item].JournalVoucherId)
+                            @Html.HiddenFor(modelItem => Model[item].CreditNoteId)
+                            @Html.HiddenFor(modelItem => Model[item].SalesInvoiceId)
+                            @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
+                            @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                        </td>
+                        <td>
+                            @if (Model[item].TransactionTypeId == 2)
+                            {
+                                @Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId, new List<SelectListItem> { new SelectListItem { Text = Model[item].ParticularLedgerName, Value = Model[item].ParticularLedgerId.ToString() } },
+                                             new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(modelItem => Model[item].ParticularLedgerId,
+                                                                   new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select",
+                                                                   new { @class = "form-control form-control-sm" })
+                            }
+
+                            @Html.ValidationMessageFor(modelItem => Model[item].ParticularLedgerId, "", new { @class = "text-danger" })
+                        </td>
+                        <td style="width:120px;" class="text-center">
+                            @if (Model[item].JournalVoucherDetId != 0)
+                            {
+                                @Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new List<SelectListItem> { new SelectListItem { Text = Model[item].TransactionTypeName, Value = Model[item].TransactionTypeId.ToString() } },
+                                             new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(modelItem => Model[item].TransactionTypeId, new SelectList(ViewBag.TransactionTypeList, "Value", "Description"),
+                              "Select", new { @class = "form-control form-control-sm" })
+                            }
+                            @Html.ValidationMessageFor(modelItem => Model[item].TransactionTypeId, "", new { @class = "text-danger" })
+                        </td>
+                        <td style="width:100px;">
+                            @if (Model[item].TransactionTypeId == 2)
+                            {
+                                @Html.TextBoxFor(modelItem => Model[item].CreditAmountFc, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(modelItem => Model[item].CreditAmountFc, new { @class = "form-control form-control-sm" })
+                            }
+
+                            @Html.ValidationMessageFor(modelItem => Model[item].CreditAmountFc, "", new { @class = "text-danger" })
+                        </td>
+                        <td style="width:100px;">
+                            @if (Model[item].TransactionTypeId == 2)
+                            {
+                                @Html.TextBoxFor(modelItem => Model[item].DebitAmountFc, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(modelItem => Model[item].DebitAmountFc, new { @class = "form-control form-control-sm" })
+                            }
+
+                            @Html.ValidationMessageFor(modelItem => Model[item].DebitAmountFc, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model[item].InvoiceType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model[item].InvoiceNo)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(modelItem => Model[item].Narration, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(modelItem => Model[item].Narration, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 p-2">
+            <button type="submit" class="btn btn-primary" id="save-new-voucher-dtl" title="Save"><i class="fas fa-save"></i> Save</button>
+        </div>
+    </div>
+
+</form>
+<style>
+    .table th {
+        font-size: 0.9em;
+        padding: 4px 5px; /* e.g. change 8x to 4px here */
+    }
+
+    .table td {
+        font-size: 0.9em;
+        padding: 1px 1px; /* e.g. change 8x to 4px here */
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+
+    //// begin form
+    function BeginVoucherDetail() {
+        var form = $("#frmVoucherDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+
+        var isValid = true;
+
+        $('#journalVoucherDetailGrid tbody tr').each(function () {
+            var currentRow = $(this);
+
+            if (parseFloat(currentRow.find("input[id*=CreditAmountFc]").val()) != 0 && parseFloat(currentRow.find("input[id*=DebitAmountFc]").val()) != 0) {
+                alert("Please enter either Credit Amount FC Or Debit Amount FC. You can not add both in same line.");
+                currentRow.find("input[id*=CreditAmountFc]").focus();
+                isValid = false;
+                return false;
+            }
+
+        }); //validation loop
+
+        if (isValid == false) {
+            return false;
+        }
+    }
+
+    //// success form
+    function SuccessVoucherDetail(data) {
+        if (data.Result.Status) {
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("VoucherDetail", "JournalVoucherDetail")?journalVoucherId=' + data.Result.Data + '&addRow_Blank=0';
+
+            $('#voucherdetail').empty();
+            $('#voucherdetail').load(tabUrl);
+
+            fnShowHideMasterButtons();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    function fnAddRow(journalVoucherId) {
+        var tabUrl = '@Url.Action("VoucherDetail", "JournalVoucherDetail")?journalVoucherId=' + journalVoucherId + '&addRow_Blank=1';
+
+        $('#voucherdetail').empty();
+        $('#voucherdetail').load(tabUrl);
+    }
+
+    $(document).ready(function () {
+
+        $("#journalVoucherDetailGrid").on('change', 'select[id*=TransactionTypeId]', function (e) {
+            var currentRow = $(this).closest("tr");
+
+            if (currentRow.find("select[id*=ParticularLedgerId]").val() == "") {
+                currentRow.find("select[id*=TransactionTypeId]").val("");
+                alert("Please select Particular");
+                currentRow.find("select[id*=ParticularLedgerId]").focus();
+                return false;
+            }
+
+            if (currentRow.find("select[id*=TransactionTypeId]").val() == 2) {
+                var journalVoucherId = '@ViewBag.JournalVoucherId';
+
+                var model = {
+                    journalVoucherId: journalVoucherId,
+                    particularLedgerId: currentRow.find("select[id*=ParticularLedgerId]").val()
+                };
+
+                $("#save-new-voucher-dtl").attr("disabled", "disabled");
+
+                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("MapOutstandingDetail", "JournalVoucherDetail")', 'html', model,
+                    function (data) {
+                        $('#modal-voucher').empty();
+                        $('#modal-voucher').html(data).modal('show');
+                        return false;
+                    }, null, true, null, false);
+            }
+
+        });
+
+    });
+
+
+
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteVoucherDetail"); }

@@ -1,0 +1,66 @@
+﻿<div class="modal fade" id="modalConfirmVoucherDetail" role="dialog" data-backdrop="static" data-keyboard="true" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="button" class="btn btn-danger" id="delete-voucher-detail" title="Delete" ><i class="fas fa-trash-alt"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // remove element button click.
+    var _voucherDetId = null;
+    function fnDeleteVoucherDetail(element, journalVoucherDetId) {
+        _voucherDetId = journalVoucherDetId;
+        $(element).attr("data-target", "#modalConfirmVoucherDetail");
+
+        $('#modalConfirmVoucherDetail').on('show.bs.modal', function (e) {
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #modalConfirmVoucherDetail').data('form', form);
+        });
+    }
+
+    // form confirm (yes/ok) handler, submits form
+    $('#modalConfirmVoucherDetail').find('.modal-footer #delete-voucher-detail').on('click', function () {
+        var model = { journalVoucherDetId: _voucherDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("DeleteVoucherDetail", "JournalVoucherDetail")', '', model,
+        function (data) {
+            if (data.Result.Status) {
+                $('#modalConfirmVoucherDetail').modal('hide');
+
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+
+                /*$('#journalVoucherDetailGrid').DataTable().ajax.reload();*/
+
+                fnSuccessNotify('Record deleted.');
+
+                var tabUrl = '@Url.Action("VoucherDetail", "JournalVoucherDetail")?journalVoucherId=' + '@ViewBag.JournalVoucherId' + '&addRow_Blank=0';
+
+                console.log(tabUrl);
+
+                $('#voucherdetail').empty();
+                $('#voucherdetail').load(tabUrl);
+
+                fnShowHideMasterButtons();
+
+            }
+            else {
+                fnDangerNotify('Error occured while processing request.');
+            }
+        }, null, true, null, false);
+    });
+
+</script>

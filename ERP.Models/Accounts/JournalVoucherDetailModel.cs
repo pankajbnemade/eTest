@@ -20,7 +20,6 @@ namespace ERP.Models.Accounts
         public int TransactionTypeId { get; set; }
 
         [Display(Name = "Narration")]
-        [Required(ErrorMessage = "Narration is required.")]
         public string Narration { get; set; }
 
         [Display(Name = "Sales Invoice")]

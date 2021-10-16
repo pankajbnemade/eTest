@@ -212,7 +212,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
             {
                 ReceiptVoucherModel receiptVoucherModel = await _receiptVoucher.GetReceiptVoucherById(receiptVoucherId);
 
-                if (receiptVoucherModel.ChequeAmountFc != receiptVoucherModel.AmountFc
+                if (receiptVoucherModel.ChequeAmountFc == 0
+                    && (statusId == (int)DocumentStatus.Approved || statusId == (int)DocumentStatus.ApprovalRequested)
+                    )
+                {
+                    data.Result.Data = "Cheque Amount FC should be getter than 0. Please update Cheque Amount FC";
+                }
+                else if (receiptVoucherModel.ChequeAmountFc != receiptVoucherModel.AmountFc
                     && (statusId == (int)DocumentStatus.Approved || statusId == (int)DocumentStatus.ApprovalRequested)
                     )
                 {

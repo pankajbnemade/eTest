@@ -156,6 +156,31 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
+        public async Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId, int addRow_Blank)
+        {
+            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await GetAdvanceAdjustmentDetailList(0, advanceAdjustmentId);
+
+            //if (null != advanceAdjustmentDetailModelList && advanceAdjustmentDetailModelList.Any())
+            //{
+            //    if (addRow_Blank == 1)
+            //    {
+            //        advanceAdjustmentDetailModelList.Add(await AddRow_Blank(advanceAdjustmentId));
+            //    }
+            //}
+            //else
+            //{
+            //    advanceAdjustmentDetailModelList = new List<AdvanceAdjustmentDetailModel>();
+
+            //    if (addRow_Blank == 1)
+            //    {
+            //        advanceAdjustmentDetailModelList.Add(await AddRow_Blank(advanceAdjustmentId));
+            //    }
+
+            //}
+
+            return advanceAdjustmentDetailModelList; // returns.
+        }
+
         public async Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList()
         {
             DataTableResultModel<AdvanceAdjustmentDetailModel> resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();

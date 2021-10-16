@@ -206,8 +206,6 @@ namespace ERP.Services.Accounts
             return journalVoucherDetailModelList; // returns.
         }
 
-
-
         private async Task<JournalVoucherDetailModel> AddRow_Blank(int journalVoucherId)
         {
             JournalVoucherDetailModel journalVoucherDetailModel = new JournalVoucherDetailModel();
@@ -323,22 +321,22 @@ namespace ERP.Services.Accounts
                 if (journalVoucherDetailModel.SalesInvoiceId != 0 && journalVoucherDetailModel.SalesInvoiceId != null)
                 {
                     journalVoucherDetailModel.InvoiceType = "Sales Invoice";
-                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.SalesInvoice.InvoiceNo;
+                    journalVoucherDetailModel.InvoiceNo = null != journalVoucherDetail.SalesInvoice ? journalVoucherDetail.SalesInvoice.InvoiceNo : null;
                 }
                 else if (journalVoucherDetailModel.PurchaseInvoiceId != 0 && journalVoucherDetailModel.PurchaseInvoiceId != null)
                 {
                     journalVoucherDetailModel.InvoiceType = "Purchase Invoice";
-                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.PurchaseInvoice.InvoiceNo;
+                    journalVoucherDetailModel.InvoiceNo = null != journalVoucherDetail.PurchaseInvoice ? journalVoucherDetail.PurchaseInvoice.InvoiceNo : null;
                 }
                 else if (journalVoucherDetailModel.CreditNoteId != 0 && journalVoucherDetailModel.CreditNoteId != null)
                 {
                     journalVoucherDetailModel.InvoiceType = "Credit Note";
-                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.CreditNote.CreditNoteNo;
+                    journalVoucherDetailModel.InvoiceNo = null != journalVoucherDetail.CreditNote ? journalVoucherDetail.CreditNote.CreditNoteNo : null;
                 }
                 else if (journalVoucherDetailModel.DebitNoteId != 0 && journalVoucherDetailModel.DebitNoteId != null)
                 {
                     journalVoucherDetailModel.InvoiceType = "Debit Note";
-                    journalVoucherDetailModel.InvoiceNo = journalVoucherDetail.DebitNote.DebitNoteNo;
+                    journalVoucherDetailModel.InvoiceNo = null != journalVoucherDetail.DebitNote ? journalVoucherDetail.DebitNote.DebitNoteNo : null;
                 }
 
                 return journalVoucherDetailModel;

@@ -304,12 +304,12 @@ namespace ERP.Services.Accounts
                 if (paymentVoucherDetailModel.PurchaseInvoiceId != 0 && paymentVoucherDetailModel.PurchaseInvoiceId != null)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Purchase Invoice";
-                    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.PurchaseInvoice.InvoiceNo;
+                    paymentVoucherDetailModel.InvoiceNo = null != paymentVoucherDetail.PurchaseInvoice ? paymentVoucherDetail.PurchaseInvoice.InvoiceNo : null;
                 }
                 else if (paymentVoucherDetailModel.DebitNoteId != 0 && paymentVoucherDetailModel.DebitNoteId != null)
                 {
                     paymentVoucherDetailModel.InvoiceType = "Debit Note";
-                    paymentVoucherDetailModel.InvoiceNo = paymentVoucherDetail.DebitNote.DebitNoteNo;
+                    paymentVoucherDetailModel.InvoiceNo = null != paymentVoucherDetail.DebitNote ? paymentVoucherDetail.DebitNote.DebitNoteNo : null;
                 }
 
                 return paymentVoucherDetailModel;

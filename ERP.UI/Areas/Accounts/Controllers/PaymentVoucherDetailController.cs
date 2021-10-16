@@ -47,19 +47,19 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
 
-            Decimal ExchangeRate = 0;
+            Decimal exchangeRate = 0;
             Int32 currencyId = paymentVoucherModel.CurrencyId;
             DateTime voucherDate = (DateTime)paymentVoucherModel.VoucherDate;
 
             CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetExchangeRateByCurrencyId(currencyId, voucherDate);
 
-            ExchangeRate = null != currencyConversionModel ? (decimal)currencyConversionModel.ExchangeRate : 0;
+            exchangeRate = null != currencyConversionModel ? (decimal)currencyConversionModel.ExchangeRate : 0;
 
-            ExchangeRate = 0 != ExchangeRate ? 1 / ExchangeRate : 0;
+            exchangeRate = 0 != exchangeRate ? 1 / exchangeRate : 0;
 
             //################
 
-            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(particularLedgerId, "Payment Voucher", ExchangeRate);
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(particularLedgerId, "Payment Voucher", paymentVoucherId,voucherDate,exchangeRate);
 
             IList<PaymentVoucherOutstandingInvoiceModel> paymentVoucherOutstandingInvoiceModelList = new List<PaymentVoucherOutstandingInvoiceModel>(); ;
 
@@ -82,7 +82,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     SalesInvoiceId = outstandingInvoiceModel.SalesInvoiceId,
                     CreditNoteId = outstandingInvoiceModel.CreditNoteId,
                     DebitNoteId = outstandingInvoiceModel.DebitNoteId,
-                    AmountFc = 0,
+                    AmountFc = null,
                     Narration = "",
                 });
             }
@@ -159,16 +159,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
                         TransactionTypeId = paymentVoucherOutstandingInvoiceModel.TransactionTypeId,
                         PurchaseInvoiceId = paymentVoucherOutstandingInvoiceModel.PurchaseInvoiceId,
                         DebitNoteId = paymentVoucherOutstandingInvoiceModel.DebitNoteId,
-                        AmountFc = paymentVoucherOutstandingInvoiceModel.AmountFc,
+                        AmountFc = paymentVoucherOutstandingInvoiceModel.AmountFc == null ? 0 : (decimal)paymentVoucherOutstandingInvoiceModel.AmountFc,
                         Narration = paymentVoucherOutstandingInvoiceModel.Narration,
                     };
 
-                    if (paymentVoucherOutstandingInvoiceModel.PaymentVoucherId == 0
-                        || paymentVoucherOutstandingInvoiceModel.ParticularLedgerId == 0
-                        || paymentVoucherOutstandingInvoiceModel.TransactionTypeId == 0
-                        || (paymentVoucherOutstandingInvoiceModel.PurchaseInvoiceId == 0 && paymentVoucherOutstandingInvoiceModel.DebitNoteId == 0)
-                        || paymentVoucherOutstandingInvoiceModel.AmountFc == 0
-                        || paymentVoucherOutstandingInvoiceModel.AmountFc == null
+                    if (paymentVoucherDetailModel.PaymentVoucherId == 0
+                        || paymentVoucherDetailModel.ParticularLedgerId == 0
+                        || paymentVoucherDetailModel.TransactionTypeId == 0
+                        || (paymentVoucherDetailModel.PurchaseInvoiceId == 0 && paymentVoucherDetailModel.DebitNoteId == 0)
+                        || paymentVoucherDetailModel.AmountFc == 0
                         )
                     {
                         // skip as all required fields are not entered

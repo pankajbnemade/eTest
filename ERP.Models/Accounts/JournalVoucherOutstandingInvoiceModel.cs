@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
-    public partial class PaymentVoucherOutstandingInvoiceModel
+    public partial class JournalVoucherOutstandingInvoiceModel
     {
-        public int PaymentVoucherId { get; set; }
+        public int JournalVoucherId { get; set; }
 
         public int ParticularLedgerId { get; set; }
 
@@ -43,7 +43,10 @@ namespace ERP.Models.Accounts
         public int? DebitNoteId { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
-        public decimal? AmountFc { get; set; }
+        public decimal? CreditAmountFc { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal? DebitAmountFc { get; set; }
 
         public string Narration { get; set; }
 

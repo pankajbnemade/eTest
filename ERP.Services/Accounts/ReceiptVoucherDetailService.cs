@@ -304,12 +304,12 @@ namespace ERP.Services.Accounts
                 if (receiptVoucherDetailModel.SalesInvoiceId != 0 && receiptVoucherDetailModel.SalesInvoiceId  != null)
                 {
                     receiptVoucherDetailModel.InvoiceType = "Sales Invoice";
-                    receiptVoucherDetailModel.InvoiceNo = receiptVoucherDetail.SalesInvoice.InvoiceNo;
+                    receiptVoucherDetailModel.InvoiceNo = null != receiptVoucherDetail.SalesInvoice ? receiptVoucherDetail.SalesInvoice.InvoiceNo : null;
                 }
                 else if (receiptVoucherDetailModel.CreditNoteId != 0 && receiptVoucherDetailModel.CreditNoteId  != null)
                 {
                     receiptVoucherDetailModel.InvoiceType = "Credit Note";
-                    receiptVoucherDetailModel.InvoiceNo = receiptVoucherDetail.CreditNote.CreditNoteNo;
+                    receiptVoucherDetailModel.InvoiceNo = null != receiptVoucherDetail.CreditNote ? receiptVoucherDetail.CreditNote.CreditNoteNo : null;
                 }
 
                 return receiptVoucherDetailModel;

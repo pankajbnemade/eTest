@@ -22,6 +22,8 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(int advanceAdjustmentId);
 
+        Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId, int addRow_Blank);
+
         Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList();
 
     }

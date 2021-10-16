@@ -1,0 +1,289 @@
+﻿@model JournalVoucherModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.JournalVoucherId > 0)
+            {
+<h5 class="modal-title">Edit Voucher</h5> }
+else
+{
+<h5 class="modal-title">Add Voucher</h5>}
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="frmVoucherMaster" class="width100" method="post"
+              asp-action="SaveVoucherMaster" asp-controller="JournalVoucher" asp-area="Accounts"
+              data-ajax-begin="return BeginVoucherMaster();" data-ajax-success="SuccessVoucherMaster"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+
+                @Html.HiddenFor(model => model.JournalVoucherId)
+                @Html.HiddenFor(model => model.CompanyId)
+                @Html.HiddenFor(model => model.FinancialYearId)
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VoucherNo, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.VoucherNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.VoucherNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VoucherDate, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.VoucherDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                            @Html.ValidationMessageFor(model => model.VoucherDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                
+
+                @if (Model.NoOfLineItems > 0)
+                {
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+                @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem> { new SelectListItem { Text = Model.CurrencyCode, Value = Model.CurrencyId.ToString() } },
+                                              new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div> }
+else
+{
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+            @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+            @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+            @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
+            @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>}
+                
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AmountFc)
+                            @Html.TextBoxFor(model => model.AmountFc, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.AmountFc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Narration)
+                            @Html.TextAreaFor(model => model.Narration, new { @class = "form-control form-control-sm col-sm-12" })
+                            @Html.ValidationMessageFor(model => model.Narration, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#VoucherDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        $('#ChequeDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.999', vMax: '999999999999999.999' });
+
+        @*if ('@Model.JournalVoucherId' > 0 && '@Model.TypeCorB' != "") {
+            GetAccountLedger('@Model.TypeCorB');
+        }
+
+        if ('@Model.JournalVoucherId' > 0 && '@Model.AccountLedgerId' > 0) {
+            GetClosingBalance('@Model.AccountLedgerId');
+        }*@
+
+
+        //// TypeCorB change.
+        //$(document).off('change').on('change', '#TypeCorB', function () {
+        //    //alert("TypeCorB");
+        //    GetAccountLedger(this.value);
+        //});
+
+        ////account ledger change.
+        //$(document).on('change', '#AccountLedgerId', function () {
+        //    //alert("AccountLedgerId");
+        //    GetClosingBalance(this.value);
+        //});
+
+        // currency change.
+        $(document).on('change', '#CurrencyId', function () {
+            //alert("CurrencyId");
+            GetExchangeRateByCurrencyId(this.value);
+        });
+
+    });
+
+    @*// get Account Ledger by TypeCorB.
+    function GetAccountLedger(typeCorB) {
+
+        if ('' != typeCorB) {
+            var model = { typeCorB: typeCorB };
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetAccountLedgerByTypeCorB", "JournalVoucher")', '', model,
+                function (response) {
+                    $('#AccountLedgerId').empty();
+                    $('#AccountLedgerId').append("<option value=''>Select</option>");
+
+                    if (true == response.Result.Status) {
+                        $.each(response.Result.Data, function (i, item) {
+                            $('#AccountLedgerId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                        });
+
+                        if ('@Model.TypeCorB' != "") {
+                            $('#AccountLedgerId').val('@Model.AccountLedgerId');
+                        }
+                    }
+                    else {
+                        if ('NoItems' == response.Result.Message) {
+                            $("span[data-valmsg-for='AccountLedgerId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                            $("span[data-valmsg-for='AccountLedgerId']").html('<span for="AccountLedgerId" class="">No data found.</span>');
+                        }
+                    }
+                }, null, true, null, false);
+        }
+        else {
+            $('#AccountLedgerId').empty();
+            $('#AccountLedgerId').append("<option value=''>Select</option>");
+        }
+    }*@
+
+    @*// get closing balance by accountLedgerId
+    function GetClosingBalance(accountLedgerId) {
+        if ('' != accountLedgerId) {
+            //var model = { accountLedgerId: accountLedgerId };
+            var model = { accountLedgerId: accountLedgerId , voucherDate: $('#VoucherDate').val() };
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetClosingBalanceByAccountLedgerId", "JournalVoucher")', '', model,
+            function (response) {
+                if (true == response.Result.Status) {
+                    $('#ClosingBalance').val(response.Result.Data);
+                }
+                else {
+                    $('#ClosingBalance').val(0);
+                }
+            }, null, true, null, false);
+
+        }
+        else {
+            $('#ClosingBalance').val(0);
+        }
+    }*@
+
+    // get exchange rate by currencyId.
+    function GetExchangeRateByCurrencyId(currencyId) {
+        if ('' != currencyId) {
+
+            var model = { currencyId: currencyId, voucherDate: $('#VoucherDate').val() };
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "JournalVoucher")', '', model,
+            function (response) {
+                if (true == response.Result.Status) {
+                    $('#ExchangeRate').val(response.Result.Data);
+                }
+                else {
+                    $('#ExchangeRate').val(0);
+                }
+            }, null, true, null, false);
+        }
+        else {
+            $('#ExchangeRate').val(0);
+        }
+       /* $('#ExchangeRate').val(currencyId);*/
+    }
+
+    // begin form
+    function BeginVoucherMaster() {
+        var form = $("#frmVoucherMaster");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+
+    // success form
+    function SuccessVoucherMaster(data) {
+        if (data.Result.Status) {
+            $('#modal-voucher').modal('hide');
+
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("ManageVoucher", "JournalVoucher")?journalVoucherId=' + data.Result.Data;
+            window.location.href = tabUrl;
+
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
+
+<style type="text/css">
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>

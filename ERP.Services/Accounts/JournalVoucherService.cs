@@ -57,7 +57,7 @@ namespace ERP.Services.Accounts
 
             journalVoucher.Narration = journalVoucherModel.Narration;
 
-            journalVoucher.AmountFc = 0;
+            journalVoucher.AmountFc = journalVoucherModel.AmountFc;
             journalVoucher.Amount = 0;
             journalVoucher.AmountFcinWord = "";
 
@@ -97,7 +97,7 @@ namespace ERP.Services.Accounts
 
                 journalVoucher.Narration = journalVoucherModel.Narration;
 
-                journalVoucher.AmountFc = 0;
+                journalVoucher.AmountFc = journalVoucherModel.AmountFc;
                 journalVoucher.Amount = 0;
                 journalVoucher.AmountFcinWord = "";
 

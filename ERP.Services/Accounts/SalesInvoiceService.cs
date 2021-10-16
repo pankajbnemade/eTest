@@ -318,7 +318,7 @@ namespace ERP.Services.Accounts
         /// <returns>
         /// return record.
         /// </returns>
-        public async Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId)
+        public async Task<IList<OutstandingInvoiceModel>> GetSalesInvoiceListByCustomerLedgerId(int customerLedgerId, DateTime? voucherDate)
         {
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
@@ -328,6 +328,11 @@ namespace ERP.Services.Accounts
             // apply filters.
             if (0 != customerLedgerId)
                 query = query.Where(w => w.CustomerLedgerId == customerLedgerId);
+
+            if (null != voucherDate)
+            {
+                query = query.Where(w => w.InvoiceDate <= voucherDate);
+            }
 
             // get records by query.
             List<Salesinvoice> salesInvoiceList = await query.ToListAsync();

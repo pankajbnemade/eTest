@@ -1,0 +1,78 @@
+﻿
+@{ ViewBag.Title = "Journal Voucher"; }
+
+<section class="content-header p-1">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h5>@ViewBag.Title</h5>
+            </div>
+            <div class="col-sm-6">
+                <div id="masterbuttons"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content p-1">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-primary card-outline card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="tab-list" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link" id="master-tab" data-toggle="tab" href="#vouchermaster" role="tab" aria-controls="vouchermaster" aria-selected="true">Master</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="detail-tab" data-toggle="tab" href="#voucherdetail" role="tab" aria-controls="voucherdetail" aria-selected="false">Detail</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="vouchermaster" role="tabpanel" aria-labelledby="master-tab"></div>
+                            <div class="tab-pane fade" id="voucherdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="modal-voucher" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+<div id="modal-voucher-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        fnShowHideMasterButtons();
+
+        $('#tab-list li:first-child a').tab('show');
+    });
+
+    function fnShowHideMasterButtons() {
+        var tabUrl = '@Url.Action("MasterButtons", "JournalVoucher")?journalVoucherId=' + '@ViewBag.JournalVoucherId';
+        /*console.log(tabUrl);*/
+        $('#masterbuttons').empty();
+        $('#masterbuttons').load(tabUrl);
+    }
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+        switch ($(e.target).attr('aria-controls')) {
+            case 'vouchermaster':
+                //$('#btn-edit-master').show();
+                tabUrl = '@Url.Action("ViewVoucherMaster", "JournalVoucher", new { journalVoucherId = ViewBag.JournalVoucherId })';
+                break;
+            case 'voucherdetail':
+                //$('#btn-edit-master').hide();
+                tabUrl = '@Url.Action("VoucherDetail", "JournalVoucherDetail", new { journalVoucherId = ViewBag.JournalVoucherId, addRow_Blank=0 })';
+                break;
+            default:
+                break;
+        }
+        $('#' + tabPanel).empty();
+        $('#' + tabPanel).load(tabUrl);
+    });
+
+</script>

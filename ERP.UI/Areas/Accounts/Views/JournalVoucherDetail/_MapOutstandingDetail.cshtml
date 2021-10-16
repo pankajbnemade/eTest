@@ -1,0 +1,209 @@
+﻿@model IList<JournalVoucherOutstandingInvoiceModel>
+
+<form id="frmOutstandingDetail" class="width100" method="post"
+      asp-action="SaveOutstandingDetail" asp-controller="JournalVoucherDetail" asp-area="Accounts"
+      data-ajax-begin="return BeginOutstandingDetail();" data-ajax-success="SuccessOutstandingDetail"
+      data-ajax="true" data-ajax-method="post">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Map Outstanding Invoice</h5>
+                <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="col-sm-12 table-responsive">
+                    <table id="outstandingInvoiceGrid" class="table table-bordered table-striped w-100">
+                        <thead>
+                            <tr class="table-header">
+                                <th>Invoice Type</th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Invoice Amount FC</th>
+                                <th>Outstanding Amount FC</th>
+                                <th>Credit Amount FC</th>
+                                <th>Debit Amount FC</th>
+                                <th>Narration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var item = 0; item < Model.Count(); item++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.HiddenFor(modelItem => Model[item].JournalVoucherId)
+                                        @Html.HiddenFor(modelItem => Model[item].ParticularLedgerId)
+                                        @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
+                                        @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
+                                        @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                                        @Html.HiddenFor(modelItem => Model[item].OutstandingAmount_FC)
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].InvoiceAmount_FC)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].OutstandingAmount_FC)
+                                    </td>
+                                    <td style="width:100px;">
+                                        @if (Model[item].InvoiceType == "Sales Invoice" || Model[item].InvoiceType == "Debit Note")
+                                        {
+                                            @Html.TextBoxFor(modelItem => Model[item].CreditAmountFc, new { @class = "form-control form-control-sm" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(modelItem => Model[item].CreditAmountFc, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                        }
+
+                                        @Html.ValidationMessageFor(modelItem => Model[item].CreditAmountFc, "", new { @class = "text-danger" })
+                                    </td>
+                                    <td style="width:100px;">
+                                        @if (Model[item].InvoiceType == "Purchase Invoice" || Model[item].InvoiceType == "Credit Note")
+                                        {
+                                            @Html.TextBoxFor(modelItem => Model[item].DebitAmountFc, new { @class = "form-control form-control-sm" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(modelItem => Model[item].DebitAmountFc, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                        }
+
+                                        @Html.ValidationMessageFor(modelItem => Model[item].DebitAmountFc, "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model[item].Narration, new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(modelItem => Model[item].Narration, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" id="save-new-voucher-dtl" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+    });
+
+    //// begin form
+    function BeginOutstandingDetail() {
+        var form = $("#frmOutstandingDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+
+        var isValid = true;
+
+        $('#outstandingInvoiceGrid tbody tr').each(function () {
+            var currentRow = $(this);
+
+            if (parseFloat(currentRow.find("input[id*=CreditAmountFc]").val()) != 0 && parseFloat(currentRow.find("input[id*=DebitAmountFc]").val()) != 0
+                && isNaN(currentRow.find("input[id*=CreditAmountFc]").val()) && isNaN(currentRow.find("input[id*=DebitAmountFc]").val())) {
+                alert("Please enter either Credit Amount FC Or Debit Amount FC. You can not add both in same line.");
+                currentRow.find("input[id*=CreditAmountFc]").focus();
+                isValid = false;
+                return false;
+            }
+
+            //console.log(currentRow.find("input[id*=CreditAmountFc]").val() + currentRow.find("input[id*=DebitAmountFc]").val());
+
+            if (currentRow.find("input[id*=CreditAmountFc]").val()!="" || currentRow.find("input[id*=DebitAmountFc]").val()!="") {
+
+                //console.log(currentRow.find("input[id*=CreditAmountFc]").val() != "");
+                //console.log(currentRow.find("input[id*=DebitAmountFc]").val() != "");
+
+                var creditAmountFc = currentRow.find("input[id*=CreditAmountFc]").val();
+                var debitAmountFc = currentRow.find("input[id*=DebitAmountFc]").val();
+                var outstandingAmount_FC = currentRow.find("input[id*=OutstandingAmount_FC]").val();
+
+                //console.log("isNaN");
+
+                //console.log($.isNumeric(creditAmountFc));
+                //console.log($.isNumeric(debitAmountFc));
+                //console.log($.isNumeric(outstandingAmount_FC));
+
+                if ($.isNumeric(creditAmountFc)==false){
+                    creditAmountFc = 0;
+                }
+
+                if ($.isNumeric(debitAmountFc) == false) {
+                    debitAmountFc = 0;
+                }
+
+                //console.log("creditAmountFc");
+
+                //console.log(parseFloat(creditAmountFc));
+
+                //console.log("debitAmountFc");
+                //console.log(parseFloat(debitAmountFc));
+
+                if (parseFloat(creditAmountFc) > parseFloat(outstandingAmount_FC)) {
+                    alert("Please Note, Credit Amount FC " + currentRow.find("input[id*=CreditAmountFc]").val() + " must less than or equal to Outstanding Amount FC " + currentRow.find("input[id*=OutstandingAmount_FC]").val()+ ".");
+                    currentRow.find("input[id*=CreditAmountFc]").focus();
+                    isValid = false;
+                    return false;
+                }
+
+                if (parseFloat(debitAmountFc) > parseFloat(outstandingAmount_FC)) {
+                    alert("Please Note, Debit Amount FC " + currentRow.find("input[id*=DebitAmountFc]").val() + " must less than or equal to Outstanding Amount FC " + currentRow.find("input[id*=OutstandingAmount_FC]").val() + ".");
+                    currentRow.find("input[id*=DebitAmountFc]").focus();
+                    isValid = false;
+                    return false;
+                }
+            }
+
+        }); //validation loop
+
+        if (isValid == false) {
+            return false;
+        }
+    }
+
+    //// success form
+    function SuccessOutstandingDetail(data) {
+        if (data.Result.Status) {
+            $('#modal-voucher').modal('hide');
+
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("VoucherDetail", "JournalVoucherDetail")?journalVoucherId=' + data.Result.Data + '&addRow_Blank=0';
+
+            $('#voucherdetail').empty();
+            $('#voucherdetail').load(tabUrl);
+
+            fnShowHideMasterButtons();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+
+
+</script>

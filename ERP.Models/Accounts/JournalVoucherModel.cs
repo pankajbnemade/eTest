@@ -39,8 +39,7 @@ namespace ERP.Models.Accounts
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal AmountFc { get; set; }
 
-        [Display(Name = "Amount FC in word")]
-        [Required(ErrorMessage = "Amount FC in word is required.")]
+        [Display(Name = "Amount FC In word")]
         public string AmountFcInWord { get; set; }
 
         [Display(Name = "Amount")]
@@ -81,6 +80,8 @@ namespace ERP.Models.Accounts
         public string StatusName { get; set; }
 
         public string PreparedByName { get; set; }
+
+        public int NoOfLineItems { get; set; }
 
     }
 }

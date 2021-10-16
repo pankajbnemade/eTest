@@ -324,7 +324,7 @@ namespace ERP.Services.Accounts
         /// <returns>
         /// return record.
         /// </returns>
-        public async Task<IList<OutstandingInvoiceModel>> GetDebitNoteListByPartyLedgerId(int partyLedgerId)
+        public async Task<IList<OutstandingInvoiceModel>> GetDebitNoteListByPartyLedgerId(int partyLedgerId, DateTime? voucherDate)
         {
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
@@ -334,6 +334,11 @@ namespace ERP.Services.Accounts
             // apply filters.
             if (0 != partyLedgerId)
                 query = query.Where(w => w.PartyLedgerId == partyLedgerId);
+
+            if (null != voucherDate)
+            {
+                query = query.Where(w => w.DebitNoteDate <= voucherDate);
+            }
 
             // get records by query.
             List<Debitnote> debitNoteList = await query.ToListAsync();
@@ -347,7 +352,7 @@ namespace ERP.Services.Accounts
                     outstandingInvoiceModelList.Add(new OutstandingInvoiceModel()
                     {
                         InvoiceId = debitNote.DebitNoteId,
-                        InvoiceType = "Purchase Invoice",
+                        InvoiceType = "Debit Note",
                         InvoiceNo = debitNote.DebitNoteNo,
                         InvoiceDate = debitNote.DebitNoteDate,
                         InvoiceAmount = debitNote.NetAmount,
