@@ -38,8 +38,10 @@
                                         @Html.HiddenFor(modelItem => Model[item].JournalVoucherId)
                                         @Html.HiddenFor(modelItem => Model[item].ParticularLedgerId)
                                         @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
+                                        @Html.HiddenFor(modelItem => Model[item].SalesInvoiceId)
                                         @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
                                         @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                                        @Html.HiddenFor(modelItem => Model[item].CreditNoteId)
                                         @Html.HiddenFor(modelItem => Model[item].OutstandingAmount_FC)
                                         @Html.DisplayFor(modelItem => Model[item].InvoiceType)
                                     </td>
@@ -118,49 +120,31 @@
         }
 
         var isValid = true;
+        var totalAmountFc = 0;
 
         $('#outstandingInvoiceGrid tbody tr').each(function () {
             var currentRow = $(this);
 
-            if (parseFloat(currentRow.find("input[id*=CreditAmountFc]").val()) != 0 && parseFloat(currentRow.find("input[id*=DebitAmountFc]").val()) != 0
-                && isNaN(currentRow.find("input[id*=CreditAmountFc]").val()) && isNaN(currentRow.find("input[id*=DebitAmountFc]").val())) {
+            var creditAmountFc = currentRow.find("input[id*=CreditAmountFc]").val();
+            var debitAmountFc = currentRow.find("input[id*=DebitAmountFc]").val();
+            var outstandingAmount_FC = currentRow.find("input[id*=OutstandingAmount_FC]").val();
+
+            if ($.isNumeric(creditAmountFc) == false) {
+                creditAmountFc = 0;
+            }
+
+            if ($.isNumeric(debitAmountFc) == false) {
+                debitAmountFc = 0;
+            }
+
+            if (parseFloat(creditAmountFc) != 0 && parseFloat(debitAmountFc) != 0) {
                 alert("Please enter either Credit Amount FC Or Debit Amount FC. You can not add both in same line.");
                 currentRow.find("input[id*=CreditAmountFc]").focus();
                 isValid = false;
                 return false;
             }
 
-            //console.log(currentRow.find("input[id*=CreditAmountFc]").val() + currentRow.find("input[id*=DebitAmountFc]").val());
-
-            if (currentRow.find("input[id*=CreditAmountFc]").val()!="" || currentRow.find("input[id*=DebitAmountFc]").val()!="") {
-
-                //console.log(currentRow.find("input[id*=CreditAmountFc]").val() != "");
-                //console.log(currentRow.find("input[id*=DebitAmountFc]").val() != "");
-
-                var creditAmountFc = currentRow.find("input[id*=CreditAmountFc]").val();
-                var debitAmountFc = currentRow.find("input[id*=DebitAmountFc]").val();
-                var outstandingAmount_FC = currentRow.find("input[id*=OutstandingAmount_FC]").val();
-
-                //console.log("isNaN");
-
-                //console.log($.isNumeric(creditAmountFc));
-                //console.log($.isNumeric(debitAmountFc));
-                //console.log($.isNumeric(outstandingAmount_FC));
-
-                if ($.isNumeric(creditAmountFc)==false){
-                    creditAmountFc = 0;
-                }
-
-                if ($.isNumeric(debitAmountFc) == false) {
-                    debitAmountFc = 0;
-                }
-
-                //console.log("creditAmountFc");
-
-                //console.log(parseFloat(creditAmountFc));
-
-                //console.log("debitAmountFc");
-                //console.log(parseFloat(debitAmountFc));
+            if (parseFloat(creditAmountFc) != 0 || parseFloat(debitAmountFc) != 0) {
 
                 if (parseFloat(creditAmountFc) > parseFloat(outstandingAmount_FC)) {
                     alert("Please Note, Credit Amount FC " + currentRow.find("input[id*=CreditAmountFc]").val() + " must less than or equal to Outstanding Amount FC " + currentRow.find("input[id*=OutstandingAmount_FC]").val()+ ".");
@@ -177,11 +161,20 @@
                 }
             }
 
+            totalAmountFc = parseFloat(totalAmountFc) + parseFloat(creditAmountFc) + parseFloat(debitAmountFc);
+
         }); //validation loop
 
         if (isValid == false) {
             return false;
         }
+
+        if (parseFloat(totalAmountFc) == 0) {
+            alert("Please enter atleast one Invoice Credit Amount Fc or Debit Amount Fc");
+            $("#outstandingInvoiceGrid").focus();
+            return false;
+        }
+
     }
 
     //// success form

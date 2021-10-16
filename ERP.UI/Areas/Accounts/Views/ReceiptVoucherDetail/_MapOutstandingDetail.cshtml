@@ -37,8 +37,11 @@
                                         @Html.HiddenFor(modelItem => Model[item].ReceiptVoucherId)
                                         @Html.HiddenFor(modelItem => Model[item].ParticularLedgerId)
                                         @Html.HiddenFor(modelItem => Model[item].TransactionTypeId)
+                                        @Html.HiddenFor(modelItem => Model[item].SalesInvoiceId)
                                         @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
                                         @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                                        @Html.HiddenFor(modelItem => Model[item].CreditNoteId)
+                                        @Html.HiddenFor(modelItem => Model[item].OutstandingAmount_FC)
                                         @Html.DisplayFor(modelItem => Model[item].InvoiceType)
                                     </td>
                                     <td>
@@ -87,6 +90,42 @@
         var isModelValid = $(form).valid();
         if (false == isModelValid) {
             validator.focusInvalid();
+            return false;
+        }
+
+        var isValid = true;
+        var totalAmountFc = 0;
+
+        $('#outstandingInvoiceGrid tbody tr').each(function () {
+            var currentRow = $(this);
+
+            var amountFc = currentRow.find("input[id*=AmountFc]").val();
+            var outstandingAmount_FC = currentRow.find("input[id*=OutstandingAmount_FC]").val();
+
+            if ($.isNumeric(amountFc) == false) {
+                amountFc = 0;
+            }
+
+            if (parseFloat(amountFc) != 0) {
+                if (parseFloat(amountFc) > parseFloat(outstandingAmount_FC)) {
+                    alert("Please Note, Amount FC " + currentRow.find("input[id*=AmountFc]").val() + " must less than or equal to Outstanding Amount FC " + currentRow.find("input[id*=OutstandingAmount_FC]").val() + ".");
+                    currentRow.find("input[id*=CreditAmountFc]").focus();
+                    isValid = false;
+                    return false;
+                }
+            }
+
+            totalAmountFc = parseFloat(totalAmountFc) + parseFloat(amountFc);
+
+        }); //validation loop
+
+        if (isValid == false) {
+            return false;
+        }
+
+        if (parseFloat(totalAmountFc) == 0) {
+            alert("Please enter atleast one Invoice Amount Fc");
+            $("#outstandingInvoiceGrid").focus();
             return false;
         }
     }

@@ -130,7 +130,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 }
 
                 await _journalVoucher.UpdateJournalVoucherMasterAmount(journalVoucherId);
-
             }
 
             return Json(data);
@@ -158,8 +157,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
                         JournalVoucherId = journalVoucherOutstandingInvoiceModel.JournalVoucherId,
                         ParticularLedgerId = journalVoucherOutstandingInvoiceModel.ParticularLedgerId,
                         TransactionTypeId = journalVoucherOutstandingInvoiceModel.TransactionTypeId,
+                        SalesInvoiceId = journalVoucherOutstandingInvoiceModel.SalesInvoiceId,
                         PurchaseInvoiceId = journalVoucherOutstandingInvoiceModel.PurchaseInvoiceId,
                         DebitNoteId = journalVoucherOutstandingInvoiceModel.DebitNoteId,
+                        CreditNoteId = journalVoucherOutstandingInvoiceModel.CreditNoteId,
                         CreditAmountFc = journalVoucherOutstandingInvoiceModel.CreditAmountFc == null ? 0 : (decimal)journalVoucherOutstandingInvoiceModel.CreditAmountFc,
                         DebitAmountFc = journalVoucherOutstandingInvoiceModel.DebitAmountFc == null ? 0 : (decimal)journalVoucherOutstandingInvoiceModel.DebitAmountFc,
                         Narration = journalVoucherOutstandingInvoiceModel.Narration,
