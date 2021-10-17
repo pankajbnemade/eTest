@@ -8,21 +8,21 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface IJournalVoucherDetail : IRepository<Journalvoucherdetail>
     {
-        Task<int> CreateJournalVoucherDetail(JournalVoucherDetailModel paymentVoucherDetailModel);
+        Task<int> CreateJournalVoucherDetail(JournalVoucherDetailModel journalVoucherDetailModel);
 
-        Task<bool> UpdateJournalVoucherDetail(JournalVoucherDetailModel paymentVoucherDetailModel);
+        Task<bool> UpdateJournalVoucherDetail(JournalVoucherDetailModel journalVoucherDetailModel);
 
-        Task<bool> UpdateJournalVoucherDetailAmount(int paymentVoucherDetailId);
+        Task<bool> UpdateJournalVoucherDetailAmount(int journalVoucherDetailId);
 
-        Task<bool> DeleteJournalVoucherDetail(int paymentVoucherDetailId);
+        Task<bool> DeleteJournalVoucherDetail(int journalVoucherDetailId);
 
-        Task<JournalVoucherDetailModel> GetJournalVoucherDetailById(int paymentVoucherDetailId,int paymentVoucherId);
+        Task<JournalVoucherDetailModel> GetJournalVoucherDetailById(int journalVoucherDetailId,int journalVoucherId);
 
         Task<IList<JournalVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId);
 
-        Task<DataTableResultModel<JournalVoucherDetailModel>> GetJournalVoucherDetailByJournalVoucherId(int paymentVoucherId, int addRow);
+        Task<DataTableResultModel<JournalVoucherDetailModel>> GetJournalVoucherDetailByJournalVoucherId(int journalVoucherId, int addRow);
 
-        Task<IList<JournalVoucherDetailModel>> GetJournalVoucherDetailByVoucherId(int paymentVoucherId, int addRow_Blank);
+        Task<IList<JournalVoucherDetailModel>> GetJournalVoucherDetailByVoucherId(int journalVoucherId, int addRow_Blank);
 
     }
 }

@@ -39,9 +39,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
-            ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, true);
-
             return await Task.Run(() =>
             {
                 return View();
@@ -236,55 +233,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
             if (true == await _journalVoucher.DeleteJournalVoucher(journalVoucherId))
             {
                 data.Result.Status = true;
-            }
-
-            return Json(data); // returns.
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> GetAccountLedgerByTypeCorB(string typeCorB)
-        {
-            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-
-            IList<SelectListModel> selectList;
-
-            if (typeCorB == "C")
-            {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount, true);
-            }
-            else
-            {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
-            }
-
-            if (null != selectList && selectList.Any())
-            {
-                data.Result.Status = true;
-                data.Result.Data = selectList;
-            }
-            else
-            {
-                data.Result.Message = "NoItems";
-            }
-
-            return Json(data); // returns.
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> GetClosingBalanceByAccountLedgerId(int accountLedgerId, DateTime voucherDate)
-        {
-            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-
-            LedgerModel ledgerModel = await _ledger.GetClosingBalanceByAccountLedgerId(accountLedgerId, voucherDate);
-
-            if (null != ledgerModel)
-            {
-                data.Result.Status = true;
-                data.Result.Data = ledgerModel.ClosingBalance;
-            }
-            else
-            {
-                data.Result.Data = "0";
             }
 
             return Json(data); // returns.

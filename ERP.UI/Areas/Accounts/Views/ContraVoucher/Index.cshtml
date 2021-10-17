@@ -1,0 +1,223 @@
+﻿@model SearchFilterContraVoucherModel
+@{ ViewBag.Title = "Contra Voucher List"; }
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card m-0">
+                    <div class="card-body p-2" id="searchFilterCriteria">
+                        <div class="row">
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.VoucherNo, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.VoucherNo, new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.VoucherNo)
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.FromDate)
+                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                    @Html.ValidationMessageFor(model => model.FromDate)
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ToDate)
+                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                    @Html.ValidationMessageFor(model => model.ToDate)
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ChequeNo, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.ChequeNo, new { @class = "form-control form-control-sm" })
+                                    @Html.ValidationMessageFor(model => model.ChequeNo)
+                                </div>
+                            </div>
+                            @*<div class="col-6 col-sm-2">
+                                    <div class="form-group-sm">
+                                        @Html.LabelFor(model => model.TypeCorB, new { @class = "required" })
+                                        @Html.DropDownListFor(model => model.TypeCorB, new SelectList(ViewBag.TypeCorBList, "Name", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(model => model.TypeCorB, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-2">
+                                    <div class="form-group-sm">
+                                        @Html.LabelFor(model => model.LedgerId, new { @class = "" })
+                                        @Html.DropDownListFor(model => model.LedgerId, new SelectList(ViewBag.LedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(model => model.LedgerId)
+                                    </div>
+                                </div>*@
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 pt-2 text-right">
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnSearchVoucher();">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddContraVoucher();">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="contraVoucherGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort"></th>
+                            <th>ContraVoucherId</th>
+                            <th>Voucher No</th>
+                            <th>Voucher Date</th>
+                            @*<th class="no-sort">Cash/Bank</th>
+        <th>Account</th>*@
+                            <th>Cheque/Trans. No</th>
+                            <th>Currency</th>
+                            <th>Amount FC</th>
+                            <th>Status</th>
+                            <th>Prepared By</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="modal-voucher" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+<script type="text/javascript">
+    const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+    const TO_PATTERN = 'DD/MM/YYYY HH:mm';
+    $(document).ready(function () {
+        $("#contraVoucherGrid").DataTable({
+            "processing": true,
+            "scrollX": true,
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
+            "serverSide": true,
+            "ajax": {
+                "url": "@Url.Action("GetContraVoucherList", "ContraVoucher")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: function () {
+                        var searchFilterModel = {
+                            VoucherNo: $('#VoucherNo').val(),
+                            FromDate: $('#FromDate').val(),
+                            ToDate: $('#ToDate').val(),
+                            //TypeCorB: $('#TypeCorB').val(),
+                            //LedgerId: $('#LedgerId').val(),
+                            ChequeNo: $('#ChequeNo').val(),
+                        };
+
+                        return JSON.stringify(searchFilterModel);
+                    }
+                },
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditVoucherMaster(' + full.ContraVoucherId + ')"><i class="far fa-edit"></i></button>' +
+                            /*'<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteVoucherMaster(this, ' + full.ContraVoucherId + ')"><i class="fa fa-trash-alt"></i></button>' +*/
+                            '</div>';
+                    }
+                },
+                { "data": "ContraVoucherId", "name": "ContraVoucherId", "visible": false },
+                { "data": "VoucherNo", "name": "VoucherNo" },
+                {
+                    "data": "VoucherDate", "name": "VoucherDate",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                //{ "data": "TypeCorBName", "name": "TypeCorBName", "orderable": false },
+                //{ "data": "AccountLedgerName", "name": "AccountLedgerName" },
+                { "data": "ChequeNo", "name": "ChequeNo" },
+                { "data": "CurrencyCode", "name": "CurrencyCode" },
+                { "data": "AmountFc", "name": "AmountFc", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "StatusName", "name": "StatusName" },
+                { "data": "PreparedByName", "name": "PreparedByName" }
+            ],
+        });
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+
+    // edit voucher.
+    function fnEditVoucherMaster(contraVoucherId) {
+        window.location.href = '@Url.Action("ManageVoucher", "ContraVoucher")?contraVoucherId=' + contraVoucherId;
+    }
+
+    // delete voucher.
+    function fnDeleteVoucherMaster(contraVoucherId) {
+
+    }
+
+    // search data.
+    function fnSearchVoucher() {
+        $("#contraVoucherGrid").DataTable().ajax.reload();
+    }
+
+    // reset filter.
+    function fnResetSearch() {
+        $('#searchFilterCriteria :input[type=text]').each(function (index) {
+            $(this).val('');
+        });
+        $('#searchFilterCriteria select').each(function (index) {
+            $(this).val('');
+        });
+
+        $("#contraVoucherGrid").DataTable().ajax.reload();
+    }
+
+    // new button click.
+    function fnAddContraVoucher() {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddVoucherMaster", "ContraVoucher")', 'html', '',
+        function (data) {
+            $('#modal-voucher').empty();
+            $('#modal-voucher').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteVoucherMaster"); }

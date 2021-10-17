@@ -1,0 +1,80 @@
+﻿@using ERP.Models.Accounts.Enums;
+@model ContraVoucherMasterButtonsModel;
+
+<div class="float-sm-right">
+    <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditVoucherMaster('@Model.ContraVoucherId');">
+        <i class="far fa-edit"></i>  Edit
+    </button>
+    @if (Model.IsApprovalRequestVisible == true)
+    {
+<button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusVoucherMaster('@Model.ContraVoucherId','@DocumentStatus.ApprovalRequested');">
+    <i class="fas fa-download"></i> Request
+</button>}
+
+    @if (Model.IsApproveVisible == true)
+    {
+<button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusVoucherMaster('@Model.ContraVoucherId','@DocumentStatus.Approved');">
+    <i class="far fa-calendar-check"></i> Approve
+</button>}
+
+    @if (Model.IsCancelVisible == true)
+    {
+<button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusVoucherMaster('@Model.ContraVoucherId','@DocumentStatus.Cancelled');">
+    <i class="far fa-times-circle"></i> Cancel
+</button>}
+
+    <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintVoucher('@Model.ContraVoucherId');">
+        <i class="far fa-file-pdf"></i> Print
+    </button>
+    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">
+        <i class="fas fa-arrow-left"></i>  Back
+    </button>
+    @*<button type="button" class="btn btn-default" title="Refresh" onclick="javascript: fnRefreshVoucherMaster('@Model.ContraVoucherId');">
+            <i class="fas fa-sync"></i>
+        </button>*@
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    @*function fnRefreshVoucherMaster(contraVoucherId) {
+        var tabUrl = '@Url.Action("ManageVoucher", "ContraVoucher")?contraVoucherId=' + contraVoucherId;
+        window.location.href = tabUrl;
+    }*@
+
+    // back to index voucher.
+    function fnBackToIndex() {
+        window.location.href = '@Url.Action("Index", "ContraVoucher")';
+    }
+
+    // back to print voucher.
+    function fnPrintVoucher(contraVoucherId) {
+        alert("Print");
+    }
+
+    function fnUpdateStatusVoucherMaster(contraVoucherId, action) {
+        if (confirm("Are you sure?")) {
+
+        var model = {
+            contraVoucherId: contraVoucherId,
+            action: action
+        };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusVoucherMaster", "ContraVoucher")', 'html', model,
+        function (data) {
+            if (data.Result.Status) {
+                fnSuccessNotify('Status updated sucessfully.');
+                var tabUrl = '@Url.Action("ManageVoucher", "ContraVoucher")?contraVoucherId=' + data.Result.Data;
+                window.location.href = tabUrl;
+                return false;
+            }
+            else {
+                fnDangerNotify(data.Result.Data);
+                return false;
+            }
+            }, null, true, null, false);
+        }
+    }
+
+</script>

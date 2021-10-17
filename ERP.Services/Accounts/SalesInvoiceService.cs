@@ -445,7 +445,7 @@ namespace ERP.Services.Accounts
                 CustomerReferenceDate = s.CustomerReferenceDate,
                 CustomerLedgerName = s.CustomerLedger.LedgerName,
                 CurrencyCode = s.Currency.CurrencyCode,
-                PreparedByName = s.Currency.PreparedByUser.UserName,
+                PreparedByName = s.PreparedByUser.UserName,
                 StatusName = s.Status.StatusName,
             }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 

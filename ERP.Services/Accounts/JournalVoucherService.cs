@@ -27,7 +27,7 @@ namespace ERP.Services.Accounts
 
         public async Task<GenerateNoModel> GenerateJournalVoucherNo(int companyId, int financialYearId)
         {
-            int voucherSetupId = 7;
+            int voucherSetupId = 8;
             // get maxno.
             int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
 
@@ -260,7 +260,8 @@ namespace ERP.Services.Accounts
                 VoucherNo = s.VoucherNo,
                 VoucherDate = s.VoucherDate,
                 AmountFc = s.AmountFc,
-                PreparedByName = s.Currency.PreparedByUser.UserName,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.PreparedByUser.UserName,
                 StatusName = s.Status.StatusName,
             }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 

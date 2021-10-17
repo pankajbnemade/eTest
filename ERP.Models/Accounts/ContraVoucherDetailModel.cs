@@ -9,35 +9,55 @@ namespace ERP.Models.Accounts
     {
         public int ContraVoucherDetId { get; set; }
 
-        public int? ContraVoucherId { get; set; }
+        public int ContraVoucherId { get; set; }
 
         [Display(Name = "Particular")]
         [Required(ErrorMessage = "Particular is required.")]
-        public int? ParticularLedgerId { get; set; }
+        public int ParticularLedgerId { get; set; }
+
+        //[Display(Name = "Transaction Type")]
+        //[Required(ErrorMessage = "Transaction Type is required.")]
+        //public int TransactionTypeId { get; set; }
 
         [Display(Name = "Narration")]
-        [Required(ErrorMessage = "Narration is required.")]
         public string Narration { get; set; }
-        
+
+        //[Display(Name = "Sales Invoice")]
+        //public int? SalesInvoiceId { get; set; }
+
+        //[Display(Name = "Purchase Invoice")]
+        //public int? PurchaseInvoiceId { get; set; }
+
+        //[Display(Name = "Credit Note")]
+        //public int? CreditNoteId { get; set; }
+
+        //[Display(Name = "Debit Note")]
+        //public int? DebitNoteId { get; set; }
+
         [Display(Name = "Debit Amount FC")]
         [Required(ErrorMessage = "Debit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmountFc { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [Required(ErrorMessage = "Debit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
         [Required(ErrorMessage = "Credit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmountFc { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [Required(ErrorMessage = "Credit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmount { get; set; }
+
+        //###
+
+        //public string TransactionTypeName { get; set; }
+        public string ParticularLedgerName { get; set; }
+        //public string InvoiceType { get; set; }
+        //public string InvoiceNo { get; set; }
 
     }
 }

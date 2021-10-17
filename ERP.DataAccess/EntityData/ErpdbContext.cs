@@ -78,18 +78,18 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
-        //            }
-        //        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
@@ -680,12 +680,14 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_ContraVoucher_VoucherStyleId");
 
-                entity.Property(e => e.ChequeAmountFc)
-                    .HasColumnName("ChequeAmount_FC")
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+
+                entity.Property(e => e.AmountFc)
+                    .HasColumnName("Amount_FC")
                     .HasColumnType("decimal(18,4)");
 
-                entity.Property(e => e.ChequeAmountFcinWord)
-                    .HasColumnName("ChequeAmount_FCInWord")
+                entity.Property(e => e.AmountFcinWord)
+                    .HasColumnName("Amount_FCInWord")
                     .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -730,6 +732,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Contravouchers)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
@@ -741,26 +744,31 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Contravouchers)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ContravoucherPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Contravouchers)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_Status_StatusId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.ContravoucherUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_aspnetusers_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Contravouchers)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_VoucherStyle_VoucherStyleId");
             });
 
@@ -807,21 +815,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.ContraVoucher)
                     .WithMany(p => p.Contravoucherdetails)
                     .HasForeignKey(d => d.ContraVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucherDetails_ContraVoucher_ContraVoucherId");
 
                 entity.HasOne(d => d.ParticularLedger)
                     .WithMany(p => p.Contravoucherdetails)
                     .HasForeignKey(d => d.ParticularLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucherDetails_Ledger_ParticularLedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ContravoucherdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucherDetails_aspnetusers_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.ContravoucherdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucherDetails_aspnetusers_UpdatedByUserId");
             });
 

@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -11,15 +12,17 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdateContraVoucherDetail(ContraVoucherDetailModel contraVoucherDetailModel);
 
-        Task<bool> UpdateContraVoucherDetailAmount(int? contraVoucherDetailId);
+        Task<bool> UpdateContraVoucherDetailAmount(int contraVoucherDetailId);
 
         Task<bool> DeleteContraVoucherDetail(int contraVoucherDetailId);
 
-        Task<ContraVoucherDetailModel> GetContraVoucherDetailById(int contraVoucherDetailId);
+        Task<ContraVoucherDetailModel> GetContraVoucherDetailById(int contraVoucherDetailId,int contraVoucherId);
 
-        Task<DataTableResultModel<ContraVoucherDetailModel>> GetContraVoucherDetailByContraVoucherId(int contraVoucherId);
+        Task<IList<ContraVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId);
 
-        Task<DataTableResultModel<ContraVoucherDetailModel>> GetContraVoucherDetailList();
+        Task<DataTableResultModel<ContraVoucherDetailModel>> GetContraVoucherDetailByContraVoucherId(int contraVoucherId, int addRow);
+
+        Task<IList<ContraVoucherDetailModel>> GetContraVoucherDetailByVoucherId(int contraVoucherId, int addRow_Blank);
 
     }
 }

@@ -25,68 +25,74 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
+        [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Narration")]
         [StringLength(2000, ErrorMessage = "Narration cannot exceed 2000 characters.")]
         public string Narration { get; set; }
-        
-        [Display(Name = "Cheque No")]
+
+        [Display(Name = "Cheque/Trans. No")]
         [StringLength(250, ErrorMessage = "50 chars only.")]
-        [Required(ErrorMessage = "Cheque No is required.")]
+        [Required(ErrorMessage = "Cheque/Trans. No is required.")]
         public string ChequeNo { get; set; }
 
         [DataType(DataType.DateTime)]
-        [Display(Name = "Cheque Date")]
+        [Display(Name = "Cheque/Trans. Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}", ApplyFormatInEditMode = true)]
-        [Required(ErrorMessage = "Cheque Date is required.")]
+        [Required(ErrorMessage = "Cheque/Trans. Date is required.")]
         public DateTime? ChequeDate { get; set; }
 
-        [Display(Name = "Cheque Amount FC")]
-        [Required(ErrorMessage = "Cheque Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? ChequeAmountFc { get; set; }
+        [Display(Name = "Cheque/Trans. Amount FC")]
+        [Required(ErrorMessage = "Cheque/Trans. Amount FC is required.")]
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal AmountFc { get; set; }
 
-        [Display(Name = "Cheque Amount FC in word")]
-        [Required(ErrorMessage = "Cheque Amount FC in word is required.")]
-        public string ChequeAmountFcinWord { get; set; }
+        [Display(Name = "Cheque/Trans. Amount FC In word")]
+        public string AmountFcInWord { get; set; }
+
+        [Display(Name = "Cheque/Trans. Amount")]
+        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        public decimal Amount { get; set; }
 
         [Display(Name = "Debit Amount FC")]
-        [Required(ErrorMessage = "Debit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmountFc { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [Required(ErrorMessage = "Debit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? DebitAmount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
-        [Required(ErrorMessage = "Credit Amount FC is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmountFc { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [Required(ErrorMessage = "Credit Amount is required.")]
-        //[RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Numbers only.")]
-        public decimal? CreditAmount { get; set; }
+        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmount { get; set; }
 
-        public int? StatusId { get; set; }
+        [Display(Name = "Status")]
+        public int StatusId { get; set; }
 
         public int CompanyId { get; set; }
 
         public int FinancialYearId { get; set; }
 
-        public int? MaxNo { get; set; }
+        public int MaxNo { get; set; }
 
-        public int? VoucherStyleId { get; set; }
+        public int VoucherStyleId { get; set; }
 
         //####
 
-        public string CurrencyName { get; set; }
+        public string CurrencyCode { get; set; }
+
         public string StatusName { get; set; }
+
         public string PreparedByName { get; set; }
+
+        public int NoOfLineItems { get; set; }
 
     }
 }

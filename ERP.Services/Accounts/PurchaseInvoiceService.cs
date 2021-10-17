@@ -442,7 +442,7 @@ namespace ERP.Services.Accounts
                 SupplierReferenceDate = s.SupplierReferenceDate,
                 SupplierLedgerName = s.SupplierLedger.LedgerName,
                 CurrencyCode = s.Currency.CurrencyCode,
-                PreparedByName = s.Currency.PreparedByUser.UserName,
+                PreparedByName = s.PreparedByUser.UserName,
                 StatusName = s.Status.StatusName,
             }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 

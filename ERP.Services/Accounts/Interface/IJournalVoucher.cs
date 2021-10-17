@@ -9,15 +9,15 @@ namespace ERP.Services.Accounts.Interface
     {
         Task<GenerateNoModel> GenerateJournalVoucherNo(int companyId, int financialYearId);
 
-        Task<int> CreateJournalVoucher(JournalVoucherModel paymentVoucherModel);
+        Task<int> CreateJournalVoucher(JournalVoucherModel journalVoucherModel);
 
-        Task<bool> UpdateJournalVoucher(JournalVoucherModel paymentVoucherModel);
+        Task<bool> UpdateJournalVoucher(JournalVoucherModel journalVoucherModel);
 
-        Task<bool> DeleteJournalVoucher(int paymentVoucherId);
+        Task<bool> DeleteJournalVoucher(int journalVoucherId);
 
-        Task<bool> UpdateJournalVoucherMasterAmount(int paymentVoucherId);
+        Task<bool> UpdateJournalVoucherMasterAmount(int journalVoucherId);
 
-         Task<bool> UpdateStatusJournalVoucher(int paymentVoucherId, int action);
+         Task<bool> UpdateStatusJournalVoucher(int journalVoucherId, int action);
 
         Task<JournalVoucherModel> GetJournalVoucherById(int paymentVoucherId);
         

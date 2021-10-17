@@ -279,7 +279,7 @@ namespace ERP.Services.Accounts
                 AccountLedgerName = s.AccountLedger.LedgerName,
                 ChequeNo = s.ChequeNo,
                 CurrencyCode = s.Currency.CurrencyCode,
-                PreparedByName = s.Currency.PreparedByUser.UserName,
+                PreparedByName = s.PreparedByUser.UserName,
                 StatusName = s.Status.StatusName,
             }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 

@@ -1,9 +1,9 @@
-﻿@model JournalVoucherModel
+﻿@model ContraVoucherModel
 
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            @if (Model.JournalVoucherId > 0)
+            @if (Model.ContraVoucherId > 0)
             {
 <h5 class="modal-title">Edit Voucher</h5> }
 else
@@ -14,12 +14,12 @@ else
             </button>
         </div>
         <form id="frmVoucherMaster" class="width100" method="post"
-              asp-action="SaveVoucherMaster" asp-controller="JournalVoucher" asp-area="Accounts"
+              asp-action="SaveVoucherMaster" asp-controller="ContraVoucher" asp-area="Accounts"
               data-ajax-begin="return BeginVoucherMaster();" data-ajax-success="SuccessVoucherMaster"
               data-ajax="true" data-ajax-method="post">
             <div class="modal-body">
 
-                @Html.HiddenFor(model => model.JournalVoucherId)
+                @Html.HiddenFor(model => model.ContraVoucherId)
                 @Html.HiddenFor(model => model.CompanyId)
                 @Html.HiddenFor(model => model.FinancialYearId)
 
@@ -39,7 +39,6 @@ else
                         </div>
                     </div>
                 </div>
-                
 
                 @if (Model.NoOfLineItems > 0)
                 {
@@ -48,7 +47,7 @@ else
             <div class="form-group">
                 @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
                 @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem> { new SelectListItem { Text = Model.CurrencyCode, Value = Model.CurrencyId.ToString() } },
-                                              new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                                   new { @class = "form-control form-control-sm", @readonly = "readonly" })
                 @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -78,7 +77,22 @@ else
         </div>
     </div>
 </div>}
-                
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ChequeNo)
+                            @Html.TextBoxFor(model => model.ChequeNo, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ChequeDate, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.ChequeDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                            @Html.ValidationMessageFor(model => model.ChequeDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -119,7 +133,16 @@ else
             }
         });
 
-       
+        $('#ChequeDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
         // currency change.
         $(document).on('change', '#CurrencyId', function () {
             GetExchangeRateByCurrencyId(this.value);
@@ -133,7 +156,7 @@ else
 
             var model = { currencyId: currencyId, voucherDate: $('#VoucherDate').val() };
 
-            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "JournalVoucher")', '', model,
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetExchangeRateByCurrencyId", "ContraVoucher")', '', model,
             function (response) {
                 if (true == response.Result.Status) {
                     $('#ExchangeRate').val(response.Result.Data);
@@ -168,7 +191,7 @@ else
 
             fnSuccessNotify('Record saved sucessfully.');
 
-            var tabUrl = '@Url.Action("ManageVoucher", "JournalVoucher")?journalVoucherId=' + data.Result.Data;
+            var tabUrl = '@Url.Action("ManageVoucher", "ContraVoucher")?contraVoucherId=' + data.Result.Data;
             window.location.href = tabUrl;
 
         }
