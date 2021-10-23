@@ -7,11 +7,11 @@ namespace ERP.DataAccess.EntityModels
     public partial class Financialyearcompanyrelation
     {
         public int RelationId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Company Company { get; set; }

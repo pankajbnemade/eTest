@@ -8,7 +8,7 @@ namespace ERP.Models.Master
 
         [Required(ErrorMessage = "Voucher Setup is required.")]
         [Display(Name = "Voucher Setup")]
-        public int? VoucherSetupId { get; set; }
+        public int VoucherSetupId { get; set; }
 
         [Display(Name = "Number Padding Character")]
         public string NoPad { get; set; }
@@ -27,15 +27,15 @@ namespace ERP.Models.Master
 
         [Required(ErrorMessage = "Voucher Style is required.")]
         [Display(Name = "Voucher Style")]
-        public int? VoucherStyleId { get; set; }
+        public int VoucherStyleId { get; set; }
 
         [Required(ErrorMessage = "Company is required.")]
         [Display(Name = "Company")]
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         [Required(ErrorMessage = "Financial Year is required.")]
         [Display(Name = "Financial Year")]
-        public int? FinancialYearId { get; set; }
+        public int FinancialYearId { get; set; }
 
         //####
         [Display(Name = "Voucher Setup Name")]

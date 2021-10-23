@@ -20,11 +20,11 @@ namespace ERP.Models.Master
 
         [Required(ErrorMessage = "Designation is required.")]
         [Display(Name = "Designation")]
-        public int? DesignationId { get; set; }
+        public int DesignationId { get; set; }
 
         [Required(ErrorMessage = "Department is required.")]
         [Display(Name = "Department")]
-        public int? DepartmentId { get; set; }
+        public int DepartmentId { get; set; }
 
          [Display(Name = "Email Address")]
         public string EmailAddress { get; set; }

@@ -8,10 +8,10 @@ namespace ERP.DataAccess.EntityModels
     {
         public int FormId { get; set; }
         public string FormName { get; set; }
-        public int? ModuleId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int ModuleId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Module Module { get; set; }

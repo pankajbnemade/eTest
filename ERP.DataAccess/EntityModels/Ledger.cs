@@ -42,14 +42,14 @@ namespace ERP.DataAccess.EntityModels
         public int LedgerId { get; set; }
         public string LedgerCode { get; set; }
         public string LedgerName { get; set; }
-        public sbyte? IsGroup { get; set; }
-        public sbyte? IsMasterGroup { get; set; }
+        public sbyte IsGroup { get; set; }
+        public sbyte IsMasterGroup { get; set; }
         public int? ParentGroupId { get; set; }
-        public sbyte? IsDeActived { get; set; }
+        public sbyte IsDeActived { get; set; }
         public string TaxRegisteredNo { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Ledger ParentGroup { get; set; }

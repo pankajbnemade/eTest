@@ -7,15 +7,15 @@ namespace ERP.DataAccess.EntityModels
     public partial class Taxregisterdetail
     {
         public int TaxRegisterDetId { get; set; }
-        public int? TaxRegisterId { get; set; }
-        public int? SrNo { get; set; }
-        public int? TaxLedgerId { get; set; }
+        public int TaxRegisterId { get; set; }
+        public int SrNo { get; set; }
+        public int TaxLedgerId { get; set; }
         public string TaxPercentageOrAmount { get; set; }
-        public decimal? Rate { get; set; }
+        public decimal Rate { get; set; }
         public string TaxAddOrDeduct { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Aspnetuser PreparedByUser { get; set; }

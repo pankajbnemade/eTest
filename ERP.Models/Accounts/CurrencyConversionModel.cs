@@ -13,11 +13,11 @@ namespace ERP.Models.Accounts
 
         [Required(ErrorMessage = "Company Name is required.")]
         [Display(Name = "Company Name")]
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         [Required(ErrorMessage = "Currency Name is required.")]
         [Display(Name = "Currency Name")]
-        public int? CurrencyId { get; set; }
+        public int CurrencyId { get; set; }
 
         [Required(ErrorMessage = "Effective Date Time is required.")]
         [Display(Name = "Effective Date Time")]
@@ -25,10 +25,10 @@ namespace ERP.Models.Accounts
 
         [Required(ErrorMessage = "Exchange Rate is required.")]
         [Display(Name = "Exchange Rate")]
-        public decimal? ExchangeRate { get; set; }
+        public decimal ExchangeRate { get; set; }
 
         //#####
-         [Display(Name = "Company Name")]
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
         [Display(Name = "Currency Name")]
@@ -37,5 +37,5 @@ namespace ERP.Models.Accounts
         [Display(Name = "Prepared By Name")]
         public string PreparedByName { get; set; }
 
-            }
+    }
 }

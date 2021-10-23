@@ -152,7 +152,7 @@ namespace ERP.Services.Accounts
                 //####
                 ledgerAddressModel.LedgerName = ledgerAddress.Ledger.LedgerName;
                 ledgerAddressModel.CountryName = ledgerAddress.Country.CountryName;
-                ledgerAddressModel.StateIName = ledgerAddress.State.StateName;
+                ledgerAddressModel.StateName = ledgerAddress.State.StateName;
                 ledgerAddressModel.CityName = ledgerAddress.City.CityName;
 
                 return ledgerAddressModel;

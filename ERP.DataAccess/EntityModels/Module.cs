@@ -14,10 +14,10 @@ namespace ERP.DataAccess.EntityModels
 
         public int ModuleId { get; set; }
         public string ModuleName { get; set; }
-        public sbyte? IsActive { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public sbyte IsActive { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Aspnetuser PreparedByUser { get; set; }

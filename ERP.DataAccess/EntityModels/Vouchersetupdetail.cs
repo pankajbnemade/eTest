@@ -7,18 +7,18 @@ namespace ERP.DataAccess.EntityModels
     public partial class Vouchersetupdetail
     {
         public int VoucherSetupDetId { get; set; }
-        public int? VoucherSetupId { get; set; }
+        public int VoucherSetupId { get; set; }
         public string NoPad { get; set; }
         public string NoPreString { get; set; }
         public string NoPostString { get; set; }
         public string NoSeparator { get; set; }
         public string FormatText { get; set; }
-        public int? VoucherStyleId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? FinancialYearId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int VoucherStyleId { get; set; }
+        public int CompanyId { get; set; }
+        public int FinancialYearId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Company Company { get; set; }

@@ -26,9 +26,9 @@ namespace ERP.DataAccess.EntityModels
         public string CurrencyCode { get; set; }
         public string CurrencyName { get; set; }
         public string Denomination { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Aspnetuser PreparedByUser { get; set; }

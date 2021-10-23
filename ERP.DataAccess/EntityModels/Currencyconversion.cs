@@ -7,13 +7,13 @@ namespace ERP.DataAccess.EntityModels
     public partial class Currencyconversion
     {
         public int ConversionId { get; set; }
-        public int? CompanyId { get; set; }
-        public int? CurrencyId { get; set; }
+        public int CompanyId { get; set; }
+        public int CurrencyId { get; set; }
         public DateTime? EffectiveDateTime { get; set; }
-        public decimal? ExchangeRate { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public decimal ExchangeRate { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Company Company { get; set; }

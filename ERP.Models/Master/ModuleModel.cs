@@ -12,7 +12,7 @@ namespace ERP.Models.Master
 
         [Required(ErrorMessage = "Is Active is required.")]
         [Display(Name = "Is Active")]
-        public sbyte? IsActive { get; set; }
+        public sbyte IsActive { get; set; }
 
         //####
         [Display(Name = "Prepared By Name")]

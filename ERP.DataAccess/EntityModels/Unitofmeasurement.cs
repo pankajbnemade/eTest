@@ -16,9 +16,9 @@ namespace ERP.DataAccess.EntityModels
 
         public int UnitOfMeasurementId { get; set; }
         public string UnitOfMeasurementName { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Aspnetuser PreparedByUser { get; set; }

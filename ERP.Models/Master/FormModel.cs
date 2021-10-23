@@ -12,7 +12,7 @@ namespace ERP.Models.Master
 
         [Required(ErrorMessage = "Module is required.")]
         [Display(Name = "Module")]
-        public int? ModuleId { get; set; }
+        public int ModuleId { get; set; }
 
         //#####
         [Display(Name = "Module")]

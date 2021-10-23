@@ -33,11 +33,11 @@ namespace ERP.DataAccess.EntityModels
         public string AlternatePhoneNo { get; set; }
         public string FaxNo { get; set; }
         public string PostalCode { get; set; }
-        public int? CurrencyId { get; set; }
-        public int? NoOfDecimals { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int CurrencyId { get; set; }
+        public int NoOfDecimals { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Currency Currency { get; set; }

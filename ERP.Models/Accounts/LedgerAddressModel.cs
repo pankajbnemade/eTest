@@ -8,7 +8,7 @@ namespace ERP.Models.Accounts
 
         [Required(ErrorMessage = "Ledger Name is required.")]
         [Display(Name = "Ledger Name")]
-        public int? LedgerId { get; set; }
+        public int LedgerId { get; set; }
 
         [Required(ErrorMessage = "Address is required.")]
         [Display(Name = "Address")]
@@ -16,15 +16,15 @@ namespace ERP.Models.Accounts
 
         [Required(ErrorMessage = "Country Name is required.")]
         [Display(Name = "Country Name")]
-        public int? CountryId { get; set; }
+        public int CountryId { get; set; }
 
         [Required(ErrorMessage = "State Name is required.")]
         [Display(Name = "State Name")]
-        public int? StateId { get; set; }
+        public int StateId { get; set; }
 
         [Required(ErrorMessage = "City Name is required.")]
         [Display(Name = "City Name")]
-        public int? CityId { get; set; }
+        public int CityId { get; set; }
 
         [Required(ErrorMessage = "EmailAddress is required.")]
         [Display(Name = "EmailAddress")]
@@ -50,7 +50,7 @@ namespace ERP.Models.Accounts
         public string CountryName { get; set; }
 
         [Display(Name = "StateIName")]
-        public string StateIName { get; set; }
+        public string StateName { get; set; }
 
         [Display(Name = "CityName")]
         public string CityName { get; set; }

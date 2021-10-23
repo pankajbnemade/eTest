@@ -12,11 +12,11 @@ namespace ERP.Models.Master
 
         [Required(ErrorMessage = "Module is required.")]
         [Display(Name = "Module")]
-        public int? ModuleId { get; set; }
+        public int ModuleId { get; set; }
 
         [Required(ErrorMessage = "Is Active is required.")]
         [Display(Name = "Is Active")]
-        public sbyte? IsActive { get; set; }
+        public sbyte IsActive { get; set; }
 
         //####
         [Display(Name = "Module Name")]

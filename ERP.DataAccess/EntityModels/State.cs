@@ -15,9 +15,9 @@ namespace ERP.DataAccess.EntityModels
         public int StateId { get; set; }
         public string StateName { get; set; }
         public int? CountryId { get; set; }
-        public int? PreparedByUserId { get; set; }
+        public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
+        public int UpdatedByUserId { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
 
         public virtual Country Country { get; set; }

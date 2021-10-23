@@ -528,11 +528,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ChargetypePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargeType_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.ChargetypeUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargeType_User_UpdatedByUserId");
             });
 
@@ -562,6 +564,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CityPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_City_User_PreparedByUserId");
 
                 entity.HasOne(d => d.State)
@@ -572,12 +575,17 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.CityUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_City_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Company>(entity =>
             {
                 entity.ToTable("company");
+
+                entity.HasIndex(e => e.CompanyName)
+                    .HasName("CompanyName_UNIQUE")
+                    .IsUnique();
 
                 entity.HasIndex(e => e.CurrencyId)
                     .HasName("IX_Company_CurrencyId");
@@ -636,16 +644,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Currency)
                     .WithMany(p => p.Companies)
                     .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Company_Currency_CurrencyId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CompanyPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Company_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.CompanyUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Company_User_UpdatedByUserId");
             });
 
@@ -862,11 +873,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CountryPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Country_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.CountryUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Country_User_UpdatedByUserId");
             });
 
@@ -1275,6 +1288,10 @@ namespace ERP.DataAccess.EntityData
             {
                 entity.ToTable("currency");
 
+                entity.HasIndex(e => e.CurrencyCode)
+                    .HasName("CurrencyCode_UNIQUE")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.CurrencyName)
                     .HasName("Name_UNIQUE")
                     .IsUnique();
@@ -1291,7 +1308,6 @@ namespace ERP.DataAccess.EntityData
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.CurrencyName)
-                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -1308,11 +1324,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CurrencyPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Currency_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.CurrencyUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Currency_User_UpdatedByUserId");
             });
 
@@ -1346,21 +1364,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Currencyconversions)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CurrencyConversion_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
                     .WithMany(p => p.Currencyconversions)
                     .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CurrencyConversion_Currency_CurrencyId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.CurrencyconversionPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CurrencyConversion_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.CurrencyconversionUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CurrencyConversion_User_UpdatedByUserId");
             });
 
@@ -1792,6 +1814,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Department_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.DepartmentName)
+                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -1803,11 +1826,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DepartmentPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Department_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.DepartmentUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Department_User_UpdatedByUserId");
             });
 
@@ -1826,6 +1851,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Designation_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.DesignationName)
+                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -1837,11 +1863,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.DesignationPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Designation_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.DesignationUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Designation_User_UpdatedByUserId");
             });
 
@@ -1866,11 +1894,12 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_Employee_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.EmailAddress)
-                    .HasColumnType("text")
+                    .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.EmployeeCode)
+                    .IsRequired()
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -1892,21 +1921,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.DepartmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_Department_DepartmentId");
 
                 entity.HasOne(d => d.Designation)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.DesignationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_Designation_DesignationId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.EmployeePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.EmployeeUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_User_UpdatedByUserId");
             });
 
@@ -1925,6 +1958,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_FinancialYear_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.FinancialYearName)
+                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -1940,11 +1974,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.FinancialyearPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FinancialYear_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.FinancialyearUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FinancialYear_User_UpdatedByUserId");
             });
 
@@ -1974,21 +2010,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Financialyearcompanyrelations)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FinancialYearCompanyRelation_Company_CompanyId");
 
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Financialyearcompanyrelations)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FinancialYearCompanyRelation_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.FinancialyearcompanyrelationPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FinancialYearCompanyRelation_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.FinancialyearcompanyrelationUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FinancialYearCompanyRelation_User_UpdatedByUserId");
             });
 
@@ -2022,16 +2062,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Module)
                     .WithMany(p => p.Forms)
                     .HasForeignKey(d => d.ModuleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Form_Module_ModuleId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.FormPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Form_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.FormUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Form_User_UpdatedByUserId");
             });
 
@@ -2292,11 +2335,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.LedgerPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Ledger_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.LedgerUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Ledger_User_UpdatedByUserId");
             });
 
@@ -2357,31 +2402,37 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.City)
                     .WithMany(p => p.Ledgeraddresses)
                     .HasForeignKey(d => d.CityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_City_CityId");
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Ledgeraddresses)
                     .HasForeignKey(d => d.CountryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_Country_CountryId");
 
                 entity.HasOne(d => d.Ledger)
                     .WithMany(p => p.Ledgeraddresses)
                     .HasForeignKey(d => d.LedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_Ledger_LedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.LedgeraddressPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_User_PreparedByUserId");
 
                 entity.HasOne(d => d.State)
                     .WithMany(p => p.Ledgeraddresses)
                     .HasForeignKey(d => d.StateId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_State_StateId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.LedgeraddressUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_User_UpdatedByUserId");
             });
 
@@ -2411,21 +2462,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Ledgercompanyrelations)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerCompanyRelation_Company_CompanyId");
 
                 entity.HasOne(d => d.Ledger)
                     .WithMany(p => p.Ledgercompanyrelations)
                     .HasForeignKey(d => d.LedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerCompanyRelation_Ledger_LedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.LedgercompanyrelationPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerCompanyRelation_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.LedgercompanyrelationUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerCompanyRelation_User_UpdatedByUserId");
             });
 
@@ -2469,32 +2524,36 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Ledgerfinancialyearbalances)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_Company_CompanyId");
 
                 entity.HasOne(d => d.Currency)
                     .WithMany(p => p.Ledgerfinancialyearbalances)
                     .HasForeignKey(d => d.CurrencyId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_Currency_CurrencyId");
 
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Ledgerfinancialyearbalances)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.Ledger)
                     .WithMany(p => p.Ledgerfinancialyearbalances)
                     .HasForeignKey(d => d.LedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_Ledger_LedgerId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.LedgerfinancialyearbalancePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.LedgerfinancialyearbalanceUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_User_UpdatedByUserId");
             });
 
@@ -2525,11 +2584,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.ModulePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Module_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.ModuleUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Module_User_UpdatedByUserId");
             });
 
@@ -3774,12 +3835,17 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_State_User_PreparedByUserId_idx");
 
+                entity.HasIndex(e => e.StateName)
+                    .HasName("StateName_UNIQUE")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_State_User_UpdatedByUserId_idx");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.StateName)
+                    .IsRequired()
                     .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -3794,11 +3860,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.StatePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_State_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.StateUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_State_User_UpdatedByUserId");
             });
 
@@ -3819,6 +3887,7 @@ namespace ERP.DataAccess.EntityData
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.StatusName)
+                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -3828,11 +3897,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.StatusPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Status_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.StatusUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Status_User_UpdatedByUserId");
             });
 
@@ -3853,6 +3924,7 @@ namespace ERP.DataAccess.EntityData
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.TaxRegisterName)
+                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -3862,11 +3934,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.TaxregisterPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TaxRegister_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.TaxregisterUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TaxRegister_User_UpdatedByUserId");
             });
 
@@ -3908,21 +3982,25 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.TaxregisterdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TaxRegisterDetails_User_PreparedByUserId");
 
                 entity.HasOne(d => d.TaxLedger)
                     .WithMany(p => p.Taxregisterdetails)
                     .HasForeignKey(d => d.TaxLedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TaxRegisterDetails_Ledger_TaxLedgerId");
 
                 entity.HasOne(d => d.TaxRegister)
                     .WithMany(p => p.Taxregisterdetails)
                     .HasForeignKey(d => d.TaxRegisterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TaxRegisterDetails_TaxRegister_TaxRegisterId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.TaxregisterdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TaxRegisterDetails_User_UpdatedByUserId");
             });
 
@@ -3943,6 +4021,7 @@ namespace ERP.DataAccess.EntityData
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UnitOfMeasurementName)
+                    .IsRequired()
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -3952,11 +4031,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.UnitofmeasurementPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UnitOfMeasurement_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.UnitofmeasurementUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UnitOfMeasurement_User_UpdatedByUserId");
             });
 
@@ -3990,16 +4071,19 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Module)
                     .WithMany(p => p.Vouchersetups)
                     .HasForeignKey(d => d.ModuleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetup_Module_ModuleId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.VouchersetupPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetup_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.VouchersetupUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetup_User_UpdatedByUserId");
             });
 
@@ -4060,31 +4144,37 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Vouchersetupdetails)
                     .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetupDetails_Company_CompanyId");
 
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Vouchersetupdetails)
                     .HasForeignKey(d => d.FinancialYearId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetupDetails_FinancialYear_FinancialYearId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.VouchersetupdetailPreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetupDetails_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.VouchersetupdetailUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetupDetails_User_UpdatedByUserId");
 
                 entity.HasOne(d => d.VoucherSetup)
                     .WithMany(p => p.Vouchersetupdetails)
                     .HasForeignKey(d => d.VoucherSetupId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetupDetails_VoucherSetup_VoucherSetupId");
 
                 entity.HasOne(d => d.VoucherStyle)
                     .WithMany(p => p.Vouchersetupdetails)
                     .HasForeignKey(d => d.VoucherStyleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherSetupDetails_VoucherStyle_VoucherStyleId");
             });
 
@@ -4107,6 +4197,7 @@ namespace ERP.DataAccess.EntityData
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.VoucherStyleName)
+                    .IsRequired()
                     .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
@@ -4114,11 +4205,13 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.VoucherstylePreparedByUsers)
                     .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherStyle_User_PreparedByUserId");
 
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.VoucherstyleUpdatedByUsers)
                     .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VoucherStyle_User_UpdatedByUserId");
             });
 

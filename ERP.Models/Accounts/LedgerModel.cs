@@ -20,17 +20,17 @@ namespace ERP.Models.Accounts
         public string LedgerName { get; set; }
 
         [Display(Name = "Is Group")]
-        public sbyte? IsGroup { get; set; }
+        public sbyte IsGroup { get; set; }
 
         [Display(Name = "Is Master Group")]
-        public sbyte? IsMasterGroup { get; set; }
+        public sbyte IsMasterGroup { get; set; }
 
         [Required(ErrorMessage = "Parent Group Name is required.")]
         [Display(Name = "Parent Group Name")]
         public int? ParentGroupId { get; set; }
 
         [Display(Name = "Is DeActivated")]
-        public sbyte? IsDeActived { get; set; }
+        public sbyte IsDeActived { get; set; }
 
         [Display(Name = "Tax Registered No")]
         public string TaxRegisteredNo { get; set; }
