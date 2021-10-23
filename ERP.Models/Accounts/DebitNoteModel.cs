@@ -145,11 +145,6 @@ namespace ERP.Models.Accounts
         public int MaxNo { get; set; }
         public int VoucherStyleId { get; set; }
 
-        //public int? PreparedByUserId { get; set; }
-        //public int? UpdatedByUserId { get; set; }
-        //public DateTime? PreparedDateTime { get; set; }
-        //public DateTime? UpdatedDateTime { get; set; }
-
         //####
 
         public string PartyLedgerName { get; set; }
