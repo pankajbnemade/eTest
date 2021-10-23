@@ -1,6 +1,8 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,5 +26,10 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<ReceiptVoucherDetailModel>> GetReceiptVoucherDetailByVoucherId(int receiptVoucherId, int addRow_Blank);
 
+        Task<AdvanceAdjustmentVoucherDetailModel> GetVoucherDetail(int receiptVoucherDetId);
+
+        Task<IList<SelectListModel>>  GetVocuherSelectList(int particularLedgerId, DateTime advanceAdjustmentDate, int voucherDetId, decimal amountFc);
+
+        Task<decimal> GetVoucherAvailableAmount(int receiptVoucherDetId);
     }
 }

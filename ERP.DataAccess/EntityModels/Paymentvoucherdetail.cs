@@ -6,6 +6,11 @@ namespace ERP.DataAccess.EntityModels
 {
     public partial class Paymentvoucherdetail
     {
+        public Paymentvoucherdetail()
+        {
+            Advanceadjustments = new HashSet<Advanceadjustment>();
+        }
+
         public int PaymentVoucherDetId { get; set; }
         public int PaymentVoucherId { get; set; }
         public int ParticularLedgerId { get; set; }
@@ -26,5 +31,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual Aspnetuser PreparedByUser { get; set; }
         public virtual Purchaseinvoice PurchaseInvoice { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        public virtual ICollection<Advanceadjustment> Advanceadjustments { get; set; }
     }
 }

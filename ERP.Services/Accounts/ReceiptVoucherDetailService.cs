@@ -6,6 +6,7 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -301,12 +302,12 @@ namespace ERP.Services.Accounts
                 receiptVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)receiptVoucherDetail.TransactionTypeId).ToString());
                 receiptVoucherDetailModel.ParticularLedgerName = null != receiptVoucherDetail.ParticularLedger ? receiptVoucherDetail.ParticularLedger.LedgerName : null;
 
-                if (receiptVoucherDetailModel.SalesInvoiceId != 0 && receiptVoucherDetailModel.SalesInvoiceId  != null)
+                if (receiptVoucherDetailModel.SalesInvoiceId != 0 && receiptVoucherDetailModel.SalesInvoiceId != null)
                 {
                     receiptVoucherDetailModel.InvoiceType = "Sales Invoice";
                     receiptVoucherDetailModel.InvoiceNo = null != receiptVoucherDetail.SalesInvoice ? receiptVoucherDetail.SalesInvoice.InvoiceNo : null;
                 }
-                else if (receiptVoucherDetailModel.CreditNoteId != 0 && receiptVoucherDetailModel.CreditNoteId  != null)
+                else if (receiptVoucherDetailModel.CreditNoteId != 0 && receiptVoucherDetailModel.CreditNoteId != null)
                 {
                     receiptVoucherDetailModel.InvoiceType = "Credit Note";
                     receiptVoucherDetailModel.InvoiceNo = null != receiptVoucherDetail.CreditNote ? receiptVoucherDetail.CreditNote.CreditNoteNo : null;
@@ -314,6 +315,83 @@ namespace ERP.Services.Accounts
 
                 return receiptVoucherDetailModel;
             });
+        }
+
+        public async Task<AdvanceAdjustmentVoucherDetailModel> GetVoucherDetail(int receiptVoucherDetId)
+        {
+            // create query.
+            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId == receiptVoucherDetId)
+                                                    .Include(w => w.ReceiptVoucher);
+
+            // get records by query.
+            List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
+
+            Receiptvoucherdetail receiptVoucherDetail = null;
+
+            AdvanceAdjustmentVoucherDetailModel advanceAdjustmentVoucherDetailModel = new AdvanceAdjustmentVoucherDetailModel();
+
+            if (null != receiptVoucherDetailList && receiptVoucherDetailList.Any())
+            {
+                receiptVoucherDetail = receiptVoucherDetailList.FirstOrDefault();
+
+                advanceAdjustmentVoucherDetailModel.CurrencyId = receiptVoucherDetail.ReceiptVoucher.CurrencyId;
+                advanceAdjustmentVoucherDetailModel.ExchangeRate = receiptVoucherDetail.ReceiptVoucher.ExchangeRate;
+            }
+
+            return advanceAdjustmentVoucherDetailModel;
+        }
+
+        public async Task<IList<SelectListModel>> GetVocuherSelectList(int particularLedgerId, DateTime advanceAdjustmentDate, int voucherDetId, decimal amountFc)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.ReceiptVoucherDetId != 0))
+            {
+                var query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0)
+                                                .Include(w => w.ReceiptVoucher)
+                                                .Include(w => w.Advanceadjustments)
+                                                .ThenInclude(w => w.Advanceadjustmentdetails)
+                                                .Where(w => w.ParticularLedgerId == particularLedgerId)
+                                                //.Where(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved)
+                                                //.Where(w => w.ReceiptVoucher.VoucherDate <= advanceAdjustmentDate)
+                                                //.Where(w => w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
+                                                .Select(c => new
+                                                {
+                                                    VoucherNo = c.ReceiptVoucher.VoucherNo,
+                                                    VoucherDetId = c.ReceiptVoucherDetId,
+                                                    AmountFc = voucherDetId == c.ReceiptVoucherDetId ? c.AmountFc : c.AmountFc + amountFc,
+                                                });
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.VoucherNo + " (" + s.AmountFc.ToString() + ")",
+                    Value = s.VoucherDetId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
+        public async Task<decimal> GetVoucherAvailableAmount(int receiptVoucherDetId)
+        {
+            // create query.
+            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId == receiptVoucherDetId)
+                                                    //.Where(w => w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
+                                                    ;
+            // get records by query.
+            List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
+
+            Receiptvoucherdetail receiptVoucherDetail = null;
+
+            decimal availableAmountFc = 0;
+
+            if (null != receiptVoucherDetailList && receiptVoucherDetailList.Any())
+            {
+                receiptVoucherDetail = receiptVoucherDetailList.FirstOrDefault();
+                availableAmountFc = receiptVoucherDetail.AmountFc;
+            }
+
+            return availableAmountFc;
         }
 
     }

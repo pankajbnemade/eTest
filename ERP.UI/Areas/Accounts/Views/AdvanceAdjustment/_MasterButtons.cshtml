@@ -1,0 +1,80 @@
+﻿@using ERP.Models.Accounts.Enums;
+@model AdvanceAdjustmentMasterButtonsModel;
+
+<div class="float-sm-right">
+    <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditAdvanceAdjustmentMaster('@Model.AdvanceAdjustmentId');">
+        <i class="far fa-edit"></i>  Edit
+    </button>
+    @if (Model.IsApprovalRequestVisible == true)
+    {
+<button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusAdvanceAdjustmentMaster('@Model.AdvanceAdjustmentId','@DocumentStatus.ApprovalRequested');">
+    <i class="fas fa-download"></i> Request
+</button>}
+
+    @if (Model.IsApproveVisible == true)
+    {
+<button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusAdvanceAdjustmentMaster('@Model.AdvanceAdjustmentId','@DocumentStatus.Approved');">
+    <i class="far fa-calendar-check"></i> Approve
+</button>}
+
+    @if (Model.IsCancelVisible == true)
+    {
+<button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusAdvanceAdjustmentMaster('@Model.AdvanceAdjustmentId','@DocumentStatus.Cancelled');">
+    <i class="far fa-times-circle"></i> Cancel
+</button>}
+
+    <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintAdvanceAdjustment('@Model.AdvanceAdjustmentId');">
+        <i class="far fa-file-pdf"></i> Print
+    </button>
+    <button type="button" class="btn btn-secondary" title="Back" onclick="javascript: fnBackToIndex();">
+        <i class="fas fa-arrow-left"></i>  Back
+    </button>
+    @*<button type="button" class="btn btn-default" title="Refresh" onclick="javascript: fnRefreshAdvanceAdjustmentMaster('@Model.AdvanceAdjustmentId');">
+            <i class="fas fa-sync"></i>
+        </button>*@
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    @*function fnRefreshAdvanceAdjustmentMaster(advanceAdjustmentId) {
+        var tabUrl = '@Url.Action("ManageAdvanceAdjustment", "AdvanceAdjustment")?advanceAdjustmentId=' + advanceAdjustmentId;
+        window.location.href = tabUrl;
+    }*@
+
+    // back to index advanceAdjustment.
+    function fnBackToIndex() {
+        window.location.href = '@Url.Action("Index", "AdvanceAdjustment")';
+    }
+
+    // back to print advanceAdjustment.
+    function fnPrintAdvanceAdjustment(advanceAdjustmentId) {
+        alert("Print");
+    }
+
+    function fnUpdateStatusAdvanceAdjustmentMaster(advanceAdjustmentId, action) {
+        if (confirm("Are you sure?")) {
+
+        var model = {
+            advanceAdjustmentId: advanceAdjustmentId,
+            action: action
+        };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusAdvanceAdjustmentMaster", "AdvanceAdjustment")', 'html', model,
+        function (data) {
+            if (data.Result.Status) {
+                fnSuccessNotify('Status updated sucessfully.');
+                var tabUrl = '@Url.Action("ManageAdvanceAdjustment", "AdvanceAdjustment")?advanceAdjustmentId=' + data.Result.Data;
+                window.location.href = tabUrl;
+                return false;
+            }
+            else {
+                fnDangerNotify(data.Result.Data);
+                return false;
+            }
+            }, null, true, null, false);
+        }
+    }
+
+</script>

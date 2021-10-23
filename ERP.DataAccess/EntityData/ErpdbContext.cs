@@ -89,7 +89,7 @@ namespace ERP.DataAccess.EntityData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
@@ -111,14 +111,14 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.ParticularLedgerId)
                     .HasName("IX_AdvanceAdjustment_ParticularLedgerId");
 
-                entity.HasIndex(e => e.PaymentVoucherId)
-                    .HasName("IX_AdvanceAdjustment_PaymentVoucherId");
+                entity.HasIndex(e => e.PaymentVoucherDetId)
+                    .HasName("fk_advanceadjustment_VoucherDet_DetId");
 
                 entity.HasIndex(e => e.PreparedByUserId)
                     .HasName("FK_AdvanceAdjustment_aspnetusers_PreparedByUserId_idx");
 
-                entity.HasIndex(e => e.ReceiptVoucherId)
-                    .HasName("IX_AdvanceAdjustment_ReceiptVoucherId");
+                entity.HasIndex(e => e.ReceiptVoucherDetId)
+                    .HasName("fk_advanceadjustment_ReceiptVoucherDet_DetId");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("IX_AdvanceAdjustment_StatusId");
@@ -127,7 +127,7 @@ namespace ERP.DataAccess.EntityData
                     .HasName("FK_AdvanceAdjustment_aspnetusers_UpdatedByUserId_idx");
 
                 entity.HasIndex(e => e.VoucherStyleId)
-                    .HasName("tf_idx");
+                    .HasName("IX_AdvanceAdjustment_VoucherStyleId");
 
                 entity.Property(e => e.AdvanceAdjustmentDate).HasColumnType("datetime");
 
@@ -183,11 +183,10 @@ namespace ERP.DataAccess.EntityData
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_Ledger_ParticularLedgerId");
 
-                entity.HasOne(d => d.PaymentVoucher)
+                entity.HasOne(d => d.PaymentVoucherDet)
                     .WithMany(p => p.Advanceadjustments)
-                    .HasForeignKey(d => d.PaymentVoucherId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AdvanceAdjustment_PaymentVoucher_CompanyId");
+                    .HasForeignKey(d => d.PaymentVoucherDetId)
+                    .HasConstraintName("fk_advanceadjustment_VoucherDet_DetId");
 
                 entity.HasOne(d => d.PreparedByUser)
                     .WithMany(p => p.AdvanceadjustmentPreparedByUsers)
@@ -195,11 +194,10 @@ namespace ERP.DataAccess.EntityData
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_aspnetusers_PreparedByUserId");
 
-                entity.HasOne(d => d.ReceiptVoucher)
+                entity.HasOne(d => d.ReceiptVoucherDet)
                     .WithMany(p => p.Advanceadjustments)
-                    .HasForeignKey(d => d.ReceiptVoucherId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AdvanceAdjustment_ReceiptVoucher_CompanyId");
+                    .HasForeignKey(d => d.ReceiptVoucherDetId)
+                    .HasConstraintName("fk_advanceadjustment_ReceiptVoucherDet_DetId");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Advanceadjustments)

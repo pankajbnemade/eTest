@@ -1,0 +1,206 @@
+﻿@model AdvanceAdjustmentModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.AdvanceAdjustmentId > 0)
+            {
+<h5 class="modal-title">Edit Advance Adjustment</h5> }
+else
+{
+<h5 class="modal-title">Add Advance Adjustment</h5>}
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="frmAdvanceAdjustmentMaster" class="width100" method="post"
+              asp-action="SaveAdvanceAdjustmentMaster" asp-controller="AdvanceAdjustment" asp-area="Accounts"
+              data-ajax-begin="return BeginAdvanceAdjustmentMaster();" data-ajax-success="SuccessAdvanceAdjustmentMaster"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+
+                @Html.HiddenFor(model => model.AdvanceAdjustmentId)
+                @Html.HiddenFor(model => model.CompanyId)
+                @Html.HiddenFor(model => model.FinancialYearId)
+                @Html.HiddenFor(model => model.PaymentVoucherDetId)
+                @Html.HiddenFor(model => model.ReceiptVoucherDetId)
+                @Html.HiddenFor(model => model.CurrencyId)
+                @Html.HiddenFor(model => model.ExchangeRate)
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AdvanceAdjustmentNo, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.AdvanceAdjustmentNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.AdvanceAdjustmentNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AdvanceAdjustmentDate, new { @class = "required" })
+
+                            @if (Model.NoOfLineItems > 0)
+                            {
+                @Html.TextBoxFor(model => model.AdvanceAdjustmentDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @readonly = "readonly", autocomplete = "off", @placeholder = "DD/MMM/YYYY" }) }
+            else
+            {
+@Html.TextBoxFor(model => model.AdvanceAdjustmentDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })}
+
+                            @Html.ValidationMessageFor(model => model.AdvanceAdjustmentDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ParticularLedgerId, new { @class = "required" })
+                            @if (Model.NoOfLineItems > 0)
+                            {
+                @Html.DropDownListFor(model => model.ParticularLedgerId,
+                                        new List<SelectListItem> { new SelectListItem { Text = Model.ParticularLedgerName, Value = Model.ParticularLedgerId.ToString() } },
+                                        new { @class = "form-control form-control-sm", @readonly = "readonly" }) }
+            else
+            {
+@Html.DropDownListFor(model => model.ParticularLedgerId, new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })}
+                            @Html.ValidationMessageFor(model => model.ParticularLedgerId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VoucherDetId, new { @class = "required" })
+                            <select class="form-control form-control-sm r" asp-for="VoucherDetId">
+                                <option value="">Select</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.VoucherDetId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Narration)
+                            @Html.TextAreaFor(model => model.Narration, new { @class = "form-control form-control-sm col-sm-12" })
+                            @Html.ValidationMessageFor(model => model.Narration, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#AdvanceAdjustmentDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+        if ('@Model.AdvanceAdjustmentId' > 0 && '@Model.ParticularLedgerId' > 0) {
+            GetVoucherList('@Model.ParticularLedgerId','@Model.VoucherDetId');
+        }
+
+        $(document).off('change').on('change', '#ParticularLedgerId', function () {
+            GetVoucherList(this.value,"");
+        });
+
+    });
+
+    function GetVoucherList(particularLedgerId, voucherDetId) {
+        if (0 != particularLedgerId) {
+            var model = { advanceAdjustmentId: $('#AdvanceAdjustmentId').val(), particularLedgerId: particularLedgerId, advanceAdjustmentDate: $('#AdvanceAdjustmentDate').val()};
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetVoucherListByParticularId", "AdvanceAdjustment")', '', model,
+                function (response) {
+                    $('#VoucherDetId').empty();
+                    $('#VoucherDetId').append("<option value=''>Select</option>");
+
+                    if (true == response.Result.Status) {
+                        $.each(response.Result.Data, function (i, item) {
+                            $('#VoucherDetId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                        });
+
+                        if ($('#ParticularLedgerId').val() == '') {
+                            voucherDetId = '';
+                        }
+
+                        $('#VoucherDetId').val(voucherDetId);
+                        $("span[data-valmsg-for='VoucherDetId']").html('');
+                    }
+                    else {
+                        if ('NoItems' == response.Result.Message) {
+                            $("span[data-valmsg-for='VoucherDetId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                            $("span[data-valmsg-for='VoucherDetId']").html('<span for="VoucherDetId" class="">No data found.</span>');
+                        }
+                    }
+                }, null, true, null, false);
+        }
+        else {
+            $('#VoucherDetId').empty();
+            $('#VoucherDetId').append("<option value=''>Select</option>");
+        }
+
+    }
+
+    // begin form
+    function BeginAdvanceAdjustmentMaster() {
+        var form = $("#frmAdvanceAdjustmentMaster");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            fnDangerNotify('Model state is invalid.');
+            return false;
+        }
+    }
+
+    // success form
+    function SuccessAdvanceAdjustmentMaster(data) {
+        if (data.Result.Status) {
+            $('#modal-advanceAdjustment').modal('hide');
+
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("ManageAdvanceAdjustment", "AdvanceAdjustment")?advanceAdjustmentId=' + data.Result.Data;
+            window.location.href = tabUrl;
+
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+</script>
+
+<style type="text/css">
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>

@@ -134,7 +134,7 @@ namespace ERP.Services.Accounts
             return advanceAdjustmentDetailModel; // returns.
         }
 
-        public async Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(int advanceAdjustmentId)
+        public async Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(int advanceAdjustmentId, int addRow_Blank)
         {
             DataTableResultModel<AdvanceAdjustmentDetailModel> resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();
 
@@ -160,49 +160,25 @@ namespace ERP.Services.Accounts
         {
             IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await GetAdvanceAdjustmentDetailList(0, advanceAdjustmentId);
 
-            //if (null != advanceAdjustmentDetailModelList && advanceAdjustmentDetailModelList.Any())
-            //{
-            //    if (addRow_Blank == 1)
-            //    {
-            //        advanceAdjustmentDetailModelList.Add(await AddRow_Blank(advanceAdjustmentId));
-            //    }
-            //}
-            //else
-            //{
-            //    advanceAdjustmentDetailModelList = new List<AdvanceAdjustmentDetailModel>();
-
-            //    if (addRow_Blank == 1)
-            //    {
-            //        advanceAdjustmentDetailModelList.Add(await AddRow_Blank(advanceAdjustmentId));
-            //    }
-
-            //}
-
             return advanceAdjustmentDetailModelList; // returns.
         }
 
-        public async Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList()
-        {
-            DataTableResultModel<AdvanceAdjustmentDetailModel> resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();
+        //public async Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList()
+        //{
+        //    DataTableResultModel<AdvanceAdjustmentDetailModel> resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();
 
-            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await GetAdvanceAdjustmentDetailList(0, 0);
+        //    IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await GetAdvanceAdjustmentDetailList(0, 0);
 
-            if (null != advanceAdjustmentDetailModelList && advanceAdjustmentDetailModelList.Any())
-            {
-                resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();
-                resultModel.ResultList = advanceAdjustmentDetailModelList;
-                resultModel.TotalResultCount = advanceAdjustmentDetailModelList.Count();
-            }
+        //    if (null != advanceAdjustmentDetailModelList && advanceAdjustmentDetailModelList.Any())
+        //    {
+        //        resultModel = new DataTableResultModel<AdvanceAdjustmentDetailModel>();
+        //        resultModel.ResultList = advanceAdjustmentDetailModelList;
+        //        resultModel.TotalResultCount = advanceAdjustmentDetailModelList.Count();
+        //    }
 
-            return resultModel; // returns.
-        }
+        //    return resultModel; // returns.
+        //}
 
-        /// <summary>
-        /// get advance adjustment List based on particularLedgerId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
         public async Task<IList<AdvanceAdjustmentDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId)
         {
             IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = null;

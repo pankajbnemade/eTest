@@ -6,6 +6,7 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -314,6 +315,87 @@ namespace ERP.Services.Accounts
 
                 return paymentVoucherDetailModel;
             });
+        }
+
+        public async Task<AdvanceAdjustmentVoucherDetailModel> GetVoucherDetail(int paymentVoucherDetId)
+        {
+            // create query.
+            IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId == paymentVoucherDetId)
+                                                    .Include(w => w.PaymentVoucher);
+            // apply filters.
+            if (0 != paymentVoucherDetId)
+                query = query.Where(w => w.PaymentVoucherDetId == paymentVoucherDetId);
+
+            // get records by query.
+            List<Paymentvoucherdetail> paymentVoucherDetailList = await query.ToListAsync();
+
+            Paymentvoucherdetail paymentVoucherDetail = null;
+
+            AdvanceAdjustmentVoucherDetailModel advanceAdjustmentVoucherDetailModel = new AdvanceAdjustmentVoucherDetailModel();
+
+            if (null != paymentVoucherDetailList && paymentVoucherDetailList.Any())
+            {
+                paymentVoucherDetail = paymentVoucherDetailList.FirstOrDefault();
+
+                advanceAdjustmentVoucherDetailModel.CurrencyId = paymentVoucherDetail.PaymentVoucher.CurrencyId;
+                advanceAdjustmentVoucherDetailModel.ExchangeRate = paymentVoucherDetail.PaymentVoucher.ExchangeRate;
+            }
+
+            return advanceAdjustmentVoucherDetailModel;
+        }
+
+        public async Task<IList<SelectListModel>> GetVocuherSelectList(int particularLedgerId, DateTime advanceAdjustmentDate, int voucherDetId, decimal amountFc)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.PaymentVoucherDetId != 0))
+            {
+                var query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0)
+                                                .Include(w => w.PaymentVoucher)
+                                                .Include(w => w.Advanceadjustments)
+                                                .ThenInclude(w => w.Advanceadjustmentdetails)
+                                                .Where(w => w.ParticularLedgerId == particularLedgerId)
+                                                //.Where(w => w.PaymentVoucher.StatusId == (int)DocumentStatus.Approved)
+                                                //.Where(w => w.PaymentVoucher.VoucherDate <= advanceAdjustmentDate)
+                                                //.Where(w => w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
+                                                .Select(c => new
+                                                {
+                                                    VoucherNo = c.PaymentVoucher.VoucherNo,
+                                                    VoucherDetId = c.PaymentVoucherDetId,
+                                                    AmountFc = voucherDetId == 0 ? c.AmountFc : c.AmountFc + amountFc
+                                                });
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.VoucherNo + " (" + s.AmountFc.ToString() + ")",
+                    Value = s.VoucherDetId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
+        
+        public async Task<decimal> GetVoucherAvailableAmount(int paymentVoucherDetId)
+        {
+            // create query.
+            IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId == paymentVoucherDetId)
+                                                    //.Where(w => w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
+                                                    ;
+            // get records by query.
+            List<Paymentvoucherdetail> paymentVoucherDetailList = await query.ToListAsync();
+
+            Paymentvoucherdetail paymentVoucherDetail = null;
+
+            decimal availableAmountFc = 0;
+
+            if (null != paymentVoucherDetailList && paymentVoucherDetailList.Any())
+            {
+                paymentVoucherDetail = paymentVoucherDetailList.FirstOrDefault();
+                availableAmountFc = paymentVoucherDetail.AmountFc;
+            }
+
+            return availableAmountFc;
         }
 
     }

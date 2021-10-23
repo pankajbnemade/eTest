@@ -18,37 +18,25 @@ namespace ERP.Services.Accounts
     public class AdvanceAdjustmentService : Repository<Advanceadjustment>, IAdvanceAdjustment
     {
         ICommon common;
+
         public AdvanceAdjustmentService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
         {
             common = _common;
         }
 
-        /// <summary>
-        /// generate invoice no.
-        /// </summary>
-        /// <param name="companyId"></param>
-        /// <param name="financialYearId"></param>
-        /// <returns>
-        /// return invoice no.
-        /// </returns>
         public async Task<GenerateNoModel> GenerateAdvanceAdjustmentNo(int companyId, int financialYearId)
         {
-            int voucherSetupId = 7;
-            // get maxno.
-            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => m.MaxNo);
+            int voucherSetupId = 10;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo(Convert.ToInt32(maxNo), voucherSetupId, companyId, financialYearId);
+            int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
+
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
 
-        /// <summary>
-        /// create new purchase invoice.
-        /// </summary>
-        /// <param name="advanceAdjustmentModel"></param>
-        /// <returns>
-        /// return id.
-        /// </returns>
         public async Task<int> CreateAdvanceAdjustment(AdvanceAdjustmentModel advanceAdjustmentModel)
         {
             int advanceAdjustmentId = 0;
@@ -64,8 +52,8 @@ namespace ERP.Services.Accounts
 
             advanceAdjustment.AdvanceAdjustmentDate = advanceAdjustmentModel.AdvanceAdjustmentDate;
             advanceAdjustment.ParticularLedgerId = advanceAdjustmentModel.ParticularLedgerId;
-            advanceAdjustment.PaymentVoucherId = advanceAdjustmentModel.PaymentVoucherId;
-            advanceAdjustment.ReceiptVoucherId = advanceAdjustmentModel.ReceiptVoucherId;
+            advanceAdjustment.PaymentVoucherDetId = advanceAdjustmentModel.PaymentVoucherDetId;
+            advanceAdjustment.ReceiptVoucherDetId = advanceAdjustmentModel.ReceiptVoucherDetId;
             advanceAdjustment.CurrencyId = advanceAdjustmentModel.CurrencyId;
             advanceAdjustment.ExchangeRate = advanceAdjustmentModel.ExchangeRate;
             advanceAdjustment.Narration = advanceAdjustmentModel.Narration;
@@ -88,13 +76,6 @@ namespace ERP.Services.Accounts
             return advanceAdjustmentId; // returns.
         }
 
-        /// <summary>
-        /// update purchase invoice.
-        /// </summary>
-        /// <param name="advanceAdjustmentModel"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
         public async Task<bool> UpdateAdvanceAdjustment(AdvanceAdjustmentModel advanceAdjustmentModel)
         {
             bool isUpdated = false;
@@ -106,8 +87,8 @@ namespace ERP.Services.Accounts
             {
                 advanceAdjustment.AdvanceAdjustmentDate = advanceAdjustmentModel.AdvanceAdjustmentDate;
                 advanceAdjustment.ParticularLedgerId = advanceAdjustmentModel.ParticularLedgerId;
-                advanceAdjustment.PaymentVoucherId = advanceAdjustmentModel.PaymentVoucherId;
-                advanceAdjustment.ReceiptVoucherId = advanceAdjustmentModel.ReceiptVoucherId;
+                advanceAdjustment.PaymentVoucherDetId = advanceAdjustmentModel.PaymentVoucherDetId;
+                advanceAdjustment.ReceiptVoucherDetId = advanceAdjustmentModel.ReceiptVoucherDetId;
                 advanceAdjustment.CurrencyId = advanceAdjustmentModel.CurrencyId;
                 advanceAdjustment.ExchangeRate = advanceAdjustmentModel.ExchangeRate;
                 advanceAdjustment.Narration = advanceAdjustmentModel.Narration;
@@ -130,13 +111,22 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        /// <summary>
-        /// delete purchase invoice.
-        /// </summary>
-        /// <param name="advanceAdjustmentId"></param>
-        /// <returns>
-        /// return true if success.
-        /// </returns>
+        public async Task<bool> UpdateStatusAdvanceAdjustment(int advanceAdjustmentId, int statusId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Advanceadjustment advanceAdjustment = await GetByIdAsync(w => w.AdvanceAdjustmentId == advanceAdjustmentId);
+
+            if (null != advanceAdjustment)
+            {
+                advanceAdjustment.StatusId = statusId;
+                isUpdated = await Update(advanceAdjustment);
+            }
+
+            return isUpdated; // returns.
+        }
+
         public async Task<bool> DeleteAdvanceAdjustment(int AdvanceAdjustmentId)
         {
             bool isDeleted = false;
@@ -152,7 +142,7 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-        public async Task<bool> UpdateAdvanceAdjustmentMasterAmount(int? advanceAdjustmentId)
+        public async Task<bool> UpdateAdvanceAdjustmentMasterAmount(int advanceAdjustmentId)
         {
             bool isUpdated = false;
 
@@ -167,7 +157,7 @@ namespace ERP.Services.Accounts
                 advanceAdjustment.AmountFc = advanceAdjustment.Advanceadjustmentdetails.Sum(w => w.AmountFc);
                 advanceAdjustment.Amount = advanceAdjustment.AmountFc * advanceAdjustment.ExchangeRate;
 
-                advanceAdjustment.AmountFcinWord = await common.AmountInWord_Million(advanceAdjustment.AmountFc.ToString(), advanceAdjustment.PaymentVoucher.Currency.CurrencyCode, advanceAdjustment.PaymentVoucher.Currency.Denomination);
+                advanceAdjustment.AmountFcinWord = await common.AmountInWord_Million(advanceAdjustment.AmountFc.ToString(), advanceAdjustment.Currency.CurrencyCode, advanceAdjustment.Currency.Denomination);
 
                 isUpdated = await Update(advanceAdjustment);
             }
@@ -175,12 +165,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        /// <summary>
-        /// get purchase invoice based on AdvanceAdjustmentId
-        /// </summary>
-        /// <returns>
-        /// return record.
-        /// </returns>
         public async Task<AdvanceAdjustmentModel> GetAdvanceAdjustmentById(int advanceAdjustmentId)
         {
             AdvanceAdjustmentModel advanceAdjustmentModel = null;
@@ -195,14 +179,6 @@ namespace ERP.Services.Accounts
             return advanceAdjustmentModel; // returns.
         }
 
-        /// <summary>
-        /// get search purchase invoice result list.
-        /// </summary>
-        /// <param name="dataTableAjaxPostModel"></param>
-        /// <param name="searchFilterModel"></param>
-        /// <returns>
-        /// return list.
-        /// </returns>
         public async Task<DataTableResultModel<AdvanceAdjustmentModel>> GetAdvanceAdjustmentList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterAdvanceAdjustmentModel searchFilterModel)
         {
             string searchBy = dataTableAjaxPostModel.search?.value;
@@ -226,29 +202,23 @@ namespace ERP.Services.Accounts
 
         #region Private Methods
 
-        /// <summary>
-        /// get records from database.
-        /// </summary>
-        /// <param name="searchBy"></param>
-        /// <param name="take"></param>
-        /// <param name="skip"></param>
-        /// <param name="sortBy"></param>
-        /// <param name="sortDir"></param>
-        /// <returns></returns>
         private async Task<DataTableResultModel<AdvanceAdjustmentModel>> GetDataFromDbase(SearchFilterAdvanceAdjustmentModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
         {
             DataTableResultModel<AdvanceAdjustmentModel> resultModel = new DataTableResultModel<AdvanceAdjustmentModel>();
 
-            IQueryable<Advanceadjustment> query = GetQueryByCondition(w => w.AdvanceAdjustmentId != 0);
+            IQueryable<Advanceadjustment> query = GetQueryByCondition(w => w.AdvanceAdjustmentId != 0)
+                                                    .Include(w => w.ParticularLedger)
+                                                    .Include(w => w.PaymentVoucherDet).ThenInclude(w => w.PaymentVoucher)
+                                                    .Include(w => w.ReceiptVoucherDet).ThenInclude(w => w.ReceiptVoucher);
 
             if (!string.IsNullOrEmpty(searchFilterModel.AdvanceAdjustmentNo))
             {
                 query = query.Where(w => w.AdvanceAdjustmentNo.Contains(searchFilterModel.AdvanceAdjustmentNo));
             }
 
-            if (null != searchFilterModel.AccountLedgerId)
+            if (null != searchFilterModel.ParticularLedgerId)
             {
-                query = query.Where(w => w.ParticularLedgerId == searchFilterModel.AccountLedgerId);
+                query = query.Where(w => w.ParticularLedgerId == searchFilterModel.ParticularLedgerId);
             }
 
             if (null != searchFilterModel.FromDate)
@@ -276,7 +246,6 @@ namespace ERP.Services.Accounts
                 query = query.Where(w => w.AdvanceAdjustmentNo.ToLower().Contains(searchBy.ToLower()));
             }
 
-
             // get records based on pagesize.
             query = query.Skip(skip).Take(take);
             resultModel.ResultList = await query.Select(s => new AdvanceAdjustmentModel
@@ -284,8 +253,13 @@ namespace ERP.Services.Accounts
                 AdvanceAdjustmentId = s.AdvanceAdjustmentId,
                 AdvanceAdjustmentNo = s.AdvanceAdjustmentNo,
                 AdvanceAdjustmentDate = s.AdvanceAdjustmentDate,
+                //VoucherType = s.PaymentVoucherDet == null && s.ReceiptVoucherDet != null ? "Receipt Voucher" : "Payment Voucher",
+                VoucherNo = s.PaymentVoucherDet == null && s.ReceiptVoucherDet != null ? s.ReceiptVoucherDet.ReceiptVoucher.VoucherNo
+                                                        : s.PaymentVoucherDet.PaymentVoucher.VoucherNo,
+                ParticularLedgerName = s.ParticularLedger.LedgerName,
                 AmountFc = s.AmountFc,
             }).ToListAsync();
+
             // get filter record count.
             resultModel.FilterResultCount = await query.CountAsync();
 
@@ -298,9 +272,9 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Advanceadjustment> query = GetQueryByCondition(w => w.AdvanceAdjustmentId != 0)
-                                            .Include(w => w.ParticularLedger)
-                                            //.Include(w => w.Currency)
-                                            .Include(w => w.Status).Include(w => w.PreparedByUser);
+                                            .Include(w => w.ParticularLedger).Include(w => w.Currency).Include(w => w.Status)
+                                            .Include(w => w.PaymentVoucherDet).ThenInclude(w => w.PaymentVoucher)
+                                            .Include(w => w.ReceiptVoucherDet).ThenInclude(w => w.ReceiptVoucher);
 
             // apply filters.
             if (0 != advanceAdjustmentId)
@@ -332,23 +306,54 @@ namespace ERP.Services.Accounts
                 advanceAdjustmentModel.AdvanceAdjustmentNo = advanceAdjustment.AdvanceAdjustmentNo;
                 advanceAdjustmentModel.AdvanceAdjustmentDate = advanceAdjustment.AdvanceAdjustmentDate;
                 advanceAdjustmentModel.ParticularLedgerId = advanceAdjustment.ParticularLedgerId;
-                advanceAdjustmentModel.PaymentVoucherId = advanceAdjustment.PaymentVoucherId;
-                advanceAdjustmentModel.ReceiptVoucherId = advanceAdjustment.ReceiptVoucherId;
+                advanceAdjustmentModel.PaymentVoucherDetId = advanceAdjustment.PaymentVoucherDetId;
+                advanceAdjustmentModel.ReceiptVoucherDetId = advanceAdjustment.ReceiptVoucherDetId;
                 advanceAdjustmentModel.CurrencyId = advanceAdjustment.CurrencyId;
                 advanceAdjustmentModel.ExchangeRate = advanceAdjustment.ExchangeRate;
                 advanceAdjustmentModel.AmountFc = advanceAdjustment.AmountFc;
                 advanceAdjustmentModel.Narration = advanceAdjustment.Narration;
                 advanceAdjustmentModel.AmountFc = advanceAdjustment.AmountFc;
                 advanceAdjustmentModel.Amount = advanceAdjustment.Amount;
-                advanceAdjustmentModel.AmountFcinWord = advanceAdjustment.AmountFcinWord;
+                advanceAdjustmentModel.AmountFcInWord = advanceAdjustment.AmountFcinWord;
 
                 advanceAdjustmentModel.StatusId = advanceAdjustment.StatusId;
-                advanceAdjustmentModel.CompanyId = Convert.ToInt32(advanceAdjustment.CompanyId);
-                advanceAdjustmentModel.FinancialYearId = Convert.ToInt32(advanceAdjustment.FinancialYearId);
+                advanceAdjustmentModel.CompanyId = advanceAdjustment.CompanyId;
+                advanceAdjustmentModel.FinancialYearId = advanceAdjustment.FinancialYearId;
                 advanceAdjustmentModel.MaxNo = advanceAdjustment.MaxNo;
                 advanceAdjustmentModel.VoucherStyleId = advanceAdjustment.VoucherStyleId;
 
                 // ###
+
+                if (null != advanceAdjustment.PaymentVoucherDetId && null == advanceAdjustment.ReceiptVoucherDetId)
+                {
+                    advanceAdjustmentModel.VoucherDetId = (int)advanceAdjustment.PaymentVoucherDetId;
+                    advanceAdjustmentModel.VoucherNo = null != advanceAdjustment.PaymentVoucherDet.PaymentVoucher.VoucherNo ? advanceAdjustment.PaymentVoucherDet.PaymentVoucher.VoucherNo : "";
+                }
+                else if (null == advanceAdjustment.PaymentVoucherDetId && null != advanceAdjustment.ReceiptVoucherDetId)
+                {
+                    advanceAdjustmentModel.VoucherDetId = (int)advanceAdjustment.ReceiptVoucherDetId;
+                    advanceAdjustmentModel.VoucherNo = null != advanceAdjustment.ReceiptVoucherDet.ReceiptVoucher.VoucherNo ? advanceAdjustment.ReceiptVoucherDet.ReceiptVoucher.VoucherNo : "";
+                }
+                else
+                {
+                    advanceAdjustmentModel.VoucherDetId = 0;
+                    advanceAdjustmentModel.VoucherNo = "";
+                }
+
+                //advanceAdjustmentModel.VoucherDetId = null != advanceAdjustment.PaymentVoucherDetId && null == advanceAdjustment.ReceiptVoucherDetId
+                //                                    ? (int)advanceAdjustment.PaymentVoucherDetId
+                //                                    : (null == advanceAdjustment.PaymentVoucherDetId && null != advanceAdjustment.ReceiptVoucherDetId
+                //                                    ? (int)advanceAdjustment.ReceiptVoucherDetId
+                //                                    : 0);
+
+                //advanceAdjustmentModel.VoucherNo = null != advanceAdjustment.PaymentVoucherDet.PaymentVoucher
+                //                                    ? advanceAdjustment.PaymentVoucherDet.PaymentVoucher.VoucherNo
+                //                                    : (null != advanceAdjustment.ReceiptVoucherDet.ReceiptVoucher
+                //                                    ? advanceAdjustment.ReceiptVoucherDet.ReceiptVoucher.VoucherNo
+                //                                    : "");
+
+                advanceAdjustmentModel.CurrencyCode = null != advanceAdjustment.Currency ? advanceAdjustment.Currency.CurrencyCode : null;
+                advanceAdjustmentModel.ParticularLedgerName = null != advanceAdjustment.ParticularLedger ? advanceAdjustment.ParticularLedger.LedgerName : null;
                 advanceAdjustmentModel.StatusName = null != advanceAdjustment.Status ? advanceAdjustment.Status.StatusName : null;
                 advanceAdjustmentModel.PreparedByName = null != advanceAdjustment.PreparedByUser ? advanceAdjustment.PreparedByUser.UserName : null;
 

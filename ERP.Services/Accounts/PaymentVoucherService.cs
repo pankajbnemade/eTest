@@ -238,7 +238,7 @@ namespace ERP.Services.Accounts
             {
                 query = query.Where(w => w.VoucherDate <= searchFilterModel.ToDate);
             }
-            
+
             if (!string.IsNullOrEmpty(searchFilterModel.TypeCorB))
             {
                 query = query.Where(w => w.TypeCorB == searchFilterModel.TypeCorB);
@@ -259,7 +259,7 @@ namespace ERP.Services.Accounts
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
 
-            
+
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
             {

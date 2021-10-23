@@ -1,6 +1,8 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts.Interface
@@ -17,11 +19,12 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdateReceiptVoucherMasterAmount(int receiptVoucherId);
 
-         Task<bool> UpdateStatusReceiptVoucher(int receiptVoucherId, int action);
+        Task<bool> UpdateStatusReceiptVoucher(int receiptVoucherId, int action);
 
         Task<ReceiptVoucherModel> GetReceiptVoucherById(int receiptVoucherId);
-        
+
         Task<DataTableResultModel<ReceiptVoucherModel>> GetReceiptVoucherList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterReceiptVoucherModel searchFilterModel);
-   
+
+        Task<IList<SelectListModel>> GetVocuherSelectList();
     }
 }

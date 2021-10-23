@@ -116,7 +116,6 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-
         public async Task<LedgerModel> GetClosingBalanceByAccountLedgerId(int ledgerId, DateTime voucherDate)
         {
             LedgerModel ledgerModel = null;

@@ -15,8 +15,8 @@ namespace ERP.DataAccess.EntityModels
         public string AdvanceAdjustmentNo { get; set; }
         public DateTime? AdvanceAdjustmentDate { get; set; }
         public int ParticularLedgerId { get; set; }
-        public int PaymentVoucherId { get; set; }
-        public int ReceiptVoucherId { get; set; }
+        public int? PaymentVoucherDetId { get; set; }
+        public int? ReceiptVoucherDetId { get; set; }
         public string Narration { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
@@ -37,9 +37,9 @@ namespace ERP.DataAccess.EntityModels
         public virtual Currency Currency { get; set; }
         public virtual Financialyear FinancialYear { get; set; }
         public virtual Ledger ParticularLedger { get; set; }
-        public virtual Paymentvoucher PaymentVoucher { get; set; }
+        public virtual Paymentvoucherdetail PaymentVoucherDet { get; set; }
         public virtual Aspnetuser PreparedByUser { get; set; }
-        public virtual Receiptvoucher ReceiptVoucher { get; set; }
+        public virtual Receiptvoucherdetail ReceiptVoucherDet { get; set; }
         public virtual Status Status { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }

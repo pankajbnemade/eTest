@@ -20,11 +20,11 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<AdvanceAdjustmentDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId);
 
-        Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(int advanceAdjustmentId);
+        Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(int advanceAdjustmentId, int addRow_Blank);
 
         Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId, int addRow_Blank);
 
-        Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList();
+        //Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList();
 
     }
 }

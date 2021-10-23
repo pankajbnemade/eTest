@@ -238,7 +238,7 @@ namespace ERP.Services.Accounts
             {
                 query = query.Where(w => w.VoucherDate <= searchFilterModel.ToDate);
             }
-            
+
             if (!string.IsNullOrEmpty(searchFilterModel.TypeCorB))
             {
                 query = query.Where(w => w.TypeCorB == searchFilterModel.TypeCorB);
@@ -259,7 +259,7 @@ namespace ERP.Services.Accounts
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
 
-            
+
             // datatable search
             if (!string.IsNullOrEmpty(searchBy))
             {
@@ -359,6 +359,25 @@ namespace ERP.Services.Accounts
                 return receiptVoucherModel;
             });
 
+        }
+
+        public async Task<IList<SelectListModel>> GetVocuherSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.ReceiptVoucherId != 0))
+            {
+                IQueryable<Receiptvoucher> query = GetQueryByCondition(w => w.ReceiptVoucherId != 0)
+                                                    .Where(w => w.StatusId == (int)DocumentStatus.Approved);
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.VoucherNo,
+                    Value = s.ReceiptVoucherId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
         #endregion Private Methods
