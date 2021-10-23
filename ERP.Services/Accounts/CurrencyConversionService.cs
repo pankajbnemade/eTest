@@ -26,6 +26,7 @@ namespace ERP.Services.Accounts
             currencyConversion.CurrencyId = currencyConversionModel.CurrencyId;
             currencyConversion.EffectiveDateTime = currencyConversionModel.EffectiveDateTime;
             currencyConversion.ExchangeRate = currencyConversionModel.ExchangeRate;
+
             await Create(currencyConversion);
             currencyConversionId = currencyConversion.ConversionId;
 
@@ -43,6 +44,7 @@ namespace ERP.Services.Accounts
                 // assign values.
                 currencyConversion.EffectiveDateTime = currencyConversionModel.EffectiveDateTime;
                 currencyConversion.ExchangeRate = currencyConversionModel.ExchangeRate;
+
                 isUpdated = await Update(currencyConversion);
             }
 
@@ -94,7 +96,6 @@ namespace ERP.Services.Accounts
             return currencyConversionModel; // returns.
         }
 
-
         public async Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionByCurrencyId(int currencyId)
         {
             DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();
@@ -110,12 +111,12 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-
         public async Task<DataTableResultModel<CurrencyConversionModel>> GetCurrencyConversionList()
         {
             DataTableResultModel<CurrencyConversionModel> resultModel = new DataTableResultModel<CurrencyConversionModel>();
 
             IList<CurrencyConversionModel> currencyConversionModelList = await GetCurrencyConversionList(0, 0);
+
             if (null != currencyConversionModelList && currencyConversionModelList.Any())
             {
                 resultModel = new DataTableResultModel<CurrencyConversionModel>();
@@ -167,10 +168,11 @@ namespace ERP.Services.Accounts
                 currencyConversionModel.CurrencyId = currencyConversion.CurrencyId;
                 currencyConversionModel.EffectiveDateTime = currencyConversion.EffectiveDateTime;
                 currencyConversionModel.ExchangeRate = currencyConversion.ExchangeRate;
+
                 // ###
-                currencyConversionModel.CompanyName = currencyConversion.Company.CompanyName;
-                currencyConversionModel.CurrencyName = currencyConversion.Currency.CurrencyName;
-                currencyConversionModel.PreparedByName = currencyConversion.PreparedByUser.UserName;
+                currencyConversionModel.CompanyName = currencyConversion.Company != null ? currencyConversion.Company.CompanyName : "";
+                currencyConversionModel.CurrencyCode = currencyConversion.Currency != null ? currencyConversion.Currency.CurrencyCode : "";
+                currencyConversionModel.PreparedByName = currencyConversion.PreparedByUser != null ? currencyConversion.PreparedByUser.UserName : "";
 
                 return currencyConversionModel;
             });

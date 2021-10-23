@@ -1,0 +1,91 @@
+﻿@model CurrencyConversionModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.ConversionId > 0)
+            {
+        <h4 class="modal-title">Edit Currency Conversion</h4> }
+                    else
+                    {
+        <h4 class="modal-title">Add Currency Conversion</h4>            }
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="frmSaveCurrencyConversion" class="width100" method="post"
+              asp-action="SaveCurrencyConversion" asp-controller="CurrencyConversion" asp-area="Master"
+              data-ajax-begin="return BeginSaveCurrencyConversion();" data-ajax-success="SuccessSaveCurrencyConversion"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.ConversionId)
+                @Html.HiddenFor(model => model.CompanyId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EffectiveDateTime, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.EffectiveDateTime, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                    @Html.ValidationMessageFor(model => model.EffectiveDateTime, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                    @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm " })
+                    @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#EffectiveDateTime').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+   
+    // begin form
+    function BeginSaveCurrencyConversion() {
+        var form = $("#frmSaveCurrencyConversion");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessSaveCurrencyConversion(data) {
+        if (data.Result.Status) {
+            $('#modal-currencyconversion-master').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $('#currencyConversionGrid').DataTable().ajax.reload();
+        }
+        else
+        {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>

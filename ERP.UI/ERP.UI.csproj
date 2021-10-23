@@ -5,11 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Accounts\Controllers\CurrencyConversionController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="Areas\Accounts\Views\CreditNote\_ViewCreditNoteSummary.cshtml" />
+    <Content Remove="Areas\Accounts\Views\CurrencyConversion\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\CurrencyConversion\_AddCurrencyConversion.cshtml" />
+    <Content Remove="Areas\Accounts\Views\CurrencyConversion\_ConfirmDeleteCurrencyConversion.cshtml" />
     <Content Remove="Areas\Accounts\Views\DebitNote\_ViewDebitNoteSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
@@ -132,6 +131,9 @@
     <None Include="Areas\Accounts\Views\CreditNote\_AddCreditNoteMaster.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNote\_ConfirmDeleteCreditNoteMaster.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNote\_ViewCreditNoteMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\CurrencyConversion\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\CurrencyConversion\_AddCurrencyConversion.cshtml" />
+    <None Include="Areas\Accounts\Views\CurrencyConversion\_ConfirmDeleteCurrencyConversion.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteDetail\_AddDebitNoteDetail.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteDetail\_ConfirmDeleteDebitNoteDetail.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteDetail\_DebitNoteDetail.cshtml" />
@@ -252,10 +254,6 @@
     <None Include="wwwroot\lib\jquery\jquery-3.4.1.min.js" />
     <None Include="wwwroot\lib\moment\moment.js" />
     <None Include="wwwroot\lib\moment\moment.min.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Accounts\Views\CurrencyConversion\" />
   </ItemGroup>
 
 </Project>

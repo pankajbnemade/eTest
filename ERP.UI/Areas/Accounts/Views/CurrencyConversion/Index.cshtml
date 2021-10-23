@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Currency Conversion List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h5>@ViewBag.Title</h5>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-currencyconversion">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="currencyConversionGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    <th class="no-sort"></th>
+                                    <th>Currency Code</th>
+                                    <th>Effective Date Time</th>
+                                    <th>Exchange Rate</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#currencyConversionGrid").DataTable({
+
+        //dom: 'lftip',
+        "pageLength": 25,
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+
+        "ajax": {
+            "url": "@Url.Action("GetCurrencyConversionList", "CurrencyConversion")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCurrencyConversion(' + full.ConversionId + ')"><i class="far fa-edit"></i></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCurrencyConversion(this, ' + full.ConversionId + ')"><i class="fa fa-trash-alt"></i></button>' +
+                        '</div>';
+                }, "orderable": false
+            },
+            { "data": "CurrencyCode", "name": "Currency Code" },
+            {
+                "data": "EffectiveDateTime", "name": "Effective Date Time",
+                "render": function (dt) {
+                    return moment(dt).format("DD/MMM/YYYY");
+                }
+            },
+            { "data": "ExchangeRate", "name": "Exchange Rate" }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-currencyconversion').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddCurrencyConversion", "CurrencyConversion")', 'html', '',
+    function (data) {
+        $('#modal-currencyconversion-master').empty();
+        $('#modal-currencyconversion-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit currencyconversion
+    function fnEditCurrencyConversion(conversionId) {
+        var model = { conversionId: conversionId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCurrencyConversion", "CurrencyConversion")', 'html', model,
+        function (data) {
+            $('#modal-currencyconversion-master').empty();
+            $('#modal-currencyconversion-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteCurrencyConversion"); }
+
+<div id="modal-currencyconversion-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

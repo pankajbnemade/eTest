@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Sales\**" />
+    <EmbeddedResource Remove="Sales\**" />
+    <None Remove="Sales\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Accounts\Interface\IPurchaseInvoiceCharge.cs" />
     <Compile Remove="Accounts\Interface\ISalesInvoiceCharge.cs" />
     <Compile Remove="Accounts\Interface\I_.cs" />
@@ -35,10 +41,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ERP.DataAccess\ERP.DataAccess.csproj" />
     <ProjectReference Include="..\ERP.Models\ERP.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Sales\Interface\" />
   </ItemGroup>
 
 </Project>

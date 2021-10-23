@@ -5,31 +5,23 @@ using ERP.Services.Accounts.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ERP.Services.Master.Interface;
+using ERP.Models.Admin;
+using ERP.Models.Extension;
+using System;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
     public class CurrencyConversionController : Controller
     {
-        private readonly IFinancialYear _financialYear;
-        private readonly ICompany _company;
+        private readonly ICurrency _currency;
         private readonly ICurrencyConversion _currencyConversion;
 
-        /// <summary>
-        /// constractor.
-        /// </summary>
-        /// <param name="financialYear"></param>
-        /// <param name="currencyConversion"></param>
-        public CurrencyConversionController(IFinancialYear financialYear, ICurrencyConversion currencyConversion,ICompany company)
+        public CurrencyConversionController(ICurrencyConversion currencyConversion, ICurrency currency)
         {
             this._currencyConversion = currencyConversion;
-            this._financialYear = financialYear;
-            this._company = company;
+            this._currency = currency;
         }
 
-        /// <summary>
-        /// currencyConversion list.
-        /// </summary>
-        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             return await Task.Run(() =>
@@ -38,14 +30,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// get currencyConversion list.
-        /// </summary>
-        /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> GetFinancialYearCompanyRelationList()
+        public async Task<JsonResult> GetCurrencyConversionList()
         {
-            DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = await _currencyConversion.GetFinancialYearCompanyRelationList();
+            DataTableResultModel<CurrencyConversionModel> resultModel = await _currencyConversion.GetCurrencyConversionList();
 
             return await Task.Run(() =>
             {
@@ -53,86 +41,74 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        /// <summary>
-        /// add new currencyConversion.
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        public async Task<PartialViewResult> AddFinancialYearCompanyRelation()
+        public async Task<PartialViewResult> AddCurrencyConversion()
         {
-            ViewBag.FinancialYearList = await _financialYear.GetFinancialYearSelectList();
-            ViewBag.CompanyList = await _company.GetCompanySelectList();
+            ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
 
-            return PartialView("_AddFinancialYearCompanyRelation", new FinancialYearCompanyRelationModel());
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+            
+            CurrencyConversionModel currencyConversionModel = new CurrencyConversionModel();
+            currencyConversionModel.CompanyId = userSession.CompanyId;
+            currencyConversionModel.EffectiveDateTime = DateTime.Now;
+
+            return await Task.Run(() =>
+            {
+                return PartialView("_AddCurrencyConversion", currencyConversionModel);
+            });
         }
 
-        /// <summary>
-        /// edit currencyConversion.
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        public async Task<PartialViewResult> EditFinancialYearCompanyRelation(int currencyConversionId)
+        public async Task<PartialViewResult> EditCurrencyConversion(int currencyConversionId)
         {
-            ViewBag.FinancialYearList = await _financialYear.GetFinancialYearSelectList();
-            ViewBag.CompanyList = await _company.GetCompanySelectList();
+            ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
 
-            FinancialYearCompanyRelationModel currencyConversionModel = await _currencyConversion.GetFinancialYearCompanyRelationById(currencyConversionId);
+            CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetCurrencyConversionById(currencyConversionId);
 
-            return PartialView("_AddFinancialYearCompanyRelation", currencyConversionModel);
+            return PartialView("_AddCurrencyConversion", currencyConversionModel);
         }
 
-        /// <summary>
-        /// save currencyConversion.
-        /// </summary>
-        /// <param name="currencyConversionModel"></param>
-        /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> SaveFinancialYearCompanyRelation(FinancialYearCompanyRelationModel currencyConversionModel)
+        public async Task<JsonResult> SaveCurrencyConversion(CurrencyConversionModel currencyConversionModel)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
             if (ModelState.IsValid)
             {
-                ////if (currencyConversionModel.RelationId > 0)
-                ////{
-                ////    // update record.
-                ////    if (true == await _currencyConversion.UpdateFinancialYearCompanyRelation(currencyConversionModel))
-                ////    {
-                ////        data.Result.Status = true;
-                ////    }
-                ////}
-                ////else
-                ////{
-                //// add new record.
-                if (await _currencyConversion.CreateFinancialYearCompanyRelation(currencyConversionModel) > 0)
+                if (currencyConversionModel.ConversionId > 0)
                 {
-                    data.Result.Status = true;
+                    // update record.
+                    if (true == await _currencyConversion.UpdateCurrencyConversion(currencyConversionModel))
+                    {
+                        data.Result.Status = true;
+                    }
                 }
-                ////}
+                else
+                {
+                    // add new record.
+                    if (await _currencyConversion.CreateCurrencyConversion(currencyConversionModel) > 0)
+                    {
+                        data.Result.Status = true;
+                    }
+                }
             }
 
             return Json(data);
         }
 
-
-
-        /// <summary>
-        /// delete currencyConversion by currencyConversionid.
-        /// </summary>
-        /// <param name="currencyConversionId"></param>
-        /// <returns>
-        /// return json.
-        /// </returns>
         [HttpPost]
-        public async Task<JsonResult> DeleteFinancialYearCompanyRelation(int currencyConversionId)
+        public async Task<JsonResult> DeleteCurrencyConversion(int conversionId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-            if (true == await _currencyConversion.DeleteFinancialYearCompanyRelation(currencyConversionId))
+
+            if (true == await _currencyConversion.DeleteCurrencyConversion(conversionId))
             {
                 data.Result.Status = true;
             }
 
             return Json(data); // returns.
         }
+
+
     }
 }
