@@ -81,14 +81,30 @@ namespace ERP.Services.Accounts
             IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModel = await advanceAdjustmentDetail.GetInvoiceListByParticularLedgerId(ledgerId);
 
 
-            IList<PaymentVoucherDetailModel> paymentVoucherDetailModel_Current = await paymentVoucherDetail.GetPaymentVoucherDetailByVoucherId(voucherId, 0);
+            IList<PaymentVoucherDetailModel> paymentVoucherDetailModel_Current = null;
+            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModel_Current = null;
+            IList<JournalVoucherDetailModel> journalVoucherDetailModel_Current = null;
+            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModel_Current = null;
 
-            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModel_Current = await receiptVoucherDetail.GetReceiptVoucherDetailByVoucherId(voucherId, 0);
+            if (voucherType == "Payment Voucher")
+            {
+                paymentVoucherDetailModel_Current = await paymentVoucherDetail.GetPaymentVoucherDetailByVoucherId(voucherId, 0);
+            }
 
-            IList<JournalVoucherDetailModel> journalVoucherDetailModel_Current = await journalVoucherDetail.GetJournalVoucherDetailByVoucherId(voucherId, 0);
+            if (voucherType == "Receipt Voucher")
+            {
+                receiptVoucherDetailModel_Current = await receiptVoucherDetail.GetReceiptVoucherDetailByVoucherId(voucherId, 0);
+            }
 
-            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModel_Current = await advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdjustmentId(voucherId, 0);
+            if (voucherType == "Journal Voucher")
+            {
+                journalVoucherDetailModel_Current = await journalVoucherDetail.GetJournalVoucherDetailByVoucherId(voucherId, 0);
+            }
 
+            if (voucherType == "Advance Adjustment")
+            {
+                advanceAdjustmentDetailModel_Current = await advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdjustmentId(voucherId);
+            }
 
             if (purchaseInvoiceModelList != null)
             {
@@ -154,7 +170,6 @@ namespace ERP.Services.Accounts
                     creditNoteModelList = creditNoteModelList.Where(w => !advanceAdjustmentDetailModel_Current.Any(c => c.CreditNoteId == w.CreditNoteId)).ToList();
                 }
             }
-
 
             //---------
 

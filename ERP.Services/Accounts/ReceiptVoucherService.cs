@@ -164,7 +164,7 @@ namespace ERP.Services.Accounts
             if (null != receiptVoucher)
             {
                 receiptVoucher.AmountFc = receiptVoucher.Receiptvoucherdetails.Sum(w => w.AmountFc);
-                receiptVoucher.Amount = receiptVoucher.AmountFc * receiptVoucher.ExchangeRate;
+                receiptVoucher.Amount = receiptVoucher.AmountFc / receiptVoucher.ExchangeRate;
 
                 receiptVoucher.AmountFcinWord = await common.AmountInWord_Million(receiptVoucher.AmountFc.ToString(), receiptVoucher.Currency.CurrencyCode, receiptVoucher.Currency.Denomination);
 

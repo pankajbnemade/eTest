@@ -163,10 +163,10 @@ namespace ERP.Services.Accounts
             if (null != journalVoucher)
             {
                 journalVoucher.CreditAmountFc = journalVoucher.Journalvoucherdetails.Sum(w => w.CreditAmountFc);
-                journalVoucher.CreditAmount = journalVoucher.CreditAmountFc * journalVoucher.ExchangeRate;
+                journalVoucher.CreditAmount = journalVoucher.CreditAmountFc / journalVoucher.ExchangeRate;
 
                 journalVoucher.DebitAmountFc = journalVoucher.Journalvoucherdetails.Sum(w => w.DebitAmountFc);
-                journalVoucher.DebitAmount = journalVoucher.DebitAmountFc * journalVoucher.ExchangeRate;
+                journalVoucher.DebitAmount = journalVoucher.DebitAmountFc / journalVoucher.ExchangeRate;
 
                 journalVoucher.AmountFcinWord = await common.AmountInWord_Million(journalVoucher.AmountFc.ToString(), journalVoucher.Currency.CurrencyCode, journalVoucher.Currency.Denomination);
 

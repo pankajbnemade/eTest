@@ -1,0 +1,146 @@
+﻿@model IList<AdvanceAdjustmentDetailModel>
+
+<form id="frmAdvanceAdjustmentDetail" class="width100" method="post"
+      asp-action="SaveAdvanceAdjustmentDetail" asp-controller="AdvanceAdjustmentDetail" asp-area="Accounts"
+      data-ajax-begin="return BeginAdvanceAdjustmentDetail();" data-ajax-success="SuccessAdvanceAdjustmentDetail"
+      data-ajax="true" data-ajax-method="post">
+
+    <div class="row">
+        <div class="col-sm-12 table-responsive">
+
+            <table id="advanceAdjustmentDetailGrid" class="table table-bordered table-striped w-100">
+                <thead>
+                    <tr class="table-header">
+                        <th class="no-sort">
+                            <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-advanceadjustment-dtl" title="Add New Line"
+                                    onclick="javascript: fnAddRow('@ViewBag.AdvanceAdjustmentId')">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </th>
+                        <th>Invoice Type</th>
+                        <th>Invoice No</th>
+                        <th>Amount FC</th>
+                        <th>Narration</th>
+                    </tr>
+                </thead>
+
+
+                @if (Model != null)
+                {
+                    <tbody>
+
+                        @for (var item = 0; item < Model.Count(); item++)
+                        {
+                        <tr>
+                            <td style="width:20px;">
+                                @if (Model[item].AdvanceAdjustmentDetId != 0)
+                                {
+                                    <button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteAdvanceAdjustmentDetail(this, @Model[item].AdvanceAdjustmentDetId)"><i class="fa fa-trash-alt"></i></button>
+                                }
+                                @Html.HiddenFor(modelItem => Model[item].AdvanceAdjustmentDetId)
+                                @Html.HiddenFor(modelItem => Model[item].AdvanceAdjustmentId)
+                                @Html.HiddenFor(modelItem => Model[item].CreditNoteId)
+                                @Html.HiddenFor(modelItem => Model[item].SalesInvoiceId)
+                                @Html.HiddenFor(modelItem => Model[item].PurchaseInvoiceId)
+                                @Html.HiddenFor(modelItem => Model[item].DebitNoteId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Model[item].InvoiceType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Model[item].InvoiceNo)
+                            </td>
+                            <td style="width:100px;">
+                                @Html.TextBoxFor(modelItem => Model[item].AmountFc, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(modelItem => Model[item].AmountFc, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(modelItem => Model[item].Narration, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(modelItem => Model[item].Narration, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                }
+
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 p-2">
+            <button type="submit" class="btn btn-primary" id="save-new-advanceadjustment-dtl" title="Save"><i class="fas fa-save"></i> Save</button>
+        </div>
+    </div>
+
+</form>
+<style>
+    .table th {
+        font-size: 0.9em;
+        padding: 4px 5px; /* e.g. change 8x to 4px here */
+    }
+
+    .table td {
+        font-size: 0.9em;
+        padding: 1px 1px; /* e.g. change 8x to 4px here */
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+
+    //// begin form
+    function BeginAdvanceAdjustmentDetail() {
+        var form = $("#frmAdvanceAdjustmentDetail");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+
+    //// success form
+    function SuccessAdvanceAdjustmentDetail(data) {
+        if (data.Result.Status) {
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("AdvanceAdjustmentDetail", "AdvanceAdjustmentDetail")?advanceAdjustmentId=' + data.Result.Data ;
+
+            $('#advanceadjustmentdetail').empty();
+            $('#advanceadjustmentdetail').load(tabUrl);
+
+            fnShowHideMasterButtons();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    function fnAddRow(advanceAdjustmentId) {
+
+        var advanceAdjustmentId = '@ViewBag.AdvanceAdjustmentId';
+
+        var model = {
+            advanceAdjustmentId: advanceAdjustmentId
+        };
+
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("MapOutstandingDetail", "AdvanceAdjustmentDetail")', 'html', model,
+            function (data) {
+                $('#modal-advanceadjustment').empty();
+                $('#modal-advanceadjustment').html(data).modal('show');
+                return false;
+            }, null, true, null, false);
+
+    }
+
+
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteAdvanceAdjustmentDetail"); }

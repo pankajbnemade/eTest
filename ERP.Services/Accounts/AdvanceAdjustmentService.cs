@@ -155,9 +155,14 @@ namespace ERP.Services.Accounts
             if (null != advanceAdjustment)
             {
                 advanceAdjustment.AmountFc = advanceAdjustment.Advanceadjustmentdetails.Sum(w => w.AmountFc);
-                advanceAdjustment.Amount = advanceAdjustment.AmountFc * advanceAdjustment.ExchangeRate;
+                advanceAdjustment.Amount = advanceAdjustment.AmountFc / advanceAdjustment.ExchangeRate;
 
                 advanceAdjustment.AmountFcinWord = await common.AmountInWord_Million(advanceAdjustment.AmountFc.ToString(), advanceAdjustment.Currency.CurrencyCode, advanceAdjustment.Currency.Denomination);
+                
+                if (advanceAdjustment.StatusId == (int)DocumentStatus.Approved || advanceAdjustment.StatusId == (int)DocumentStatus.ApprovalRequested || advanceAdjustment.StatusId == (int)DocumentStatus.Cancelled)
+                {
+                    advanceAdjustment.StatusId = (int)DocumentStatus.Inprocess;
+                }
 
                 isUpdated = await Update(advanceAdjustment);
             }
@@ -207,7 +212,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<AdvanceAdjustmentModel> resultModel = new DataTableResultModel<AdvanceAdjustmentModel>();
 
             IQueryable<Advanceadjustment> query = GetQueryByCondition(w => w.AdvanceAdjustmentId != 0)
-                                                    .Include(w => w.ParticularLedger)
+                                                    .Include(w => w.ParticularLedger).Include(w => w.Currency).Include(w => w.Status)
                                                     .Include(w => w.PaymentVoucherDet).ThenInclude(w => w.PaymentVoucher)
                                                     .Include(w => w.ReceiptVoucherDet).ThenInclude(w => w.ReceiptVoucher);
 
@@ -253,11 +258,13 @@ namespace ERP.Services.Accounts
                 AdvanceAdjustmentId = s.AdvanceAdjustmentId,
                 AdvanceAdjustmentNo = s.AdvanceAdjustmentNo,
                 AdvanceAdjustmentDate = s.AdvanceAdjustmentDate,
-                //VoucherType = s.PaymentVoucherDet == null && s.ReceiptVoucherDet != null ? "Receipt Voucher" : "Payment Voucher",
+                ParticularLedgerName = s.ParticularLedger.LedgerName,
                 VoucherNo = s.PaymentVoucherDet == null && s.ReceiptVoucherDet != null ? s.ReceiptVoucherDet.ReceiptVoucher.VoucherNo
                                                         : s.PaymentVoucherDet.PaymentVoucher.VoucherNo,
-                ParticularLedgerName = s.ParticularLedger.LedgerName,
                 AmountFc = s.AmountFc,
+                CurrencyCode = s.Currency.CurrencyCode,
+                PreparedByName = s.PreparedByUser.UserName,
+                StatusName = s.Status.StatusName,
             }).ToListAsync();
 
             // get filter record count.

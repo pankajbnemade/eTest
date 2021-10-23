@@ -24,6 +24,7 @@ namespace ERP.Services.Accounts
             currency.CurrencyCode = currencyModel.CurrencyCode;
             currency.CurrencyName = currencyModel.CurrencyName;
             currency.Denomination = currencyModel.Denomination;
+
             await Create(currency);
             currencyId = currency.CurrencyId;
 
@@ -39,8 +40,10 @@ namespace ERP.Services.Accounts
             if (null != currency)
             {
                 // assign values.
+                currency.CurrencyCode = currencyModel.CurrencyCode;
                 currency.CurrencyName = currencyModel.CurrencyName;
                 currency.Denomination = currencyModel.Denomination;
+
                 isUpdated = await Update(currency);
             }
 

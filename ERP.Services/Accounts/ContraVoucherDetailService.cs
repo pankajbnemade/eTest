@@ -88,8 +88,8 @@ namespace ERP.Services.Accounts
 
             if (null != contraVoucherDetail)
             {
-                contraVoucherDetail.CreditAmount = contraVoucherDetail.CreditAmountFc * contraVoucherDetail.ContraVoucher.ExchangeRate;
-                contraVoucherDetail.DebitAmount = contraVoucherDetail.DebitAmountFc * contraVoucherDetail.ContraVoucher.ExchangeRate;
+                contraVoucherDetail.CreditAmount = contraVoucherDetail.CreditAmountFc / contraVoucherDetail.ContraVoucher.ExchangeRate;
+                contraVoucherDetail.DebitAmount = contraVoucherDetail.DebitAmountFc / contraVoucherDetail.ContraVoucher.ExchangeRate;
 
                 isUpdated = await Update(contraVoucherDetail);
             }

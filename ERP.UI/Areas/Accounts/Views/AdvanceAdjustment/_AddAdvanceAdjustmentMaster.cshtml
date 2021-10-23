@@ -58,8 +58,8 @@ else
                             @if (Model.NoOfLineItems > 0)
                             {
                 @Html.DropDownListFor(model => model.ParticularLedgerId,
-                                        new List<SelectListItem> { new SelectListItem { Text = Model.ParticularLedgerName, Value = Model.ParticularLedgerId.ToString() } },
-                                        new { @class = "form-control form-control-sm", @readonly = "readonly" }) }
+                                             new List<SelectListItem> { new SelectListItem { Text = Model.ParticularLedgerName, Value = Model.ParticularLedgerId.ToString() } },
+                                             new { @class = "form-control form-control-sm", @readonly = "readonly" }) }
             else
             {
 @Html.DropDownListFor(model => model.ParticularLedgerId, new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })}
@@ -119,32 +119,42 @@ else
 
     function GetVoucherList(particularLedgerId, voucherDetId) {
         if (0 != particularLedgerId) {
-            var model = { advanceAdjustmentId: $('#AdvanceAdjustmentId').val(), particularLedgerId: particularLedgerId, advanceAdjustmentDate: $('#AdvanceAdjustmentDate').val()};
+            if ('@Model.NoOfLineItems' == 0) {
 
-            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetVoucherListByParticularId", "AdvanceAdjustment")', '', model,
-                function (response) {
-                    $('#VoucherDetId').empty();
-                    $('#VoucherDetId').append("<option value=''>Select</option>");
+                var model = { advanceAdjustmentId: $('#AdvanceAdjustmentId').val(), particularLedgerId: particularLedgerId, advanceAdjustmentDate: $('#AdvanceAdjustmentDate').val() };
 
-                    if (true == response.Result.Status) {
-                        $.each(response.Result.Data, function (i, item) {
-                            $('#VoucherDetId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
-                        });
+                AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetVoucherListByParticularId", "AdvanceAdjustment")', '', model,
+                    function (response) {
+                        $('#VoucherDetId').empty();
+                        $('#VoucherDetId').append("<option value=''>Select</option>");
 
-                        if ($('#ParticularLedgerId').val() == '') {
-                            voucherDetId = '';
+                        if (true == response.Result.Status) {
+                            $.each(response.Result.Data, function (i, item) {
+                                $('#VoucherDetId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                            });
+
+                            if ($('#ParticularLedgerId').val() == '') {
+                                voucherDetId = '';
+                            }
+
+                            $('#VoucherDetId').val(voucherDetId);
+                            $("span[data-valmsg-for='VoucherDetId']").html('');
                         }
-
-                        $('#VoucherDetId').val(voucherDetId);
-                        $("span[data-valmsg-for='VoucherDetId']").html('');
-                    }
-                    else {
-                        if ('NoItems' == response.Result.Message) {
-                            $("span[data-valmsg-for='VoucherDetId']").removeClass('field-validation-valid').addClass('field-validation-error');
-                            $("span[data-valmsg-for='VoucherDetId']").html('<span for="VoucherDetId" class="">No data found.</span>');
+                        else {
+                            if ('NoItems' == response.Result.Message) {
+                                $("span[data-valmsg-for='VoucherDetId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                                $("span[data-valmsg-for='VoucherDetId']").html('<span for="VoucherDetId" class="">No data found.</span>');
+                            }
                         }
-                    }
-                }, null, true, null, false);
+                    }, null, true, null, false);
+            }
+            else {
+                $('#VoucherDetId').empty();
+                if ('@Model.VoucherNo' != null) {
+                    $('#VoucherDetId').append("<option value='" + '@Model.VoucherDetId.ToString()' + "'>" + '@Model.VoucherNo' + "</option>");
+                    $('#VoucherDetId').val(voucherDetId);
+                }
+            }
         }
         else {
             $('#VoucherDetId').empty();

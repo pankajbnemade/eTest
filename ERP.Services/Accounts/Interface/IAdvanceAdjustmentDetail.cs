@@ -12,7 +12,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdateAdvanceAdjustmentDetail(AdvanceAdjustmentDetailModel advanceAdjustmentDetailModel);
 
-        Task<bool> UpdateAdvanceAdjustmentDetailAmount(int? advanceAdjustmentDetailId);
+        Task<bool> UpdateAdvanceAdjustmentDetailAmount(int advanceAdjustmentDetailId);
 
         Task<bool> DeleteAdvanceAdjustmentDetail(int advanceAdjustmentDetailId);
 
@@ -22,7 +22,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(int advanceAdjustmentId, int addRow_Blank);
 
-        Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId, int addRow_Blank);
+        Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId);
 
         //Task<DataTableResultModel<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailList();
 

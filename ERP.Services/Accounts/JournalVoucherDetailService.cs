@@ -72,10 +72,10 @@ namespace ERP.Services.Accounts
                 journalVoucherDetail.DebitAmount = 0;
 
                 journalVoucherDetail.Narration = journalVoucherDetailModel.Narration;
-                journalVoucherDetail.SalesInvoiceId = journalVoucherDetailModel.SalesInvoiceId;
-                journalVoucherDetail.CreditNoteId = journalVoucherDetailModel.CreditNoteId;
-                journalVoucherDetail.PurchaseInvoiceId = journalVoucherDetailModel.PurchaseInvoiceId;
-                journalVoucherDetail.DebitNoteId = journalVoucherDetailModel.DebitNoteId;
+                //journalVoucherDetail.SalesInvoiceId = journalVoucherDetailModel.SalesInvoiceId;
+                //journalVoucherDetail.CreditNoteId = journalVoucherDetailModel.CreditNoteId;
+                //journalVoucherDetail.PurchaseInvoiceId = journalVoucherDetailModel.PurchaseInvoiceId;
+                //journalVoucherDetail.DebitNoteId = journalVoucherDetailModel.DebitNoteId;
 
                 isUpdated = await Update(journalVoucherDetail);
             }
@@ -98,8 +98,8 @@ namespace ERP.Services.Accounts
 
             if (null != journalVoucherDetail)
             {
-                journalVoucherDetail.CreditAmount = journalVoucherDetail.CreditAmountFc * journalVoucherDetail.JournalVoucher.ExchangeRate;
-                journalVoucherDetail.DebitAmount = journalVoucherDetail.DebitAmountFc * journalVoucherDetail.JournalVoucher.ExchangeRate;
+                journalVoucherDetail.CreditAmount = journalVoucherDetail.CreditAmountFc / journalVoucherDetail.JournalVoucher.ExchangeRate;
+                journalVoucherDetail.DebitAmount = journalVoucherDetail.DebitAmountFc / journalVoucherDetail.JournalVoucher.ExchangeRate;
 
                 isUpdated = await Update(journalVoucherDetail);
             }

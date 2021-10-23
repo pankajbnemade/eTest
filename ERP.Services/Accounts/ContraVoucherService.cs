@@ -168,10 +168,10 @@ namespace ERP.Services.Accounts
             if (null != contraVoucher)
             {
                 contraVoucher.CreditAmountFc = contraVoucher.Contravoucherdetails.Sum(w => w.CreditAmountFc);
-                contraVoucher.CreditAmount = contraVoucher.CreditAmountFc * contraVoucher.ExchangeRate;
+                contraVoucher.CreditAmount = contraVoucher.CreditAmountFc / contraVoucher.ExchangeRate;
 
                 contraVoucher.DebitAmountFc = contraVoucher.Contravoucherdetails.Sum(w => w.DebitAmountFc);
-                contraVoucher.DebitAmount = contraVoucher.DebitAmountFc * contraVoucher.ExchangeRate;
+                contraVoucher.DebitAmount = contraVoucher.DebitAmountFc / contraVoucher.ExchangeRate;
 
                 contraVoucher.AmountFcinWord = await common.AmountInWord_Million(contraVoucher.AmountFc.ToString(), contraVoucher.Currency.CurrencyCode, contraVoucher.Currency.Denomination);
 

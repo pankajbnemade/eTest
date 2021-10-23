@@ -320,7 +320,8 @@ namespace ERP.Services.Accounts
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
             // create query.
-            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0);
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0 
+                                                                    && w.StatusId == (int)DocumentStatus.Approved);
 
             // apply filters.
             if (0 != supplierLedgerId)

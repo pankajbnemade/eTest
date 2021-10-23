@@ -28,35 +28,35 @@ namespace ERP.UI.Areas.Accounts.Controllers
             this._advanceAdjustment = advanceAdjustment;
         }
 
-        //public async Task<IActionResult> AdvanceAdjustmentDetail(int advanceAdjustmentId, int addRow_Blank)
-        //{
-        //    ViewBag.AdvanceAdjustmentId = advanceAdjustmentId;
+        public async Task<IActionResult> AdvanceAdjustmentDetail(int advanceAdjustmentId)
+        {
+            ViewBag.AdvanceAdjustmentId = advanceAdjustmentId;
 
-        //    IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await _advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdjustmentId(advanceAdjustmentId, addRow_Blank);
+            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await _advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdjustmentId(advanceAdjustmentId);
 
-        //    return await Task.Run(() =>
-        //    {
-        //        return PartialView("_AdvanceAdjustmentDetail", advanceAdjustmentDetailModelList);
-        //    });
-        //}
+            return await Task.Run(() =>
+            {
+                return PartialView("_AdvanceAdjustmentDetail", advanceAdjustmentDetailModelList);
+            });
+        }
 
-        public async Task<IActionResult> MapOutstandingDetail(int particularLedgerId, int advanceAdjustmentId)
+        public async Task<IActionResult> MapOutstandingDetail(int advanceAdjustmentId)
         {
             AdvanceAdjustmentModel advanceAdjustmentModel = await _advanceAdjustment.GetAdvanceAdjustmentById(advanceAdjustmentId);
 
             Decimal exchangeRate = 0;
             Int32 currencyId = advanceAdjustmentModel.CurrencyId;
-            DateTime voucherDate = (DateTime)advanceAdjustmentModel.AdvanceAdjustmentDate;
+            DateTime advanceAdjustmentDate = (DateTime)advanceAdjustmentModel.AdvanceAdjustmentDate;
 
-            CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetExchangeRateByCurrencyId(currencyId, voucherDate);
+            CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetExchangeRateByCurrencyId(currencyId, advanceAdjustmentDate);
 
             exchangeRate = null != currencyConversionModel ? (decimal)currencyConversionModel.ExchangeRate : 0;
 
-            exchangeRate = 0 != exchangeRate ? 1 / exchangeRate : 0;
+            //exchangeRate = 0 != exchangeRate ? 1 / exchangeRate : 0;
 
             //################
 
-            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(particularLedgerId, "Payment AdvanceAdjustment", advanceAdjustmentId,voucherDate,exchangeRate);
+            IList<OutstandingInvoiceModel> outstandingInvoiceModelList = await _outstandingInvoice.GetOutstandingInvoiceListByLedgerId(advanceAdjustmentModel.ParticularLedgerId, "Advance Adjustment", advanceAdjustmentId, advanceAdjustmentDate, exchangeRate);
 
             IList<AdvanceAdjustmentOutstandingInvoiceModel> advanceAdjustmentOutstandingInvoiceModelList = new List<AdvanceAdjustmentOutstandingInvoiceModel>(); ;
 
@@ -65,6 +65,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 advanceAdjustmentOutstandingInvoiceModelList.Add(new AdvanceAdjustmentOutstandingInvoiceModel
                 {
                     AdvanceAdjustmentId = advanceAdjustmentId,
+                    ParticularLedgerId = advanceAdjustmentModel.ParticularLedgerId,
                     InvoiceId = outstandingInvoiceModel.InvoiceId,
                     InvoiceType = outstandingInvoiceModel.InvoiceType,
                     InvoiceNo = outstandingInvoiceModel.InvoiceNo,
@@ -124,12 +125,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 }
 
                 await _advanceAdjustment.UpdateAdvanceAdjustmentMasterAmount(advanceAdjustmentId);
-
             }
 
             return Json(data);
         }
-
 
         [HttpPost]
         public async Task<JsonResult> SaveOutstandingDetail(List<AdvanceAdjustmentOutstandingInvoiceModel> advanceAdjustmentOutstandingInvoiceModelList)
@@ -151,8 +150,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     {
                         AdvanceAdjustmentDetId = 0,
                         AdvanceAdjustmentId = advanceAdjustmentOutstandingInvoiceModel.AdvanceAdjustmentId,
-                        PurchaseInvoiceId = advanceAdjustmentOutstandingInvoiceModel.PurchaseInvoiceId,
                         SalesInvoiceId = advanceAdjustmentOutstandingInvoiceModel.SalesInvoiceId,
+                        PurchaseInvoiceId = advanceAdjustmentOutstandingInvoiceModel.PurchaseInvoiceId,
                         DebitNoteId = advanceAdjustmentOutstandingInvoiceModel.DebitNoteId,
                         CreditNoteId = advanceAdjustmentOutstandingInvoiceModel.CreditNoteId,
                         AmountFc = advanceAdjustmentOutstandingInvoiceModel.AmountFc == null ? 0 : (decimal)advanceAdjustmentOutstandingInvoiceModel.AmountFc,
@@ -160,7 +159,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     };
 
                     if (advanceAdjustmentDetailModel.AdvanceAdjustmentId == 0
-                        || (advanceAdjustmentDetailModel.PurchaseInvoiceId == 0 && advanceAdjustmentDetailModel.DebitNoteId == 0)
+                        || (advanceAdjustmentDetailModel.PurchaseInvoiceId == 0 && advanceAdjustmentDetailModel.DebitNoteId == 0 && advanceAdjustmentDetailModel.PurchaseInvoiceId == 0 && advanceAdjustmentDetailModel.CreditNoteId == 0)
                         || advanceAdjustmentDetailModel.AmountFc == 0
                         )
                     {
@@ -183,7 +182,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             return Json(data);
         }
-
 
         [HttpPost]
         public async Task<JsonResult> DeleteAdvanceAdjustmentDetail(int advanceAdjustmentDetId)

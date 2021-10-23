@@ -30,19 +30,21 @@ namespace ERP.Services.Accounts
             advanceAdjustmentDetail.AdvanceAdjustmentId = advanceAdjustmentDetailModel.AdvanceAdjustmentId;
             advanceAdjustmentDetail.AmountFc = advanceAdjustmentDetailModel.AmountFc;
             advanceAdjustmentDetail.Amount = 0;
+
             advanceAdjustmentDetail.Narration = advanceAdjustmentDetailModel.Narration;
+            advanceAdjustmentDetail.SalesInvoiceId = advanceAdjustmentDetailModel.SalesInvoiceId;
             advanceAdjustmentDetail.PurchaseInvoiceId = advanceAdjustmentDetailModel.PurchaseInvoiceId;
             advanceAdjustmentDetail.DebitNoteId = advanceAdjustmentDetailModel.DebitNoteId;
             advanceAdjustmentDetail.CreditNoteId = advanceAdjustmentDetailModel.CreditNoteId;
+
+            await Create(advanceAdjustmentDetail);
+
+            advanceAdjustmentDetailId = advanceAdjustmentDetail.AdvanceAdjustmentDetId;
 
             if (advanceAdjustmentDetailId != 0)
             {
                 await UpdateAdvanceAdjustmentDetailAmount(advanceAdjustmentDetailId);
             }
-
-            await Create(advanceAdjustmentDetail);
-
-            advanceAdjustmentDetailId = advanceAdjustmentDetail.AdvanceAdjustmentDetId;
 
             return advanceAdjustmentDetailId; // returns.
         }
@@ -61,9 +63,10 @@ namespace ERP.Services.Accounts
                 advanceAdjustmentDetail.AmountFc = advanceAdjustmentDetailModel.AmountFc;
                 advanceAdjustmentDetail.Amount = 0;
                 advanceAdjustmentDetail.Narration = advanceAdjustmentDetailModel.Narration;
-                advanceAdjustmentDetail.PurchaseInvoiceId = advanceAdjustmentDetailModel.PurchaseInvoiceId;
-                advanceAdjustmentDetail.DebitNoteId = advanceAdjustmentDetailModel.DebitNoteId;
-                advanceAdjustmentDetail.CreditNoteId = advanceAdjustmentDetailModel.CreditNoteId;
+                //advanceAdjustmentDetail.SalesInvoiceId = advanceAdjustmentDetailModel.SalesInvoiceId;
+                // advanceAdjustmentDetail.PurchaseInvoiceId = advanceAdjustmentDetailModel.PurchaseInvoiceId;
+                // advanceAdjustmentDetail.DebitNoteId = advanceAdjustmentDetailModel.DebitNoteId;
+                // advanceAdjustmentDetail.CreditNoteId = advanceAdjustmentDetailModel.CreditNoteId;
 
                 isUpdated = await Update(advanceAdjustmentDetail);
             }
@@ -76,7 +79,7 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        public async Task<bool> UpdateAdvanceAdjustmentDetailAmount(int? advanceAdjustmentDetailId)
+        public async Task<bool> UpdateAdvanceAdjustmentDetailAmount(int advanceAdjustmentDetailId)
         {
             bool isUpdated = false;
 
@@ -87,15 +90,15 @@ namespace ERP.Services.Accounts
 
             if (null != advanceAdjustmentDetail)
             {
-                advanceAdjustmentDetail.Amount = advanceAdjustmentDetail.AmountFc * advanceAdjustmentDetail.AdvanceAdjustment.ExchangeRate;
+                advanceAdjustmentDetail.Amount = advanceAdjustmentDetail.AmountFc / advanceAdjustmentDetail.AdvanceAdjustment.ExchangeRate;
 
                 isUpdated = await Update(advanceAdjustmentDetail);
             }
 
-            if (isUpdated != false)
-            {
-                await advanceAdjustment.UpdateAdvanceAdjustmentMasterAmount(advanceAdjustmentDetail.AdvanceAdjustmentId);
-            }
+            //if (isUpdated != false)
+            //{
+            //    await advanceAdjustment.UpdateAdvanceAdjustmentMasterAmount(advanceAdjustmentDetail.AdvanceAdjustmentId);
+            //}
 
             return isUpdated; // returns.
         }
@@ -156,7 +159,7 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        public async Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId, int addRow_Blank)
+        public async Task<IList<AdvanceAdjustmentDetailModel>> GetAdvanceAdjustmentDetailByAdjustmentId(int advanceAdjustmentId)
         {
             IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = await GetAdvanceAdjustmentDetailList(0, advanceAdjustmentId);
 
@@ -185,7 +188,9 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Advanceadjustmentdetail> query = GetQueryByCondition(w => w.AdvanceAdjustmentDetId != 0)
-                                                        .Include(w => w.AdvanceAdjustment);
+                                                        .Include(w => w.AdvanceAdjustment)
+                                                        .Include(w => w.SalesInvoice).Include(w => w.CreditNote)
+                                                        .Include(w => w.PurchaseInvoice).Include(w => w.DebitNote);
 
             // apply filters.
             if (0 != particularLedgerId)
@@ -204,7 +209,6 @@ namespace ERP.Services.Accounts
                 }
             }
 
-
             return advanceAdjustmentDetailModelList; // returns.
         }
 
@@ -213,7 +217,9 @@ namespace ERP.Services.Accounts
             IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModelList = null;
 
             // create query.
-            IQueryable<Advanceadjustmentdetail> query = GetQueryByCondition(w => w.AdvanceAdjustmentDetId != 0);
+            IQueryable<Advanceadjustmentdetail> query = GetQueryByCondition(w => w.AdvanceAdjustmentDetId != 0)
+                                                        .Include(w => w.SalesInvoice).Include(w => w.CreditNote)
+                                                        .Include(w => w.PurchaseInvoice).Include(w => w.DebitNote);
 
             // apply filters.
             if (0 != advanceAdjustmentDetailId)
@@ -251,11 +257,31 @@ namespace ERP.Services.Accounts
                 advanceAdjustmentDetailModel.Narration = advanceAdjustmentDetail.Narration;
 
                 advanceAdjustmentDetailModel.PurchaseInvoiceId = advanceAdjustmentDetail.PurchaseInvoiceId;
+                advanceAdjustmentDetailModel.SalesInvoiceId = advanceAdjustmentDetail.SalesInvoiceId;
                 advanceAdjustmentDetailModel.CreditNoteId = advanceAdjustmentDetail.CreditNoteId;
                 advanceAdjustmentDetailModel.DebitNoteId = advanceAdjustmentDetail.DebitNoteId;
 
                 //--####
-                //advanceAdjustmentDetailModel.TransactionTypeName = null != advanceAdjustmentDetail.UnitOfMeasurement ? advanceAdjustmentDetail.UnitOfMeasurement.UnitOfMeasurementName : null;
+                if (advanceAdjustmentDetailModel.SalesInvoiceId != 0 && advanceAdjustmentDetailModel.SalesInvoiceId != null)
+                {
+                    advanceAdjustmentDetailModel.InvoiceType = "Sales Invoice";
+                    advanceAdjustmentDetailModel.InvoiceNo = null != advanceAdjustmentDetail.SalesInvoice ? advanceAdjustmentDetail.SalesInvoice.InvoiceNo : null;
+                }
+                else if (advanceAdjustmentDetailModel.PurchaseInvoiceId != 0 && advanceAdjustmentDetailModel.PurchaseInvoiceId != null)
+                {
+                    advanceAdjustmentDetailModel.InvoiceType = "Purchase Invoice";
+                    advanceAdjustmentDetailModel.InvoiceNo = null != advanceAdjustmentDetail.PurchaseInvoice ? advanceAdjustmentDetail.PurchaseInvoice.InvoiceNo : null;
+                }
+                else if (advanceAdjustmentDetailModel.CreditNoteId != 0 && advanceAdjustmentDetailModel.CreditNoteId != null)
+                {
+                    advanceAdjustmentDetailModel.InvoiceType = "Credit Note";
+                    advanceAdjustmentDetailModel.InvoiceNo = null != advanceAdjustmentDetail.CreditNote ? advanceAdjustmentDetail.CreditNote.CreditNoteNo : null;
+                }
+                else if (advanceAdjustmentDetailModel.DebitNoteId != 0 && advanceAdjustmentDetailModel.DebitNoteId != null)
+                {
+                    advanceAdjustmentDetailModel.InvoiceType = "Debit Note";
+                    advanceAdjustmentDetailModel.InvoiceNo = null != advanceAdjustmentDetail.DebitNote ? advanceAdjustmentDetail.DebitNote.DebitNoteNo : null;
+                }
 
                 return advanceAdjustmentDetailModel;
             });

@@ -66,8 +66,8 @@ namespace ERP.Services.Accounts
                 receiptVoucherDetail.AmountFc = receiptVoucherDetailModel.AmountFc;
                 receiptVoucherDetail.Amount = 0;
                 receiptVoucherDetail.Narration = receiptVoucherDetailModel.Narration == null ? "" : receiptVoucherDetailModel.Narration;
-                receiptVoucherDetail.SalesInvoiceId = receiptVoucherDetailModel.SalesInvoiceId;
-                receiptVoucherDetail.CreditNoteId = receiptVoucherDetailModel.CreditNoteId;
+                //receiptVoucherDetail.SalesInvoiceId = receiptVoucherDetailModel.SalesInvoiceId;
+                //receiptVoucherDetail.CreditNoteId = receiptVoucherDetailModel.CreditNoteId;
 
                 isUpdated = await Update(receiptVoucherDetail);
             }
@@ -90,7 +90,7 @@ namespace ERP.Services.Accounts
 
             if (null != receiptVoucherDetail)
             {
-                receiptVoucherDetail.Amount = receiptVoucherDetail.AmountFc * receiptVoucherDetail.ReceiptVoucher.ExchangeRate;
+                receiptVoucherDetail.Amount = receiptVoucherDetail.AmountFc / receiptVoucherDetail.ReceiptVoucher.ExchangeRate;
 
                 isUpdated = await Update(receiptVoucherDetail);
             }
@@ -351,15 +351,24 @@ namespace ERP.Services.Accounts
                                                 .Include(w => w.ReceiptVoucher)
                                                 .Include(w => w.Advanceadjustments)
                                                 .ThenInclude(w => w.Advanceadjustmentdetails)
-                                                .Where(w => w.ParticularLedgerId == particularLedgerId)
-                                                //.Where(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved)
-                                                //.Where(w => w.ReceiptVoucher.VoucherDate <= advanceAdjustmentDate)
-                                                //.Where(w => w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
-                                                .Select(c => new
+                                                .Where
+                                                (
+                                                    w => w.ParticularLedgerId == particularLedgerId
+                                                    && w.TransactionTypeId == (int)TransactionType.Advance
+                                                    && w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved
+                                                    && w.ReceiptVoucher.VoucherDate <= advanceAdjustmentDate
+                                                    && (
+                                                            w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc))
+                                                        || voucherDetId == w.ReceiptVoucherDetId
+                                                        )
+                                                )
+                                                .Select(vd => new
                                                 {
-                                                    VoucherNo = c.ReceiptVoucher.VoucherNo,
-                                                    VoucherDetId = c.ReceiptVoucherDetId,
-                                                    AmountFc = voucherDetId == c.ReceiptVoucherDetId ? c.AmountFc : c.AmountFc + amountFc,
+                                                    VoucherNo = vd.ReceiptVoucher.VoucherNo,
+                                                    VoucherDetId = vd.ReceiptVoucherDetId,
+                                                    AmountFc = voucherDetId == vd.ReceiptVoucherDetId
+                                                            ? (vd.AmountFc - vd.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
+                                                            : (vd.AmountFc - vd.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc))) + amountFc,
                                                 });
 
                 resultModel = await query.Select(s => new SelectListModel
@@ -376,8 +385,9 @@ namespace ERP.Services.Accounts
         {
             // create query.
             IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId == receiptVoucherDetId)
-                                                    //.Where(w => w.AmountFc > w.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc)))
-                                                    ;
+                                                    .Include(w => w.Advanceadjustments)
+                                                    .ThenInclude(w => w.Advanceadjustmentdetails);
+
             // get records by query.
             List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
 
@@ -388,7 +398,8 @@ namespace ERP.Services.Accounts
             if (null != receiptVoucherDetailList && receiptVoucherDetailList.Any())
             {
                 receiptVoucherDetail = receiptVoucherDetailList.FirstOrDefault();
-                availableAmountFc = receiptVoucherDetail.AmountFc;
+
+                availableAmountFc = receiptVoucherDetail.AmountFc - receiptVoucherDetail.Advanceadjustments.Sum(a => a.Advanceadjustmentdetails.Sum(ad => ad.AmountFc));
             }
 
             return availableAmountFc;

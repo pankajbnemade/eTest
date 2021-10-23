@@ -119,6 +119,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 advanceAdjustmentModel.VoucherAvailableAmountFc = await _paymentVoucherDetail.GetVoucherAvailableAmount((Int32)advanceAdjustmentModel.PaymentVoucherDetId);
             }
 
+            advanceAdjustmentModel.VoucherAvailableAmountFc = advanceAdjustmentModel.VoucherAvailableAmountFc + advanceAdjustmentModel.AmountFc;
+
             return await Task.Run(() =>
             {
                 return PartialView("_ViewAdvanceAdjustmentMaster", advanceAdjustmentModel);
@@ -239,6 +241,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 {
                     advanceAdjustmentModel.VoucherAvailableAmountFc = await _paymentVoucherDetail.GetVoucherAvailableAmount((Int32)advanceAdjustmentModel.PaymentVoucherDetId);
                 }
+
+                advanceAdjustmentModel.VoucherAvailableAmountFc = advanceAdjustmentModel.VoucherAvailableAmountFc + advanceAdjustmentModel.AmountFc;
 
                 if (advanceAdjustmentModel.AmountFc == 0
                     && (statusId == (int)DocumentStatus.Approved || statusId == (int)DocumentStatus.ApprovalRequested)

@@ -323,7 +323,8 @@ namespace ERP.Services.Accounts
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
             // create query.
-            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0);
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0
+                                                                && w.StatusId == (int)DocumentStatus.Approved);
 
             // apply filters.
             if (0 != customerLedgerId)

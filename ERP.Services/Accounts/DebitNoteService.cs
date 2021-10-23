@@ -329,7 +329,8 @@ namespace ERP.Services.Accounts
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
             // create query.
-            IQueryable<Debitnote> query = GetQueryByCondition(w => w.DebitNoteId != 0);
+            IQueryable<Debitnote> query = GetQueryByCondition(w => w.DebitNoteId != 0
+                                                               && w.StatusId == (int)DocumentStatus.Approved);
 
             // apply filters.
             if (0 != partyLedgerId)
