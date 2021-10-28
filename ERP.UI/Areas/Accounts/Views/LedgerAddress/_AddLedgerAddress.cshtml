@@ -1,0 +1,224 @@
+﻿@model LedgerAddressModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.AddressId > 0)
+            {
+<h5 class="modal-title">Edit Address</h5> }
+else
+{
+<h5 class="modal-title">Add Address</h5>}
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="frmLedgerAddress" class="width100" method="post"
+              asp-action="SaveLedgerAddress" asp-controller="LedgerAddress" asp-area="Accounts"
+              data-ajax-begin="return BeginLedgerAddress();" data-ajax-success="SuccessLedgerAddress"
+              data-ajax="true" data-ajax-method="post">
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.AddressId)
+                @Html.HiddenFor(model => model.LedgerId)
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AddressDescription, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.AddressDescription, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.AddressDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CountryId, new { @class = "required" })
+                            @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.CountryList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StateId, new { @class = "required" })
+                            <select class="form-control form-control-sm" asp-for="StateId">
+                                <option value="">Select</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CityId, new { @class = "required" })
+                            <select class="form-control form-control-sm" asp-for="CityId">
+                                <option value="">Select</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EmailAddress, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PhoneNo, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.PhoneNo, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PostalCode, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.PostalCode, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FaxNo, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.FaxNo, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.FaxNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    // begin form
+    function BeginLedgerAddress() {
+        var form = $("#frmLedgerAddress");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessLedgerAddress(data) {
+        if (data.Result.Status) {
+            $('#modal-ledger').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $("#ledgerAddressGrid").DataTable().clear().ajax.reload();
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    $(document).ready(function () {
+        //$('.decimal-two-scale').autoNumeric('init', { vMin: '-999999999999999.99', vMax: '999999999999999.99' });
+
+        if ('@Model.AddressId' > 0 && '@Model.CountryId' > 0) {
+            GetStateByCountryId('@Model.CountryId');
+        }
+
+        // CountryId change.
+        $(document).off('change').on('change', '#CountryId', function () {
+            GetStateByCountryId(this.value);
+        });
+
+        if ('@Model.AddressId' > 0 && '@Model.StateId' > 0) {
+            GetCityByStateId('@Model.StateId');
+        }
+
+        // StateId change.
+        $(document).on('change', '#StateId', function () {
+            GetCityByStateId(this.value);
+        });
+
+
+    });
+
+
+    function GetStateByCountryId(countryId) {
+        if ('' != countryId) {
+            var model = { countryId: countryId };
+            
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetStateByCountryId", "LedgerAddress")', '', model,
+                function (response) {
+                    $('#StateId').empty();
+                    $('#StateId').append("<option value=''>Select</option>");
+
+                    if (true == response.Result.Status) {
+                        $.each(response.Result.Data, function (i, item) {
+                            $('#StateId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                        });
+                        if ('@Model.StateId' > 0) {
+                            $('#StateId').val('@Model.StateId');
+                        }
+                    }
+                    else {
+                        if ('NoItems' == response.Result.Message) {
+                            $("span[data-valmsg-for='StateId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                            $("span[data-valmsg-for='StateId']").html('<span for="StateId" class="">No data found.</span>');
+                        }
+                    }
+                }, null, true, null, false);
+        }
+        else {
+            $('#StateId').empty();
+            $('#StateId').append("<option value=''>Select</option>");
+        }
+
+        $('#CityId').empty();
+        $('#CityId').append("<option value=''>Select</option>");
+    }
+
+
+    function GetCityByStateId(stateId) {
+        console.log(1);
+
+        if ('' != stateId) {
+            var model = { stateId: stateId };
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetCityByStateId", "LedgerAddress")', '', model,
+                function (response) {
+                    $('#CityId').empty();
+                    $('#CityId').append("<option value=''>Select</option>");
+
+                    if (true == response.Result.Status) {
+                        $.each(response.Result.Data, function (i, item) {
+                            $('#CityId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
+                        });
+                        if ('@Model.CityId' > 0) {
+                            $('#CityId').val('@Model.CityId');
+                        }
+                    }
+                    else {
+                        if ('NoItems' == response.Result.Message) {
+                            $("span[data-valmsg-for='CityId']").removeClass('field-validation-valid').addClass('field-validation-error');
+                            $("span[data-valmsg-for='CityId']").html('<span for="CityId" class="">No data found.</span>');
+                        }
+                    }
+                }, null, true, null, false);
+        }
+        else {
+            $('#CityId').empty();
+            $('#CityId').append("<option value=''>Select</option>");
+        }
+
+
+    }
+
+
+
+</script>

@@ -1,0 +1,189 @@
+﻿@model SearchFilterLedgerModel
+
+@{ ViewBag.Title = "Ledger List"; }
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body p-2" id="searchFilterCriteria">
+                        <div class="row">
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.LedgerName, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.LedgerName, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.FromDate)
+                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ToDate)
+                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ParentGroupId, new { @class = "" })
+                                    @Html.DropDownListFor(model => model.ParentGroupId, new SelectList(ViewBag.ParentGroupList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 pt-2 text-right">
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnSearchLedger();">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddLedger();">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                @*<div class="col-sm-12 table-responsive">*@
+                <table id="ledgerGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort"></th>
+                            <th>LedgerId</th>
+                            <th>Ledger Name</th>
+                            <th>Parent Group</th>
+                            <th>Prepared By</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="modal-ledger" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+<script type="text/javascript">
+    const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+    const TO_PATTERN = 'DD/MM/YYYY HH:mm';
+    $(document).ready(function () {
+        $("#ledgerGrid").DataTable({
+            "processing": true,
+            "scrollX": true,
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
+            "serverSide": true,
+            "ajax": {
+                "url": "@Url.Action("GetLedgerList", "Ledger")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: function () {
+                        var searchFilterModel = {
+                            LedgerName: $('#LedgerName').val(),
+                            ParentGroupId: $('#ParentGroupId').val(),
+                            FromDate: $('#FromDate').val(),
+                            ToDate: $('#ToDate').val(),
+                        };
+
+                        return JSON.stringify(searchFilterModel);
+                    }
+                },
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditLedgerMaster(' + full.LedgerId + ')"><i class="far fa-edit"></i></button>' +
+                           /* '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteLedgerMaster(this, ' + full.LedgerId + ')"><i class="fa fa-trash-alt"></i></button>' +*/
+                            '</div>';
+                    }
+                },
+                { "data": "LedgerId", "name": "LedgerId", "visible": false },
+                { "data": "LedgerName", "name": "Ledger Name" },
+                { "data": "ParentGroupName", "name": "Parent Group Name" },
+                { "data": "PreparedByName", "name": "Prepared By Name" }
+            ],
+        });
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+
+    // edit ledger.
+    function fnEditLedgerMaster(ledgerId) {
+        window.location.href = '@Url.Action("ManageLedger", "Ledger")?ledgerId=' + ledgerId;
+    }
+
+    // delete ledger.
+    function fnDeleteLedgerMaster(ledgerId) {
+
+    }
+
+    // search data.
+    function fnSearchLedger() {
+        $("#ledgerGrid").DataTable().ajax.reload();
+    }
+
+    // reset filter.
+    function fnResetSearch() {
+        $('#searchFilterCriteria :input[type=text]').each(function (index) {
+            $(this).val('');
+        });
+        $('#searchFilterCriteria select').each(function (index) {
+            $(this).val('');
+        });
+
+        $("#ledgerGrid").DataTable().ajax.reload();
+    }
+
+    // new button click.
+    function fnAddLedger() {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddLedgerMaster", "Ledger")', 'html', '',
+        function (data) {
+            $('#modal-ledger').empty();
+            $('#modal-ledger').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+</script>
+@*@{ await Html.RenderPartialAsync("_ConfirmDeleteLedgerMaster"); }*@

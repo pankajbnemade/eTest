@@ -22,5 +22,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<SelectListModel>> GetLedgerAddressSelectList(int ledgerId);
 
+        Task<DataTableResultModel<LedgerAddressModel>> GetLedgerAddressByLedgerId(int ledgerId);
+
     }
 }

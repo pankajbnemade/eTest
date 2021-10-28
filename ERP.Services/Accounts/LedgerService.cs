@@ -4,17 +4,37 @@ using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
+using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
 {
     public class LedgerService : Repository<Ledger>, ILedger
     {
-        public LedgerService(ErpDbContext dbContext) : base(dbContext) { }
+        private readonly ICommon common;
+
+        public LedgerService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        {
+            common = _common;
+        }
+
+        public async Task<GenerateNoModel> GenerateLedgerCode()
+        {
+            int voucherSetupId = 1;
+
+            int? maxNo = await GetQueryByCondition(w => w.LedgerId != 0).MaxAsync(m => (int?)m.MaxNo);
+
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, 1, 1);
+
+            return generateNoModel; // returns.
+        }
 
         public async Task<int> CreateLedger(LedgerModel ledgerModel)
         {
@@ -165,6 +185,94 @@ namespace ERP.Services.Accounts
             return ledgerModelList; // returns.
         }
 
+        public async Task<DataTableResultModel<LedgerModel>> GetLedgerList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterLedgerModel searchFilterModel)
+        {
+            string searchBy = dataTableAjaxPostModel.search?.value;
+            int take = dataTableAjaxPostModel.length;
+            int skip = dataTableAjaxPostModel.start;
+
+            string sortBy = string.Empty;
+            string sortDir = string.Empty;
+
+            if (dataTableAjaxPostModel.order != null)
+            {
+                sortBy = dataTableAjaxPostModel.columns[dataTableAjaxPostModel.order[0].column].data;
+                sortDir = dataTableAjaxPostModel.order[0].dir.ToLower();
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            DataTableResultModel<LedgerModel> resultModel = await GetDataFromDbase(searchFilterModel, searchBy, take, skip, sortBy, sortDir);
+
+            return resultModel; // returns.
+        }
+
+        private async Task<DataTableResultModel<LedgerModel>> GetDataFromDbase(SearchFilterLedgerModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
+        {
+            DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
+
+            IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
+                                                .Include(w => w.ParentGroup)
+                                                .Include(w => w.PreparedByUser);
+
+            //sortBy
+            if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
+            {
+                sortBy = "LedgerName";
+            }
+
+            //sortDir
+            if (string.IsNullOrEmpty(sortDir) || sortDir == "")
+            {
+                sortDir = "asc";
+            }
+
+            if (!string.IsNullOrEmpty(searchFilterModel.LedgerName))
+            {
+                query = query.Where(w => w.LedgerName.Contains(searchFilterModel.LedgerName));
+            }
+
+            if (null != searchFilterModel.ParentGroupId)
+            {
+                query = query.Where(w => w.ParentGroupId == searchFilterModel.ParentGroupId);
+            }
+
+            if (null != searchFilterModel.FromDate)
+            {
+                query = query.Where(w => w.PreparedDateTime >= searchFilterModel.FromDate);
+            }
+
+            if (null != searchFilterModel.ToDate)
+            {
+                query = query.Where(w => w.PreparedDateTime <= searchFilterModel.ToDate);
+            }
+
+            // get total count.
+            resultModel.TotalResultCount = await query.CountAsync();
+
+            // datatable search
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                query = query.Where(w => w.LedgerName.ToLower().Contains(searchBy.ToLower()));
+            }
+
+            // get records based on pagesize.
+            query = query.Skip(skip).Take(take);
+
+            resultModel.ResultList = await query.Select(s => new LedgerModel
+            {
+                LedgerId = s.LedgerId,
+                LedgerCode = s.LedgerCode,
+                LedgerName = s.LedgerName,
+                ParentGroupName = s.ParentGroup.LedgerName,
+                PreparedByName = s.PreparedByUser.UserName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
+
+
+            // get filter record count.
+            resultModel.FilterResultCount = await query.CountAsync();
+
+            return resultModel; // returns.
+        }
 
         private async Task<LedgerModel> AssignValueToModel(Ledger ledger)
         {
@@ -186,6 +294,30 @@ namespace ERP.Services.Accounts
 
                 return ledgerModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetGroupSelectList(int parentGroupId)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.LedgerId != 0))
+            {
+                IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0);
+
+                query = query.Where(w => w.IsGroup == 1);
+
+                // apply filters.
+                if (0 != parentGroupId)
+                    query = query.Where(w => w.ParentGroupId == parentGroupId);
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.LedgerName,
+                    Value = s.LedgerId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
         public async Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId, Boolean IsLegderOnly)

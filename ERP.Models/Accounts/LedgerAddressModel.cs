@@ -27,19 +27,19 @@ namespace ERP.Models.Accounts
         public int CityId { get; set; }
 
         [Required(ErrorMessage = "EmailAddress is required.")]
-        [Display(Name = "EmailAddress")]
+        [Display(Name = "Email Address")]
         public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "PhoneNo is required.")]
-        [Display(Name = "PhoneNo")]
+        [Display(Name = "Phone No")]
         public string PhoneNo { get; set; }
 
         [Required(ErrorMessage = "PostalCode is required.")]
-        [Display(Name = "PostalCode")]
+        [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
 
         [Required(ErrorMessage = "FaxNo is required.")]
-        [Display(Name = "FaxNo")]
+        [Display(Name = "Fax No")]
         public string FaxNo { get; set; }
 
         //####

@@ -7,6 +7,7 @@ using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
@@ -36,7 +37,6 @@ namespace ERP.Services.Accounts
             return ledgerAddressId; // returns.
         }
 
-
         public async Task<bool> UpdateLedgerAddress(LedgerAddressModel ledgerAddressModel)
         {
             bool isUpdated = false;
@@ -61,7 +61,6 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-
         public async Task<bool> DeleteLedgerAddress(int ledgerAddressId)
         {
             bool isDeleted = false;
@@ -76,12 +75,11 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-
         public async Task<LedgerAddressModel> GetLedgerAddressById(int ledgerAddressId)
         {
             LedgerAddressModel ledgerAddressModel = null;
 
-            IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(ledgerAddressId);
+            IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(ledgerAddressId,0);
             if (null != ledgerAddressModelList && ledgerAddressModelList.Any())
             {
                 ledgerAddressModel = ledgerAddressModelList.FirstOrDefault();
@@ -90,12 +88,33 @@ namespace ERP.Services.Accounts
             return ledgerAddressModel; // returns.
         }
 
+        public async Task<DataTableResultModel<LedgerAddressModel>> GetLedgerAddressByLedgerId(int ledgerId)
+        {
+            DataTableResultModel<LedgerAddressModel> resultModel = new DataTableResultModel<LedgerAddressModel>();
+
+            IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(0, ledgerId);
+
+            if (null != ledgerAddressModelList && ledgerAddressModelList.Any())
+            {
+                resultModel = new DataTableResultModel<LedgerAddressModel>();
+                resultModel.ResultList = ledgerAddressModelList;
+                resultModel.TotalResultCount = ledgerAddressModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<LedgerAddressModel>();
+                resultModel.ResultList = new List<LedgerAddressModel>();
+                resultModel.TotalResultCount = 0;
+            }
+
+            return resultModel; // returns.
+        }
 
         public async Task<DataTableResultModel<LedgerAddressModel>> GetLedgerAddressList()
         {
             DataTableResultModel<LedgerAddressModel> resultModel = new DataTableResultModel<LedgerAddressModel>();
 
-            IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(0);
+            IList<LedgerAddressModel> ledgerAddressModelList = await GetLedgerAddressList(0,0);
             if (null != ledgerAddressModelList && ledgerAddressModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerAddressModel>();
@@ -106,7 +125,7 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        private async Task<IList<LedgerAddressModel>> GetLedgerAddressList(int ledgerAddressId)
+        private async Task<IList<LedgerAddressModel>> GetLedgerAddressList(int ledgerAddressId, int ledgerId)
         {
             IList<LedgerAddressModel> ledgerAddressModelList = null;
 
@@ -118,6 +137,10 @@ namespace ERP.Services.Accounts
             // apply filters.
             if (0 != ledgerAddressId)
                 query = query.Where(w => w.AddressId == ledgerAddressId);
+
+             // apply filters.
+            if (0 != ledgerId)
+                query = query.Where(w => w.LedgerId == ledgerId);
 
             // get records by query.
             List<Ledgeraddress> ledgerAddressList = await query.ToListAsync();

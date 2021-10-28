@@ -3,16 +3,14 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
-using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using ERP.Models.Accounts.Enums;
+using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
 {
@@ -91,7 +89,7 @@ namespace ERP.Services.Accounts
             salesInvoice.TaxAmount = 0;
 
             salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
-            salesInvoice.DiscountPerOrAmountFc = salesInvoiceModel.DiscountPerOrAmountFc == null ? 0 : salesInvoiceModel.DiscountPerOrAmountFc;
+            salesInvoice.DiscountPerOrAmountFc =  salesInvoiceModel.DiscountPerOrAmountFc;
             salesInvoice.DiscountAmountFc = 0;
             salesInvoice.DiscountAmount = 0;
 
@@ -156,7 +154,7 @@ namespace ERP.Services.Accounts
                 salesInvoice.TaxAmount = 0;
 
                 salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
-                salesInvoice.DiscountPerOrAmountFc = salesInvoiceModel.DiscountPerOrAmountFc == null ? 0 : salesInvoiceModel.DiscountPerOrAmountFc;
+                salesInvoice.DiscountPerOrAmountFc =  salesInvoiceModel.DiscountPerOrAmountFc;
 
                 salesInvoice.DiscountAmountFc = 0;
                 salesInvoice.DiscountAmount = 0;

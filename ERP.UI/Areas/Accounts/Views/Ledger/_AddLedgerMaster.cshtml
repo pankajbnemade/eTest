@@ -1,0 +1,119 @@
+﻿@model LedgerModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.LedgerId > 0)
+            {
+<h5 class="modal-title">Edit Ledger</h5> }
+            else
+            {
+        <h5 class="modal-title">Add Ledger</h5>            }
+        <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        </div>
+        <form id="frmLedgerMaster" class="width100" method="post"
+              asp-action="SaveLedgerMaster" asp-controller="Ledger" asp-area="Accounts"
+              data-ajax-begin="return BeginLedgerMaster();" data-ajax-success="SuccessLedgerMaster"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.LedgerId)
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LedgerCode, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.LedgerCode, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.LedgerCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LedgerName, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.LedgerName, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.LedgerName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ParentGroupId)
+                            @Html.DropDownListFor(model => model.ParentGroupId, new SelectList(ViewBag.ParentGroupList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.ParentGroupId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TaxRegisteredNo)
+                            @Html.TextBoxFor(model => model.TaxRegisteredNo, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.TaxRegisteredNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    }); //document ready
+
+    // begin form
+    function BeginLedgerMaster() {
+        var form = $("#frmLedgerMaster");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessLedgerMaster(data) {
+
+        if (data.Result.Status) {
+            $('#modal-ledger').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+
+             var tabUrl = '@Url.Action("ManageLedger", "Ledger")?ledgerId=' + data.Result.Data;
+            window.location.href = tabUrl;
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
+
+<style type="text/css">
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>

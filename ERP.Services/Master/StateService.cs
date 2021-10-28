@@ -143,6 +143,24 @@ namespace ERP.Services.Master
             });
         }
 
+        public async Task<IList<SelectListModel>> GetStateSelectListByCountryId(int countryId)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.StateId != 0))
+            {
+                IQueryable<State> query = GetQueryByCondition(w => w.CountryId == countryId);
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.StateName,
+                    Value = s.StateId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
         public async Task<IList<SelectListModel>> GetStateSelectList()
         {
             IList<SelectListModel> resultModel = null;

@@ -25,8 +25,8 @@ namespace ERP.Models.Accounts
         [Display(Name = "Is Master Group")]
         public sbyte IsMasterGroup { get; set; }
 
-        [Required(ErrorMessage = "Parent Group Name is required.")]
-        [Display(Name = "Parent Group Name")]
+        [Required(ErrorMessage = "Parent Group is required.")]
+        [Display(Name = "Parent Group")]
         public int? ParentGroupId { get; set; }
 
         [Display(Name = "Is DeActivated")]

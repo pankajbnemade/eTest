@@ -10,6 +10,8 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ILedger : IRepository<Ledger>
     {
+        Task<GenerateNoModel> GenerateLedgerCode();
+
         Task<int> CreateLedger(LedgerModel ledgerModel);
 
         Task<bool> UpdateLedger(LedgerModel ledgerModel);
@@ -24,7 +26,11 @@ namespace ERP.Services.Accounts.Interface
 
         Task<DataTableResultModel<LedgerModel>> GetLedgerList();
 
+        Task<IList<SelectListModel>> GetGroupSelectList(int parentGroupId);
+
         Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId, Boolean IsLegderOnly);
+
+        Task<DataTableResultModel<LedgerModel>> GetLedgerList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterLedgerModel searchFilterModel);
 
     }
 }

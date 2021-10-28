@@ -25,6 +25,8 @@ namespace ERP.Services.Master.Interface
 
         Task<DataTableResultModel<StateModel>> GetStateList();
 
+        Task<IList<SelectListModel>> GetStateSelectListByCountryId(int countryId);
+
         Task<IList<SelectListModel>> GetStateSelectList();
 
     }

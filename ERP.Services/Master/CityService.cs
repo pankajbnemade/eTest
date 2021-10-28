@@ -183,6 +183,24 @@ namespace ERP.Services.Master
                 return cityModel;
             });
         }
+        
+        public async Task<IList<SelectListModel>> GetCitySelectListByStateId(int stateId)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.CityId != 0))
+            {
+                IQueryable<City> query = GetQueryByCondition(w => w.StateId == stateId);
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.CityName,
+                    Value = s.CityId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
 
         public async Task<IList<SelectListModel>> GetCitySelectList()
         {

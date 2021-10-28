@@ -47,6 +47,7 @@ namespace ERP.DataAccess.EntityModels
         public int? ParentGroupId { get; set; }
         public sbyte IsDeActived { get; set; }
         public string TaxRegisteredNo { get; set; }
+        public int MaxNo { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

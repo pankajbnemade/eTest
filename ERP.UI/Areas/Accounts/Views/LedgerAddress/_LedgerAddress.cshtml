@@ -1,0 +1,93 @@
+﻿
+<div class="row">
+    <div class="col-sm-12">
+        <table id="ledgerAddressGrid" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr class="table-header">
+                    <th class="no-sort">
+                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-ledgeraddress-dtl" title="Add New Line">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </th>
+                    <th>AddressId</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Email Address</th>
+                    <th>Phone No</th>
+                    <th>Fax No</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ledgerAddressGrid").DataTable({
+            "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetLedgerAddressList", "LedgerAddress", new { ledgerId = ViewBag.LedgerId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        var control = '<div class="action_button">' +
+                                    '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditLedgerAddress(' + full.AddressId + ')"><i class="far fa-edit"></i></button>' +
+                                    '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteLedgerAddress(this, ' + full.AddressId + ')"><i class="fa fa-trash-alt"></i></button>';
+                            control = control + '</div>';
+
+                        return control;
+                    }
+                },
+                { "data": "AddressId", "name": "AddressId", "visible": false  },
+                { "data": "CountryName", "name": "CountryName" },
+                { "data": "StateName", "name": "StateName" },
+                { "data": "CityName", "name": "CityName" },
+                { "data": "EmailAddress", "name": "EmailAddress" },
+                { "data": "PhoneNo", "name": "PhoneNo" },
+                { "data": "FaxNo", "name": "FaxNo" },
+                { "data": "AddressDescription", "name": "AddressDescription" }
+            ],
+        });
+    });
+
+    // add new ledgeraddress detail.
+    $('#add-new-ledgeraddress-dtl').click(function () {
+       
+        var model = { ledgerId: '@ViewBag.LedgerId' };
+        //alert(1);
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddLedgerAddress", "LedgerAddress")', 'html', model,
+        function (data) {
+            $('#modal-ledger').empty();
+            $('#modal-ledger').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit ledgeraddress detail.
+    function fnEditLedgerAddress(addressId) {
+        var model = { addressId: addressId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditLedgerAddress", "LedgerAddress")', 'html', model,
+        function (data) {
+            $('#modal-ledger').empty();
+            $('#modal-ledger').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteLedgerAddress"); }
