@@ -405,5 +405,49 @@ namespace ERP.Services.Accounts
             return availableAmountFc;
         }
 
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Receiptvoucherdetail> query = GetQueryByCondition(w => w.ReceiptVoucherDetId != 0)
+                                                .Include(i => i.ReceiptVoucher).ThenInclude(i => i.Currency)
+                                                .Where((w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved && w.ReceiptVoucher.FinancialYearId == yearId && w.ReceiptVoucher.CompanyId == companyId));
+
+            query = query.Where(w => w.ParticularLedgerId == ledgerId);
+
+            query = query.Where(w => w.ReceiptVoucher.VoucherDate >= fromDate && w.ReceiptVoucher.VoucherDate <= toDate);
+
+            // get records by query.
+            List<Receiptvoucherdetail> receiptVoucherDetailList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != receiptVoucherDetailList && receiptVoucherDetailList.Count > 0)
+            {
+                foreach (Receiptvoucherdetail receiptVoucherDetail in receiptVoucherDetailList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = receiptVoucherDetail.ReceiptVoucher.ReceiptVoucherId,
+                        DocumentType = "Receipt Voucher",
+                        DocumentNo = receiptVoucherDetail.ReceiptVoucher.VoucherNo,
+                        DocumentDate = receiptVoucherDetail.ReceiptVoucher.VoucherDate,
+                        Amount_FC = receiptVoucherDetail.AmountFc,
+                        Amount = receiptVoucherDetail.Amount,
+                        CreditAmount_FC = receiptVoucherDetail.AmountFc,
+                        CreditAmount = receiptVoucherDetail.Amount,
+                        ReceiptVoucherId = receiptVoucherDetail.ReceiptVoucher.ReceiptVoucherId,
+                        CurrencyId = receiptVoucherDetail.ReceiptVoucher.CurrencyId,
+                        CurrencyCode = receiptVoucherDetail.ReceiptVoucher.Currency.CurrencyCode,
+                        ExchangeRate = receiptVoucherDetail.ReceiptVoucher.ExchangeRate,
+                        PartyReferenceNo = receiptVoucherDetail.ReceiptVoucher.ChequeNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
+        }
+
     }
 }

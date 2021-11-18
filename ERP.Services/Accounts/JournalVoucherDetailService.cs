@@ -6,6 +6,7 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -341,6 +342,51 @@ namespace ERP.Services.Accounts
 
                 return journalVoucherDetailModel;
             });
+        }
+
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Journalvoucherdetail> query = GetQueryByCondition(w => w.JournalVoucherDetId != 0)
+                                                .Include(i => i.JournalVoucher).ThenInclude(i => i.Currency)
+                                                .Where((w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved && w.JournalVoucher.FinancialYearId == yearId && w.JournalVoucher.CompanyId == companyId));
+
+            query = query.Where(w => w.ParticularLedgerId == ledgerId);
+
+            query = query.Where(w => w.JournalVoucher.VoucherDate >= fromDate && w.JournalVoucher.VoucherDate <= toDate);
+
+            // get records by query.
+            List<Journalvoucherdetail> journalVoucherDetailList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != journalVoucherDetailList && journalVoucherDetailList.Count > 0)
+            {
+                foreach (Journalvoucherdetail journalVoucherDetail in journalVoucherDetailList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = journalVoucherDetail.JournalVoucher.JournalVoucherId,
+                        DocumentType = "Journal Voucher",
+                        DocumentNo = journalVoucherDetail.JournalVoucher.VoucherNo,
+                        DocumentDate = journalVoucherDetail.JournalVoucher.VoucherDate,
+                        Amount_FC = journalVoucherDetail.DebitAmountFc == 0 ? journalVoucherDetail.CreditAmountFc : journalVoucherDetail.DebitAmountFc,
+                        Amount = journalVoucherDetail.DebitAmount == 0 ? journalVoucherDetail.CreditAmount : journalVoucherDetail.DebitAmount,
+                        DebitAmount_FC = journalVoucherDetail.DebitAmountFc,
+                        DebitAmount = journalVoucherDetail.DebitAmount,
+                        CreditAmount_FC = journalVoucherDetail.CreditAmountFc,
+                        CreditAmount = journalVoucherDetail.CreditAmount,
+                        JournalVoucherId = journalVoucherDetail.JournalVoucher.JournalVoucherId,
+                        CurrencyId = journalVoucherDetail.JournalVoucher.CurrencyId,
+                        CurrencyCode = journalVoucherDetail.JournalVoucher.Currency.CurrencyCode,
+                        ExchangeRate = journalVoucherDetail.JournalVoucher.ExchangeRate,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
         }
 
     }

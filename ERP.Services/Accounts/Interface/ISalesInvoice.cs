@@ -43,6 +43,8 @@ namespace ERP.Services.Accounts.Interface
         /// </returns>
         Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterSalesInvoiceModel searchFilterModel);
 
+        Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
+
         //Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList();
     }
 }

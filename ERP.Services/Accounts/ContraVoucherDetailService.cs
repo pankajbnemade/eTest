@@ -6,6 +6,7 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -293,6 +294,52 @@ namespace ERP.Services.Accounts
 
                 return contraVoucherDetailModel;
             });
+        }
+
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Contravoucherdetail> query = GetQueryByCondition(w => w.ContraVoucherDetId != 0)
+                                                .Include(i => i.ContraVoucher).ThenInclude(i => i.Currency)
+                                                .Where((w => w.ContraVoucher.StatusId == (int)DocumentStatus.Approved && w.ContraVoucher.FinancialYearId == yearId && w.ContraVoucher.CompanyId == companyId));
+
+            query = query.Where(w => w.ParticularLedgerId == ledgerId);
+
+            query = query.Where(w => w.ContraVoucher.VoucherDate >= fromDate && w.ContraVoucher.VoucherDate <= toDate);
+
+            // get records by query.
+            List<Contravoucherdetail> contraVoucherDetailList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != contraVoucherDetailList && contraVoucherDetailList.Count > 0)
+            {
+                foreach (Contravoucherdetail contraVoucherDetail in contraVoucherDetailList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = contraVoucherDetail.ContraVoucher.ContraVoucherId,
+                        DocumentType = "Contra Voucher",
+                        DocumentNo = contraVoucherDetail.ContraVoucher.VoucherNo,
+                        DocumentDate = contraVoucherDetail.ContraVoucher.VoucherDate,
+                        Amount_FC = contraVoucherDetail.DebitAmountFc == 0 ? contraVoucherDetail.CreditAmountFc : contraVoucherDetail.DebitAmountFc,
+                        Amount = contraVoucherDetail.DebitAmount == 0 ? contraVoucherDetail.CreditAmount : contraVoucherDetail.DebitAmount,
+                        DebitAmount_FC = contraVoucherDetail.DebitAmountFc,
+                        DebitAmount = contraVoucherDetail.DebitAmount,
+                        CreditAmount_FC = contraVoucherDetail.CreditAmountFc,
+                        CreditAmount = contraVoucherDetail.CreditAmount,
+                        ContraVoucherId = contraVoucherDetail.ContraVoucher.ContraVoucherId,
+                        CurrencyId = contraVoucherDetail.ContraVoucher.CurrencyId,
+                        CurrencyCode = contraVoucherDetail.ContraVoucher.Currency.CurrencyCode,
+                        ExchangeRate = contraVoucherDetail.ContraVoucher.ExchangeRate,
+                        //PartyReferenceNo = contraVoucherDetail.ContraVoucher.ChequeNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
         }
 
     }

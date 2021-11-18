@@ -5,6 +5,7 @@ using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -123,10 +124,11 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 FinancialYearModel financialYearModel = new FinancialYearModel();
+
                 financialYearModel.FinancialYearId = financialYear.FinancialYearId;
                 financialYearModel.FinancialYearName = financialYear.FinancialYearName;
-                financialYearModel.FromDate = financialYear.FromDate;
-                financialYearModel.ToDate = financialYear.ToDate;
+                financialYearModel.FromDate = (DateTime)financialYear.FromDate;
+                financialYearModel.ToDate = (DateTime)financialYear.ToDate;
                 financialYearModel.PreparedByName = null != financialYear.PreparedByUser ? financialYear.PreparedByUser.UserName : null;
 
                 return financialYearModel;

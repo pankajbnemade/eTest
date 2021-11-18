@@ -1,0 +1,191 @@
+﻿@model SearchFilterGeneralLedgerModel
+
+@{ ViewBag.Title = "General Ledger Report"; }
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <form id="frmGeneralLedger" class="width100" method="post" data-ajax-begin="return fnSearchData();" data-ajax="true" data-ajax-method="post">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card m-0">
+                        <div class="card-body p-2" id="searchFilterCriteria">
+                            <div class="row">
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        @Html.LabelFor(model => model.LedgerId, new { @class = "" })
+                                        @Html.DropDownListFor(model => model.LedgerId, new SelectList(ViewBag.LedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                        @Html.ValidationMessageFor(model => model.LedgerId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        @Html.LabelFor(model => model.FromDate)
+                                        @Html.TextBoxFor(model => model.FromDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                        @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        @Html.LabelFor(model => model.ToDate)
+                                        @Html.TextBoxFor(model => model.ToDate,"{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                        @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                    <div class="col-sm-12 pt-2 text-right">
+                                        <button type="submit" class="btn btn-primary" title="Search">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Reset" onclick="javascript: fnResetSearch();">
+                                            <i class="fas fa-undo"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="reportGrid" class="table table-bordered table-striped w-100">
+                    @*<thead>
+                            <tr class="table-header">
+
+                                <th>Voucher Type</th>
+                                <th>Voucher No</th>
+                                <th>Voucher Date</th>
+                                <th>Party Reference No</th>
+                                <th>Our Reference No</th>
+                                <th>Currency</th>
+                                <th>Exchange Rate</th>
+                                <th>Credit Amount FC</th>
+                                <th>Credit Amount</th>
+                                <th>Debit Amount FC</th>
+                                <th>Debit Amount</th>
+                                <th>Closing Amount</th>
+                            </tr>
+                        </thead>*@
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+    });
+
+    // search data.
+    function fnBindDataTable() {
+
+        $("#reportGrid").DataTable({
+            "destroy": true,
+            "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "scrollX": true,
+            //"dom": "<'row'<'col-sm-12'tr>>" +
+            //    "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
+            /*"serverSide": true,*/
+            "dom":"Bfrtip",
+            "buttons": ['excel'],
+            "ajax": {
+                "url": "@Url.Action("GetTransactionList", "GeneralLedger")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: function () {
+                        var searchFilterModel = {
+                            LedgerId: $('#LedgerId').val(),
+                            FromDate: $('#FromDate').val(),
+                            ToDate: $('#ToDate').val(),
+                        };
+
+                        return JSON.stringify(searchFilterModel);
+                    }
+                },
+            },
+            "columns": [
+                { "data": "DocumentType", "name": "DocumentType", "title":"Voucher Type" },
+                { "data": "DocumentNo", "name": "DocumentNo", "title": "Voucher No" },
+                {
+                    "data": "DocumentDate", "name": "DocumentDate", "title": "Voucher Date",
+                    "render": function (dt) {
+                        return moment(dt).format("DD/MMM/YYYY");
+                    }
+                },
+                { "data": "PartyReferenceNo", "name": "PartyReferenceNo", "title": "Party Reference No"},
+                { "data": "OurReferenceNo", "name": "OurReferenceNo", "title": "Other Reference No" },
+                { "data": "CurrencyCode", "name": "CurrencyCode", "title": "Currency" },
+                { "data": "ExchangeRate", "name": "ExchangeRate", "title": "Exchenge Rate", render: $.fn.dataTable.render.number(',', '.', 6, '') },
+                { "data": "CreditAmount_FC", "name": "CreditAmount_FC", "title": "Credit Amount FC", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "CreditAmount", "name": "CreditAmount", "title": "Credit Amount", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "DebitAmount_FC", "name": "DebitAmount_FC", "title": "Debit Amount FC", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "DebitAmount", "name": "DebitAmount", "title": "Debit Amount", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "ClosingAmount", "name": "ClosingAmount", "title": "Closing Amount", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+            ],
+        });
+
+    }
+
+    //// search data.
+    function fnSearchData() {
+        fnBindDataTable();
+    }
+
+    // reset filter.
+
+    function fnResetSearch() {
+
+        $('#searchFilterCriteria :input[type=text]').each(function (index) {
+            $(this).val('');
+        });
+
+        $('#searchFilterCriteria select').each(function (index) {
+            $(this).val('');
+        });
+
+        $("#reportGrid").DataTable().clear().draw();
+
+    }
+
+</script>

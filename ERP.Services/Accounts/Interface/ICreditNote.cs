@@ -43,6 +43,8 @@ namespace ERP.Services.Accounts.Interface
         /// </returns>
         Task<DataTableResultModel<CreditNoteModel>> GetCreditNoteList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterCreditNoteModel searchFilterModel);
 
+        Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
+
         //Task<DataTableResultModel<CreditNoteModel>> GetCreditNoteList();
     }
 }

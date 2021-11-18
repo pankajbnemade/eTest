@@ -369,6 +369,49 @@ namespace ERP.Services.Accounts
             return outstandingInvoiceModelList; // returns.
         }
 
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Creditnote> query = GetQueryByCondition(w => w.StatusId == (int)DocumentStatus.Approved && w.FinancialYearId == yearId && w.CompanyId == companyId)
+                                                .Include(i => i.Currency);
+
+            query = query.Where(w => w.PartyLedgerId == ledgerId);
+
+            query = query.Where(w => w.CreditNoteDate >= fromDate && w.CreditNoteDate <= toDate);
+
+            // get records by query.
+            List<Creditnote> creditNoteList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != creditNoteList && creditNoteList.Count > 0)
+            {
+                foreach (Creditnote creditNote in creditNoteList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = creditNote.CreditNoteId,
+                        DocumentType = "Credit Note",
+                        DocumentNo = creditNote.CreditNoteNo,
+                        DocumentDate = creditNote.CreditNoteDate,
+                        Amount_FC = creditNote.NetAmountFc,
+                        Amount = creditNote.NetAmount,
+                        CreditAmount_FC = creditNote.NetAmountFc,
+                        CreditAmount = creditNote.NetAmount,
+                        DebitNoteId = creditNote.CreditNoteId,
+                        CurrencyId = creditNote.CurrencyId,
+                        CurrencyCode = creditNote.Currency.CurrencyCode,
+                        PartyReferenceNo = creditNote.PartyReferenceNo,
+                        OurReferenceNo = creditNote.OurReferenceNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
+        }
+
         #region Private Methods
 
         /// <summary>

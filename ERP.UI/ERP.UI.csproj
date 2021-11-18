@@ -25,6 +25,7 @@
     <Content Remove="Areas\Accounts\Views\Ledger\ManageLedger.cshtml" />
     <Content Remove="Areas\Accounts\Views\Ledger\_AddLedgerMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\Ledger\_ViewLedgerMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\GeneralLedger\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherDetail\_ConfirmDeleteVoucherDetail.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherDetail\_MapOutstandingDetail.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherDetail\_VoucherDetail.cshtml" />
@@ -164,6 +165,7 @@
     <None Include="Areas\Accounts\Views\LedgerAddress\_AddLedgerAddress.cshtml" />
     <None Include="Areas\Accounts\Views\LedgerAddress\_ConfirmDeleteLedgerAddress.cshtml" />
     <None Include="Areas\Accounts\Views\LedgerAddress\_LedgerAddress.cshtml" />
+    <None Include="Areas\Accounts\Views\GeneralLedger\Index.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherDetail\_ConfirmDeleteVoucherDetail.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherDetail\_MapOutstandingDetail.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherDetail\_VoucherDetail.cshtml" />

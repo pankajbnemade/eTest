@@ -103,6 +103,15 @@ namespace ERP.UI
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
             services.AddTransient<IOutstandingInvoice, OutstandingInvoiceService>();
 
+
+
+            //Reports
+
+            services.AddTransient<IGeneralLedger, GeneralLedgerService>();
+
+            
+
+
             #endregion // Accounts
 
             #region Admin

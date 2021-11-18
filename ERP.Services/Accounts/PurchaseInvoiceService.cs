@@ -35,7 +35,7 @@ namespace ERP.Services.Accounts
         public async Task<GenerateNoModel> GenerateInvoiceNo(int companyId, int financialYearId)
         {
             int voucherSetupId = 3;
-            
+
             int? maxNo = await GetQueryByCondition(w => w.CompanyId == companyId && w.FinancialYearId == financialYearId).MaxAsync(m => (int?)m.MaxNo);
 
             maxNo = maxNo == null ? 0 : maxNo;
@@ -320,7 +320,7 @@ namespace ERP.Services.Accounts
             IList<OutstandingInvoiceModel> outstandingInvoiceModelList = null;
 
             // create query.
-            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0 
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0
                                                                     && w.StatusId == (int)DocumentStatus.Approved);
 
             // apply filters.
@@ -358,6 +358,48 @@ namespace ERP.Services.Accounts
             }
 
             return outstandingInvoiceModelList; // returns.
+        }
+
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.StatusId == (int)DocumentStatus.Approved && w.FinancialYearId == yearId && w.CompanyId == companyId)
+                                                .Include(i => i.Currency);
+
+            query = query.Where(w => w.SupplierLedgerId == ledgerId);
+
+            query = query.Where(w => w.InvoiceDate >= fromDate && w.InvoiceDate <= toDate);
+
+            // get records by query.
+            List<Purchaseinvoice> purchaseInvoiceList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != purchaseInvoiceList && purchaseInvoiceList.Count > 0)
+            {
+                foreach (Purchaseinvoice purchaseInvoice in purchaseInvoiceList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = purchaseInvoice.PurchaseInvoiceId,
+                        DocumentType = "Purchase Invoice",
+                        DocumentNo = purchaseInvoice.InvoiceNo,
+                        DocumentDate = purchaseInvoice.InvoiceDate,
+                        Amount_FC = purchaseInvoice.NetAmountFc,
+                        Amount = purchaseInvoice.NetAmount,
+                        CreditAmount_FC = purchaseInvoice.NetAmountFc,
+                        CreditAmount = purchaseInvoice.NetAmount,
+                        PurchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId,
+                        CurrencyId = purchaseInvoice.CurrencyId,
+                        CurrencyCode = purchaseInvoice.Currency.CurrencyCode,
+                        PartyReferenceNo = purchaseInvoice.SupplierReferenceNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
         }
 
         #region Private Methods

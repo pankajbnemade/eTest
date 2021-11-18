@@ -31,5 +31,7 @@ namespace ERP.Services.Accounts.Interface
         Task<IList<SelectListModel>> GetVocuherSelectList(int particularLedgerId, DateTime advanceAdjustmentDate, int voucherDetId, decimal amountFc);
 
         Task<decimal> GetVoucherAvailableAmount(int paymentVoucherDetId);
+
+        Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
     }
 }

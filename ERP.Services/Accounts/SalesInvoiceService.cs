@@ -89,7 +89,7 @@ namespace ERP.Services.Accounts
             salesInvoice.TaxAmount = 0;
 
             salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
-            salesInvoice.DiscountPerOrAmountFc =  salesInvoiceModel.DiscountPerOrAmountFc;
+            salesInvoice.DiscountPerOrAmountFc = salesInvoiceModel.DiscountPerOrAmountFc;
             salesInvoice.DiscountAmountFc = 0;
             salesInvoice.DiscountAmount = 0;
 
@@ -154,7 +154,7 @@ namespace ERP.Services.Accounts
                 salesInvoice.TaxAmount = 0;
 
                 salesInvoice.DiscountPercentageOrAmount = salesInvoiceModel.DiscountPercentageOrAmount;
-                salesInvoice.DiscountPerOrAmountFc =  salesInvoiceModel.DiscountPerOrAmountFc;
+                salesInvoice.DiscountPerOrAmountFc = salesInvoiceModel.DiscountPerOrAmountFc;
 
                 salesInvoice.DiscountAmountFc = 0;
                 salesInvoice.DiscountAmount = 0;
@@ -359,6 +359,48 @@ namespace ERP.Services.Accounts
             }
 
             return outstandingInvoiceModelList; // returns.
+        }
+
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.StatusId == (int)DocumentStatus.Approved && w.FinancialYearId == yearId && w.CompanyId == companyId)
+                                                .Include(i => i.Currency);
+
+            query = query.Where(w => w.CustomerLedgerId == ledgerId);
+
+            query = query.Where(w => w.InvoiceDate >= fromDate && w.InvoiceDate <= toDate);
+
+            // get records by query.
+            List<Salesinvoice> salesInvoiceList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != salesInvoiceList && salesInvoiceList.Count > 0)
+            {
+                foreach (Salesinvoice salesInvoice in salesInvoiceList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = salesInvoice.SalesInvoiceId,
+                        DocumentType = "Sales Invoice",
+                        DocumentNo = salesInvoice.InvoiceNo,
+                        DocumentDate = salesInvoice.InvoiceDate,
+                        Amount_FC = salesInvoice.NetAmountFc,
+                        Amount = salesInvoice.NetAmount,
+                        DebitAmount_FC = salesInvoice.NetAmountFc,
+                        DebitAmount = salesInvoice.NetAmount,
+                        SalesInvoiceId = salesInvoice.SalesInvoiceId,
+                        CurrencyId = salesInvoice.CurrencyId,
+                        CurrencyCode = salesInvoice.Currency.CurrencyCode,
+                        PartyReferenceNo = salesInvoice.CustomerReferenceNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
         }
 
         #region Private Methods

@@ -18,7 +18,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> DeleteReceiptVoucherDetail(int receiptVoucherDetailId);
 
-        Task<ReceiptVoucherDetailModel> GetReceiptVoucherDetailById(int receiptVoucherDetailId,int receiptVoucherId);
+        Task<ReceiptVoucherDetailModel> GetReceiptVoucherDetailById(int receiptVoucherDetailId, int receiptVoucherId);
 
         Task<IList<ReceiptVoucherDetailModel>> GetInvoiceListByParticularLedgerId(int particularLedgerId);
 
@@ -28,8 +28,10 @@ namespace ERP.Services.Accounts.Interface
 
         Task<AdvanceAdjustmentVoucherDetailModel> GetVoucherDetail(int receiptVoucherDetId);
 
-        Task<IList<SelectListModel>>  GetVocuherSelectList(int particularLedgerId, DateTime advanceAdjustmentDate, int voucherDetId, decimal amountFc);
+        Task<IList<SelectListModel>> GetVocuherSelectList(int particularLedgerId, DateTime advanceAdjustmentDate, int voucherDetId, decimal amountFc);
 
         Task<decimal> GetVoucherAvailableAmount(int receiptVoucherDetId);
+
+        Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,5 +25,6 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<ContraVoucherDetailModel>> GetContraVoucherDetailByVoucherId(int contraVoucherId, int addRow_Blank);
 
+        Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
     }
 }

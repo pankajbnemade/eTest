@@ -369,6 +369,49 @@ namespace ERP.Services.Accounts
             return outstandingInvoiceModelList; // returns.
         }
 
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Debitnote> query = GetQueryByCondition(w => w.StatusId == (int)DocumentStatus.Approved && w.FinancialYearId == yearId && w.CompanyId == companyId)
+                                                .Include(i => i.Currency);
+
+            query = query.Where(w => w.PartyLedgerId == ledgerId);
+
+            query = query.Where(w => w.DebitNoteDate >= fromDate && w.DebitNoteDate <= toDate);
+
+            // get records by query.
+            List<Debitnote> debitNoteList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != debitNoteList && debitNoteList.Count > 0)
+            {
+                foreach (Debitnote debitNote in debitNoteList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = debitNote.DebitNoteId,
+                        DocumentType = "Debit Note",
+                        DocumentNo = debitNote.DebitNoteNo,
+                        DocumentDate = debitNote.DebitNoteDate,
+                        Amount_FC = debitNote.NetAmountFc,
+                        Amount = debitNote.NetAmount,
+                        DebitAmount_FC = debitNote.NetAmountFc,
+                        DebitAmount = debitNote.NetAmount,
+                        DebitNoteId = debitNote.DebitNoteId,
+                        CurrencyId = debitNote.CurrencyId,
+                        CurrencyCode = debitNote.Currency.CurrencyCode,
+                        PartyReferenceNo = debitNote.PartyReferenceNo,
+                        OurReferenceNo = debitNote.OurReferenceNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
+        }
+
         #region Private Methods
 
         /// <summary>

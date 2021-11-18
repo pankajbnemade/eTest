@@ -409,5 +409,49 @@ namespace ERP.Services.Accounts
             return availableAmountFc;
         }
 
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0)
+                                                .Include(i => i.PaymentVoucher).ThenInclude(i => i.Currency)
+                                                .Where((w => w.PaymentVoucher.StatusId == (int)DocumentStatus.Approved && w.PaymentVoucher.FinancialYearId == yearId && w.PaymentVoucher.CompanyId == companyId));
+
+            query = query.Where(w => w.ParticularLedgerId == ledgerId);
+
+            query = query.Where(w => w.PaymentVoucher.VoucherDate >= fromDate && w.PaymentVoucher.VoucherDate <= toDate);
+
+            // get records by query.
+            List<Paymentvoucherdetail> paymentVoucherDetailList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != paymentVoucherDetailList && paymentVoucherDetailList.Count > 0)
+            {
+                foreach (Paymentvoucherdetail paymentVoucherDetail in paymentVoucherDetailList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = paymentVoucherDetail.PaymentVoucher.PaymentVoucherId,
+                        DocumentType = "Payment Voucher",
+                        DocumentNo = paymentVoucherDetail.PaymentVoucher.VoucherNo,
+                        DocumentDate = paymentVoucherDetail.PaymentVoucher.VoucherDate,
+                        Amount_FC = paymentVoucherDetail.AmountFc,
+                        Amount = paymentVoucherDetail.Amount,
+                        DebitAmount_FC = paymentVoucherDetail.AmountFc,
+                        DebitAmount = paymentVoucherDetail.Amount,
+                        PaymentVoucherId = paymentVoucherDetail.PaymentVoucher.PaymentVoucherId,
+                        CurrencyId = paymentVoucherDetail.PaymentVoucher.CurrencyId,
+                        CurrencyCode = paymentVoucherDetail.PaymentVoucher.Currency.CurrencyCode,
+                        ExchangeRate = paymentVoucherDetail.PaymentVoucher.ExchangeRate,
+                        PartyReferenceNo = paymentVoucherDetail.PaymentVoucher.ChequeNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
+        }
+
     }
 }
