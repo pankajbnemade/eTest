@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\ReportController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Areas\Accounts\Views\CreditNote\_ViewCreditNoteSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\CurrencyConversion\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\CurrencyConversion\_AddCurrencyConversion.cshtml" />
@@ -19,6 +23,8 @@
     <Content Remove="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYear\_ConfirmDeleteFinancialYear.cshtml" />
     <Content Remove="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\GeneralLedger\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\GeneralLedger\_Search.cshtml" />
     <Content Remove="Areas\Accounts\Views\LedgerAddress\_AddLedgerAddress.cshtml" />
     <Content Remove="Areas\Accounts\Views\LedgerAddress\_ConfirmDeleteLedgerAddress.cshtml" />
     <Content Remove="Areas\Accounts\Views\LedgerAddress\_LedgerAddress.cshtml" />
@@ -90,6 +96,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.5" />
@@ -114,6 +121,7 @@
     <PackageReference Include="Serilog.Exceptions" Version="6.1.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.12" />
   </ItemGroup>
 
@@ -162,6 +170,8 @@
     <None Include="Areas\Accounts\Views\Currency\Index.cshtml" />
     <None Include="Areas\Accounts\Views\Currency\_AddCurrency.cshtml" />
     <None Include="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
+    <None Include="Areas\Accounts\Views\GeneralLedger\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\GeneralLedger\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\LedgerAddress\_AddLedgerAddress.cshtml" />
     <None Include="Areas\Accounts\Views\LedgerAddress\_ConfirmDeleteLedgerAddress.cshtml" />
     <None Include="Areas\Accounts\Views\LedgerAddress\_LedgerAddress.cshtml" />
@@ -270,6 +280,35 @@
     <None Include="wwwroot\lib\jquery\jquery-3.4.1.min.js" />
     <None Include="wwwroot\lib\moment\moment.js" />
     <None Include="wwwroot\lib\moment\moment.min.js" />
+    <None Include="wwwroot\Report\rptSalesInvoice.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Report\rptSalesInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ReportDataset\dsSalesInvoice.Designer.cs">
+      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ReportDataset\dsSalesInvoice.xsc">
+      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+    </None>
+    <None Update="ReportDataset\dsSalesInvoice.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>dsSalesInvoice.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="ReportDataset\dsSalesInvoice.xss">
+      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>

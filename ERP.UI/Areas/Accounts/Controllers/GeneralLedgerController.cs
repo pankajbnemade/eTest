@@ -30,6 +30,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
+            return await Task.Run(() =>
+            {
+                return View();
+            });
+        }
+
+        public async Task<IActionResult> Search()
+        {
             ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
@@ -43,7 +51,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             return await Task.Run(() =>
             {
-                return View(searchFilterGeneralLedgerModel);
+                return PartialView("_Search", searchFilterGeneralLedgerModel);
+            });
+        }
+
+        public async Task<IActionResult> Detail()
+        {
+            return await Task.Run(() =>
+            {
+                return PartialView("_Detail");
             });
         }
 

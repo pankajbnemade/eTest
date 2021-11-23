@@ -17,7 +17,7 @@
     <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.min.css" rel="stylesheet" />
     <link href="~/lib/datatable/css/dataTables.bootstrap.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-notify/css/bootstrap-notify.min.css" rel="stylesheet" />
     <link href="~/lib/content-temp/css/adminlte.min.css" rel="stylesheet" />
     <link href="~/lib/content-temp/css/skin-blue.css" rel="stylesheet" />
@@ -28,9 +28,9 @@
     <script src="~/lib/moment/moment.js"></script>
     <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
     <script src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.10.24/dataRender/datetime.js"></script>
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.24/dataRender/datetime.js"></script>
     @*<script src="~/lib/datatable/js/jquery.dataTables.js"></script>
         <script src="~/lib/datatable/js/dataTables.bootstrap.js"></script>*@
     <script src="~/lib/jquery-block-ui/jquery.blockUI.min.js"></script>
@@ -46,6 +46,11 @@
     <script src="~/js/custom-js/validation.js"></script>
     <link href="~/css/site.css" rel="stylesheet" />
 
+    <script src="//cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="//cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
 
     <style>
 
@@ -198,7 +203,7 @@
 
 
 
-            
+
     </style>
 
 </head>
@@ -224,40 +229,39 @@
             </ul>
             @if (User.Identity.IsAuthenticated)
             {
-                <ul class="navbar-nav ml-auto" id="nav-userprofile-menu">
-                    <li class="dropdown user user-menu nav-link">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <img src="@Url.Content("~/lib/content-temp/img/avatar.png")" class="user-image" alt="User Image">
-                            <span class="hidden-xs">@User.Identity.Name</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="user-body">
-                                <a asp-area="Common" asp-controller="Home" asp-action="ChangeCompany" class="nav-link">Company</a>
-                            </li>
-                            <li class="user-body">
-                                <a asp-area="Common" asp-controller="Home" asp-action="ChangeYear" class="nav-link">Year</a>
-                            </li>
-                            <li class="user-footer">
-                                <div class="float-left">
-                                    <a asp-area="Admin" asp-controller="User" asp-action="UserInformation" class="btn btn-block btn-outline-primary btn-flat">Profile</a>
-                                </div>
-                                <div class="float-right">
-                                    <a asp-area="Admin" asp-controller="User" asp-action="Logout" class="btn btn-block btn-outline-primary btn-flat"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        @*<a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                                <i class="fas fa-expand-arrows-alt"></i>
-                            </a>*@
-                    </li>
-                </ul>
-            }
+<ul class="navbar-nav ml-auto" id="nav-userprofile-menu">
+    <li class="dropdown user user-menu nav-link">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+            <img src="@Url.Content("~/lib/content-temp/img/avatar.png")" class="user-image" alt="User Image">
+            <span class="hidden-xs">@User.Identity.Name</span>
+        </a>
+        <ul class="dropdown-menu">
+            <li class="user-body">
+                <a asp-area="Common" asp-controller="Home" asp-action="ChangeCompany" class="nav-link">Company</a>
+            </li>
+            <li class="user-body">
+                <a asp-area="Common" asp-controller="Home" asp-action="ChangeYear" class="nav-link">Year</a>
+            </li>
+            <li class="user-footer">
+                <div class="float-left">
+                    <a asp-area="Admin" asp-controller="User" asp-action="UserInformation" class="btn btn-block btn-outline-primary btn-flat">Profile</a>
+                </div>
+                <div class="float-right">
+                    <a asp-area="Admin" asp-controller="User" asp-action="Logout" class="btn btn-block btn-outline-primary btn-flat"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="nav-item">
+        @*<a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>*@
+    </li>
+</ul>            }
         </nav>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a  asp-area="Common" asp-controller="Home" asp-action="Index" class="brand-link">
+            <a asp-area="Common" asp-controller="Home" asp-action="Index" class="brand-link">
                 <img src="@Url.Content("~/lib/content-temp/img/AdminLTELogo.png")" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">eTest</span>
             </a>
@@ -265,15 +269,14 @@
             <div class="sidebar">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                        <div class="image">
-                            <img src="@Url.Content("~/lib/content-temp/img/avatar.png")" class="img-circle elevation-2" alt="User Image">
-                        </div>
-                        <div class="info">
-                            <a asp-area="Admin" asp-controller="User" asp-action="UserInformation" class="d-block"> @User.Identity.Name</a>
-                        </div>
-                    </div>
-                }
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+            <img src="@Url.Content("~/lib/content-temp/img/avatar.png")" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+            <a asp-area="Admin" asp-controller="User" asp-action="UserInformation" class="d-block"> @User.Identity.Name</a>
+        </div>
+    </div>}
 
                 <div class="form-inline">
                     <div class="input-group" data-widget="sidebar-search">

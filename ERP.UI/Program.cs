@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace ERP.UI
 {
@@ -13,6 +14,8 @@ namespace ERP.UI
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseWebRoot("wwwroot")
             .UseStartup<Startup>();
     }
 }
