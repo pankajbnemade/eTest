@@ -26,5 +26,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<SalesInvoiceDetailModel>> GetSalesInvoiceDetailListBySalesInvoiceId(int salesInvoiceId);
 
+        Task<IList<SalesInvoiceReportModel>> GetSalesInvoiceReportDataById(int salesInvoiceId);
+
     }
 }

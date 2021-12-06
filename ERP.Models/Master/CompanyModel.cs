@@ -42,8 +42,8 @@ namespace ERP.Models.Master
         public int NoOfDecimals { get; set; }
 
         //####
-        [Display(Name = "Currency Name")]
-        public string CurrencyName { get; set; }
+        [Display(Name = "Currency Code")]
+        public string CurrencyCode { get; set; }
 
         [Display(Name = "Prepared By Name")]
         public string PreparedByName { get; set; }

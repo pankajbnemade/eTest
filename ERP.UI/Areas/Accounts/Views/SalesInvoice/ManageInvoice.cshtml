@@ -15,19 +15,19 @@
                     </button>
                     @if (ViewBag.IsApprovalRequestVisible == true)
                     {
-                <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.SalesInvoiceId','@DocumentStatus.ApprovalRequested');">
-                    <i class="fas fa-download"></i> Request
-                </button>}
+        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.SalesInvoiceId','@DocumentStatus.ApprovalRequested');">
+            <i class="fas fa-download"></i> Request
+        </button>}
                     @if (ViewBag.IsApproveVisible == true)
                     {
-                <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.SalesInvoiceId','@DocumentStatus.Approved');">
-                    <i class="far fa-calendar-check"></i> Approve
-                </button>}
+        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.SalesInvoiceId','@DocumentStatus.Approved');">
+            <i class="far fa-calendar-check"></i> Approve
+        </button>}
                     @if (ViewBag.IsCancelVisible == true)
                     {
-                <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.SalesInvoiceId','@DocumentStatus.Cancelled');">
-                    <i class="far fa-times-circle"></i> Cancel
-                </button>}
+        <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusInvoiceMaster('@ViewBag.SalesInvoiceId','@DocumentStatus.Cancelled');">
+            <i class="far fa-times-circle"></i> Cancel
+        </button>}
                     <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintInvoice('@ViewBag.SalesInvoiceId');">
                         <i class="fas fa-file-pdf"></i> Print
                     </button>
@@ -54,11 +54,9 @@
                             </li>
                             @if (ViewBag.IsTaxMasterVisible == true)
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
-                                </li> 
-                            } 
-                            @*<li class="nav-item">
+                <li class="nav-item">
+                    <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
+                </li> } @*<li class="nav-item">
                                     <a class="nav-link" id="summary-tab" data-toggle="tab" href="#invsummary" role="tab" aria-controls="invsummary" aria-selected="false">Summary</a>
                                 </li>*@
                         </ul>
@@ -69,9 +67,7 @@
                             <div class="tab-pane fade" id="invdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
                             @if (ViewBag.IsTaxMasterVisible == true)
                             {
-                                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div> 
-                            } 
-                            @*<div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>*@
+                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div> } @*<div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>*@
                         </div>
                     </div>
                 </div>
@@ -96,8 +92,11 @@
     }
 
     // back to print invoice.
-    function fnPrintInvoice() {
-        alert("Print");
+    function fnPrintInvoice(salesInvoiceId) {
+        var url  = '@Url.Action("SalesInvoice", "Report")?id=' + salesInvoiceId;
+        var win= window.open(url, '_blank');
+        win.focus();
+        return false;
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

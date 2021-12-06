@@ -156,6 +156,14 @@ namespace ERP.Services.Master
             return companyModelList; // returns.
         }
 
+
+        public async Task<IList<CompanyModel>> GetCompanyReportDataById(int companyId)
+        {
+            IList<CompanyModel> companyModelList = await GetCompanyList(companyId);
+
+            return companyModelList; // returns.
+        }
+
         private async Task<CompanyModel> AssignValueToModel(Company company)
         {
             return await Task.Run(() =>
@@ -173,7 +181,7 @@ namespace ERP.Services.Master
                 companyModel.PostalCode = company.PostalCode;
                 companyModel.CurrencyId = Convert.ToInt32(company.CurrencyId);
                 companyModel.NoOfDecimals = Convert.ToInt32(company.NoOfDecimals);
-                companyModel.CurrencyName = null != company.Currency ? company.Currency.CurrencyName : null;
+                companyModel.CurrencyCode = null != company.Currency ? company.Currency.CurrencyCode : null;
                 companyModel.PreparedByName = null != company.PreparedByUser ? company.PreparedByUser.UserName : null;
 
                 return companyModel;

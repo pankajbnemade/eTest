@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Common\Controllers\ReportController.cs" />
     <Compile Remove="Controllers\ReportController.cs" />
   </ItemGroup>
 
@@ -64,6 +65,7 @@
     <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_AddInvoiceTaxMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_ConfirmDeleteInvoiceTaxMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_InvoiceTaxMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoice\Print.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceSummary.cshtml" />
     <Content Remove="Areas\Master\Views\Company\Index.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_AddCompany.cshtml" />
@@ -96,7 +98,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Report\Accounts\rptSalesInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
+    <PackageReference Include="Grpc.Core" Version="2.42.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.5" />
@@ -210,6 +219,7 @@
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_ConfirmDeleteInvoiceTaxMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceTaxMaster\_InvoiceTaxMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\Report\SalesInvoice.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\ManageInvoice.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_AddInvoiceMaster.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoice\_ConfirmDeleteInvoiceMaster.cshtml" />
@@ -280,34 +290,43 @@
     <None Include="wwwroot\lib\jquery\jquery-3.4.1.min.js" />
     <None Include="wwwroot\lib\moment\moment.js" />
     <None Include="wwwroot\lib\moment\moment.min.js" />
-    <None Include="wwwroot\Report\rptSalesInvoice.rdlc" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\Report\rptSalesInvoice.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="ReportDataset\dsSalesInvoice.Designer.cs">
-      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+    <Compile Update="ReportDataset\Accounts\dsSalesInvoiceDet.Designer.cs">
+      <DependentUpon>dsSalesInvoiceDet.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="ReportDataset\Master\dsCompany.Designer.cs">
+      <DependentUpon>dsCompany.xsd</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ReportDataset\dsSalesInvoice.xsc">
-      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+    <None Update="ReportDataset\Accounts\dsSalesInvoiceDet.xsc">
+      <DependentUpon>dsSalesInvoiceDet.xsd</DependentUpon>
     </None>
-    <None Update="ReportDataset\dsSalesInvoice.xsd">
+    <None Update="ReportDataset\Accounts\dsSalesInvoiceDet.xsd">
       <SubType>Designer</SubType>
-      <LastGenOutput>dsSalesInvoice.Designer.cs</LastGenOutput>
+      <LastGenOutput>dsSalesInvoiceDet.Designer.cs</LastGenOutput>
       <Generator>MSDataSetGenerator</Generator>
     </None>
-    <None Update="ReportDataset\dsSalesInvoice.xss">
-      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+    <None Update="ReportDataset\Accounts\dsSalesInvoiceDet.xss">
+      <DependentUpon>dsSalesInvoiceDet.xsd</DependentUpon>
+    </None>
+    <None Update="ReportDataset\Master\dsCompany.xsc">
+      <DependentUpon>dsCompany.xsd</DependentUpon>
+    </None>
+    <None Update="ReportDataset\Master\dsCompany.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>dsCompany.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="ReportDataset\Master\dsCompany.xss">
+      <DependentUpon>dsCompany.xsd</DependentUpon>
     </None>
   </ItemGroup>
 

@@ -51,7 +51,7 @@ namespace ERP.UI.Areas.Common.Controllers
 
             string mimtype = "";
             int exetension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\Report\\rptSalesInvoice.rdlc";
+            var path = $"{this._webHostEnvironment.WebRootPath}\\Report\\Accounts\\rptSalesInvoice.rdlc";
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("param1", "ERP");
             LocalReport localReport = new LocalReport(path);

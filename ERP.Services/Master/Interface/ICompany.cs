@@ -55,5 +55,7 @@ namespace ERP.Services.Master.Interface
 
         Task<IList<SelectListModel>> GetCompanySelectList();
 
+        Task<IList<CompanyModel>> GetCompanyReportDataById(int companyId);
+
     }
 }

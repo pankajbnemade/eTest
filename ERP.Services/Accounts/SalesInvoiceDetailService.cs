@@ -272,5 +272,116 @@ namespace ERP.Services.Accounts
             });
         }
 
+
+        /// <summary>
+        /// get report data for sales invoice print
+        /// </summary>
+        /// <returns>
+        /// return record.
+        /// </returns>
+
+        public async Task<IList<SalesInvoiceReportModel>> GetSalesInvoiceReportDataById(int salesInvoiceId)
+        {
+            IList<SalesInvoiceReportModel> salesInvoiceReportModelList = null;
+
+            // create query.
+            IQueryable<Salesinvoicedetail> query = GetQueryByCondition(w => w.SalesInvoiceId == salesInvoiceId)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.Company)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.Status)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.CustomerLedger)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.AccountLedger)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.BankLedger)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.Currency)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.BillToAddress)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.BillToAddress).ThenInclude(w => w.City)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.BillToAddress).ThenInclude(w => w.State)
+                                            .Include(w => w.SalesInvoice).ThenInclude(w => w.BillToAddress).ThenInclude(w => w.Country)
+                                            .Include(w => w.UnitOfMeasurement)
+                                           ;
+
+            List<Salesinvoicedetail> salesInvoiceDetailList = await query.ToListAsync();
+
+            salesInvoiceReportModelList = new List<SalesInvoiceReportModel>();
+
+
+            foreach (Salesinvoicedetail salesInvoiceDetail in salesInvoiceDetailList)
+            {
+                SalesInvoiceReportModel salesInvoiceReportModel = new SalesInvoiceReportModel();
+
+                salesInvoiceReportModel.SalesInvoiceId = salesInvoiceDetail.SalesInvoiceId;
+                salesInvoiceReportModel.InvoiceNo = salesInvoiceDetail.SalesInvoice.InvoiceNo;
+                salesInvoiceReportModel.InvoiceDate = salesInvoiceDetail.SalesInvoice.InvoiceDate;
+                salesInvoiceReportModel.CustomerLedgerId = salesInvoiceDetail.SalesInvoice.CustomerLedgerId;
+                salesInvoiceReportModel.BillToAddressId = salesInvoiceDetail.SalesInvoice.BillToAddressId;
+                salesInvoiceReportModel.AccountLedgerId = salesInvoiceDetail.SalesInvoice.AccountLedgerId;
+                salesInvoiceReportModel.BankLedgerId = salesInvoiceDetail.SalesInvoice.BankLedgerId;
+                salesInvoiceReportModel.CustomerReferenceNo = salesInvoiceDetail.SalesInvoice.CustomerReferenceNo;
+                salesInvoiceReportModel.CustomerReferenceDate = salesInvoiceDetail.SalesInvoice.CustomerReferenceDate;
+                salesInvoiceReportModel.CreditLimitDays = salesInvoiceDetail.SalesInvoice.CreditLimitDays;
+                salesInvoiceReportModel.PaymentTerm = salesInvoiceDetail.SalesInvoice.PaymentTerm;
+                salesInvoiceReportModel.Remark = salesInvoiceDetail.SalesInvoice.Remark;
+                salesInvoiceReportModel.TaxModelType = salesInvoiceDetail.SalesInvoice.TaxModelType;
+                salesInvoiceReportModel.TaxRegisterId = salesInvoiceDetail.SalesInvoice.TaxRegisterId;
+                salesInvoiceReportModel.CurrencyId = salesInvoiceDetail.SalesInvoice.CurrencyId;
+                salesInvoiceReportModel.ExchangeRate = salesInvoiceDetail.SalesInvoice.ExchangeRate;
+                salesInvoiceReportModel.TotalLineItemAmountFc = salesInvoiceDetail.SalesInvoice.TotalLineItemAmountFc;
+                salesInvoiceReportModel.TotalLineItemAmount = salesInvoiceDetail.SalesInvoice.TotalLineItemAmount;
+                salesInvoiceReportModel.GrossAmountFc = salesInvoiceDetail.SalesInvoice.GrossAmountFc;
+                salesInvoiceReportModel.GrossAmount = salesInvoiceDetail.SalesInvoice.GrossAmount;
+                salesInvoiceReportModel.NetAmountFc = salesInvoiceDetail.SalesInvoice.NetAmountFc;
+                salesInvoiceReportModel.NetAmount = salesInvoiceDetail.SalesInvoice.NetAmount;
+                salesInvoiceReportModel.NetAmountFcInWord = salesInvoiceDetail.SalesInvoice.NetAmountFcinWord;
+                salesInvoiceReportModel.TaxAmountFc = salesInvoiceDetail.SalesInvoice.TaxAmountFc;
+                salesInvoiceReportModel.TaxAmount = salesInvoiceDetail.SalesInvoice.TaxAmount;
+                salesInvoiceReportModel.DiscountPercentageOrAmount = salesInvoiceDetail.SalesInvoice.DiscountPercentageOrAmount;
+                salesInvoiceReportModel.DiscountPerOrAmountFc = salesInvoiceDetail.SalesInvoice.DiscountPerOrAmountFc;
+                salesInvoiceReportModel.DiscountAmountFc = salesInvoiceDetail.SalesInvoice.DiscountAmountFc;
+                salesInvoiceReportModel.DiscountAmount = salesInvoiceDetail.SalesInvoice.DiscountAmount;
+                salesInvoiceReportModel.StatusId = salesInvoiceDetail.SalesInvoice.StatusId;
+                salesInvoiceReportModel.CompanyId = Convert.ToInt32(salesInvoiceDetail.SalesInvoice.CompanyId);
+                salesInvoiceReportModel.FinancialYearId = Convert.ToInt32(salesInvoiceDetail.SalesInvoice.FinancialYearId);
+                salesInvoiceReportModel.MaxNo = salesInvoiceDetail.SalesInvoice.MaxNo;
+                salesInvoiceReportModel.VoucherStyleId = salesInvoiceDetail.SalesInvoice.VoucherStyleId;
+
+                salesInvoiceReportModel.CustomerLedgerName = null != salesInvoiceDetail.SalesInvoice.CustomerLedger ? salesInvoiceDetail.SalesInvoice.CustomerLedger.LedgerName : null;
+                salesInvoiceReportModel.CustomerBillToAddress = null != salesInvoiceDetail.SalesInvoice.BillToAddress ? salesInvoiceDetail.SalesInvoice.BillToAddress.AddressDescription : null;
+                salesInvoiceReportModel.CustomerBillToCountryName = null != salesInvoiceDetail.SalesInvoice.BillToAddress.Country ? salesInvoiceDetail.SalesInvoice.BillToAddress.Country.CountryName : null;
+                salesInvoiceReportModel.CustomerBillToStateName = null != salesInvoiceDetail.SalesInvoice.BillToAddress.State ? salesInvoiceDetail.SalesInvoice.BillToAddress.State.StateName : null;
+                salesInvoiceReportModel.CustomerBillToCityName = null != salesInvoiceDetail.SalesInvoice.BillToAddress.City ? salesInvoiceDetail.SalesInvoice.BillToAddress.City.CityName : null;
+                salesInvoiceReportModel.BankLedgerName = null != salesInvoiceDetail.SalesInvoice.BankLedger ? salesInvoiceDetail.SalesInvoice.BankLedger.LedgerName : null;
+                salesInvoiceReportModel.CurrencyCode = null != salesInvoiceDetail.SalesInvoice.Currency ? salesInvoiceDetail.SalesInvoice.Currency.CurrencyCode : null;
+                salesInvoiceReportModel.StatusName = null != salesInvoiceDetail.SalesInvoice.Status ? salesInvoiceDetail.SalesInvoice.Status.StatusName : null;
+                salesInvoiceReportModel.PreparedByName = null != salesInvoiceDetail.SalesInvoice.PreparedByUser ? salesInvoiceDetail.SalesInvoice.PreparedByUser.UserName : null;
+
+                salesInvoiceReportModel.SalesInvoiceDetId = salesInvoiceDetail.SalesInvoiceDetId;
+                salesInvoiceReportModel.SrNo = salesInvoiceDetail.SrNo;
+                salesInvoiceReportModel.Description = salesInvoiceDetail.Description;
+                salesInvoiceReportModel.UnitOfMeasurementId = salesInvoiceDetail.UnitOfMeasurementId;
+                salesInvoiceReportModel.Quantity = salesInvoiceDetail.Quantity;
+                salesInvoiceReportModel.PerUnit = salesInvoiceDetail.PerUnit;
+                salesInvoiceReportModel.UnitPrice = salesInvoiceDetail.UnitPrice;
+                salesInvoiceReportModel.GrossAmountFc_Det = salesInvoiceDetail.GrossAmountFc;
+                salesInvoiceReportModel.GrossAmount_Det = salesInvoiceDetail.GrossAmount;
+                salesInvoiceReportModel.TaxAmountFc_Det = salesInvoiceDetail.TaxAmountFc;
+                salesInvoiceReportModel.TaxAmount_Det = salesInvoiceDetail.TaxAmount;
+                salesInvoiceReportModel.NetAmountFc_Det = salesInvoiceDetail.NetAmountFc;
+                salesInvoiceReportModel.NetAmount_Det = salesInvoiceDetail.NetAmount;
+                salesInvoiceReportModel.UnitOfMeasurementName = salesInvoiceDetail.UnitOfMeasurement.UnitOfMeasurementName;
+
+                salesInvoiceReportModel.CompanyName = salesInvoiceDetail.SalesInvoice.Company.CompanyName;
+                salesInvoiceReportModel.CompanyAddress = salesInvoiceDetail.SalesInvoice.Company.Address;
+                salesInvoiceReportModel.CompanyEmailAddress = salesInvoiceDetail.SalesInvoice.Company.EmailAddress;
+                salesInvoiceReportModel.CompanyWebsite = salesInvoiceDetail.SalesInvoice.Company.Website;
+                salesInvoiceReportModel.CompanyPhoneNo = salesInvoiceDetail.SalesInvoice.Company.PhoneNo;
+                salesInvoiceReportModel.CompanyAlternatePhoneNo = salesInvoiceDetail.SalesInvoice.Company.AlternatePhoneNo;
+                salesInvoiceReportModel.CompanyFaxNo = salesInvoiceDetail.SalesInvoice.Company.FaxNo;
+                salesInvoiceReportModel.CompanyPostalCode = salesInvoiceDetail.SalesInvoice.Company.PostalCode;
+
+                salesInvoiceReportModelList.Add(salesInvoiceReportModel);
+            }
+
+            return salesInvoiceReportModelList; // returns.
+        }
+
     }
 }

@@ -13,7 +13,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdateSalesInvoiceTax(SalesInvoiceTaxModel salesInvoiceTaxModel);
 
-        Task<bool> UpdateSalesInvoiceTaxAmountAll(int? salesInvoiceId);
+        Task<bool> UpdateSalesInvoiceTaxAmountAll(int salesInvoiceId);
 
         Task<bool> AddSalesInvoiceTaxBySalesInvoiceId(int salesInvoiceId,int taxRegisterId);
 

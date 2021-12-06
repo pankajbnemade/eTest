@@ -27,7 +27,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<bool> UpdateStatusSalesInvoice(int salesInvoiceId, int action);
 
-        Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId);
+        Task<bool> UpdateSalesInvoiceMasterAmount(int salesInvoiceId);
 
         Task<SalesInvoiceModel> GetSalesInvoiceById(int salesInvoiceId);
 
@@ -44,7 +44,7 @@ namespace ERP.Services.Accounts.Interface
         Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterSalesInvoiceModel searchFilterModel);
 
         Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
-
-        //Task<DataTableResultModel<SalesInvoiceModel>> GetSalesInvoiceList();
+        
+        
     }
 }

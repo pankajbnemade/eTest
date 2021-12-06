@@ -57,7 +57,7 @@ namespace ERP.Services.Accounts
             salesInvoiceTax.SrNo = salesInvoiceTaxModel.SrNo;
             salesInvoiceTax.TaxLedgerId = salesInvoiceTaxModel.TaxLedgerId;
             salesInvoiceTax.TaxPercentageOrAmount = salesInvoiceTaxModel.TaxPercentageOrAmount;
-            salesInvoiceTax.TaxPerOrAmountFc = salesInvoiceTaxModel.TaxPerOrAmountFc == null ? 0 : salesInvoiceTaxModel.TaxPerOrAmountFc;
+            salesInvoiceTax.TaxPerOrAmountFc =  salesInvoiceTaxModel.TaxPerOrAmountFc;
             salesInvoiceTax.TaxAddOrDeduct = salesInvoiceTaxModel.TaxAddOrDeduct;
             salesInvoiceTax.TaxAmountFc = 0;
             salesInvoiceTax.TaxAmount = 0;
@@ -90,7 +90,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceTax.SrNo = salesInvoiceTaxModel.SrNo;
                 salesInvoiceTax.TaxLedgerId = salesInvoiceTaxModel.TaxLedgerId;
                 salesInvoiceTax.TaxPercentageOrAmount = salesInvoiceTaxModel.TaxPercentageOrAmount;
-                salesInvoiceTax.TaxPerOrAmountFc = salesInvoiceTaxModel.TaxPerOrAmountFc == null ? 0 : salesInvoiceTaxModel.TaxPerOrAmountFc;
+                salesInvoiceTax.TaxPerOrAmountFc =  salesInvoiceTaxModel.TaxPerOrAmountFc;
                 salesInvoiceTax.TaxAddOrDeduct = salesInvoiceTaxModel.TaxAddOrDeduct;
                 salesInvoiceTax.TaxAmountFc = 0;
                 salesInvoiceTax.TaxAmount = 0;
@@ -147,7 +147,7 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        public async Task<bool> UpdateSalesInvoiceTaxAmountAll(int? salesInvoiceId)
+        public async Task<bool> UpdateSalesInvoiceTaxAmountAll(int salesInvoiceId)
         {
             bool isUpdated = false;
 

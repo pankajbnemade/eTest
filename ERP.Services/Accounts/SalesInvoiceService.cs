@@ -8,6 +8,7 @@ using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -208,7 +209,7 @@ namespace ERP.Services.Accounts
             return isDeleted; // returns.
         }
 
-        public async Task<bool> UpdateSalesInvoiceMasterAmount(int? salesInvoiceId)
+        public async Task<bool> UpdateSalesInvoiceMasterAmount(int salesInvoiceId)
         {
             bool isUpdated = false;
 
@@ -403,6 +404,9 @@ namespace ERP.Services.Accounts
             return generalLedgerModelList; // returns.
         }
 
+
+
+
         #region Private Methods
 
         /// <summary>
@@ -531,6 +535,7 @@ namespace ERP.Services.Accounts
         {
             return await Task.Run(() =>
             {
+
                 SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
 
                 salesInvoiceModel.SalesInvoiceId = salesInvoice.SalesInvoiceId;
@@ -567,10 +572,18 @@ namespace ERP.Services.Accounts
                 salesInvoiceModel.FinancialYearId = Convert.ToInt32(salesInvoice.FinancialYearId);
                 salesInvoiceModel.MaxNo = salesInvoice.MaxNo;
                 salesInvoiceModel.VoucherStyleId = salesInvoice.VoucherStyleId;
+
+
+
                 //salesInvoiceModel.PreparedByUserId = salesInvoice.PreparedByUserId;
                 //salesInvoiceModel.UpdatedByUserId = salesInvoice.UpdatedByUserId;
+
+
+
                 //salesInvoiceModel.PreparedDateTime = salesInvoice.PreparedDateTime;
                 //salesInvoiceModel.UpdatedDateTime = salesInvoice.UpdatedDateTime;
+
+
 
                 // ###
                 salesInvoiceModel.CustomerLedgerName = null != salesInvoice.CustomerLedger ? salesInvoice.CustomerLedger.LedgerName : null;
@@ -588,5 +601,9 @@ namespace ERP.Services.Accounts
         }
 
         #endregion Private Methods
+
+
     }
+
+
 }
