@@ -9,6 +9,7 @@ using ERP.Services.Common.Interface;
 using ERP.Services.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -109,7 +110,7 @@ namespace ERP.UI
 
             services.AddTransient<IGeneralLedger, GeneralLedgerService>();
 
-            
+
 
 
             #endregion // Accounts
@@ -117,6 +118,7 @@ namespace ERP.UI
             #region Admin
 
             services.AddTransient<IApplicationIdentityUser, ApplicationIdentityUserService>();
+            //services.AddScoped<IApplicationIEmailSender<IEmailSender>, ApplicationEmailSenderService>();
 
 
             #endregion

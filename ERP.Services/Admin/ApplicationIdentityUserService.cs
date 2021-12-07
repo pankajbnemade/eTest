@@ -26,9 +26,6 @@ namespace ERP.Services.Admin
             // assign values.
             ApplicationIdentityUser applicationIdentityUser = new ApplicationIdentityUser();
 
-            //applicationIdentityUser.CurrencyCode = applicationIdentityUserModel.CurrencyCode;
-            //applicationIdentityUser.CurrencyName = applicationIdentityUserModel.CurrencyName;
-            //applicationIdentityUser.Denomination = applicationIdentityUserModel.Denomination;
 
             userId = await Create(applicationIdentityUser);
 
