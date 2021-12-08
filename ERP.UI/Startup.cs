@@ -4,8 +4,6 @@ using ERP.Models.Extension;
 //using ERP.Models.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,9 +61,6 @@ namespace ERP.UI
             services.AddRazorPages();
             services.AddHttpContextAccessor();
 
-            services.AddIdentityCore<ApplicationIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ErpDbContext>()
-                .AddTokenProvider<DataProtectorTokenProvider<ApplicationIdentityUser>>(TokenOptions.DefaultProvider);
 
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);

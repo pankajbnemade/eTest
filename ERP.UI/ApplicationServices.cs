@@ -118,7 +118,6 @@ namespace ERP.UI
             #region Admin
 
             services.AddTransient<IApplicationIdentityUser, ApplicationIdentityUserService>();
-            //services.AddScoped<IApplicationIEmailSender<IEmailSender>, ApplicationEmailSenderService>();
 
 
             #endregion
