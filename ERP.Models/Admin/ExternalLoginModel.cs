@@ -18,7 +18,7 @@ namespace ERP.Models.Admin
 
         public string ReturnUrl { get; set; }
 
-        //[TempData]
+        [TempData]
         public string ErrorMessage { get; set; }
     }
 }

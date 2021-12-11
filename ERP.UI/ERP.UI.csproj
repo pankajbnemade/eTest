@@ -68,7 +68,6 @@
     <Content Remove="Areas\Accounts\Views\SalesInvoice\Print.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceSummary.cshtml" />
     <Content Remove="Areas\Admin\Views\User\ConfirmEmail.cshtml" />
-    <Content Remove="Areas\Admin\Views\User\ForgotPasswordConfirmationModel.cshtml" />
     <Content Remove="Areas\Master\Views\Company\Index.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_AddCompany.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />
@@ -236,7 +235,6 @@
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
     <None Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <None Include="Areas\Admin\Views\User\ForgotPasswordConfirmationModel.cshtml" />
     <None Include="Areas\Admin\Views\User\AccessDenied.cshtml" />
     <None Include="Areas\Admin\Views\User\ChangePassword.cshtml" />
     <None Include="Areas\Admin\Views\User\ForgotPassword.cshtml" />

@@ -10,7 +10,7 @@ namespace ERP.Models.Admin
 {
     public class ConfirmEmailModel
     {
-         //[TempData]
+        [TempData]
         public string StatusMessage { get; set; }
     }
 }
