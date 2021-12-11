@@ -1,9 +1,10 @@
-using ERP.DataAccess.Entity;
+﻿using ERP.DataAccess.Entity;
 using ERP.DataAccess.EntityData;
+using ERP.Models.Common;
 using ERP.Models.Extension;
-//using ERP.Models.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,20 +34,39 @@ namespace ERP.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             string mySqlConnectionStr = Configuration.GetValue<string>("AppSettings:ErplanConnString");
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
-            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().
+            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().AddDefaultTokenProviders().
                 AddEntityFrameworkStores<ErpDbContext>();
+
+             //services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
+             //   .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Admin/User/Login";
-                options.LogoutPath = "/Admin/User/Logout";
-                options.AccessDeniedPath = "/Admin/User/AccessDenied";
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
+            services.AddAuthentication().AddFacebook(options =>
+           {
+               options.AppId = "479144716347128";
+               options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
+           });
+            services.AddAuthentication().AddMicrosoftAccount(options =>
+           {
+               options.ClientId = "479144716347128";
+               options.ClientSecret = "8888cefba55e9cfa06a2b28f0495e533";
+           });
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "751413081977-ct8rrlcf8cgt8f42b5evots13mg458lt.apps.googleusercontent.com";
+                options.ClientSecret = "LPRLug47n8OQsYAirUVGofLw";
+
             });
 
             services.AddControllers();
@@ -61,7 +81,6 @@ namespace ERP.UI
             services.AddRazorPages();
             services.AddHttpContextAccessor();
 
-
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);
             services.AddSession(options =>
@@ -70,6 +89,8 @@ namespace ERP.UI
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+            services.Configure<MailSettingsModel>(Configuration.GetSection("MailSettings"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,16 +113,15 @@ namespace ERP.UI
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
-
             //app.UseContextAccessor();
             //loggerFactory.AddSeriLog();
             //app.UseSeriLogMiddleware();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{area=Admin}/{controller=User}/{action=Login}");
+                endpoints.MapRazorPages();
             });
         }
     }

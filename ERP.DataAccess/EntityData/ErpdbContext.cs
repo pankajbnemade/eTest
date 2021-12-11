@@ -10,10 +10,7 @@ namespace ERP.DataAccess.EntityData
 {
     public partial class ErpDbContext : IdentityDbContext<ApplicationIdentityUser, ApplicationRole, int>
     {
-        public ErpDbContext()
-        {
-        }
-
+       
         public ErpDbContext(DbContextOptions<ErpDbContext> options)
             : base(options)
         {
@@ -78,18 +75,18 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
-            }
-        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+////#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                //optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {

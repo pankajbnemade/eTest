@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Identity\**" />
-    <Content Remove="Areas\Identity\**" />
-    <EmbeddedResource Remove="Areas\Identity\**" />
-    <None Remove="Areas\Identity\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Areas\Common\Controllers\ReportController.cs" />
     <Compile Remove="Controllers\ReportController.cs" />
   </ItemGroup>
@@ -74,6 +67,8 @@
     <Content Remove="Areas\Accounts\Views\SalesInvoiceTaxMaster\_InvoiceTaxMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoice\Print.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoice\_ViewInvoiceSummary.cshtml" />
+    <Content Remove="Areas\Admin\Views\User\ConfirmEmail.cshtml" />
+    <Content Remove="Areas\Admin\Views\User\ForgotPasswordConfirmationModel.cshtml" />
     <Content Remove="Areas\Master\Views\Company\Index.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_AddCompany.cshtml" />
     <Content Remove="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />
@@ -113,9 +108,14 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="Grpc.Core" Version="2.42.0" />
+    <PackageReference Include="MailKit" Version="2.15.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.5" />
@@ -133,6 +133,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="MimeKit" Version="2.15.1" />
     <PackageReference Include="MySql.Data" Version="8.0.24" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -234,6 +235,20 @@
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <None Include="Areas\Admin\Views\User\ForgotPasswordConfirmationModel.cshtml" />
+    <None Include="Areas\Admin\Views\User\AccessDenied.cshtml" />
+    <None Include="Areas\Admin\Views\User\ChangePassword.cshtml" />
+    <None Include="Areas\Admin\Views\User\ForgotPassword.cshtml" />
+    <None Include="Areas\Admin\Views\User\ForgotPasswordConfirmation.cshtml" />
+    <None Include="Areas\Admin\Views\User\Login.cshtml" />
+    <None Include="Areas\Admin\Views\User\Register.cshtml" />
+    <None Include="Areas\Admin\Views\User\ResetPassword.cshtml" />
+    <None Include="Areas\Admin\Views\User\ConfirmEmail.cshtml" />
+    <None Include="Areas\Admin\Views\User\ResetPasswordConfirmation.cshtml" />
+    <None Include="Areas\Admin\Views\User\UserInformation.cshtml" />
+    <None Include="Areas\Admin\_ViewImports.cshtml" />
+    <None Include="Areas\Admin\_ViewStart.cshtml" />
     <None Include="Areas\Master\Views\Company\Index.cshtml" />
     <None Include="Areas\Master\Views\Company\_AddCompany.cshtml" />
     <None Include="Areas\Master\Views\Company\_ConfirmDeleteCompany.cshtml" />
@@ -297,6 +312,7 @@
     <None Include="wwwroot\lib\jquery\jquery-3.4.1.min.js" />
     <None Include="wwwroot\lib\moment\moment.js" />
     <None Include="wwwroot\lib\moment\moment.min.js" />
+    <None Include="wwwroot\Templates\MailTemplates\WelcomeTemplate.html" />
   </ItemGroup>
 
   <ItemGroup>

@@ -123,6 +123,9 @@ namespace ERP.UI
             #endregion
 
             services.AddTransient<ICommon, CommonService>();
+            services.AddTransient<IMailService, MailService>();
+            services.AddSingleton<IEmailSender, EmailSender>();
+
         }
     }
 }
