@@ -7,13 +7,15 @@ using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using ERP.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace ERP.UI.Areas.Common.Controllers
+namespace ERP.UI.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

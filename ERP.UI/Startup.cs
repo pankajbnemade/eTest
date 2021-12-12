@@ -42,9 +42,6 @@ namespace ERP.UI
             services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().AddDefaultTokenProviders().
                 AddEntityFrameworkStores<ErpDbContext>();
 
-             //services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
-             //   .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = $"/Identity/Account/Login";
@@ -69,26 +66,27 @@ namespace ERP.UI
 
             });
 
-            services.AddControllers();
-            services.AddControllersWithViews(options =>
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation()
+            .AddNewtonsoftJson(options =>
             {
-                //options.Filters.Add<SeriLogFilter>();
-            }).AddRazorRuntimeCompilation()
-              .AddNewtonsoftJson(options =>
-              {
-                  options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-              });
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
+
             services.AddRazorPages();
+
             services.AddHttpContextAccessor();
 
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
             services.Configure<MailSettingsModel>(Configuration.GetSection("MailSettings"));
 
         }
@@ -120,7 +118,7 @@ namespace ERP.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=Admin}/{controller=User}/{action=Login}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
