@@ -11,6 +11,7 @@ using System;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class CurrencyConversionController : Controller
     {
         private readonly ICurrency _currency;

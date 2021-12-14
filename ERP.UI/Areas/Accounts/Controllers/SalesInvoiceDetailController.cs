@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class SalesInvoiceDetailController : Controller
     {
         private readonly ISalesInvoice _salesInvoice;

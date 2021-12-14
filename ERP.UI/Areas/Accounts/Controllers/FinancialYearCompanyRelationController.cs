@@ -8,6 +8,7 @@ using ERP.Services.Master.Interface;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class FinancialYearCompanyRelationController : Controller
     {
         private readonly IFinancialYear _financialYear;

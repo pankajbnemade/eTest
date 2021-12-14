@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class JournalVoucherDetailController : Controller
     {
         private readonly IJournalVoucherDetail _journalVoucherDetail;

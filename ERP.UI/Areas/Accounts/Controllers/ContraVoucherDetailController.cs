@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class ContraVoucherDetailController : Controller
     {
         private readonly IContraVoucherDetail _contraVoucherDetail;

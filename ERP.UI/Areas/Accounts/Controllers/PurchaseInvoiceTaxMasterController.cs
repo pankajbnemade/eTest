@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class PurchaseInvoiceTaxMasterController : Controller
     {
         private readonly IPurchaseInvoiceTax _purchaseInvoiceTax;

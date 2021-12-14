@@ -2,6 +2,7 @@
 using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Master.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class CityController : Controller
     {
         private readonly ICity _city;

@@ -13,9 +13,10 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace ERP.UI.Controllers
+namespace ERP.UI.Areas.Common.Controllers
 {
     [Authorize]
+    [Area("Common")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class FinancialYearController : Controller
     {
         private readonly IFinancialYear _financialYear;

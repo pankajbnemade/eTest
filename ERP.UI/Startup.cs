@@ -5,6 +5,7 @@ using ERP.Models.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,8 +40,9 @@ namespace ERP.UI
             string mySqlConnectionStr = Configuration.GetValue<string>("AppSettings:ErplanConnString");
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
-            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>().AddDefaultTokenProviders().
-                AddEntityFrameworkStores<ErpDbContext>();
+            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>()
+                    .AddDefaultTokenProviders()
+                    .AddEntityFrameworkStores<ErpDbContext>();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -50,15 +52,16 @@ namespace ERP.UI
             });
 
             services.AddAuthentication().AddFacebook(options =>
-           {
+            {
                options.AppId = "479144716347128";
                options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
-           });
+            });
             services.AddAuthentication().AddMicrosoftAccount(options =>
-           {
+            {
                options.ClientId = "479144716347128";
                options.ClientSecret = "8888cefba55e9cfa06a2b28f0495e533";
-           });
+            });
+
             services.AddAuthentication().AddGoogle(options =>
             {
                 options.ClientId = "751413081977-ct8rrlcf8cgt8f42b5evots13mg458lt.apps.googleusercontent.com";
@@ -67,7 +70,6 @@ namespace ERP.UI
             });
 
             services.AddControllersWithViews()
-            .AddRazorRuntimeCompilation()
             .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -111,14 +113,17 @@ namespace ERP.UI
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+
             //app.UseContextAccessor();
             //loggerFactory.AddSeriLog();
             //app.UseSeriLogMiddleware();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area=Common}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }

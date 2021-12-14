@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class AccountDashboardController : Controller
     {
         public async Task<IActionResult> Index()

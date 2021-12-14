@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class CountryController : Controller
     {
         private readonly ICountry _country;

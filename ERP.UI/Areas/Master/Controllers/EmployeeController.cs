@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class EmployeeController : Controller
     {
         private readonly IDesignation _designation;

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class DebitNoteDetailController : Controller
     {
         private readonly IDebitNote _debitNote;

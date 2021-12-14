@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "User List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>User List</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-user">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="userGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    @*<th>User Id</th>*@
+                                    <th>Action</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Designation Name</th>
+                                    <th>Department Name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#userGrid").DataTable({
+        //dom: 'lftip',
+        "pageLength": 25,
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+
+        "ajax": {
+            "url": "@Url.Action("GetUserList", "User")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+        /*{ "data": "UserId", "name": "User Id" },*/
+
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditUser(' + full.Id + ')"><i class="far fa-edit"></i></button>' +
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteUser(this, ' + full.Id + ')"><i class="fa fa-trash-alt"></i></button>' +
+                        '</div>';
+                }, "orderable": false
+            },
+            { "data": "UserName", "name": "User Name" },
+            { "data": "Email", "name": "Email" },
+            { "data": "PhoneNumber", "name": "Phone Number" }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-user').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddUser", "User")', 'html', '',
+    function (data) {
+        $('#modal-user-master').empty();
+        $('#modal-user-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+// edit user
+    function fnEditUser(userId) {
+        var model = { userId: userId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditUser", "User")', 'html', model,
+        function (data) {
+            $('#modal-user-master').empty();
+            $('#modal-user-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteUser"); }
+<div id="modal-user-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class ReceiptVoucherDetailController : Controller
     {
         private readonly IReceiptVoucherDetail _receiptVoucherDetail;

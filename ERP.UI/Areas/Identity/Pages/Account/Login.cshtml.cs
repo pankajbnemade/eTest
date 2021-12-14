@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ERP.DataAccess.Entity;
+using ERP.Models.Extension;
+using ERP.Models.Admin;
+using ERP.Services.Admin.Interface;
 
 namespace ERP.UI.Areas.Identity.Pages.Account
 {
@@ -21,14 +24,17 @@ namespace ERP.UI.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationIdentityUser> _userManager;
         private readonly SignInManager<ApplicationIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IApplicationIdentityUser _aplicationIdentityUser;
 
-        public LoginModel(SignInManager<ApplicationIdentityUser> signInManager, 
+        public LoginModel(SignInManager<ApplicationIdentityUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<ApplicationIdentityUser> userManager)
+            UserManager<ApplicationIdentityUser> userManager,
+            IApplicationIdentityUser aplicationIdentityUser)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _aplicationIdentityUser = aplicationIdentityUser;
         }
 
         [BindProperty]
@@ -74,7 +80,7 @@ namespace ERP.UI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? Url.Content("~/Admin/User/UserInformation");
 
             if (ModelState.IsValid)
             {
@@ -84,6 +90,22 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserListByEmail(Input.Email);
+                    UserSessionModel userSessionModel = new UserSessionModel();
+
+                    userSessionModel.UserId = applicationUser.Id;
+                    userSessionModel.UserName = applicationUser.UserName;
+
+                    //start temporary avoid branch/financial year  selection
+
+                    userSessionModel.CompanyId = 1;
+                    userSessionModel.FinancialYearId = 1;
+
+                    //temporary avoid branch/financial year  selection
+
+                    SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

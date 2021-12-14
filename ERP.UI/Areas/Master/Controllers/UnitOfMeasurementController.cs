@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class UnitOfMeasurementController : Controller
     {
         private readonly IUnitOfMeasurement _unitOfMeasurement;

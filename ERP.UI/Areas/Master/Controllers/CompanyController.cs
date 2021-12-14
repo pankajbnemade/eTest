@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class CompanyController : Controller
     {
         private readonly ICurrency _currency;

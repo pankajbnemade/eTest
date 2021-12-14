@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class MasterDashboardController : Controller
     {
         public async Task<IActionResult> Index()

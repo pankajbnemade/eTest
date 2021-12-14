@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class ReportController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;

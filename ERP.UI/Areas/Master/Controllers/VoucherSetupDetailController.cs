@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Master.Controllers
 {
+    [Area("Master")]
     public class VoucherSetupDetailController : Controller
     {
         private readonly IVoucherStyle _voucherStyle;

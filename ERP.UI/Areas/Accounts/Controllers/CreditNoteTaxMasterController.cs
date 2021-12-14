@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
 {
+    [Area("Accounts")]
     public class CreditNoteTaxMasterController : Controller
     {
         private readonly ICreditNoteTax _creditNoteTax;
