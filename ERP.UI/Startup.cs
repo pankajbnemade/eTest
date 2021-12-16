@@ -69,7 +69,9 @@ namespace ERP.UI
 
             });
 
+             services.AddControllers();
             services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation()
             .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();

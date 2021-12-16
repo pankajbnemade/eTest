@@ -14,9 +14,11 @@ namespace ERP.Services.Admin.Interface
     {
         Task<int> CreateUser(ApplicationIdentityUserModel applicationIdentityUserModel);
 
-        Task<ApplicationIdentityUserModel> GetApplicationIdentityUserListByUserId(int userId);
-        
-        Task<ApplicationIdentityUserModel> GetApplicationIdentityUserListByEmail(string email);
+        Task<bool> UpdateUser(ApplicationIdentityUserModel applicationIdentityUserModel);
+
+        Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByUserId(int userId);
+
+        Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByEmail(string email);
 
         Task<DataTableResultModel<ApplicationIdentityUserModel>> GetApplicationIdentityUserList();
     }

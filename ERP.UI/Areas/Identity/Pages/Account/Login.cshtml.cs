@@ -91,7 +91,7 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-                    ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserListByEmail(Input.Email);
+                    ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserByEmail(Input.Email);
                     UserSessionModel userSessionModel = new UserSessionModel();
 
                     userSessionModel.UserId = applicationUser.Id;

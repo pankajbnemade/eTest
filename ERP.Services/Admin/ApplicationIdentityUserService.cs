@@ -10,6 +10,7 @@ using ERP.Services.Admin.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,7 +33,26 @@ namespace ERP.Services.Admin
             return userId; // returns.
         }
 
-        public async Task<ApplicationIdentityUserModel> GetApplicationIdentityUserListByUserId(int userId)
+        public async Task<bool> UpdateUser(ApplicationIdentityUserModel applicationIdentityUserModel)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            ApplicationIdentityUser applicationIdentityUser = await GetQueryByCondition(w => w.Id == applicationIdentityUserModel.Id)
+                                                                .FirstOrDefaultAsync();
+
+            if (null != applicationIdentityUser)
+            {
+                // assign values.
+                applicationIdentityUser.LockoutEnd = applicationIdentityUserModel.LockoutEnd;
+
+                isUpdated = await Update(applicationIdentityUser);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByUserId(int userId)
         {
             ApplicationIdentityUserModel applicationIdentityUserModel = null;
 
@@ -46,7 +66,7 @@ namespace ERP.Services.Admin
             return applicationIdentityUserModel; // returns.
         }
 
-        public async Task<ApplicationIdentityUserModel> GetApplicationIdentityUserListByEmail(string email)
+        public async Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByEmail(string email)
         {
             ApplicationIdentityUserModel applicationIdentityUserModel = null;
 
@@ -123,7 +143,7 @@ namespace ERP.Services.Admin
                 applicationIdentityUserModel.PhoneNumber = applicationIdentityUser.PhoneNumber;
                 applicationIdentityUserModel.PhoneNumberConfirmed = applicationIdentityUser.PhoneNumberConfirmed;
                 applicationIdentityUserModel.TwoFactorEnabled = applicationIdentityUser.TwoFactorEnabled;
-                applicationIdentityUserModel.LockoutEnd = Convert.ToDateTime(applicationIdentityUser.LockoutEnd);
+                applicationIdentityUserModel.LockoutEnd = applicationIdentityUser.LockoutEnd;
                 applicationIdentityUserModel.LockoutEnabled = applicationIdentityUser.LockoutEnabled;
                 applicationIdentityUserModel.AccessFailedCount = applicationIdentityUser.AccessFailedCount;
 

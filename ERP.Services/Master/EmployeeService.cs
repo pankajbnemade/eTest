@@ -156,7 +156,7 @@ namespace ERP.Services.Master
                 IQueryable<Employee> query = GetQueryByCondition(w => w.EmployeeId != 0);
                 resultModel = await query.Select(s => new SelectListModel
                 {
-                    DisplayText = $"{s.FirstName} {s.LastName}",
+                    DisplayText = s.FirstName + " " + s.LastName,
                     Value = s.EmployeeId.ToString()
                 }).OrderBy(w => w.DisplayText).ToListAsync();
             }

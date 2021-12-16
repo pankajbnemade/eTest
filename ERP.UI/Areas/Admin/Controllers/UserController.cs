@@ -1,23 +1,15 @@
 ﻿using ERP.DataAccess.Entity;
 using ERP.Models.Admin;
-using ERP.Models.Extension;
-using ERP.Services.Admin.Interface;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
-using System.Text.Encodings.Web;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using System;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using ERP.Models.Common;
+using ERP.Models.Helpers;
+using ERP.Services.Admin.Interface;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Admin.Controllers
 {
@@ -47,12 +39,9 @@ namespace ERP.UI.Areas.Admin.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return await Task.Run(() =>
-            {
-                return View();
-            });
+            return View();
         }
 
         [HttpPost]
@@ -64,6 +53,38 @@ namespace ERP.UI.Areas.Admin.Controllers
             {
                 return Json(new { draw = 1, data = resultModel.ResultList });
             });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LockUnlock(int id)
+        {
+             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            ApplicationIdentityUserModel userModel = await _aplicationIdentityUser.GetApplicationIdentityUserByUserId(id);
+
+            if (userModel == null)
+            {
+                data.Result.Status = false;
+                data.Result.Message = "Error while Locking/Unlocking";
+                return Json(data);
+            }
+            if (userModel.LockoutEnd != null && userModel.LockoutEnd > DateTime.Now)
+            {
+                //user is currently locked, we will unlock them
+                userModel.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                userModel.LockoutEnd = DateTime.Now.AddYears(1000);
+            }
+
+            if (true == await _aplicationIdentityUser.UpdateUser(userModel))
+            {
+                data.Result.Status = true;
+                data.Result.Message = "Action successful ";
+            }
+            
+            return Json(data); // returns.
         }
 
         public IActionResult UserInformation()

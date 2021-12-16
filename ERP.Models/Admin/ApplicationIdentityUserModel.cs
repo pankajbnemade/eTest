@@ -14,6 +14,7 @@ namespace ERP.Models.Admin
         public string Email { get; set; }
 
         public string NormalizedEmail { get; set; }
+
         public bool EmailConfirmed { get; set; }
 
         public string PasswordHash { get; set; }
@@ -25,9 +26,9 @@ namespace ERP.Models.Admin
         public string PhoneNumber { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
-        public DateTime? LockoutEnd { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
-
+        public int EmployeeId { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿@{
-    ViewBag.Title = "User List";
-}
+﻿@{ ViewBag.Title = "User List"; }
 
 <section class="content-header">
     <div class="container-fluid">
@@ -31,10 +29,10 @@
                                 <tr class="table-header">
                                     @*<th>User Id</th>*@
                                     <th>Action</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Designation Name</th>
-                                    <th>Department Name</th>
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                    <th>EmailConfirmed</th>
+                                    <th>LockoutEnd</th>
                                 </tr>
                             </thead>
                         </table>
@@ -68,22 +66,96 @@ $(document).ready(function () {
             "datatype": "json",
         },
         "columns": [
-        /*{ "data": "UserId", "name": "User Id" },*/
+        /*{ "data": "Id", "name": "User Id" },*/
 
             {
                 "render": function (data, type, full, meta) {
-                    return '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditUser(' + full.Id + ')"><i class="far fa-edit"></i></button>' +
-                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteUser(this, ' + full.Id + ')"><i class="fa fa-trash-alt"></i></button>' +
-                        '</div>';
+                    var button = '<div class="action_button">' +
+                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditUser(' + full.Id + ')"><i class="far fa-edit"></i></button>' 
+                        /*'<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteUser(this, ' + full.Id + ')"><i class="fa fa-trash-alt"></i></button>' +*/
+                        ;
+
+                    var today = new Date().getTime();
+                    var lockout = new Date(full.LockoutEnd).getTime();
+
+                    if (lockout > today) {
+                        //user is currently locked
+                        button = button +  `
+                                <a onclick=LockUnlock('${full.Id}') class="border-0 rounded-0 text-danger" style="cursor:pointer;" title="Unlock">
+                                    <i class="fas fa-lock-open"></i>  
+                                </a>
+                           `;
+                    }
+                    else {
+                        button = button +  `
+                                <a onclick=LockUnlock('${full.Id}') class="border-0 rounded-0 text-success" style="cursor:pointer;" title="Lock">
+                                    <i class="fas fa-lock"></i>  
+                                </a>
+                           `;
+                    }
+
+                    button = button + '</div>';
+
+                    return button;
                 }, "orderable": false
             },
             { "data": "UserName", "name": "User Name" },
             { "data": "Email", "name": "Email" },
-            { "data": "PhoneNumber", "name": "Phone Number" }
+            {
+                render: function (data, type, full, meta) {
+                    if (full.EmailConfirmed == true) {
+                        return '<i class="fas fa-check text-success"></i>';
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
+                "data": "LockoutEnd", "name": "LockoutEnd",
+                "render": function (dt) {
+
+                    return dt==null ?"" :moment(dt).format("DD/MMM/YYYY");
+                }
+            }
+            
         ],
     });
 });
+
+
+
+    function LockUnlock(id) {
+
+        @*$.ajax({
+            type: "POST",
+            url: '@Url.Action("LockUnlock", "User")',
+            data: id,
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    toastr.success(data.message);
+                    dataTable.ajax.reload();
+                }
+                else {
+                    toastr.error(data.message);
+                }
+            }
+        });*@
+
+        var model = { id: id };
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("LockUnlock", "User")', '', model,
+        function (data) {
+            if (data.Result.Status) {
+                $('#userGrid').DataTable().ajax.reload();
+                $("#userGrid").DataTable().clear().ajax.reload();
+                fnSuccessNotify(data.Result.Message);
+            }
+            else {
+                fnDangerNotify(data.Result.Message);
+            }
+        }, null, true, null, false);
+
+    }
 
 // add new record.
 $('#add-new-user').click(function () {
@@ -96,8 +168,8 @@ $('#add-new-user').click(function () {
 });
 
 // edit user
-    function fnEditUser(userId) {
-        var model = { userId: userId };
+    function fnEditUser(id) {
+        var model = { id: id };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditUser", "User")', 'html', model,
         function (data) {
             $('#modal-user-master').empty();
@@ -106,6 +178,3 @@ $('#add-new-user').click(function () {
         }, null, true, null, false);
     }
 </script>
-
-@{ await Html.RenderPartialAsync("_ConfirmDeleteUser"); }
-<div id="modal-user-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
