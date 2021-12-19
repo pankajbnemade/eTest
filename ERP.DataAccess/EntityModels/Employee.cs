@@ -6,6 +6,11 @@ namespace ERP.DataAccess.EntityModels
 {
     public partial class Employee
     {
+        public Employee()
+        {
+            Aspnetusers = new HashSet<Aspnetuser>();
+        }
+
         public int EmployeeId { get; set; }
         public string EmployeeCode { get; set; }
         public string FirstName { get; set; }
@@ -22,5 +27,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual Designation Designation { get; set; }
         public virtual Aspnetuser PreparedByUser { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
+        public virtual ICollection<Aspnetuser> Aspnetusers { get; set; }
     }
 }

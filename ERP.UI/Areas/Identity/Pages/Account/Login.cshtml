@@ -7,7 +7,7 @@
 
 
 <form id="account" method="post">
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+
 
     <div class="row">
         <div class="form-group col-sm-12">
@@ -66,6 +66,7 @@
             <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i>  Sign In</button>
         </div>
     </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
 </form>
 
 @if ((Model.ExternalLogins?.Count ?? 0) != 0)

@@ -4,4 +4,14 @@
     ViewData["Title"] = "Confirm email";
 }
 
-<h5>@ViewData["Title"]</h5>
+<h5>@Model.StatusMessage</h5>
+<br />
+
+@if (Model.ShowLogin) {
+
+<div class="row">
+    <div class="col-sm-12">
+        <a id="login-link" class="btn btn-primary btn-block" href="/Identity/Account/Login">Click here to login</a>
+    </div>
+</div>
+}

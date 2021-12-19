@@ -1,121 +1,174 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create New User";
+    Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<h5 class="login-box-msg">@ViewData["Title"]</h5>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
 
-<form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-    <div class="row">
-        <div class="form-group col-sm-12">
-            <div class="form-group">
-                <label asp-for="Input.EmployeeId"></label>
-                @Html.DropDownListFor(m => m.Input.EmployeeId, new SelectList(Model.Input.EmployeeList, "Value", "DisplayText"),
-               "Select Employee", new { @class = "form-control" })
-            </div>
-            <span asp-validation-for="Input.Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-sm-12">
-            <div class="input-group">
-                <input type="email" asp-for="Input.Email" class="form-control" placeholder="Email">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                </div>
-            </div>
-            <span asp-validation-for="Input.Email" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-sm-12">
-            <div class="input-group">
-                <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                </div>
-            </div>
-            <span asp-validation-for="Input.Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-sm-12">
-            <div class="input-group">
-                <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="ConfirmPassword">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                </div>
-            </div>
-            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="icheck-primary">
-                <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                By clicking <em>Register</em> you agree to our <a href="" target="_blank"> terms of service </a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
-        </div>
-    </div>
-</form>
-
-
-@*@if ((Model.ExternalLogins?.Count ?? 0) != 0)
-    {
-        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-            <hr />
-            <div class="row">
-                @foreach (var provider in Model.ExternalLogins)
+                @if (Model.Input.Email != "")
                 {
-                    <div class="col-sm-12 mb-2">
-                        @if (provider.Name.ToLower().Contains("facebook"))
-                        {
-                            <button type="submit" class="btn btn-block facebook-btn"
-                                    name="provider" value="@provider.Name"
-                                    title="Log in using your @provider.DisplayName account">
-                                <i class="fab fa-facebook-square"></i> @provider.DisplayName
-                            </button> }
-                        else @if (provider.Name.ToLower().Contains("microsoft"))
-                   {
-                    <button type="submit" class="btn btn-block microsoft-btn"
-                            name="provider" value="@provider.Name"
-                            title="Log in using your @provider.DisplayName account">
-                        <i class="fab fa-facebook-square"></i> @provider.DisplayName
-                    </button> }
+                    <h5 class="modal-title">Edit User Details</h5> }
                 else
                 {
-                    @if (provider.Name.ToLower().Contains("google"))
-                    {
-                        <button type="submit" class="btn btn-block google-btn form-control"
-                                name="provider" value="@provider.Name"
-                                title="Log in using your @provider.DisplayName account">
-                            <i class="fab fa-google"></i> @provider.DisplayName
-                        </button> }
-                    else
-                    {
-                        <button type="submit" class="btn btn-primary" name="provider"
-                                value="@provider.Name"
-                                title="Log in using your @provider.DisplayName account">
-                            @provider.DisplayName
-                        </button>}}
-                    </div>}
-            </div>
-        </form>
-    }*@
+                    <h5 class="modal-title">Create New User</h5>}
 
+            </div>
+            <div class="col-sm-6">
+                <div class="float-right">
+
+                    <button type="button" class="btn btn-secondary " title="Back" onclick="javascript: fnBackToIndex();">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary card-outline card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <div class="card-body p-3">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                        <div class="row">
+                                            <div class="form-group col-sm-12">
+                                                <div class="input-group">
+                                                    @*<label asp-for="Input.EmployeeId"></label>*@
+                                                    @Html.DropDownListFor(m => m.Input.EmployeeId, new SelectList(Model.Input.EmployeeList, "Value", "DisplayText"),
+                                                   "Select Employee", new { @class = "form-control" })
+                                                </div>
+                                                <span asp-validation-for="Input.EmployeeId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="email" asp-for="Input.Email" class="form-control" placeholder="Email">
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text">
+                                                            <i class="fas fa-envelope"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        @*<div class="row">
+                                            <div class="form-group col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password">
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text">
+                                                            <i class="fas fa-lock"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="ConfirmPassword">
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text">
+                                                            <i class="fas fa-lock"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                            </div>
+                                        </div>*@
+
+                                        @*<div class="row">
+                                                <div class="col-12">
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                                                        By clicking <em>Register</em> you agree to our <a href="" target="_blank"> terms of service </a>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button type="submit" class="btn btn-primary btn-block">Register</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-12">
+                                                <div asp-validation-summary="All" class="form-text text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6">
+                                    @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                                    {
+                                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+
+                                            <div class="row">
+                                                @foreach (var provider in Model.ExternalLogins)
+                                                {
+                                                    <div class="col-sm-12 mb-2">
+                                                        @if (provider.Name.ToLower().Contains("facebook"))
+                                                        {
+                                                            <button type="submit" class="btn btn-block facebook-btn"
+                                                                    name="provider" value="@provider.Name"
+                                                                    title="Log in using your @provider.DisplayName account">
+                                                                <i class="fab fa-facebook-square"></i> @provider.DisplayName
+                                                            </button> }
+                                                        else @if (provider.Name.ToLower().Contains("microsoft"))
+                                                   {
+                                                    <button type="submit" class="btn btn-block microsoft-btn"
+                                                            name="provider" value="@provider.Name"
+                                                            title="Log in using your @provider.DisplayName account">
+                                                        <i class="fab fa-facebook-square"></i> @provider.DisplayName
+                                                    </button> }
+                                                else
+                                                {
+                                                    @if (provider.Name.ToLower().Contains("google"))
+                                                    {
+                                                        <button type="submit" class="btn btn-block google-btn form-control"
+                                                                name="provider" value="@provider.Name"
+                                                                title="Log in using your @provider.DisplayName account">
+                                                            <i class="fab fa-google"></i> @provider.DisplayName
+                                                        </button> }
+                                                    else
+                                                    {
+                                                        <button type="submit" class="btn btn-primary" name="provider"
+                                                                value="@provider.Name"
+                                                                title="Log in using your @provider.DisplayName account">
+                                                            @provider.DisplayName
+                                                        </button>}}
+                                                    </div>}
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    
+    function fnBackToIndex() {
+        window.location.href = '@Url.Action("Index", "User",new{ area="Admin"})';
+        }
+
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

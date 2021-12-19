@@ -16,6 +16,10 @@ namespace ERP.Services.Admin.Interface
 
         Task<bool> UpdateUser(ApplicationIdentityUserModel applicationIdentityUserModel);
 
+        Task<bool> LockUnlock(int userId);
+
+         //void AssignDefaultSession(string email);
+
         Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByUserId(int userId);
 
         Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByEmail(string email);

@@ -129,7 +129,9 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public int EmployeeId { get; set; }
 
+        public virtual Employee Employee { get; set; }
         public virtual ICollection<Advanceadjustment> AdvanceadjustmentPreparedByUsers { get; set; }
         public virtual ICollection<Advanceadjustment> AdvanceadjustmentUpdatedByUsers { get; set; }
         public virtual ICollection<Advanceadjustmentdetail> AdvanceadjustmentdetailPreparedByUsers { get; set; }

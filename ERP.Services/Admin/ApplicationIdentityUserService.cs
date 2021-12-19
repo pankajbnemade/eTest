@@ -4,9 +4,12 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Admin.Interface;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +21,11 @@ namespace ERP.Services.Admin
 {
     public class ApplicationIdentityUserService : Repository<ApplicationIdentityUser>, IApplicationIdentityUser
     {
-        public ApplicationIdentityUserService(ErpDbContext dbContext) : base(dbContext) { }
+        private readonly UserManager<ApplicationIdentityUser> userManager;
+        public ApplicationIdentityUserService(ErpDbContext dbContext, UserManager<ApplicationIdentityUser> _userManager) : base(dbContext)
+        {
+            userManager = _userManager;
+        }
 
         public async Task<int> CreateUser(ApplicationIdentityUserModel applicationIdentityUserModel)
         {
@@ -38,15 +45,44 @@ namespace ERP.Services.Admin
             bool isUpdated = false;
 
             // get record.
-            ApplicationIdentityUser applicationIdentityUser = await GetQueryByCondition(w => w.Id == applicationIdentityUserModel.Id)
-                                                                .FirstOrDefaultAsync();
+            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(applicationIdentityUserModel.Id.ToString());
 
             if (null != applicationIdentityUser)
             {
                 // assign values.
-                applicationIdentityUser.LockoutEnd = applicationIdentityUserModel.LockoutEnd;
+                applicationIdentityUser.EmployeeId = applicationIdentityUserModel.EmployeeId;
 
-                isUpdated = await Update(applicationIdentityUser);
+                IdentityResult result = await userManager.UpdateAsync(applicationIdentityUser);
+
+                isUpdated = result.Succeeded;
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> LockUnlock(int userId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(userId.ToString());
+
+            if (null != applicationIdentityUser)
+            {
+                // assign values.
+                if (applicationIdentityUser.LockoutEnd != null && applicationIdentityUser.LockoutEnd > DateTime.Now)
+                {
+                    //user is currently locked, we will unlock them
+                    applicationIdentityUser.LockoutEnd = DateTime.Now;
+                }
+                else
+                {
+                    applicationIdentityUser.LockoutEnd = DateTime.Now.AddYears(1000);
+                }
+
+                IdentityResult result = await userManager.UpdateAsync(applicationIdentityUser);
+
+                isUpdated = result.Succeeded;
             }
 
             return isUpdated; // returns.
@@ -101,7 +137,7 @@ namespace ERP.Services.Admin
             IList<ApplicationIdentityUserModel> applicationIdentityUserModelList = null;
 
             // create query.
-            IQueryable<ApplicationIdentityUser> query = GetQueryByCondition(w => w.Id != 0);
+            IQueryable<ApplicationIdentityUser> query = userManager.Users.Where(w => w.Id != 0);
 
             // apply filters.
             if (0 != userId)
@@ -112,6 +148,7 @@ namespace ERP.Services.Admin
 
             // get records by query.
             List<ApplicationIdentityUser> applicationIdentityUserList = await query.ToListAsync();
+
             if (null != applicationIdentityUserList && applicationIdentityUserList.Count > 0)
             {
                 applicationIdentityUserModelList = new List<ApplicationIdentityUserModel>();
@@ -147,9 +184,9 @@ namespace ERP.Services.Admin
                 applicationIdentityUserModel.LockoutEnabled = applicationIdentityUser.LockoutEnabled;
                 applicationIdentityUserModel.AccessFailedCount = applicationIdentityUser.AccessFailedCount;
 
-
                 return applicationIdentityUserModel;
             });
         }
+
     }
 }

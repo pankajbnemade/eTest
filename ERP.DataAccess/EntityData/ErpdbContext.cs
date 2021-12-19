@@ -10,11 +10,12 @@ namespace ERP.DataAccess.EntityData
 {
     public partial class ErpDbContext : IdentityDbContext<ApplicationIdentityUser, ApplicationRole, int>
     {
-       
+
         public ErpDbContext(DbContextOptions<ErpDbContext> options)
             : base(options)
         {
         }
+
 
         public virtual DbSet<Advanceadjustment> Advanceadjustments { get; set; }
         public virtual DbSet<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
@@ -79,8 +80,8 @@ namespace ERP.DataAccess.EntityData
 //        {
 //            if (!optionsBuilder.IsConfigured)
 //            {
-////#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                //optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.23-mysql"));
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.27-mysql"));
 //            }
 //        }
 
@@ -348,6 +349,9 @@ namespace ERP.DataAccess.EntityData
             {
                 entity.ToTable("aspnetusers");
 
+                entity.HasIndex(e => e.EmployeeId)
+                    .HasName("FK_aspnetusers_Employee_EmployeeId_idx");
+
                 entity.HasIndex(e => e.NormalizedEmail)
                     .HasName("EmailIndex");
 
@@ -394,6 +398,12 @@ namespace ERP.DataAccess.EntityData
                     .HasColumnType("varchar(256)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.Aspnetusers)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_aspnetusers_Employee_EmployeeId");
             });
 
             modelBuilder.Entity<Aspnetuserclaim>(entity =>

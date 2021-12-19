@@ -23,6 +23,7 @@ namespace ERP.UI.Areas.Identity.Pages.Account
 
         [TempData]
         public string StatusMessage { get; set; }
+        public bool ShowLogin { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {
@@ -40,6 +41,8 @@ namespace ERP.UI.Areas.Identity.Pages.Account
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
             StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            ShowLogin = result.Succeeded ? true : false;
+
             return Page();
         }
     }

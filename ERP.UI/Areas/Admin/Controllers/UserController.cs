@@ -1,11 +1,9 @@
-﻿using ERP.DataAccess.Entity;
-using ERP.Models.Admin;
+﻿using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Services.Admin.Interface;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,26 +14,18 @@ namespace ERP.UI.Areas.Admin.Controllers
     [Area("Admin")]
     public class UserController : Controller
     {
-        private readonly UserManager<ApplicationIdentityUser> _userManager;
-        private readonly SignInManager<ApplicationIdentityUser> _signInManager;
         private readonly IApplicationIdentityUser _aplicationIdentityUser;
-        private readonly IEmailSender _emailSender;
         private readonly ILogger<UserController> _logger;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public UserController(UserManager<ApplicationIdentityUser> userManager,
-                            SignInManager<ApplicationIdentityUser> signInManager,
+        public UserController(
                             IApplicationIdentityUser aplicationIdentityUser,
                             ILogger<UserController> logger,
-                            IEmailSender emailSender,
                             IWebHostEnvironment hostEnvironment
                             )
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
             _aplicationIdentityUser = aplicationIdentityUser;
             _logger = logger;
-            _emailSender = emailSender;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -58,32 +48,18 @@ namespace ERP.UI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> LockUnlock(int id)
         {
-             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-            ApplicationIdentityUserModel userModel = await _aplicationIdentityUser.GetApplicationIdentityUserByUserId(id);
-
-            if (userModel == null)
+            if (id > 0)
             {
-                data.Result.Status = false;
-                data.Result.Message = "Error while Locking/Unlocking";
-                return Json(data);
-            }
-            if (userModel.LockoutEnd != null && userModel.LockoutEnd > DateTime.Now)
-            {
-                //user is currently locked, we will unlock them
-                userModel.LockoutEnd = DateTime.Now;
-            }
-            else
-            {
-                userModel.LockoutEnd = DateTime.Now.AddYears(1000);
+                // update record.
+                if (true == await _aplicationIdentityUser.LockUnlock(id))
+                {
+                    data.Result.Status = true;
+                    data.Result.Message = "Action successful ";
+                }
             }
 
-            if (true == await _aplicationIdentityUser.UpdateUser(userModel))
-            {
-                data.Result.Status = true;
-                data.Result.Message = "Action successful ";
-            }
-            
             return Json(data); // returns.
         }
 

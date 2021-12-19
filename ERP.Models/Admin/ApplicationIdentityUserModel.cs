@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Admin
 {
@@ -29,6 +30,8 @@ namespace ERP.Models.Admin
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+
+        [Display(Name = "Employee")]
         public int EmployeeId { get; set; }
     }
 }

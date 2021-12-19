@@ -13,6 +13,9 @@
   <ItemGroup>
     <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewVoucherSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceSummary.cshtml" />
+    <Content Remove="Areas\Admin\Views\Role\Index.cshtml" />
+    <Content Remove="Areas\Admin\Views\Role\_AddRole.cshtml" />
+    <Content Remove="Areas\Admin\Views\Role\_ConfirmDeleteRole.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -151,6 +154,9 @@
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
+    <None Include="Areas\Admin\Views\Role\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Role\_AddRole.cshtml" />
+    <None Include="Areas\Admin\Views\Role\_ConfirmDeleteRole.cshtml" />
     <None Include="Areas\Admin\Views\User\Index.cshtml" />
     <None Include="Areas\Admin\Views\User\UserInformation.cshtml" />
     <None Include="Areas\Admin\_ViewImports.cshtml" />
@@ -258,6 +264,10 @@
     <None Update="ReportDataset\Master\dsCompany.xss">
       <DependentUpon>dsCompany.xsd</DependentUpon>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\AssignRole\" />
   </ItemGroup>
 
 </Project>

@@ -80,10 +80,11 @@ namespace ERP.UI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/Admin/User/UserInformation");
+            returnUrl = returnUrl ?? Url.Content("~/");
 
             if (ModelState.IsValid)
             {
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -92,6 +93,9 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
 
                     ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserByEmail(Input.Email);
+
+                    ///Added to set default session -- By Pankaj
+
                     UserSessionModel userSessionModel = new UserSessionModel();
 
                     userSessionModel.UserId = applicationUser.Id;
@@ -108,6 +112,9 @@ namespace ERP.UI.Areas.Identity.Pages.Account
 
                     return LocalRedirect(returnUrl);
                 }
+
+
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
@@ -117,10 +124,29 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
+                //else
+                //{
+                //    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                //    return Page();
+                //}
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    var user = await _userManager.FindByNameAsync(Input.Email);
+
+                    //Add this to check if the email was confirmed.
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError("", "You need to confirm your email.");
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                        return Page();
+                    }
+
                 }
             }
 

@@ -4,19 +4,46 @@
     ViewData["Title"] = "Register confirmation";
 }
 
-<h5>@ViewData["Title"]</h5>
+<h5 style="text-align:center">@ViewData["Title"]</h5>
 @{
+    @Html.HiddenFor(m => m.Email)
+
     if (@Model.DisplayConfirmAccountLink)
     {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
+        if (Model.Message != null)
+        {
+            <h6 class="text-info">@Model.Message</h6>
+        }
+        <p style="text-align: justify">
+            <span class="text-info">@Model.Email</span> is not confirmed, please confirm email to activate your account.
+        </p>
+        <p style="text-align: justify">
+            Please check your email to confirm your account.  If you have not received confirmation email,
+        </p>
+        <div class="row">
+            <div class="col-sm-12 text-justify">
+                @{string href = "/Identity/Account/RegisterConfirmation?email=" + @Model.Email + "&returnUrl=" + "&message=Confirmation email Sent Successfully.";}
+
+                @*If you have not received confirmation email <a id="confirm-link" href="@href">Click here to receive verification email</a>*@
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <a id="confirm-link" class="btn btn-primary btn-block" href="@href">Click here to receive confirmation email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-sm-12">
+                <a id="login-link" class="btn btn-primary btn-block" href="/Identity/Account/Login">Click here to login</a>
+            </div>
+        </div>
     }
     else
     {
-<p>
-        Please check your email to confirm your account.
-</p>
+        <p>
+            Please check your email to confirm your account.
+        </p>
     }
 }

@@ -9,5 +9,6 @@ namespace ERP.DataAccess.Entity
 {
     public class ApplicationRole : IdentityRole<int>
     {
+        
     }
 }

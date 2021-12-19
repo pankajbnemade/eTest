@@ -9,9 +9,11 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
-                        <button class="btn btn-primary btn-block" type="button" id="add-new-user">
-                            <i class="fas fa-plus"></i> New
-                        </button>
+                        <a href="/identity/account/register" class="btn btn-primary btn-block"><i class="fas fa-plus"></i> New</a>
+
+                        @*<button class="btn btn-primary btn-block" type="button" id="add-new-user">
+                                <i class="fas fa-plus"></i> New
+                            </button>*@
                     </li>
                 </ol>
             </div>
@@ -44,104 +46,92 @@
 </section>
 
 <script type="text/javascript">
-$(document).ready(function () {
-    $("#userGrid").DataTable({
-        //dom: 'lftip',
-        "pageLength": 25,
-        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
-        "bPaginate": true,
-        //"bInfo": true,
-        //"bRetrieve": true,
-        //"bFilter": true,
-        //"iDisplayLength": 5,
-        //"bSort": true,
-        //"aaSorting": [],
-        //"order": [],
-        //scrollY: "50vh",
-        //scrollCollapse: true,
 
-        "ajax": {
-            "url": "@Url.Action("GetUserList", "User")",
-            "type": "POST",
-            "datatype": "json",
-        },
-        "columns": [
-        /*{ "data": "Id", "name": "User Id" },*/
+    $(document).ready(function () {
 
-            {
-                "render": function (data, type, full, meta) {
-                    var button = '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditUser(' + full.Id + ')"><i class="far fa-edit"></i></button>' 
-                        /*'<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteUser(this, ' + full.Id + ')"><i class="fa fa-trash-alt"></i></button>' +*/
-                        ;
+        $("#userGrid").DataTable({
+            //dom: 'lftip',
+            "pageLength": 25,
+            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "bPaginate": true,
+            "scrollX": true,
+            //"bInfo": true,
+            //"bRetrieve": true,
+            //"bFilter": true,
+            //"iDisplayLength": 5,
+            //"bSort": true,
+            //"aaSorting": [],
+            //"order": [],
+            //scrollY: "50vh",
+            //scrollCollapse: true,
 
-                    var today = new Date().getTime();
-                    var lockout = new Date(full.LockoutEnd).getTime();
-
-                    if (lockout > today) {
-                        //user is currently locked
-                        button = button +  `
-                                <a onclick=LockUnlock('${full.Id}') class="border-0 rounded-0 text-danger" style="cursor:pointer;" title="Unlock">
-                                    <i class="fas fa-lock-open"></i>  
-                                </a>
-                           `;
-                    }
-                    else {
-                        button = button +  `
-                                <a onclick=LockUnlock('${full.Id}') class="border-0 rounded-0 text-success" style="cursor:pointer;" title="Lock">
-                                    <i class="fas fa-lock"></i>  
-                                </a>
-                           `;
-                    }
-
-                    button = button + '</div>';
-
-                    return button;
-                }, "orderable": false
+            "ajax": {
+                "url": "@Url.Action("GetUserList", "User")",
+                "type": "POST",
+                "datatype": "json",
             },
-            { "data": "UserName", "name": "User Name" },
-            { "data": "Email", "name": "Email" },
-            {
-                render: function (data, type, full, meta) {
-                    if (full.EmailConfirmed == true) {
-                        return '<i class="fas fa-check text-success"></i>';
-                    } else {
-                        return '';
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        var button = "";
+                        //button = button+
+                        //    '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditUser(' + full.Id + ');"><i class="far fa-edit"></i></button>';
+
+                        //button = button
+                        //    + '<button type="button" class="border-0 rounded-0 text-info" onclick="javascript: fnConfirmEmail(' + full.Id + ');"><i class="fas fa-key"></i></button>';
+
+                        var today = new Date().getTime();
+                        var lockout = new Date(full.LockoutEnd).getTime();
+
+                        if (lockout > today) {
+                            //user is currently locked
+                            button = button
+                                    + '<button class="border-0 rounded-0 text-danger" onclick="javascript: fnLockUnlock(' + full.Id + ');" title="Unlock"><i class="fas fa-lock-open"></i></button>';
+                        }
+                        else {
+                            button = button
+                                + '<button class="border-0 rounded-0 text-success" onclick="javascript: fnLockUnlock(' + full.Id + ');" title="Lock"><i class="fas fa-lock"></i></button>';
+                        }
+
+                        return button;
+                    }, "orderable": false
+                },
+                { "data": "UserName", "name": "User Name" },
+                { "data": "Email", "name": "Email" },
+                {
+                    render: function (data, type, full, meta) {
+                        if (full.EmailConfirmed == true) {
+                            return '<i class="fas fa-check text-success"></i>';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
+                {
+                    "data": "LockoutEnd", "name": "LockoutEnd",
+                    "render": function (dt) {
+
+                        return dt==null ?"" :moment(dt).format("DD/MMM/YYYY");
                     }
                 }
-            },
-            {
-                "data": "LockoutEnd", "name": "LockoutEnd",
-                "render": function (dt) {
 
-                    return dt==null ?"" :moment(dt).format("DD/MMM/YYYY");
-                }
-            }
-            
-        ],
+            ],
+        });
+
     });
-});
+
+    // add new record.
+    $('#add-new-user').click(function () {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddUser", "User")', 'html', '',
+        function (data) {
+            $('#modal-user-master').empty();
+            $('#modal-user-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
 
 
-
-    function LockUnlock(id) {
-
-        @*$.ajax({
-            type: "POST",
-            url: '@Url.Action("LockUnlock", "User")',
-            data: id,
-            contentType: "application/json",
-            success: function (data) {
-                if (data.success) {
-                    toastr.success(data.message);
-                    dataTable.ajax.reload();
-                }
-                else {
-                    toastr.error(data.message);
-                }
-            }
-        });*@
-
+    function fnLockUnlock(id) {
         var model = { id: id };
         AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("LockUnlock", "User")', '', model,
         function (data) {
@@ -154,27 +144,17 @@ $(document).ready(function () {
                 fnDangerNotify(data.Result.Message);
             }
         }, null, true, null, false);
-
     }
 
-// add new record.
-$('#add-new-user').click(function () {
-    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddUser", "User")', 'html', '',
-    function (data) {
-        $('#modal-user-master').empty();
-        $('#modal-user-master').html(data).modal('show');
-        return false;
-    }, null, true, null, false);
-});
-
-// edit user
+    // edit user
     function fnEditUser(id) {
-        var model = { id: id };
-        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditUser", "User")', 'html', model,
-        function (data) {
-            $('#modal-user-master').empty();
-            $('#modal-user-master').html(data).modal('show');
-            return false;
-        }, null, true, null, false);
+        window.location.href = '/Identity/Account/Register?userId=' + id;
     }
+
+    //// confirm email
+    //function fnConfirmEmail(text) {
+    //    //window.open("/Identity/Account/RegisterConfirmation?email=" + id +"&returnUrl=");
+    //    alert(text);
+    //}
+
 </script>

@@ -120,7 +120,7 @@ namespace ERP.UI
             #region Admin
 
             services.AddTransient<IApplicationIdentityUser, ApplicationIdentityUserService>();
-
+            services.AddTransient<IApplicationRole, ApplicationRoleService>();
 
             #endregion
 

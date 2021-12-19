@@ -40,9 +40,17 @@ namespace ERP.UI
             string mySqlConnectionStr = Configuration.GetValue<string>("AppSettings:ErplanConnString");
             services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
-            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>()
-                    .AddDefaultTokenProviders()
-                    .AddEntityFrameworkStores<ErpDbContext>();
+            //services.AddIdentity<ApplicationIdentityUser, ApplicationRole>()
+            //        .AddDefaultTokenProviders()
+            //        .AddEntityFrameworkStores<ErpDbContext>();
+
+            services.AddIdentity<ApplicationIdentityUser, ApplicationRole>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+            .AddDefaultTokenProviders()
+            .AddEntityFrameworkStores<ErpDbContext>();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -53,23 +61,23 @@ namespace ERP.UI
 
             services.AddAuthentication().AddFacebook(options =>
             {
-               options.AppId = "479144716347128";
-               options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
+                options.AppId = "479144716347128";
+                options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
             });
             services.AddAuthentication().AddMicrosoftAccount(options =>
             {
-               options.ClientId = "479144716347128";
-               options.ClientSecret = "8888cefba55e9cfa06a2b28f0495e533";
+                options.ClientId = "479144716347128";
+                options.ClientSecret = "8888cefba55e9cfa06a2b28f0495e533";
             });
 
             services.AddAuthentication().AddGoogle(options =>
             {
-                options.ClientId = "751413081977-ct8rrlcf8cgt8f42b5evots13mg458lt.apps.googleusercontent.com";
-                options.ClientSecret = "LPRLug47n8OQsYAirUVGofLw";
+                options.ClientId = "457450439478-477bgc7uvgfo9ck8bel6i0rkrjk0q266.apps.googleusercontent.com";
+                options.ClientSecret = "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";
 
             });
 
-             services.AddControllers();
+            services.AddControllers();
             services.AddControllersWithViews()
             .AddRazorRuntimeCompilation()
             .AddNewtonsoftJson(options =>
