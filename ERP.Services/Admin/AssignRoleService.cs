@@ -30,52 +30,35 @@ namespace ERP.Services.Admin
             userManager = _userManager;
         }
 
-        public async Task<int> CreateRole(ApplicationRoleModel roleModel)
+        public async Task<bool> AddUserRole(AssignRoleModel assignRoleModel)
         {
-            int applicationRoleId = 0;
+            bool isAdded = false;
 
             // assign values.
-            ApplicationRole applicationRole = new ApplicationRole();
+            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(assignRoleModel.UserId.ToString());
+            ApplicationRole applicationRole = await roleManager.FindByIdAsync(assignRoleModel.RoleId.ToString());
 
-            applicationRole.Name = roleModel.Name;
-
-            IdentityResult result = await roleManager.CreateAsync(applicationRole);
-
-            applicationRoleId = applicationRole.Id;
-
-            return applicationRoleId; // returns.
-        }
-
-        public async Task<bool> UpdateRole(ApplicationRoleModel roleModel)
-        {
-            bool isUpdated = false;
-
-            // get record.
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(roleModel.Id.ToString());
-
-            if (null != applicationRole)
+            if (applicationIdentityUser != null && applicationRole != null && !(await userManager.IsInRoleAsync(applicationIdentityUser, applicationRole.Name)))
             {
-                // assign values.
-                applicationRole.Name = roleModel.Name;
-                
-                IdentityResult result = await roleManager.UpdateAsync(applicationRole);
+                IdentityResult result = await userManager.AddToRoleAsync(applicationIdentityUser, applicationRole.Name);
 
-                isUpdated = result.Succeeded;
+                isAdded = result.Succeeded;
             }
 
-            return isUpdated; // returns.
+            return isAdded; // returns.
         }
 
-        public async Task<bool> DeleteRole(int applicationRoleId)
+        public async Task<bool> DeleteUserRole(int userId, int roleId)
         {
             bool isDeleted = false;
 
             // get record.
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(applicationRoleId.ToString());
+            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationRole applicationRole = await roleManager.FindByIdAsync(roleId.ToString());
 
-            if (null != applicationRole)
+            if (applicationIdentityUser != null && applicationRole != null && (await userManager.IsInRoleAsync(applicationIdentityUser, applicationRole.Name)))
             {
-                IdentityResult result = await roleManager.DeleteAsync(applicationRole);
+                IdentityResult result = await userManager.RemoveFromRoleAsync(applicationIdentityUser, applicationRole.Name);
 
                 isDeleted = result.Succeeded;
             }
@@ -83,29 +66,15 @@ namespace ERP.Services.Admin
             return isDeleted; // returns.
         }
 
-        public async Task<ApplicationRoleModel> GetApplicationRoleById(int applicationRoleId)
+        public async Task<DataTableResultModel<AssignRoleModel>> GetUserRoleList()
         {
-            ApplicationRoleModel roleModel = null;
+            DataTableResultModel<AssignRoleModel> resultModel = new DataTableResultModel<AssignRoleModel>();
 
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(applicationRoleId.ToString());
-
-            if (null != applicationRole)
-            {
-                roleModel = await AssignValueToModel(applicationRole);
-            }
-
-            return roleModel; // returns.
-        }
-
-        public async Task<DataTableResultModel<ApplicationRoleModel>> GetApplicationRoleList()
-        {
-            DataTableResultModel<ApplicationRoleModel> resultModel = new DataTableResultModel<ApplicationRoleModel>();
-
-            IList<ApplicationRoleModel> roleModelList = await GetRoleList();
+            IList<AssignRoleModel> roleModelList = await GetAllUserRoleList();
 
             if (null != roleModelList && roleModelList.Any())
             {
-                resultModel = new DataTableResultModel<ApplicationRoleModel>();
+                resultModel = new DataTableResultModel<AssignRoleModel>();
                 resultModel.ResultList = roleModelList;
                 resultModel.TotalResultCount = roleModelList.Count();
             }
@@ -113,63 +82,43 @@ namespace ERP.Services.Admin
             return resultModel; // returns.
         }
 
-
-        /// <summary>
-        /// get all applicationRole list.
-        /// </summary>
-        /// <returns>
-        /// return list.
-        /// </returns>
-        public async Task<IList<ApplicationRoleModel>> GetRoleList()
+        public async Task<IList<AssignRoleModel>> GetAllUserRoleList()
         {
-            IList<ApplicationRoleModel> roleModelList = null;
+            IList<AssignRoleModel> roleModelList = null;
 
-            IList<ApplicationRole> roleList = await roleManager.Roles.ToListAsync();
+            IQueryable<Aspnetuserrole> query = GetQueryByCondition(w => w.UserId != 0)
+                                                .Include(w => w.User)
+                                                .Include(w => w.Role);
+            
+            IList<Aspnetuserrole> userRoleList = await query.ToListAsync();
 
-            if (null != roleList && roleList.Count > 0)
+            if (null != userRoleList && userRoleList.Count > 0)
             {
-                roleModelList = new List<ApplicationRoleModel>();
+                roleModelList = new List<AssignRoleModel>();
 
-                foreach (ApplicationRole applicationRole in roleList)
+                foreach (Aspnetuserrole aspNetUserRole in userRoleList)
                 {
-                    roleModelList.Add(await AssignValueToModel(applicationRole));
+                    roleModelList.Add(await AssignValueToModel(aspNetUserRole));
                 }
             }
 
             return roleModelList; // returns.
         }
 
-        private async Task<ApplicationRoleModel> AssignValueToModel(ApplicationRole applicationRole)
+        private async Task<AssignRoleModel> AssignValueToModel(Aspnetuserrole aspNetUserRole)
         {
             return await Task.Run(() =>
             {
-                ApplicationRoleModel roleModel = new ApplicationRoleModel();
+                AssignRoleModel roleModel = new AssignRoleModel();
 
-                roleModel.Id = applicationRole.Id;
-                roleModel.Name = applicationRole.Name;
-                roleModel.NormalizedName = applicationRole.NormalizedName;
-                roleModel.ConcurrencyStamp = applicationRole.ConcurrencyStamp;
+                roleModel.UserId = aspNetUserRole.UserId;
+                roleModel.Email = aspNetUserRole.User.Email;
+                roleModel.RoleId = aspNetUserRole.RoleId;
+                roleModel.RoleName = aspNetUserRole.Role.Name;
 
                 return roleModel;
             });
         }
 
-        public async Task<IList<SelectListModel>> GetRoleSelectList()
-        {
-            IList<SelectListModel> resultModel = null;
-
-            if (await Any(w => w.Id != 0))
-            {
-                IQueryable<ApplicationRole> roleList = roleManager.Roles;
-
-                resultModel = await roleList.Select(s => new SelectListModel
-                {
-                    DisplayText = s.Name,
-                    Value = s.Id.ToString()
-                }).OrderBy(w => w.DisplayText).ToListAsync();
-            }
-
-            return resultModel; // returns.
-        }
     }
 }

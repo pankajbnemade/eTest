@@ -31,6 +31,7 @@
                                 <tr class="table-header">
                                     @*<th>User Id</th>*@
                                     <th>Action</th>
+                                    <th>Employee Name</th>
                                     <th>User Name</th>
                                     <th>Email</th>
                                     <th>EmailConfirmed</th>
@@ -96,7 +97,8 @@
                         return button;
                     }, "orderable": false
                 },
-                { "data": "UserName", "name": "User Name" },
+                { "data": "EmployeeName", "name": "EmployeeName" },
+                { "data": "UserName", "name": "UserName" },
                 { "data": "Email", "name": "Email" },
                 {
                     render: function (data, type, full, meta) {

@@ -25,5 +25,7 @@ namespace ERP.Services.Admin.Interface
         Task<ApplicationIdentityUserModel> GetApplicationIdentityUserByEmail(string email);
 
         Task<DataTableResultModel<ApplicationIdentityUserModel>> GetApplicationIdentityUserList();
+
+        Task<IList<SelectListModel>> GetUserSelectList();
     }
 }

@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "User Role List";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-primary btn-block" type="button" id="add-new-role">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="roleGrid" class="table table-bordered table-striped w-100">
+                            <thead>
+                                <tr class="table-header">
+                                    @*<th>Role Id</th>*@
+                                    <th>Action</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#roleGrid").DataTable({
+
+        //dom: 'lftip',
+        "pageLength": 25,
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "bPaginate": true,
+        //"bInfo": true,
+        //"bRetrieve": true,
+        //"bFilter": true,
+        //"iDisplayLength": 5,
+        //"bSort": true,
+        //"aaSorting": [],
+        //"order": [],
+        //scrollY: "50vh",
+        //scrollCollapse: true,
+
+        "ajax": {
+            "url": "@Url.Action("GetUserRoleList", "AssignRole")",
+            "type": "POST",
+            "datatype": "json",
+        },
+        "columns": [
+        /*{ "data": "RoleId", "name": "Role Id" },*/
+
+            {
+                "render": function (data, type, full, meta) {
+                    return '<div class="action_button">' +
+                        /*'<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditRole(' + full.Id + ')"><i class="far fa-edit"></i></button>' +*/
+                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteUserRole(this, ' + full.UserId + ', ' + full.RoleId + ')"><i class="fa fa-trash-alt"></i></button>' +
+                        '</div>';
+                }, "orderable": false, "width":"10%"
+            },
+            { "data": "Email", "name": "Email" },
+            { "data": "RoleName", "name": "RoleName" }
+        ],
+    });
+});
+
+// add new record.
+$('#add-new-role').click(function () {
+    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddUserRole", "AssignRole")', 'html', '',
+    function (data) {
+        $('#modal-role-master').empty();
+        $('#modal-role-master').html(data).modal('show');
+        return false;
+    }, null, true, null, false);
+});
+
+</script>
+
+@{ await Html.RenderPartialAsync("_ConfirmDeleteUserRole"); }
+<div id="modal-role-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

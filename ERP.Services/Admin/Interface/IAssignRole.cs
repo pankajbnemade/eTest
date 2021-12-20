@@ -12,9 +12,7 @@ namespace ERP.Services.Admin.Interface
 {
     public interface IAssignRole : IRepository<Aspnetuserrole>
     {
-        Task<int> AddUserRole(AssignRoleModel assignRoleModel);
-
-        Task<ApplicationRoleModel> GetApplicationRoleById(int roleId);
+        Task<bool> AddUserRole(AssignRoleModel assignRoleModel);
 
         Task<bool> DeleteUserRole(int email, int roleId);
 

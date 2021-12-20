@@ -137,7 +137,7 @@ namespace ERP.Services.Admin
             IList<ApplicationIdentityUserModel> applicationIdentityUserModelList = null;
 
             // create query.
-            IQueryable<ApplicationIdentityUser> query = userManager.Users.Where(w => w.Id != 0);
+            IQueryable<ApplicationIdentityUser> query = userManager.Users.Where(w => w.Id != 0).Include(w => w.Employee);
 
             // apply filters.
             if (0 != userId)
@@ -183,9 +183,27 @@ namespace ERP.Services.Admin
                 applicationIdentityUserModel.LockoutEnd = applicationIdentityUser.LockoutEnd;
                 applicationIdentityUserModel.LockoutEnabled = applicationIdentityUser.LockoutEnabled;
                 applicationIdentityUserModel.AccessFailedCount = applicationIdentityUser.AccessFailedCount;
-
+                applicationIdentityUserModel.EmployeeName = null != applicationIdentityUser.Employee ? applicationIdentityUser.Employee.FirstName + " " + applicationIdentityUser.Employee.LastName : null;
                 return applicationIdentityUserModel;
             });
+        }
+
+        public async Task<IList<SelectListModel>> GetUserSelectList()
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.Id != 0))
+            {
+                IQueryable<ApplicationIdentityUser> roleList = userManager.Users;
+
+                resultModel = await roleList.Select(s => new SelectListModel
+                {
+                    DisplayText = s.Email,
+                    Value = s.Id.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
         }
 
     }

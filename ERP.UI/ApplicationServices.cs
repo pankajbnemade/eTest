@@ -121,6 +121,7 @@ namespace ERP.UI
 
             services.AddTransient<IApplicationIdentityUser, ApplicationIdentityUserService>();
             services.AddTransient<IApplicationRole, ApplicationRoleService>();
+            services.AddTransient<IAssignRole, AssignRoleService>();
 
             #endregion
 

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ERP.Models.Admin;
+using ERP.Models.Common;
+using ERP.Models.Helpers;
+using ERP.Services.Admin.Interface;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +15,14 @@ namespace ERP.UI.Areas.Admin.Controllers
     {
 
         private readonly IAssignRole _assignRole;
+        private readonly IApplicationIdentityUser _user;
+        private readonly IApplicationRole _role;
 
-        public AssignRoleController(IApplicationRole assignRole)
+        public AssignRoleController(IAssignRole assignRole, IApplicationIdentityUser user, IApplicationRole role)
         {
             _assignRole = assignRole;
+            _user = user;
+            _role = role;
         }
 
         public async Task<IActionResult> Index()
@@ -25,76 +33,58 @@ namespace ERP.UI.Areas.Admin.Controllers
             });
         }
 
-        //[HttpPost]
-        //public async Task<JsonResult> GetRoleList()
-        //{
-        //    DataTableResultModel<ApplicationRoleModel> resultModel = await _assignRole.GetApplicationRoleList();
+        [HttpPost]
+        public async Task<JsonResult> GetUserRoleList()
+        {
+            DataTableResultModel<AssignRoleModel> resultModel = await _assignRole.GetUserRoleList();
 
-        //    return await Task.Run(() =>
-        //    {
-        //        return Json(new { draw = 1, data = resultModel.ResultList });
-        //    });
-        //}
+            return await Task.Run(() =>
+            {
+                return Json(new { draw = 1, data = resultModel.ResultList });
+            });
+        }
 
+        [HttpGet]
+        public async Task<PartialViewResult> AddUserRole()
+        {
+            ViewBag.UserList = await _user.GetUserSelectList();
+            ViewBag.RoleList = await _role.GetRoleSelectList();
 
-        //[HttpGet]
-        //public async Task<PartialViewResult> AddRole()
-        //{
-        //    return await Task.Run(() =>
-        //    {
-        //        return PartialView("_AddRole", new ApplicationRoleModel());
-        //    });
-        //}
+            return await Task.Run(() =>
+            {
+                return PartialView("_AddUserRole", new AssignRoleModel());
+            });
+        }
 
-        //[HttpGet]
-        //public async Task<PartialViewResult> EditRole(int roleId)
-        //{
-        //    ApplicationRoleModel applicationRoleModel = await _assignRole.GetApplicationRoleById(roleId);
+        [HttpPost]
+        public async Task<JsonResult> SaveUserRole(AssignRoleModel assignRoleModel)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-        //    return PartialView("_AddRole", applicationRoleModel);
-        //}
+            if (ModelState.IsValid)
+            {
+                // add new record.
+                if (await _assignRole.AddUserRole(assignRoleModel))
+                {
+                    data.Result.Status = true;
+                }
+            }
 
-        //[HttpPost]
-        //public async Task<JsonResult> SaveRole(ApplicationRoleModel applicationRoleModel)
-        //{
-        //    JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+            return Json(data);
+        }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (applicationRoleModel.Id > 0)
-        //        {
-        //            // update record.
-        //            if (true == await _assignRole.UpdateRole(applicationRoleModel))
-        //            {
-        //                data.Result.Status = true;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // add new record.
-        //            if (await _assignRole.CreateRole(applicationRoleModel) > 0)
-        //            {
-        //                data.Result.Status = true;
-        //            }
-        //        }
-        //    }
+        [HttpPost]
+        public async Task<JsonResult> DeleteUserRole(int userId, int roleId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
-        //    return Json(data);
-        //}
+            if (true == await _assignRole.DeleteUserRole(userId, roleId))
+            {
+                data.Result.Status = true;
+            }
 
-        //[HttpPost]
-        //public async Task<JsonResult> DeleteRole(int roleId)
-        //{
-        //    JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
-
-        //    if (true == await _assignRole.DeleteRole(roleId))
-        //    {
-        //        data.Result.Status = true;
-        //    }
-
-        //    return Json(data); // returns.
-        //}
-
+            return Json(data); // returns.
+        }
 
     }
 }

@@ -20,5 +20,7 @@ namespace ERP.Services.Admin.Interface
 
         Task<bool> DeleteRole(int applicationRoleId);
         Task<DataTableResultModel<ApplicationRoleModel>> GetApplicationRoleList();
+
+        Task<IList<SelectListModel>> GetRoleSelectList();
     }
 }
