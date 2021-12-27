@@ -21,7 +21,7 @@
                 <table id="financialYearlistgrid" class="table table-bordered table-striped w-100">
                     <thead>
                         <tr class="table-header">
-                            <th></th>
+                            <th class="no-sort"></th>
                             @*<th>Financial Year Id</th>*@
                             <th>Financial Year Name</th>
 
@@ -50,9 +50,9 @@
                 {
                     "render": function (data, type, full, meta) {
                         return '<div class="action_button">' +
-                            '<button class="border-0 rounded-0 text-success" type="button" onclick="javascript: fnSelectFinancialYear(' + full.FinancialYearId + ')"><i class="far fa-check-square"></i></button>' +
+                            '<button class="border-0 rounded-0 text-success" type="button" onclick="javascript: fnSelectFinancialYear(' + full.FinancialYearId + ')"><i class="far fa-check-square fa-lg"></i></button>' +
                             '</div>';
-                    }, "orderable": false, "width": "40px"
+                    }, "orderable": false, "width": "20px"
                 },
                 /*{ "data": "FinancialYearId", "name": "FinancialYear Id" },*/
                 { "data": "FinancialYearName", "name": "FinancialYear Name" }

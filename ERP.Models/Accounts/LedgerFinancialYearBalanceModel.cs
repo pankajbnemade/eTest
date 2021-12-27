@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ERP.Models.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Accounts
 {
@@ -18,19 +19,13 @@ namespace ERP.Models.Accounts
         [Display(Name = "Company Name")]
         public int CompanyId { get; set; }
 
-        [Required(ErrorMessage = "Currency Name is required.")]
-        [Display(Name = "Currency Name")]
-        public int CurrencyId { get; set; }
+        [Display(Name = "Opening Balance Credit")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        public decimal CreditAmountOpBal { get; set; }
 
-        [Required(ErrorMessage = "Exchange Rate is required.")]
-        [Display(Name = "Exchange Rate")]
-        public decimal ExchangeRate { get; set; }
-
-        [Display(Name = "Opening Balance Amount Fc")]
-        public decimal OpeningBalanceAmountFc { get; set; }
-
-        [Display(Name = "Opening Balance Amount")]
-        public decimal OpeningBalanceAmount { get; set; }
+        [Display(Name = "Opening Balance Debit")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        public decimal DebitAmountOpBal { get; set; }
 
         //####
         [Display(Name = "Ledger Name")]
@@ -41,9 +36,6 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
-
-        [Display(Name = "Currency Name")]
-        public string CurrencyName { get; set; }
 
         [Display(Name = "Prepared By Name")]
         public string PreparedByName { get; set; }

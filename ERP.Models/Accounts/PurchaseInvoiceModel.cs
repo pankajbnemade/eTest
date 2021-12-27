@@ -69,12 +69,12 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = "Up to 6 Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Line Total Amount FC")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal TotalLineItemAmountFc { get; set; }
 
@@ -115,7 +115,7 @@ namespace ERP.Models.Accounts
         public string DiscountPercentageOrAmount { get; set; }
 
         [Display(Name = "Discount Per / Amount")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal DiscountPerOrAmountFc { get; set; }
 

@@ -99,6 +99,7 @@ $('#add-new-currencyconversion').click(function () {
 
 // edit currencyconversion
     function fnEditCurrencyConversion(conversionId) {
+        console.log(conversionId);
         var model = { conversionId: conversionId };
         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCurrencyConversion", "CurrencyConversion")', 'html', model,
         function (data) {

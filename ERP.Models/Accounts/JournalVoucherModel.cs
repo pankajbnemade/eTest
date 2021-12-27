@@ -25,7 +25,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = "Up to 6 Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
@@ -35,7 +35,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal AmountFc { get; set; }
 
@@ -47,19 +47,19 @@ namespace ERP.Models.Accounts
         public decimal Amount { get; set; }
 
         [Display(Name = "Debit Amount FC")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal CreditAmount { get; set; }
 
         [Display(Name = "Status")]

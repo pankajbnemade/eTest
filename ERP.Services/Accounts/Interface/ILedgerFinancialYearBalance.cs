@@ -15,6 +15,8 @@ namespace ERP.Services.Accounts.Interface
         
         Task<LedgerFinancialYearBalanceModel> GetLedgerFinancialYearBalanceById(int ledgerFinancialYearBalanceId);
 
+        Task<LedgerFinancialYearBalanceModel> GetLedgerFinancialYearBalance(int ledgerId, int companyId, int financialYearId);
+
         Task<DataTableResultModel<LedgerFinancialYearBalanceModel>> GetLedgerFinancialYearBalanceList();
     }
 }

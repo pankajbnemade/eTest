@@ -27,5 +27,7 @@ namespace ERP.Services.Admin.Interface
         Task<DataTableResultModel<ApplicationIdentityUserModel>> GetApplicationIdentityUserList();
 
         Task<IList<SelectListModel>> GetUserSelectList();
+
+        Task<bool> SetDefaultSession(string email);
     }
 }

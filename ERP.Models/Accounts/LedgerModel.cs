@@ -46,5 +46,11 @@ namespace ERP.Models.Accounts
         [Display(Name = "Closing Balance")]
         public decimal ClosingBalance { get; set; }
 
+        [Display(Name = "Opening Balance Credit")]
+        public decimal CreditAmountOpBal { get; set; }
+
+        [Display(Name = "Opening Balance Debit")]
+        public decimal DebitAmountOpBal { get; set; }
+
     }
 }

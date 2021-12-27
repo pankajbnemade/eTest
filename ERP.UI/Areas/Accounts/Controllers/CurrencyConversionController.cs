@@ -60,11 +60,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         [HttpGet]
-        public async Task<PartialViewResult> EditCurrencyConversion(int currencyConversionId)
+        public async Task<PartialViewResult> EditCurrencyConversion(int conversionId)
         {
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
 
-            CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetCurrencyConversionById(currencyConversionId);
+            CurrencyConversionModel currencyConversionModel = await _currencyConversion.GetCurrencyConversionById(conversionId);
 
             return PartialView("_AddCurrencyConversion", currencyConversionModel);
         }

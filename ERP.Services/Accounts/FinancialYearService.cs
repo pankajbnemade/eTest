@@ -56,6 +56,7 @@ namespace ERP.Services.Accounts
 
             // get record.
             Financialyear financialYear = await GetByIdAsync(w => w.FinancialYearId == financialYearId);
+
             if (null != financialYear)
             {
                 isDeleted = await Delete(financialYear);
@@ -134,6 +135,33 @@ namespace ERP.Services.Accounts
                 return financialYearModel;
             });
         }
+
+        public async Task<FinancialYearModel> GetFinancialYearByDateNCompanyId(int companyId, DateTime date)
+        {
+
+            FinancialYearModel financialYearModel = null;
+
+            // create query.
+            IQueryable<Financialyear> query = GetQueryByCondition(w => w.FinancialYearId != 0)
+                                                   .Include(w => w.Financialyearcompanyrelations);
+
+            query = query.Where(w => EF.Functions.DateDiffDay(w.FromDate, date) >= 0 && EF.Functions.DateDiffDay(date, w.ToDate) >= 0);
+
+            query = query.Where(w => w.Financialyearcompanyrelations.Any(c => c.CompanyId == companyId));
+
+            // get records by query.
+            Financialyear financialYear = await query.FirstOrDefaultAsync();
+
+            if (null != financialYear)
+            {
+                {
+                    financialYearModel = await AssignValueToModel(financialYear);
+                }
+            }
+
+            return financialYearModel; // returns.
+        }
+
 
         public async Task<IList<SelectListModel>> GetFinancialYearSelectList()
         {

@@ -36,20 +36,20 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Debit Amount FC")]
         [Required(ErrorMessage = "Debit Amount FC is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
         [Required(ErrorMessage = "Credit Amount FC is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         public decimal CreditAmount { get; set; }
 
         //###

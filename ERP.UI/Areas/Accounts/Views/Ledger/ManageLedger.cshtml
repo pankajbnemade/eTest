@@ -31,16 +31,20 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="master-tab" data-toggle="tab" href="#ledermaster" role="tab" aria-controls="ledermaster" aria-selected="true">Master</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="address-tab" data-toggle="tab" href="#lederaddress" role="tab" aria-controls="lederaddress" aria-selected="false">Address</a>
-                            </li>
-                           
+                            @if (ViewBag.IsAddressVisible == true)
+                            {
+                <li class="nav-item">
+                    <a class="nav-link" id="address-tab" data-toggle="tab" href="#lederaddress" role="tab" aria-controls="lederaddress" aria-selected="false">Address</a>
+                </li>}
+
                         </ul>
                     </div>
                     <div class="card-body p-3">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="ledermaster" role="tabpanel" aria-labelledby="master-tab"></div>
-                            <div class="tab-pane fade" id="lederaddress" role="tabpanel" aria-labelledby="address-tab"></div>
+                            @if (ViewBag.IsAddressVisible == true)
+                            {
+                <div class="tab-pane fade" id="lederaddress" role="tabpanel" aria-labelledby="address-tab"></div>}
                         </div>
                     </div>
                 </div>
@@ -78,7 +82,7 @@
             case 'lederaddress':
                 tabUrl = '@Url.Action("LedgerAddress", "LedgerAddress", new { ledgerId = ViewBag.LedgerId })';
                 break;
-         
+
             default:
                 break;
         }

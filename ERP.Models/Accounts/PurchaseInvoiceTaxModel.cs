@@ -24,7 +24,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Per or Amount FC")]
         [Required(ErrorMessage = "Tax Per or Amount FC is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal TaxPerOrAmountFc { get; set; }
 

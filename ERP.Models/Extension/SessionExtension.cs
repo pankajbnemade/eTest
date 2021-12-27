@@ -12,9 +12,11 @@ namespace ERP.Models.Extension
         /// <param name="session"></param>
         /// <param name="key"></param>
         /// <returns></returns>
+       
         public static T GetComplexData<T>(this ISession session, string key)
         {
             var data = session.GetString(key);
+
             if (data == null)
             {
                 return default(T);

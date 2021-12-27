@@ -25,7 +25,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Quantity")]
         [Required(ErrorMessage = "Quantity is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Up to 2 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Up to 2 Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Quantity { get; set; }
 
@@ -36,7 +36,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Unit Price")]
         [Required(ErrorMessage = "Unit Price is required.")]
-        [RegularExpression(RegexHelper.DecimalOnly, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
         [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
         public decimal UnitPrice { get; set; }
 

@@ -92,23 +92,25 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-                    ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserByEmail(Input.Email);
+                    await _aplicationIdentityUser.SetDefaultSession(Input.Email);
 
-                    ///Added to set default session -- By Pankaj
+                    //ApplicationIdentityUserModel applicationUser = await _signInManager.get(Input.Email);
 
-                    UserSessionModel userSessionModel = new UserSessionModel();
+                    /////Added to set default session -- By Pankaj
 
-                    userSessionModel.UserId = applicationUser.Id;
-                    userSessionModel.UserName = applicationUser.UserName;
+                    //UserSessionModel userSessionModel = new UserSessionModel();
 
-                    //start temporary avoid branch/financial year  selection
+                    //userSessionModel.UserId = applicationUser.Id;
+                    //userSessionModel.UserName = applicationUser.UserName;
 
-                    userSessionModel.CompanyId = 1;
-                    userSessionModel.FinancialYearId = 1;
+                    ////start temporary avoid branch/financial year  selection
+
+                    //userSessionModel.CompanyId = 1;
+                    //userSessionModel.FinancialYearId = 1;
 
                     //temporary avoid branch/financial year  selection
 
-                    SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+                    //SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
                     return LocalRedirect(returnUrl);
                 }

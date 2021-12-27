@@ -6,9 +6,12 @@ using ERP.Models.Admin;
 using ERP.Models.Common;
 using ERP.Models.Extension;
 using ERP.Models.Helpers;
+using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Admin.Interface;
+using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,15 +19,26 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ERP.Services.Admin
 {
     public class ApplicationIdentityUserService : Repository<ApplicationIdentityUser>, IApplicationIdentityUser
     {
         private readonly UserManager<ApplicationIdentityUser> userManager;
-        public ApplicationIdentityUserService(ErpDbContext dbContext, UserManager<ApplicationIdentityUser> _userManager) : base(dbContext)
+        private readonly ICompany company;
+        private readonly IFinancialYear financialYear;
+        IHttpContextAccessor httpContextAccessor;
+
+        public ApplicationIdentityUserService(ErpDbContext dbContext,
+            UserManager<ApplicationIdentityUser> _userManager, ICompany _company, IFinancialYear _financialYear,
+            IHttpContextAccessor _httpContextAccessor
+            ) : base(dbContext)
         {
             userManager = _userManager;
+            company = _company;
+            financialYear = _financialYear;
+            httpContextAccessor = _httpContextAccessor;
         }
 
         public async Task<int> CreateUser(ApplicationIdentityUserModel applicationIdentityUserModel)
@@ -204,6 +218,34 @@ namespace ERP.Services.Admin
             }
 
             return resultModel; // returns.
+        }
+
+        public async Task<bool> SetDefaultSession(string email)
+        {
+            bool IsSucceed = false;
+
+            UserSessionModel userSessionModel = new UserSessionModel();
+
+            ApplicationIdentityUserModel applicationUser = await GetApplicationIdentityUserByEmail(email);
+
+            userSessionModel.UserId = applicationUser.Id;
+            userSessionModel.UserName = applicationUser.UserName;
+
+            var companyId = 1;
+            //var financialYearId = 1;
+
+            CompanyModel companyModel = await company.GetCompanyById(companyId);
+            FinancialYearModel financialYearModel = await financialYear.GetFinancialYearByDateNCompanyId(companyId, DateTime.Now);
+
+            userSessionModel.CompanyId = companyModel.CompanyId;
+            userSessionModel.CompanyName = companyModel.CompanyName;
+
+            userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
+            userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
+
+            SessionExtension.SetComplexData(httpContextAccessor.HttpContext.Session, "UserSession", userSessionModel);
+
+            return IsSucceed;
         }
 
     }

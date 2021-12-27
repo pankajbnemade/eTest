@@ -38,11 +38,8 @@ namespace ERP.UI
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             string mySqlConnectionStr = Configuration.GetValue<string>("AppSettings:ErplanConnString");
-            services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
-            //services.AddIdentity<ApplicationIdentityUser, ApplicationRole>()
-            //        .AddDefaultTokenProviders()
-            //        .AddEntityFrameworkStores<ErpDbContext>();
+            services.AddDbContextPool<ErpDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
 
             services.AddIdentity<ApplicationIdentityUser, ApplicationRole>(options =>
             {
@@ -59,11 +56,12 @@ namespace ERP.UI
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
-            services.AddAuthentication().AddFacebook(options =>
-            {
-                options.AppId = "479144716347128";
-                options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
-            });
+            //services.AddAuthentication().AddFacebook(options =>
+            //{
+            //    options.AppId = "479144716347128";
+            //    options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
+            //});
+
             services.AddAuthentication().AddMicrosoftAccount(options =>
             {
                 options.ClientId = "479144716347128";
@@ -92,6 +90,8 @@ namespace ERP.UI
             // registering dependency injection(application services).
             ApplicationServices.Register(ref services);
 
+            services.AddDistributedMemoryCache();
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -118,10 +118,11 @@ namespace ERP.UI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseCookiePolicy();
+           
             app.UseSession();
             app.UseAuthentication();
+            app.UseRouting();
+            app.UseCookiePolicy();
             app.UseAuthorization();
 
             //app.UseContextAccessor();
@@ -132,9 +133,9 @@ namespace ERP.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=Common}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area=Common}/{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
 
-                endpoints.MapRazorPages();
+                endpoints.MapRazorPages().RequireAuthorization();
             });
         }
     }

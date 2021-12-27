@@ -15,8 +15,6 @@ namespace ERP.DataAccess.EntityData
             : base(options)
         {
         }
-
-
         public virtual DbSet<Advanceadjustment> Advanceadjustments { get; set; }
         public virtual DbSet<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
         public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
@@ -76,14 +74,14 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.27-mysql"));
-//            }
-//        }
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        //                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.27-mysql"));
+        //            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -2501,9 +2499,6 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("IX_LedgerFinancialYearBalance_CompanyId");
 
-                entity.HasIndex(e => e.CurrencyId)
-                    .HasName("IX_LedgerFinancialYearBalance_CurrencyId");
-
                 entity.HasIndex(e => e.FinancialYearId)
                     .HasName("IX_LedgerFinancialYearBalance_FinancialYearId");
 
@@ -2516,12 +2511,12 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_LedgerFinancialYearBalance_User_UpdatedByUserId_idx");
 
-                entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+                entity.Property(e => e.CreditAmountOpBal)
+                    .HasColumnName("CreditAmount_OpBal")
+                    .HasColumnType("decimal(18,4)");
 
-                entity.Property(e => e.OpeningBalanceAmount).HasColumnType("decimal(18,4)");
-
-                entity.Property(e => e.OpeningBalanceAmountFc)
-                    .HasColumnName("OpeningBalanceAmount_FC")
+                entity.Property(e => e.DebitAmountOpBal)
+                    .HasColumnName("DebitAmount_OpBal")
                     .HasColumnType("decimal(18,4)");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
@@ -2533,11 +2528,6 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.CompanyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerFinancialYearBalance_Company_CompanyId");
-
-                entity.HasOne(d => d.Currency)
-                    .WithMany(p => p.Ledgerfinancialyearbalances)
-                    .HasForeignKey(d => d.CurrencyId)
-                    .HasConstraintName("FK_LedgerFinancialYearBalance_Currency_CurrencyId");
 
                 entity.HasOne(d => d.FinancialYear)
                     .WithMany(p => p.Ledgerfinancialyearbalances)

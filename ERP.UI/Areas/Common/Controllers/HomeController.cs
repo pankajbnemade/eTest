@@ -112,10 +112,15 @@ namespace ERP.UI.Areas.Common.Controllers
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
+            FinancialYearModel financialYearModel = await _financialYear.GetFinancialYearById(financialYearId);
+
             return await Task.Run(() =>
             {
                 UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
-                userSessionModel.FinancialYearId = financialYearId;
+
+                userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
+                userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
+
                 SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
                 return Json(data);
