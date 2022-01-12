@@ -9,6 +9,7 @@ namespace ERP.DataAccess.EntityModels
     {
         public Paymentvoucher()
         {
+            Paymentvoucherattachments = new HashSet<Paymentvoucherattachment>();
             Paymentvoucherdetails = new HashSet<Paymentvoucherdetail>();
         }
 
@@ -45,6 +46,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual Status Status { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }
+        public virtual ICollection<Paymentvoucherattachment> Paymentvoucherattachments { get; set; }
         public virtual ICollection<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
     }
 }

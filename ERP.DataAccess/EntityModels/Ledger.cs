@@ -22,6 +22,7 @@ namespace ERP.DataAccess.EntityModels
             InverseParentGroup = new HashSet<Ledger>();
             Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
             Ledgeraddresses = new HashSet<Ledgeraddress>();
+            Ledgerattachments = new HashSet<Ledgerattachment>();
             Ledgercompanyrelations = new HashSet<Ledgercompanyrelation>();
             Ledgerfinancialyearbalances = new HashSet<Ledgerfinancialyearbalance>();
             Paymentvoucherdetails = new HashSet<Paymentvoucherdetail>();
@@ -46,7 +47,7 @@ namespace ERP.DataAccess.EntityModels
         public sbyte IsGroup { get; set; }
         public sbyte IsMasterGroup { get; set; }
         public int? ParentGroupId { get; set; }
-        public sbyte IsDeActived { get; set; }
+        public sbyte IsDeActive { get; set; }
         public string TaxRegisteredNo { get; set; }
         public int MaxNo { get; set; }
         public int PreparedByUserId { get; set; }
@@ -70,6 +71,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Ledger> InverseParentGroup { get; set; }
         public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
         public virtual ICollection<Ledgeraddress> Ledgeraddresses { get; set; }
+        public virtual ICollection<Ledgerattachment> Ledgerattachments { get; set; }
         public virtual ICollection<Ledgercompanyrelation> Ledgercompanyrelations { get; set; }
         public virtual ICollection<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
         public virtual ICollection<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }

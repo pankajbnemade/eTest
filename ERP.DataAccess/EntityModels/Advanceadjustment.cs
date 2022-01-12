@@ -9,6 +9,7 @@ namespace ERP.DataAccess.EntityModels
     {
         public Advanceadjustment()
         {
+            Advanceadjustmentattachments = new HashSet<Advanceadjustmentattachment>();
             Advanceadjustmentdetails = new HashSet<Advanceadjustmentdetail>();
         }
 
@@ -44,6 +45,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual Status Status { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }
+        public virtual ICollection<Advanceadjustmentattachment> Advanceadjustmentattachments { get; set; }
         public virtual ICollection<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
     }
 }

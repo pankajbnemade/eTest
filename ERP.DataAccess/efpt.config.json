@@ -18,6 +18,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "advanceadjustmentattachment",
+         "ObjectType": 0
+      },
+      {
          "Name": "advanceadjustmentdetail",
          "ObjectType": 0
       },
@@ -50,6 +54,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "attachment",
+         "ObjectType": 0
+      },
+      {
+         "Name": "attachmentcategory",
+         "ObjectType": 0
+      },
+      {
+         "Name": "attachmentstorageaccount",
+         "ObjectType": 0
+      },
+      {
          "Name": "chargetype",
          "ObjectType": 0
       },
@@ -66,6 +82,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "contravoucherattachment",
+         "ObjectType": 0
+      },
+      {
          "Name": "contravoucherdetail",
          "ObjectType": 0
       },
@@ -75,6 +95,10 @@
       },
       {
          "Name": "creditnote",
+         "ObjectType": 0
+      },
+      {
+         "Name": "creditnoteattachment",
          "ObjectType": 0
       },
       {
@@ -102,6 +126,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "debitnoteattachment",
+         "ObjectType": 0
+      },
+      {
          "Name": "debitnotedetail",
          "ObjectType": 0
       },
@@ -126,6 +154,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "errorlog",
+         "ObjectType": 0
+      },
+      {
          "Name": "financialyear",
          "ObjectType": 0
       },
@@ -142,6 +174,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "journalvoucherattachment",
+         "ObjectType": 0
+      },
+      {
          "Name": "journalvoucherdetail",
          "ObjectType": 0
       },
@@ -151,6 +187,10 @@
       },
       {
          "Name": "ledgeraddress",
+         "ObjectType": 0
+      },
+      {
+         "Name": "ledgerattachment",
          "ObjectType": 0
       },
       {
@@ -170,11 +210,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "paymentvoucherattachment",
+         "ObjectType": 0
+      },
+      {
          "Name": "paymentvoucherdetail",
          "ObjectType": 0
       },
       {
          "Name": "purchaseinvoice",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchaseinvoiceattachment",
          "ObjectType": 0
       },
       {
@@ -194,11 +242,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "receiptvoucherattachment",
+         "ObjectType": 0
+      },
+      {
          "Name": "receiptvoucherdetail",
          "ObjectType": 0
       },
       {
          "Name": "salesinvoice",
+         "ObjectType": 0
+      },
+      {
+         "Name": "salesinvoiceattachment",
          "ObjectType": 0
       },
       {

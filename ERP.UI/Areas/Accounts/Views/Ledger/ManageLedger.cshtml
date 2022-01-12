@@ -10,9 +10,11 @@
             </div>
             <div class="col-sm-6">
                 <div class="float-right">
-                    <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditMaster('@ViewBag.LedgerId');">
-                        <i class="far fa-edit"></i> Edit
-                    </button>
+                    @if (ViewBag.IsEditVisible == true)
+                    {
+        <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditMaster('@ViewBag.LedgerId');">
+            <i class="far fa-edit"></i> Edit
+        </button>}
                     <button type="button" class="btn btn-secondary " title="Back" onclick="javascript: fnBackToIndex();">
                         <i class="fas fa-arrow-left"></i> Back
                     </button>
@@ -35,7 +37,8 @@
                             {
                 <li class="nav-item">
                     <a class="nav-link" id="address-tab" data-toggle="tab" href="#lederaddress" role="tab" aria-controls="lederaddress" aria-selected="false">Address</a>
-                </li>}
+                </li>
+}
 
                         </ul>
                     </div>

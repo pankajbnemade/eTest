@@ -9,6 +9,7 @@ namespace ERP.DataAccess.EntityModels
     {
         public Journalvoucher()
         {
+            Journalvoucherattachments = new HashSet<Journalvoucherattachment>();
             Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
         }
 
@@ -42,6 +43,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual Status Status { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }
+        public virtual ICollection<Journalvoucherattachment> Journalvoucherattachments { get; set; }
         public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
     }
 }

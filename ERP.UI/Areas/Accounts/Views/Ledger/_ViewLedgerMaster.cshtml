@@ -19,6 +19,41 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group-sm">
+                    @Html.LabelFor(model => model.ParentGroupId, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.ParentGroupName)
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.IsGroup, new { @class = "font-weight-bold" }) :
+                    @Html.CheckBoxFor(model => model.IsGroup, new { @class = "", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.IsMasterGroup, new { @class = "font-weight-bold" }) :
+                    @Html.CheckBoxFor(model => model.IsMasterGroup, new { @class = "", @disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.TaxRegisteredNo, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.TaxRegisteredNo)
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.Description, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.Description)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group-sm">
                     @Html.LabelFor(model => model.CreditAmountOpBal, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.CreditAmountOpBal)
                 </div>
@@ -30,20 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="form-group-sm">
-                    @Html.LabelFor(model => model.ParentGroupId, new { @class = "font-weight-bold" }) :
-                    @Html.DisplayFor(model => model.ParentGroupName)
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group-sm">
-                    @Html.LabelFor(model => model.TaxRegisteredNo, new { @class = "font-weight-bold" }) :
-                    @Html.DisplayFor(model => model.TaxRegisteredNo)
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 

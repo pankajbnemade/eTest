@@ -6,12 +6,12 @@
             @if (Model.LedgerId > 0)
             {
 <h5 class="modal-title">Edit Ledger</h5> }
-            else
-            {
-        <h5 class="modal-title">Add Ledger</h5>            }
-        <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-        </button>
+else
+{
+<h5 class="modal-title">Add Ledger</h5>}
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <form id="frmLedgerMaster" class="width100" method="post"
               asp-action="SaveLedgerMaster" asp-controller="Ledger" asp-area="Accounts"
@@ -46,7 +46,7 @@
                             @Html.ValidationMessageFor(model => model.ParentGroupId, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                
+
                     <div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.TaxRegisteredNo)
@@ -55,7 +55,26 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IsGroup, new { @class = "" })
+                            <div class="col-1">
+                                @Html.CheckBoxFor(model => model.IsGroup, new { @class = "form-control form-control-sm" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.IsGroup, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Description)
+                            @Html.TextAreaFor(model => model.Description, new { @class = "form-control form-control-sm col-sm-12" })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
@@ -93,7 +112,7 @@
             window.location.href = tabUrl;
         }
         else {
-            fnDangerNotify('Error occured while processing request.');
+            fnDangerNotify(data.Result.Message);
             return false;
         }
     }

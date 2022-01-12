@@ -42,6 +42,14 @@
                                     @Html.DropDownListFor(model => model.ParentGroupId, new SelectList(ViewBag.ParentGroupList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
                                 </div>
                             </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.IsGroup, new { @class = "" })
+                                    <div class="col-1">
+                                        @Html.CheckBoxFor(model => model.IsGroup, new { @class = "" })
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12 pt-2 text-right">
@@ -68,6 +76,7 @@
                         <tr class="table-header">
                             <th class="no-sort"></th>
                             <th>LedgerId</th>
+                            <th>Ledger Code</th>
                             <th>Ledger Name</th>
                             <th>Parent Group</th>
                             <th>Prepared By</th>
@@ -103,7 +112,10 @@
                             ParentGroupId: $('#ParentGroupId').val(),
                             FromDate: $('#FromDate').val(),
                             ToDate: $('#ToDate').val(),
+                            IsGroup: $('#IsGroup').is(":checked"),
                         };
+
+                        console.log(searchFilterModel);
 
                         return JSON.stringify(searchFilterModel);
                     }
@@ -120,6 +132,7 @@
                     }
                 },
                 { "data": "LedgerId", "name": "LedgerId", "visible": false },
+                { "data": "LedgerCode", "name": "Ledger Code" },
                 { "data": "LedgerName", "name": "Ledger Name" },
                 { "data": "ParentGroupName", "name": "Parent Group Name" },
                 { "data": "PreparedByName", "name": "Prepared By Name" }
@@ -170,6 +183,9 @@
         });
         $('#searchFilterCriteria select').each(function (index) {
             $(this).val('');
+        });
+        $('#searchFilterCriteria :input[type=checkbox]').each(function (index) {
+            $(this).is(":checked")==false;
         });
 
         $("#ledgerGrid").DataTable().ajax.reload();

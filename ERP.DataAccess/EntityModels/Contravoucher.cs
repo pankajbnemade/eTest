@@ -9,6 +9,7 @@ namespace ERP.DataAccess.EntityModels
     {
         public Contravoucher()
         {
+            Contravoucherattachments = new HashSet<Contravoucherattachment>();
             Contravoucherdetails = new HashSet<Contravoucherdetail>();
         }
 
@@ -44,6 +45,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual Status Status { get; set; }
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }
+        public virtual ICollection<Contravoucherattachment> Contravoucherattachments { get; set; }
         public virtual ICollection<Contravoucherdetail> Contravoucherdetails { get; set; }
     }
 }

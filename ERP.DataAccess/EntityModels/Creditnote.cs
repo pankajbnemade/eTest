@@ -10,6 +10,7 @@ namespace ERP.DataAccess.EntityModels
         public Creditnote()
         {
             Advanceadjustmentdetails = new HashSet<Advanceadjustmentdetail>();
+            Creditnoteattachments = new HashSet<Creditnoteattachment>();
             Creditnotedetails = new HashSet<Creditnotedetail>();
             Creditnotetaxes = new HashSet<Creditnotetax>();
             Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
@@ -68,6 +69,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }
         public virtual ICollection<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
+        public virtual ICollection<Creditnoteattachment> Creditnoteattachments { get; set; }
         public virtual ICollection<Creditnotedetail> Creditnotedetails { get; set; }
         public virtual ICollection<Creditnotetax> Creditnotetaxes { get; set; }
         public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }

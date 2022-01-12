@@ -12,6 +12,7 @@ namespace ERP.DataAccess.EntityModels
             Advanceadjustmentdetails = new HashSet<Advanceadjustmentdetail>();
             Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
             Receiptvoucherdetails = new HashSet<Receiptvoucherdetail>();
+            Salesinvoiceattachments = new HashSet<Salesinvoiceattachment>();
             Salesinvoicedetails = new HashSet<Salesinvoicedetail>();
             Salesinvoicetaxes = new HashSet<Salesinvoicetax>();
         }
@@ -70,6 +71,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
         public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }
         public virtual ICollection<Receiptvoucherdetail> Receiptvoucherdetails { get; set; }
+        public virtual ICollection<Salesinvoiceattachment> Salesinvoiceattachments { get; set; }
         public virtual ICollection<Salesinvoicedetail> Salesinvoicedetails { get; set; }
         public virtual ICollection<Salesinvoicetax> Salesinvoicetaxes { get; set; }
     }

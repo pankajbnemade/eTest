@@ -99,9 +99,39 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (ModelState.IsValid)
             {
+                //To check number of levels
+
+                if (ledgerModel.IsGroup==true)
+                {
+                    LedgerModel ledgerModel_Parent = await _ledger.GetLedgerById((int)ledgerModel.ParentGroupId);
+
+                    if (ledgerModel_Parent.IsMasterGroup==false)
+                    {
+                        data.Result.Status = false;
+                        data.Result.Data = ledgerModel.LedgerId;
+                        data.Result.Message = "You can not add/update this group. Selected group's parent group is not master group.";
+
+                        return Json(data);
+                    }
+                }
+
+
                 if (ledgerModel.LedgerId > 0)
                 {
-                    //LedgerModel ledgerModel_Old = await _ledger.GetLedgerById(ledgerModel.LedgerId);
+                    if (ledgerModel.IsGroup==false)
+                    {
+                        DataTableResultModel<LedgerModel> resultModel = await _ledger.GetLedgerListByParentGroupId(ledgerModel.LedgerId);
+
+                        if (resultModel.TotalResultCount!=0)
+                        {
+                            data.Result.Status = false;
+                            data.Result.Data = ledgerModel.LedgerId;
+                            data.Result.Message = "You can not remove 'Is Group'. Group is referred as parent group in other Group/Ledger";
+
+                            return Json(data);
+                        }
+
+                    }
 
                     // update record.
                     if (true == await _ledger.UpdateLedger(ledgerModel))
@@ -112,6 +142,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 }
                 else
                 {
+                    // generate no.
+                    GenerateNoModel generateNoModel = await _ledger.GenerateLedgerCode();
+
+                    ledgerModel.LedgerCode = generateNoModel.VoucherNo;
+                    ledgerModel.MaxNo = generateNoModel.MaxNo;
+
                     ledgerModel.LedgerId = await _ledger.CreateLedger(ledgerModel);
                     // add new record.
                     if (ledgerModel.LedgerId > 0)
@@ -133,9 +169,16 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             ViewBag.IsAddressVisible = false;
 
+            ViewBag.IsEditVisible =false;
+
             if (ledgerModel.ParentGroupId == (int)LedgerName.SundryDebtor || ledgerModel.ParentGroupId == (int)LedgerName.SundryCreditor)
             {
                 ViewBag.IsAddressVisible = true;
+            }
+
+            if (ledgerModel.IsMasterGroup == false)
+            {
+                ViewBag.IsEditVisible = true;
             }
 
             return await Task.Run(() =>

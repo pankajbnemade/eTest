@@ -45,12 +45,15 @@ namespace ERP.Services.Accounts
 
             ledger.LedgerCode = ledgerModel.LedgerCode;
             ledger.LedgerName = ledgerModel.LedgerName;
-            ledger.IsGroup = ledgerModel.IsGroup;
-            ledger.IsMasterGroup = ledgerModel.IsMasterGroup;
+            ledger.IsGroup = Convert.ToSByte(ledgerModel.IsGroup);
+            ledger.IsMasterGroup = Convert.ToSByte(ledgerModel.IsMasterGroup);
             ledger.ParentGroupId = ledgerModel.ParentGroupId;
-            ledger.IsDeActived = ledgerModel.IsDeActived;
+            ledger.IsDeActive = ledgerModel.IsDeActive;
             ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
+            ledger.MaxNo = ledgerModel.MaxNo;
+
             await Create(ledger);
+
             ledgerId = ledger.LedgerId;
 
             return ledgerId; // returns.
@@ -67,10 +70,10 @@ namespace ERP.Services.Accounts
                 // assign values.
                 ledger.LedgerCode = ledgerModel.LedgerCode;
                 ledger.LedgerName = ledgerModel.LedgerName;
-                ledger.IsGroup = ledgerModel.IsGroup;
-                ledger.IsMasterGroup = ledgerModel.IsMasterGroup;
+                ledger.IsGroup = Convert.ToSByte(ledgerModel.IsGroup);
+                ledger.IsMasterGroup = Convert.ToSByte(ledgerModel.IsMasterGroup);
                 ledger.ParentGroupId = ledgerModel.ParentGroupId;
-                ledger.IsDeActived = ledgerModel.IsDeActived;
+                ledger.IsDeActive = ledgerModel.IsDeActive;
                 ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
                 isUpdated = await Update(ledger);
             }
@@ -97,6 +100,7 @@ namespace ERP.Services.Accounts
             LedgerModel ledgerModel = null;
 
             IList<LedgerModel> ledgerModelList = await GetLedgerList(ledgerId, 0);
+
             if (null != ledgerModelList && ledgerModelList.Any())
             {
                 ledgerModel = ledgerModelList.FirstOrDefault();
@@ -110,6 +114,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
             IList<LedgerModel> ledgerModelList = await GetLedgerList(0, parentGroupId);
+
             if (null != ledgerModelList && ledgerModelList.Any())
             {
                 resultModel = new DataTableResultModel<LedgerModel>();
@@ -211,8 +216,10 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
             IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
-                                                .Include(w => w.ParentGroup)
-                                                .Include(w => w.PreparedByUser);
+                                    .Where(w => w.ParentGroupId!=null)
+                                    .Where(w => w.IsDeActive==0)
+                                    .Include(w => w.ParentGroup)
+                                    .Include(w => w.PreparedByUser);
 
             //sortBy
             if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
@@ -245,6 +252,8 @@ namespace ERP.Services.Accounts
             {
                 query = query.Where(w => w.PreparedDateTime <= searchFilterModel.ToDate);
             }
+
+            query = query.Where(w => w.IsGroup == Convert.ToSByte(searchFilterModel.IsGroup));
 
             // get total count.
             resultModel.TotalResultCount = await query.CountAsync();
@@ -282,10 +291,10 @@ namespace ERP.Services.Accounts
                 ledgerModel.LedgerId = ledger.LedgerId;
                 ledgerModel.LedgerCode = ledger.LedgerCode;
                 ledgerModel.LedgerName = ledger.LedgerName;
-                ledgerModel.IsGroup = ledger.IsGroup;
-                ledgerModel.IsMasterGroup = ledger.IsMasterGroup;
+                ledgerModel.IsGroup = Convert.ToBoolean(ledger.IsGroup);
+                ledgerModel.IsMasterGroup = Convert.ToBoolean(ledger.IsMasterGroup);
                 ledgerModel.ParentGroupId = ledger.ParentGroupId;
-                ledgerModel.IsDeActived = ledger.IsDeActived;
+                ledgerModel.IsDeActive = ledger.IsDeActive;
                 ledgerModel.TaxRegisteredNo = ledger.TaxRegisteredNo;
                 //######
                 ledgerModel.ParentGroupName = null != ledger.ParentGroup ? ledger.ParentGroup.LedgerName : null;
@@ -305,6 +314,7 @@ namespace ERP.Services.Accounts
                 IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0);
 
                 query = query.Where(w => w.IsGroup == 1);
+                query = query.Where(w => w.ParentGroupId != null);
 
                 // apply filters.
                 if (0 != parentGroupId)

@@ -20,5 +20,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "To Date")]
         public Nullable<DateTime> ToDate { get; set; }
+
+        [Display(Name = "Show Group")]
+        public bool IsGroup { get; set; }
     }
 }

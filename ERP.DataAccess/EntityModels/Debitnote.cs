@@ -10,6 +10,7 @@ namespace ERP.DataAccess.EntityModels
         public Debitnote()
         {
             Advanceadjustmentdetails = new HashSet<Advanceadjustmentdetail>();
+            Debitnoteattachments = new HashSet<Debitnoteattachment>();
             Debitnotedetails = new HashSet<Debitnotedetail>();
             Debitnotetaxes = new HashSet<Debitnotetax>();
             Journalvoucherdetails = new HashSet<Journalvoucherdetail>();
@@ -68,6 +69,7 @@ namespace ERP.DataAccess.EntityModels
         public virtual Aspnetuser UpdatedByUser { get; set; }
         public virtual Voucherstyle VoucherStyle { get; set; }
         public virtual ICollection<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
+        public virtual ICollection<Debitnoteattachment> Debitnoteattachments { get; set; }
         public virtual ICollection<Debitnotedetail> Debitnotedetails { get; set; }
         public virtual ICollection<Debitnotetax> Debitnotetaxes { get; set; }
         public virtual ICollection<Journalvoucherdetail> Journalvoucherdetails { get; set; }

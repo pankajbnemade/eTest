@@ -20,21 +20,26 @@ namespace ERP.Models.Accounts
         public string LedgerName { get; set; }
 
         [Display(Name = "Is Group")]
-        public sbyte IsGroup { get; set; }
+        public bool IsGroup { get; set; }
 
         [Display(Name = "Is Master Group")]
-        public sbyte IsMasterGroup { get; set; }
+        public bool IsMasterGroup { get; set; }
 
         [Required(ErrorMessage = "Parent Group is required.")]
         [Display(Name = "Parent Group")]
         public int? ParentGroupId { get; set; }
 
         [Display(Name = "Is DeActivated")]
-        public sbyte IsDeActived { get; set; }
+        public sbyte IsDeActive { get; set; }
 
         [Display(Name = "Tax Registered No")]
         public string TaxRegisteredNo { get; set; }
 
+        [Display(Name = "Description")]
+        [StringLength(2000, ErrorMessage = "Narration cannot exceed 2000 characters.")]
+        public string Description { get; set; }
+
+        public int MaxNo { get; set; }
         //######
         [Display(Name = "Parent Group Name")]
         public string ParentGroupName { get; set; }

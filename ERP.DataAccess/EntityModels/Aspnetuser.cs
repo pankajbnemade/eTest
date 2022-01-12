@@ -11,12 +11,20 @@ namespace ERP.DataAccess.EntityModels
         {
             AdvanceadjustmentPreparedByUsers = new HashSet<Advanceadjustment>();
             AdvanceadjustmentUpdatedByUsers = new HashSet<Advanceadjustment>();
+            AdvanceadjustmentattachmentPreparedByUsers = new HashSet<Advanceadjustmentattachment>();
+            AdvanceadjustmentattachmentUpdatedByUsers = new HashSet<Advanceadjustmentattachment>();
             AdvanceadjustmentdetailPreparedByUsers = new HashSet<Advanceadjustmentdetail>();
             AdvanceadjustmentdetailUpdatedByUsers = new HashSet<Advanceadjustmentdetail>();
             Aspnetuserclaims = new HashSet<Aspnetuserclaim>();
             Aspnetuserlogins = new HashSet<Aspnetuserlogin>();
             Aspnetuserroles = new HashSet<Aspnetuserrole>();
             Aspnetusertokens = new HashSet<Aspnetusertoken>();
+            AttachmentPreparedByUsers = new HashSet<Attachment>();
+            AttachmentUpdatedByUsers = new HashSet<Attachment>();
+            AttachmentcategoryPreparedByUsers = new HashSet<Attachmentcategory>();
+            AttachmentcategoryUpdatedByUsers = new HashSet<Attachmentcategory>();
+            AttachmentstorageaccountPreparedByUsers = new HashSet<Attachmentstorageaccount>();
+            AttachmentstorageaccountUpdatedByUsers = new HashSet<Attachmentstorageaccount>();
             ChargetypePreparedByUsers = new HashSet<Chargetype>();
             ChargetypeUpdatedByUsers = new HashSet<Chargetype>();
             CityPreparedByUsers = new HashSet<City>();
@@ -25,12 +33,16 @@ namespace ERP.DataAccess.EntityModels
             CompanyUpdatedByUsers = new HashSet<Company>();
             ContravoucherPreparedByUsers = new HashSet<Contravoucher>();
             ContravoucherUpdatedByUsers = new HashSet<Contravoucher>();
+            ContravoucherattachmentPreparedByUsers = new HashSet<Contravoucherattachment>();
+            ContravoucherattachmentUpdatedByUsers = new HashSet<Contravoucherattachment>();
             ContravoucherdetailPreparedByUsers = new HashSet<Contravoucherdetail>();
             ContravoucherdetailUpdatedByUsers = new HashSet<Contravoucherdetail>();
             CountryPreparedByUsers = new HashSet<Country>();
             CountryUpdatedByUsers = new HashSet<Country>();
             CreditnotePreparedByUsers = new HashSet<Creditnote>();
             CreditnoteUpdatedByUsers = new HashSet<Creditnote>();
+            CreditnoteattachmentPreparedByUsers = new HashSet<Creditnoteattachment>();
+            CreditnoteattachmentUpdatedByUsers = new HashSet<Creditnoteattachment>();
             CreditnotedetailtaxPreparedByUsers = new HashSet<Creditnotedetailtax>();
             CreditnotedetailtaxUpdatedByUsers = new HashSet<Creditnotedetailtax>();
             CreditnotetaxPreparedByUsers = new HashSet<Creditnotetax>();
@@ -41,6 +53,8 @@ namespace ERP.DataAccess.EntityModels
             CurrencyconversionUpdatedByUsers = new HashSet<Currencyconversion>();
             DebitnotePreparedByUsers = new HashSet<Debitnote>();
             DebitnoteUpdatedByUsers = new HashSet<Debitnote>();
+            DebitnoteattachmentPreparedByUsers = new HashSet<Debitnoteattachment>();
+            DebitnoteattachmentUpdatedByUsers = new HashSet<Debitnoteattachment>();
             DebitnotedetailPreparedByUsers = new HashSet<Debitnotedetail>();
             DebitnotedetailUpdatedByUsers = new HashSet<Debitnotedetail>();
             DebitnotedetailtaxPreparedByUsers = new HashSet<Debitnotedetailtax>();
@@ -53,6 +67,8 @@ namespace ERP.DataAccess.EntityModels
             DesignationUpdatedByUsers = new HashSet<Designation>();
             EmployeePreparedByUsers = new HashSet<Employee>();
             EmployeeUpdatedByUsers = new HashSet<Employee>();
+            ErrorlogPreparedByUsers = new HashSet<Errorlog>();
+            ErrorlogUpdatedByUsers = new HashSet<Errorlog>();
             FinancialyearPreparedByUsers = new HashSet<Financialyear>();
             FinancialyearUpdatedByUsers = new HashSet<Financialyear>();
             FinancialyearcompanyrelationPreparedByUsers = new HashSet<Financialyearcompanyrelation>();
@@ -61,12 +77,16 @@ namespace ERP.DataAccess.EntityModels
             FormUpdatedByUsers = new HashSet<Form>();
             JournalvoucherPreparedByUsers = new HashSet<Journalvoucher>();
             JournalvoucherUpdatedByUsers = new HashSet<Journalvoucher>();
+            JournalvoucherattachmentPreparedByUsers = new HashSet<Journalvoucherattachment>();
+            JournalvoucherattachmentUpdatedByUsers = new HashSet<Journalvoucherattachment>();
             JournalvoucherdetailPreparedByUsers = new HashSet<Journalvoucherdetail>();
             JournalvoucherdetailUpdatedByUsers = new HashSet<Journalvoucherdetail>();
             LedgerPreparedByUsers = new HashSet<Ledger>();
             LedgerUpdatedByUsers = new HashSet<Ledger>();
             LedgeraddressPreparedByUsers = new HashSet<Ledgeraddress>();
             LedgeraddressUpdatedByUsers = new HashSet<Ledgeraddress>();
+            LedgerattachmentPreparedByUsers = new HashSet<Ledgerattachment>();
+            LedgerattachmentUpdatedByUsers = new HashSet<Ledgerattachment>();
             LedgercompanyrelationPreparedByUsers = new HashSet<Ledgercompanyrelation>();
             LedgercompanyrelationUpdatedByUsers = new HashSet<Ledgercompanyrelation>();
             LedgerfinancialyearbalancePreparedByUsers = new HashSet<Ledgerfinancialyearbalance>();
@@ -75,10 +95,14 @@ namespace ERP.DataAccess.EntityModels
             ModuleUpdatedByUsers = new HashSet<Module>();
             PaymentvoucherPreparedByUsers = new HashSet<Paymentvoucher>();
             PaymentvoucherUpdatedByUsers = new HashSet<Paymentvoucher>();
+            PaymentvoucherattachmentPreparedByUsers = new HashSet<Paymentvoucherattachment>();
+            PaymentvoucherattachmentUpdatedByUsers = new HashSet<Paymentvoucherattachment>();
             PaymentvoucherdetailPreparedByUsers = new HashSet<Paymentvoucherdetail>();
             PaymentvoucherdetailUpdatedByUsers = new HashSet<Paymentvoucherdetail>();
             PurchaseinvoicePreparedByUsers = new HashSet<Purchaseinvoice>();
             PurchaseinvoiceUpdatedByUsers = new HashSet<Purchaseinvoice>();
+            PurchaseinvoiceattachmentPreparedByUsers = new HashSet<Purchaseinvoiceattachment>();
+            PurchaseinvoiceattachmentUpdatedByUsers = new HashSet<Purchaseinvoiceattachment>();
             PurchaseinvoicedetailPreparedByUsers = new HashSet<Purchaseinvoicedetail>();
             PurchaseinvoicedetailUpdatedByUsers = new HashSet<Purchaseinvoicedetail>();
             PurchaseinvoicedetailtaxPreparedByUsers = new HashSet<Purchaseinvoicedetailtax>();
@@ -87,10 +111,14 @@ namespace ERP.DataAccess.EntityModels
             PurchaseinvoicetaxUpdatedByUsers = new HashSet<Purchaseinvoicetax>();
             ReceiptvoucherPreparedByUsers = new HashSet<Receiptvoucher>();
             ReceiptvoucherUpdatedByUsers = new HashSet<Receiptvoucher>();
+            ReceiptvoucherattachmentPreparedByUsers = new HashSet<Receiptvoucherattachment>();
+            ReceiptvoucherattachmentUpdatedByUsers = new HashSet<Receiptvoucherattachment>();
             ReceiptvoucherdetailPreparedByUsers = new HashSet<Receiptvoucherdetail>();
             ReceiptvoucherdetailUpdatedByUsers = new HashSet<Receiptvoucherdetail>();
             SalesinvoicePreparedByUsers = new HashSet<Salesinvoice>();
             SalesinvoiceUpdatedByUsers = new HashSet<Salesinvoice>();
+            SalesinvoiceattachmentPreparedByUsers = new HashSet<Salesinvoiceattachment>();
+            SalesinvoiceattachmentUpdatedByUsers = new HashSet<Salesinvoiceattachment>();
             SalesinvoicedetailPreparedByUsers = new HashSet<Salesinvoicedetail>();
             SalesinvoicedetailUpdatedByUsers = new HashSet<Salesinvoicedetail>();
             SalesinvoicedetailtaxPreparedByUsers = new HashSet<Salesinvoicedetailtax>();
@@ -135,12 +163,20 @@ namespace ERP.DataAccess.EntityModels
         public virtual Employee Employee { get; set; }
         public virtual ICollection<Advanceadjustment> AdvanceadjustmentPreparedByUsers { get; set; }
         public virtual ICollection<Advanceadjustment> AdvanceadjustmentUpdatedByUsers { get; set; }
+        public virtual ICollection<Advanceadjustmentattachment> AdvanceadjustmentattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Advanceadjustmentattachment> AdvanceadjustmentattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Advanceadjustmentdetail> AdvanceadjustmentdetailPreparedByUsers { get; set; }
         public virtual ICollection<Advanceadjustmentdetail> AdvanceadjustmentdetailUpdatedByUsers { get; set; }
         public virtual ICollection<Aspnetuserclaim> Aspnetuserclaims { get; set; }
         public virtual ICollection<Aspnetuserlogin> Aspnetuserlogins { get; set; }
         public virtual ICollection<Aspnetuserrole> Aspnetuserroles { get; set; }
         public virtual ICollection<Aspnetusertoken> Aspnetusertokens { get; set; }
+        public virtual ICollection<Attachment> AttachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Attachment> AttachmentUpdatedByUsers { get; set; }
+        public virtual ICollection<Attachmentcategory> AttachmentcategoryPreparedByUsers { get; set; }
+        public virtual ICollection<Attachmentcategory> AttachmentcategoryUpdatedByUsers { get; set; }
+        public virtual ICollection<Attachmentstorageaccount> AttachmentstorageaccountPreparedByUsers { get; set; }
+        public virtual ICollection<Attachmentstorageaccount> AttachmentstorageaccountUpdatedByUsers { get; set; }
         public virtual ICollection<Chargetype> ChargetypePreparedByUsers { get; set; }
         public virtual ICollection<Chargetype> ChargetypeUpdatedByUsers { get; set; }
         public virtual ICollection<City> CityPreparedByUsers { get; set; }
@@ -149,12 +185,16 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Company> CompanyUpdatedByUsers { get; set; }
         public virtual ICollection<Contravoucher> ContravoucherPreparedByUsers { get; set; }
         public virtual ICollection<Contravoucher> ContravoucherUpdatedByUsers { get; set; }
+        public virtual ICollection<Contravoucherattachment> ContravoucherattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Contravoucherattachment> ContravoucherattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Contravoucherdetail> ContravoucherdetailPreparedByUsers { get; set; }
         public virtual ICollection<Contravoucherdetail> ContravoucherdetailUpdatedByUsers { get; set; }
         public virtual ICollection<Country> CountryPreparedByUsers { get; set; }
         public virtual ICollection<Country> CountryUpdatedByUsers { get; set; }
         public virtual ICollection<Creditnote> CreditnotePreparedByUsers { get; set; }
         public virtual ICollection<Creditnote> CreditnoteUpdatedByUsers { get; set; }
+        public virtual ICollection<Creditnoteattachment> CreditnoteattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Creditnoteattachment> CreditnoteattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Creditnotedetailtax> CreditnotedetailtaxPreparedByUsers { get; set; }
         public virtual ICollection<Creditnotedetailtax> CreditnotedetailtaxUpdatedByUsers { get; set; }
         public virtual ICollection<Creditnotetax> CreditnotetaxPreparedByUsers { get; set; }
@@ -165,6 +205,8 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Currencyconversion> CurrencyconversionUpdatedByUsers { get; set; }
         public virtual ICollection<Debitnote> DebitnotePreparedByUsers { get; set; }
         public virtual ICollection<Debitnote> DebitnoteUpdatedByUsers { get; set; }
+        public virtual ICollection<Debitnoteattachment> DebitnoteattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Debitnoteattachment> DebitnoteattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Debitnotedetail> DebitnotedetailPreparedByUsers { get; set; }
         public virtual ICollection<Debitnotedetail> DebitnotedetailUpdatedByUsers { get; set; }
         public virtual ICollection<Debitnotedetailtax> DebitnotedetailtaxPreparedByUsers { get; set; }
@@ -177,6 +219,8 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Designation> DesignationUpdatedByUsers { get; set; }
         public virtual ICollection<Employee> EmployeePreparedByUsers { get; set; }
         public virtual ICollection<Employee> EmployeeUpdatedByUsers { get; set; }
+        public virtual ICollection<Errorlog> ErrorlogPreparedByUsers { get; set; }
+        public virtual ICollection<Errorlog> ErrorlogUpdatedByUsers { get; set; }
         public virtual ICollection<Financialyear> FinancialyearPreparedByUsers { get; set; }
         public virtual ICollection<Financialyear> FinancialyearUpdatedByUsers { get; set; }
         public virtual ICollection<Financialyearcompanyrelation> FinancialyearcompanyrelationPreparedByUsers { get; set; }
@@ -185,12 +229,16 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Form> FormUpdatedByUsers { get; set; }
         public virtual ICollection<Journalvoucher> JournalvoucherPreparedByUsers { get; set; }
         public virtual ICollection<Journalvoucher> JournalvoucherUpdatedByUsers { get; set; }
+        public virtual ICollection<Journalvoucherattachment> JournalvoucherattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Journalvoucherattachment> JournalvoucherattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Journalvoucherdetail> JournalvoucherdetailPreparedByUsers { get; set; }
         public virtual ICollection<Journalvoucherdetail> JournalvoucherdetailUpdatedByUsers { get; set; }
         public virtual ICollection<Ledger> LedgerPreparedByUsers { get; set; }
         public virtual ICollection<Ledger> LedgerUpdatedByUsers { get; set; }
         public virtual ICollection<Ledgeraddress> LedgeraddressPreparedByUsers { get; set; }
         public virtual ICollection<Ledgeraddress> LedgeraddressUpdatedByUsers { get; set; }
+        public virtual ICollection<Ledgerattachment> LedgerattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Ledgerattachment> LedgerattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Ledgercompanyrelation> LedgercompanyrelationPreparedByUsers { get; set; }
         public virtual ICollection<Ledgercompanyrelation> LedgercompanyrelationUpdatedByUsers { get; set; }
         public virtual ICollection<Ledgerfinancialyearbalance> LedgerfinancialyearbalancePreparedByUsers { get; set; }
@@ -199,10 +247,14 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Module> ModuleUpdatedByUsers { get; set; }
         public virtual ICollection<Paymentvoucher> PaymentvoucherPreparedByUsers { get; set; }
         public virtual ICollection<Paymentvoucher> PaymentvoucherUpdatedByUsers { get; set; }
+        public virtual ICollection<Paymentvoucherattachment> PaymentvoucherattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Paymentvoucherattachment> PaymentvoucherattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Paymentvoucherdetail> PaymentvoucherdetailPreparedByUsers { get; set; }
         public virtual ICollection<Paymentvoucherdetail> PaymentvoucherdetailUpdatedByUsers { get; set; }
         public virtual ICollection<Purchaseinvoice> PurchaseinvoicePreparedByUsers { get; set; }
         public virtual ICollection<Purchaseinvoice> PurchaseinvoiceUpdatedByUsers { get; set; }
+        public virtual ICollection<Purchaseinvoiceattachment> PurchaseinvoiceattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Purchaseinvoiceattachment> PurchaseinvoiceattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Purchaseinvoicedetail> PurchaseinvoicedetailPreparedByUsers { get; set; }
         public virtual ICollection<Purchaseinvoicedetail> PurchaseinvoicedetailUpdatedByUsers { get; set; }
         public virtual ICollection<Purchaseinvoicedetailtax> PurchaseinvoicedetailtaxPreparedByUsers { get; set; }
@@ -211,10 +263,14 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Purchaseinvoicetax> PurchaseinvoicetaxUpdatedByUsers { get; set; }
         public virtual ICollection<Receiptvoucher> ReceiptvoucherPreparedByUsers { get; set; }
         public virtual ICollection<Receiptvoucher> ReceiptvoucherUpdatedByUsers { get; set; }
+        public virtual ICollection<Receiptvoucherattachment> ReceiptvoucherattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Receiptvoucherattachment> ReceiptvoucherattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Receiptvoucherdetail> ReceiptvoucherdetailPreparedByUsers { get; set; }
         public virtual ICollection<Receiptvoucherdetail> ReceiptvoucherdetailUpdatedByUsers { get; set; }
         public virtual ICollection<Salesinvoice> SalesinvoicePreparedByUsers { get; set; }
         public virtual ICollection<Salesinvoice> SalesinvoiceUpdatedByUsers { get; set; }
+        public virtual ICollection<Salesinvoiceattachment> SalesinvoiceattachmentPreparedByUsers { get; set; }
+        public virtual ICollection<Salesinvoiceattachment> SalesinvoiceattachmentUpdatedByUsers { get; set; }
         public virtual ICollection<Salesinvoicedetail> SalesinvoicedetailPreparedByUsers { get; set; }
         public virtual ICollection<Salesinvoicedetail> SalesinvoicedetailUpdatedByUsers { get; set; }
         public virtual ICollection<Salesinvoicedetailtax> SalesinvoicedetailtaxPreparedByUsers { get; set; }

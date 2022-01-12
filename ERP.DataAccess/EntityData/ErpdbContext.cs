@@ -15,7 +15,9 @@ namespace ERP.DataAccess.EntityData
             : base(options)
         {
         }
+
         public virtual DbSet<Advanceadjustment> Advanceadjustments { get; set; }
+        public virtual DbSet<Advanceadjustmentattachment> Advanceadjustmentattachments { get; set; }
         public virtual DbSet<Advanceadjustmentdetail> Advanceadjustmentdetails { get; set; }
         public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
         public virtual DbSet<Aspnetroleclaim> Aspnetroleclaims { get; set; }
@@ -24,44 +26,57 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Aspnetuserlogin> Aspnetuserlogins { get; set; }
         public virtual DbSet<Aspnetuserrole> Aspnetuserroles { get; set; }
         public virtual DbSet<Aspnetusertoken> Aspnetusertokens { get; set; }
+        public virtual DbSet<Attachment> Attachments { get; set; }
+        public virtual DbSet<Attachmentcategory> Attachmentcategories { get; set; }
+        public virtual DbSet<Attachmentstorageaccount> Attachmentstorageaccounts { get; set; }
         public virtual DbSet<Chargetype> Chargetypes { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Contravoucher> Contravouchers { get; set; }
+        public virtual DbSet<Contravoucherattachment> Contravoucherattachments { get; set; }
         public virtual DbSet<Contravoucherdetail> Contravoucherdetails { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Creditnote> Creditnotes { get; set; }
+        public virtual DbSet<Creditnoteattachment> Creditnoteattachments { get; set; }
         public virtual DbSet<Creditnotedetail> Creditnotedetails { get; set; }
         public virtual DbSet<Creditnotedetailtax> Creditnotedetailtaxes { get; set; }
         public virtual DbSet<Creditnotetax> Creditnotetaxes { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Currencyconversion> Currencyconversions { get; set; }
         public virtual DbSet<Debitnote> Debitnotes { get; set; }
+        public virtual DbSet<Debitnoteattachment> Debitnoteattachments { get; set; }
         public virtual DbSet<Debitnotedetail> Debitnotedetails { get; set; }
         public virtual DbSet<Debitnotedetailtax> Debitnotedetailtaxes { get; set; }
         public virtual DbSet<Debitnotetax> Debitnotetaxes { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Designation> Designations { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Errorlog> Errorlogs { get; set; }
         public virtual DbSet<Financialyear> Financialyears { get; set; }
         public virtual DbSet<Financialyearcompanyrelation> Financialyearcompanyrelations { get; set; }
         public virtual DbSet<Form> Forms { get; set; }
         public virtual DbSet<Journalvoucher> Journalvouchers { get; set; }
+        public virtual DbSet<Journalvoucherattachment> Journalvoucherattachments { get; set; }
         public virtual DbSet<Journalvoucherdetail> Journalvoucherdetails { get; set; }
         public virtual DbSet<Ledger> Ledgers { get; set; }
         public virtual DbSet<Ledgeraddress> Ledgeraddresses { get; set; }
+        public virtual DbSet<Ledgerattachment> Ledgerattachments { get; set; }
         public virtual DbSet<Ledgercompanyrelation> Ledgercompanyrelations { get; set; }
         public virtual DbSet<Ledgerfinancialyearbalance> Ledgerfinancialyearbalances { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<Paymentvoucher> Paymentvouchers { get; set; }
+        public virtual DbSet<Paymentvoucherattachment> Paymentvoucherattachments { get; set; }
         public virtual DbSet<Paymentvoucherdetail> Paymentvoucherdetails { get; set; }
         public virtual DbSet<Purchaseinvoice> Purchaseinvoices { get; set; }
+        public virtual DbSet<Purchaseinvoiceattachment> Purchaseinvoiceattachments { get; set; }
         public virtual DbSet<Purchaseinvoicedetail> Purchaseinvoicedetails { get; set; }
         public virtual DbSet<Purchaseinvoicedetailtax> Purchaseinvoicedetailtaxes { get; set; }
         public virtual DbSet<Purchaseinvoicetax> Purchaseinvoicetaxes { get; set; }
         public virtual DbSet<Receiptvoucher> Receiptvouchers { get; set; }
+        public virtual DbSet<Receiptvoucherattachment> Receiptvoucherattachments { get; set; }
         public virtual DbSet<Receiptvoucherdetail> Receiptvoucherdetails { get; set; }
         public virtual DbSet<Salesinvoice> Salesinvoices { get; set; }
+        public virtual DbSet<Salesinvoiceattachment> Salesinvoiceattachments { get; set; }
         public virtual DbSet<Salesinvoicedetail> Salesinvoicedetails { get; set; }
         public virtual DbSet<Salesinvoicedetailtax> Salesinvoicedetailtaxes { get; set; }
         public virtual DbSet<Salesinvoicetax> Salesinvoicetaxes { get; set; }
@@ -73,8 +88,7 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetup> Vouchersetups { get; set; }
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
-
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+  //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
         //            if (!optionsBuilder.IsConfigured)
         //            {
@@ -86,8 +100,7 @@ namespace ERP.DataAccess.EntityData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Advanceadjustment>(entity =>
+modelBuilder.Entity<Advanceadjustment>(entity =>
             {
                 entity.ToTable("advanceadjustment");
 
@@ -212,6 +225,54 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.VoucherStyleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AdvanceAdjustment_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Advanceadjustmentattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("advanceadjustmentattachment");
+
+                entity.HasIndex(e => e.AdvanceAdjustmentId)
+                    .HasName("FK_AdvAttachment_AdvanceAdjustment_AdvanceAdjustmentId_idx");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_AdvAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_AdvAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_AdvAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.AdvanceAdjustment)
+                    .WithMany(p => p.Advanceadjustmentattachments)
+                    .HasForeignKey(d => d.AdvanceAdjustmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AdvAttachment_AdvanceAdjustment_AdvanceAdjustmentId");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Advanceadjustmentattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AdvAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.AdvanceadjustmentattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AdvAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.AdvanceadjustmentattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AdvAttachment_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Advanceadjustmentdetail>(entity =>
@@ -510,6 +571,173 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
             });
 
+            modelBuilder.Entity<Attachment>(entity =>
+            {
+                entity.ToTable("attachment");
+
+                entity.HasIndex(e => e.CategoryId)
+                    .HasName("FK_Attachment_AttachmentCategory_CategoryId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_Attachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.StorageAccountId)
+                    .HasName("FK_Attachment_StorageAccount_StorageAccountId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_Attachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.ContainerName)
+                    .HasColumnType("varchar(1000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.ContentType)
+                    .HasColumnType("varchar(100)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("varchar(200)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.FileExtension)
+                    .HasColumnType("varchar(100)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Guidno)
+                    .HasColumnName("GUIDNo")
+                    .HasColumnType("varchar(100)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.ServerFileName)
+                    .HasColumnType("varchar(1000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Url)
+                    .HasColumnName("URL")
+                    .HasColumnType("varchar(1000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UserFileName)
+                    .HasColumnType("varchar(1000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.Attachments)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK_Attachment_AttachmentCategory_CategoryId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.AttachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Attachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.StorageAccount)
+                    .WithMany(p => p.Attachments)
+                    .HasForeignKey(d => d.StorageAccountId)
+                    .HasConstraintName("FK_Attachment_StorageAccount_StorageAccountId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.AttachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Attachment_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Attachmentcategory>(entity =>
+            {
+                entity.HasKey(e => e.CategoryId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("attachmentcategory");
+
+                entity.HasIndex(e => e.CategoryName)
+                    .HasName("CategoryName_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_AttachmentCategory_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_AttachmentCategory_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.CategoryName)
+                    .IsRequired()
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.AttachmentcategoryPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AttachmentCategory_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.AttachmentcategoryUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AttachmentCategory_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Attachmentstorageaccount>(entity =>
+            {
+                entity.HasKey(e => e.StorageAccountId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("attachmentstorageaccount");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_AttchmentAccount_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_AttchmentAccount_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.AccountKey)
+                    .IsRequired()
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.AccountName)
+                    .IsRequired()
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.AttachmentstorageaccountPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AttchmentAccount_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.AttachmentstorageaccountUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AttchmentAccount_User_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Chargetype>(entity =>
             {
                 entity.ToTable("chargetype");
@@ -784,6 +1012,54 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.VoucherStyleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContraVoucher_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Contravoucherattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("contravoucherattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_CVAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.ContraVoucherId)
+                    .HasName("FK_CVAttachment_ContraVoucher_ContraVoucherId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_CVAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_CVAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Contravoucherattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CVAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.ContraVoucher)
+                    .WithMany(p => p.Contravoucherattachments)
+                    .HasForeignKey(d => d.ContraVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CVAttachment_ContraVoucher_ContraVoucherId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ContravoucherattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CVAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ContravoucherattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CVAttachment_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Contravoucherdetail>(entity =>
@@ -1081,6 +1357,54 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.VoucherStyleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CreditNote_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Creditnoteattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("creditnoteattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_CNAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.CreditNoteId)
+                    .HasName("FK_CNAttachment_CreditNote_CreditNoteId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_CNAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_CNAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Creditnoteattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CNAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.CreditNote)
+                    .WithMany(p => p.Creditnoteattachments)
+                    .HasForeignKey(d => d.CreditNoteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CNAttachment_CreditNote_CreditNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.CreditnoteattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CNAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.CreditnoteattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CNAttachment_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Creditnotedetail>(entity =>
@@ -1586,6 +1910,54 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_DebitNote_VoucherStyle_VoucherStyleId");
             });
 
+            modelBuilder.Entity<Debitnoteattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("debitnoteattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_DNAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.DebitNoteId)
+                    .HasName("FK_DNAttachment_DebitNote_DebitNoteId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_DNAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_DNAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Debitnoteattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DNAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.DebitNote)
+                    .WithMany(p => p.Debitnoteattachments)
+                    .HasForeignKey(d => d.DebitNoteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DNAttachment_DebitNote_DebitNoteId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.DebitnoteattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DNAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.DebitnoteattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DNAttachment_User_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Debitnotedetail>(entity =>
             {
                 entity.HasKey(e => e.DebitNoteDetId)
@@ -1948,6 +2320,77 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_Employee_User_UpdatedByUserId");
             });
 
+            modelBuilder.Entity<Errorlog>(entity =>
+            {
+                entity.HasKey(e => e.LogId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("errorlog");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_ErrorLog_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_ErrorLog_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Action)
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Area)
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Controller)
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Exception)
+                    .HasColumnType("varchar(5000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Level)
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Message)
+                    .HasColumnType("varchar(5000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.RaiseDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.RawUrl)
+                    .HasColumnName("RawURL")
+                    .HasColumnType("varchar(1000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UserName)
+                    .HasColumnType("varchar(250)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ErrorlogPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .HasConstraintName("FK_ErrorLog_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ErrorlogUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .HasConstraintName("FK_ErrorLog_User_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Financialyear>(entity =>
             {
                 entity.ToTable("financialyear");
@@ -2197,6 +2640,54 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_JournalVoucher_VoucherStyle_VoucherStyleId");
             });
 
+            modelBuilder.Entity<Journalvoucherattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("journalvoucherattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_JVAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.JournalVoucherId)
+                    .HasName("FK_JVAttachment_JournalVoucher_JournalVoucherId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_JVAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_JVAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Journalvoucherattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JVAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.JournalVoucher)
+                    .WithMany(p => p.Journalvoucherattachments)
+                    .HasForeignKey(d => d.JournalVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JVAttachment_JournalVoucher_JournalVoucherId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.JournalvoucherattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JVAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.JournalvoucherattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JVAttachment_User_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Journalvoucherdetail>(entity =>
             {
                 entity.HasKey(e => e.JournalVoucherDetId)
@@ -2439,6 +2930,54 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LedgerAddress_User_UpdatedByUserId");
+            });
+
+            modelBuilder.Entity<Ledgerattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("ledgerattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_LedgerAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.LedgerId)
+                    .HasName("FK_LedgerAttachment_Ledger_LedgerId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_LedgerAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_LedgerAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Ledgerattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LedgerAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.Ledger)
+                    .WithMany(p => p.Ledgerattachments)
+                    .HasForeignKey(d => d.LedgerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LedgerAttachment_Ledger_LedgerId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.LedgerattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LedgerAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.LedgerattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LedgerAttachment_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Ledgercompanyrelation>(entity =>
@@ -2718,6 +3257,54 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_PaymentVoucher_VoucherStyle_VoucherStyleId");
             });
 
+            modelBuilder.Entity<Paymentvoucherattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("paymentvoucherattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_PVAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.PaymentVoucherId)
+                    .HasName("FK_PVAttachment_PaymentVoucher_PaymentVoucherId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_PVAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_PVAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Paymentvoucherattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PVAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.PaymentVoucher)
+                    .WithMany(p => p.Paymentvoucherattachments)
+                    .HasForeignKey(d => d.PaymentVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PVAttachment_PaymentVoucher_PaymentVoucherId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.PaymentvoucherattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PVAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.PaymentvoucherattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PVAttachment_User_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Paymentvoucherdetail>(entity =>
             {
                 entity.HasKey(e => e.PaymentVoucherDetId)
@@ -2981,6 +3568,54 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.VoucherStyleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PurchaseInvoice_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Purchaseinvoiceattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("purchaseinvoiceattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_PIAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_PIAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.PurchaseInvoiceId)
+                    .HasName("FK_PIAttachment_PurchaseInvoice_PurchaseInvoiceId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_PIAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Purchaseinvoiceattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PIAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.PurchaseinvoiceattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PIAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.PurchaseInvoice)
+                    .WithMany(p => p.Purchaseinvoiceattachments)
+                    .HasForeignKey(d => d.PurchaseInvoiceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PIAttachment_PurchaseInvoice_PurchaseInvoiceId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.PurchaseinvoiceattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PIAttachment_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Purchaseinvoicedetail>(entity =>
@@ -3330,6 +3965,54 @@ namespace ERP.DataAccess.EntityData
                     .HasConstraintName("FK_ReceiptVoucher_VoucherStyle_VoucherStyleId");
             });
 
+            modelBuilder.Entity<Receiptvoucherattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("receiptvoucherattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_RVAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_RVAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.ReceiptVoucherId)
+                    .HasName("FK_RVAttachment_ReceiptVoucher_ReceiptVoucherId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_RVAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Receiptvoucherattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RVAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.ReceiptvoucherattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RVAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.ReceiptVoucher)
+                    .WithMany(p => p.Receiptvoucherattachments)
+                    .HasForeignKey(d => d.ReceiptVoucherId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RVAttachment_ReceiptVoucher_ReceiptVoucherId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.ReceiptvoucherattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RVAttachment_User_UpdatedByUserId");
+            });
+
             modelBuilder.Entity<Receiptvoucherdetail>(entity =>
             {
                 entity.HasKey(e => e.ReceiptVoucherDetId)
@@ -3602,6 +4285,54 @@ namespace ERP.DataAccess.EntityData
                     .HasForeignKey(d => d.VoucherStyleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SalesInvoice_VoucherStyle_VoucherStyleId");
+            });
+
+            modelBuilder.Entity<Salesinvoiceattachment>(entity =>
+            {
+                entity.HasKey(e => e.AssociationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("salesinvoiceattachment");
+
+                entity.HasIndex(e => e.AttachmentId)
+                    .HasName("FK_SIAttachment_Attachment_AttachmentId_idx");
+
+                entity.HasIndex(e => e.PreparedByUserId)
+                    .HasName("FK_SIAttachment_User_PreparedByUserId_idx");
+
+                entity.HasIndex(e => e.SalesInvoiceId)
+                    .HasName("FK_SIAttachment_SalesInvoice_SalesInvoiceId_idx");
+
+                entity.HasIndex(e => e.UpdatedByUserId)
+                    .HasName("FK_SIAttachment_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Attachment)
+                    .WithMany(p => p.Salesinvoiceattachments)
+                    .HasForeignKey(d => d.AttachmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SIAttachment_Attachment_AttachmentId");
+
+                entity.HasOne(d => d.PreparedByUser)
+                    .WithMany(p => p.SalesinvoiceattachmentPreparedByUsers)
+                    .HasForeignKey(d => d.PreparedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SIAttachment_User_PreparedByUserId");
+
+                entity.HasOne(d => d.SalesInvoice)
+                    .WithMany(p => p.Salesinvoiceattachments)
+                    .HasForeignKey(d => d.SalesInvoiceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SIAttachment_SalesInvoice_SalesInvoiceId");
+
+                entity.HasOne(d => d.UpdatedByUser)
+                    .WithMany(p => p.SalesinvoiceattachmentUpdatedByUsers)
+                    .HasForeignKey(d => d.UpdatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SIAttachment_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Salesinvoicedetail>(entity =>
