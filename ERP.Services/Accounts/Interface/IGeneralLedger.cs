@@ -9,6 +9,6 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface IGeneralLedger
     {
-        Task<DataTableResultModel<GeneralLedgerModel>> GetTransactionList(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY, int yearId, int companyId);
+        Task<DataTableResultModel<GeneralLedgerModel>> GetTransactionList(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY);
     }
 }

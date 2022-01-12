@@ -51,6 +51,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterJournalVoucherModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterJournalVoucherModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<JournalVoucherModel> resultModel = await _journalVoucher.GetJournalVoucherList(dataTableAjaxPostModel, searchFilterModel);
 

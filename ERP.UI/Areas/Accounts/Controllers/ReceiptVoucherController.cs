@@ -54,6 +54,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterReceiptVoucherModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterReceiptVoucherModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<ReceiptVoucherModel> resultModel = await _receiptVoucher.GetReceiptVoucherList(dataTableAjaxPostModel, searchFilterModel);
 

@@ -57,7 +57,7 @@ namespace ERP.Services.Accounts
             salesInvoiceDetailTax.SrNo = salesInvoiceDetailTaxModel.SrNo;
             salesInvoiceDetailTax.TaxLedgerId = salesInvoiceDetailTaxModel.TaxLedgerId;
             salesInvoiceDetailTax.TaxPercentageOrAmount = salesInvoiceDetailTaxModel.TaxPercentageOrAmount;
-            salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc == null ? 0 : salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
+            salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc;
             salesInvoiceDetailTax.TaxAddOrDeduct = salesInvoiceDetailTaxModel.TaxAddOrDeduct;
             salesInvoiceDetailTax.TaxAmountFc = 0;
             salesInvoiceDetailTax.TaxAmount = 0;
@@ -90,7 +90,7 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetailTax.SrNo = salesInvoiceDetailTaxModel.SrNo;
                 salesInvoiceDetailTax.TaxLedgerId = salesInvoiceDetailTaxModel.TaxLedgerId;
                 salesInvoiceDetailTax.TaxPercentageOrAmount = salesInvoiceDetailTaxModel.TaxPercentageOrAmount;
-                salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc == null ? 0 : salesInvoiceDetailTaxModel.TaxPerOrAmountFc;;
+                salesInvoiceDetailTax.TaxPerOrAmountFc = salesInvoiceDetailTaxModel.TaxPerOrAmountFc;;
                 salesInvoiceDetailTax.TaxAddOrDeduct = salesInvoiceDetailTaxModel.TaxAddOrDeduct;
                 salesInvoiceDetailTax.TaxAmountFc = 0;
                 salesInvoiceDetailTax.TaxAmount = 0;

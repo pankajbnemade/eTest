@@ -224,6 +224,9 @@ namespace ERP.Services.Accounts
                                                 .Include(w => w.AccountLedger).Include(w => w.Currency)
                                                 .Include(w => w.PreparedByUser).Include(w => w.Status); ;
 
+            query = query.Where(w => w.CompanyId==searchFilterModel.CompanyId);
+            query = query.Where(w => w.FinancialYearId==searchFilterModel.FinancialYearId);
+
             if (!string.IsNullOrEmpty(searchFilterModel.VoucherNo))
             {
                 query = query.Where(w => w.VoucherNo.Contains(searchFilterModel.VoucherNo));

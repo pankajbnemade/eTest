@@ -22,5 +22,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Account")]
         public Nullable<int> AccountLedgerId { get; set; }
+
+        [Display(Name = "Company")]
+        public int CompanyId { get; set; }
+
+        [Display(Name = "Year")]
+        public int FinancialYearId { get; set; }
     }
 }

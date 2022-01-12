@@ -72,6 +72,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterDebitNoteModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterDebitNoteModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<DebitNoteModel> resultModel = await _debitNote.GetDebitNoteList(dataTableAjaxPostModel, searchFilterModel);
 
@@ -217,10 +223,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
                                 await _debitNoteDetailTax.AddDebitNoteDetailTaxByDebitNoteId(debitNoteModel.DebitNoteId, (int)debitNoteModel.TaxRegisterId);
                             }
                         }
-                        else
-                        {
-                            await _debitNoteTax.UpdateDebitNoteTaxAmountAll(debitNoteModel.DebitNoteId);
-                        }
+                        //else
+                        //{
+                        await _debitNoteTax.UpdateDebitNoteTaxAmountAll(debitNoteModel.DebitNoteId);
+                        //}
                         data.Result.Status = true;
                         data.Result.Data = debitNoteModel.DebitNoteId;
                     }

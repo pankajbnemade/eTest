@@ -34,13 +34,13 @@ namespace ERP.Services.Accounts
             journalVoucherDetail = _journalVoucherDetail;
         }
 
-        public async Task<DataTableResultModel<GeneralLedgerModel>> GetTransactionList(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY, int yearId, int companyId)
+        public async Task<DataTableResultModel<GeneralLedgerModel>> GetTransactionList(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
         {
             if (searchFilterModel.FromDate < fromDate_FY) { searchFilterModel.FromDate = fromDate_FY; }
 
             if (searchFilterModel.ToDate > toDate_FY) { searchFilterModel.ToDate = toDate_FY; }
 
-            IList<GeneralLedgerModel> generalLedgerModelList = await GetTransactionList(searchFilterModel.LedgerId, searchFilterModel.FromDate, searchFilterModel.ToDate, yearId, companyId);
+            IList<GeneralLedgerModel> generalLedgerModelList = await GetTransactionList(searchFilterModel.LedgerId, searchFilterModel.FromDate, searchFilterModel.ToDate, searchFilterModel.FinancialYearId, searchFilterModel.CompanyId);
 
             DataTableResultModel<GeneralLedgerModel> resultModel = new DataTableResultModel<GeneralLedgerModel>();
 

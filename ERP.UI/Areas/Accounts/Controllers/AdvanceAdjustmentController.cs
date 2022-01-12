@@ -60,6 +60,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterAdvanceAdjustmentModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterAdvanceAdjustmentModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<AdvanceAdjustmentModel> resultModel = await _advanceAdjustment.GetAdvanceAdjustmentList(dataTableAjaxPostModel, searchFilterModel);
 

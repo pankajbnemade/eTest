@@ -74,10 +74,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
             // deserilize string search filter.
             SearchFilterGeneralLedgerModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterGeneralLedgerModel>(searchFilter);
 
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<GeneralLedgerModel> resultModel = await _generalLedger.GetTransactionList(searchFilterModel,
-                                                                                            financialYearModel.FromDate, financialYearModel.ToDate,
-                                                                                            userSession.FinancialYearId, userSession.CompanyId);
+                                                                                            financialYearModel.FromDate, financialYearModel.ToDate);
 
             return await Task.Run(() =>
             {

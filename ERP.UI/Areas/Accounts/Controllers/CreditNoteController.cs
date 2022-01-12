@@ -72,6 +72,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterCreditNoteModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterCreditNoteModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<CreditNoteModel> resultModel = await _creditNote.GetCreditNoteList(dataTableAjaxPostModel, searchFilterModel);
 
@@ -217,10 +223,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
                                 await _creditNoteDetailTax.AddCreditNoteDetailTaxByCreditNoteId(creditNoteModel.CreditNoteId, (int)creditNoteModel.TaxRegisterId);
                             }
                         }
-                        else
-                        {
-                            await _creditNoteTax.UpdateCreditNoteTaxAmountAll(creditNoteModel.CreditNoteId);
-                        }
+                        //else
+                        //{
+                        await _creditNoteTax.UpdateCreditNoteTaxAmountAll(creditNoteModel.CreditNoteId);
+                        //}
                         data.Result.Status = true;
                         data.Result.Data = creditNoteModel.CreditNoteId;
                     }

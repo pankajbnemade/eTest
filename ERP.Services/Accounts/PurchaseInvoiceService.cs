@@ -3,16 +3,14 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
-using ERP.Models.Master;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using ERP.Models.Accounts.Enums;
+using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
 {
@@ -394,6 +392,7 @@ namespace ERP.Services.Accounts
                         PurchaseInvoiceId = purchaseInvoice.PurchaseInvoiceId,
                         CurrencyId = purchaseInvoice.CurrencyId,
                         CurrencyCode = purchaseInvoice.Currency.CurrencyCode,
+                        ExchangeRate = purchaseInvoice.ExchangeRate,
                         PartyReferenceNo = purchaseInvoice.SupplierReferenceNo,
                     });
                 }
@@ -420,6 +419,9 @@ namespace ERP.Services.Accounts
             IQueryable<Purchaseinvoice> query = GetQueryByCondition(w => w.PurchaseInvoiceId != 0)
                                                 .Include(w => w.SupplierLedger).Include(w => w.Currency)
                                                 .Include(w => w.PreparedByUser).Include(w => w.Status);
+
+            query = query.Where(w => w.CompanyId==searchFilterModel.CompanyId);
+            query = query.Where(w => w.FinancialYearId==searchFilterModel.FinancialYearId);
 
             //sortBy
             if (string.IsNullOrEmpty(sortBy) || sortBy == "0")

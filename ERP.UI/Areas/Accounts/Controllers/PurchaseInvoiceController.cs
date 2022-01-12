@@ -72,6 +72,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterPurchaseInvoiceModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterPurchaseInvoiceModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<PurchaseInvoiceModel> resultModel = await _purchaseInvoice.GetPurchaseInvoiceList(dataTableAjaxPostModel, searchFilterModel);
 
@@ -217,10 +223,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
                                 await _purchaseInvoiceDetailTax.AddPurchaseInvoiceDetailTaxByPurchaseInvoiceId(purchaseInvoiceModel.PurchaseInvoiceId, (int)purchaseInvoiceModel.TaxRegisterId);
                             }
                         }
-                        else
-                        {
-                            await _purchaseInvoiceTax.UpdatePurchaseInvoiceTaxAmountAll(purchaseInvoiceModel.PurchaseInvoiceId);
-                        }
+                        //else
+                        //{
+                        await _purchaseInvoiceTax.UpdatePurchaseInvoiceTaxAmountAll(purchaseInvoiceModel.PurchaseInvoiceId);
+                        //}
                         data.Result.Status = true;
                         data.Result.Data = purchaseInvoiceModel.PurchaseInvoiceId;
                     }

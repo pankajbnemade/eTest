@@ -23,5 +23,11 @@ namespace ERP.Models.Accounts
         
         [Display(Name = "Cheque/Trans. No")]
         public string ChequeNo { get; set; }
+
+        [Display(Name = "Company")]
+        public int CompanyId { get; set; }
+
+        [Display(Name = "Year")]
+        public int FinancialYearId { get; set; }
     }
 }

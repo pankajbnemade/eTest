@@ -62,18 +62,18 @@ namespace ERP.UI
             //    options.AppSecret = "8888cefba55e9cfa06a2b28f0495e533";
             //});
 
-            services.AddAuthentication().AddMicrosoftAccount(options =>
-            {
-                options.ClientId = "479144716347128";
-                options.ClientSecret = "8888cefba55e9cfa06a2b28f0495e533";
-            });
+            //services.AddAuthentication().AddMicrosoftAccount(options =>
+            //{
+            //    options.ClientId = "479144716347128";
+            //    options.ClientSecret = "8888cefba55e9cfa06a2b28f0495e533";
+            //});
 
-            services.AddAuthentication().AddGoogle(options =>
-            {
-                options.ClientId = "457450439478-477bgc7uvgfo9ck8bel6i0rkrjk0q266.apps.googleusercontent.com";
-                options.ClientSecret = "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";
+            //services.AddAuthentication().AddGoogle(options =>
+            //{
+            //    options.ClientId = "457450439478-477bgc7uvgfo9ck8bel6i0rkrjk0q266.apps.googleusercontent.com";
+            //    options.ClientSecret = "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";
 
-            });
+            //});
 
             services.AddControllers();
             services.AddControllersWithViews()

@@ -215,6 +215,9 @@ namespace ERP.Services.Accounts
                                                     .Include(w => w.ParticularLedger).Include(w => w.Currency).Include(w => w.Status)
                                                     .Include(w => w.PaymentVoucherDet).ThenInclude(w => w.PaymentVoucher)
                                                     .Include(w => w.ReceiptVoucherDet).ThenInclude(w => w.ReceiptVoucher);
+            
+            query = query.Where(w => w.CompanyId==searchFilterModel.CompanyId);
+            query = query.Where(w => w.FinancialYearId==searchFilterModel.FinancialYearId);
 
             if (!string.IsNullOrEmpty(searchFilterModel.AdvanceAdjustmentNo))
             {

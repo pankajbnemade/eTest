@@ -30,7 +30,7 @@
                                     <tr class="table-header">
                                         <th>Action</th>
                                         <th>Company Name</th>
-                                        <th>Currency Name</th>
+                                        <th>Currency</th>
                                         <th>Email Address</th>
                                         <th>Website</th>
                                         <th>Phone No</th>
@@ -46,6 +46,7 @@
 </section>
 
 <script type="text/javascript">
+
 $(document).ready(function () {
     $("#companyGrid").DataTable({
 
@@ -78,7 +79,7 @@ $(document).ready(function () {
                 }, "orderable": false
             },
             { "data": "CompanyName", "name": "Company Name" },
-            { "data": "CurrencyName", "name": "Currency Name" },
+            { "data": "CurrencyCode", "name": "Currency" },
             { "data": "EmailAddress", "name": "Email Address" },
             { "data": "Website", "name": "Website" },
             { "data": "PhoneNo", "name": "Phone No" }

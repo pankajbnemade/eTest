@@ -54,6 +54,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterPaymentVoucherModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterPaymentVoucherModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<PaymentVoucherModel> resultModel = await _paymentVoucher.GetPaymentVoucherList(dataTableAjaxPostModel, searchFilterModel);
 

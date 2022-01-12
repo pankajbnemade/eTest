@@ -51,6 +51,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             // deserilize string search filter.
             SearchFilterContraVoucherModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterContraVoucherModel>(searchFilter);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            searchFilterModel.CompanyId=userSession.CompanyId;
+            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+
             // get data.
             DataTableResultModel<ContraVoucherModel> resultModel = await _contraVoucher.GetContraVoucherList(dataTableAjaxPostModel, searchFilterModel);
 

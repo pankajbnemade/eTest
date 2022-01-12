@@ -44,9 +44,9 @@ namespace ERP.Services.Accounts
             salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
             salesInvoiceDetail.Description = salesInvoiceDetailModel.Description;
             salesInvoiceDetail.UnitOfMeasurementId = salesInvoiceDetailModel.UnitOfMeasurementId;
-            salesInvoiceDetail.Quantity = salesInvoiceDetailModel.Quantity == null ? 0 : salesInvoiceDetailModel.Quantity;
-            salesInvoiceDetail.PerUnit = salesInvoiceDetailModel.PerUnit == null ? 0 : salesInvoiceDetailModel.PerUnit;
-            salesInvoiceDetail.UnitPrice = salesInvoiceDetailModel.UnitPrice == null ? 0 : salesInvoiceDetailModel.UnitPrice;
+            salesInvoiceDetail.Quantity = salesInvoiceDetailModel.Quantity;
+            salesInvoiceDetail.PerUnit = salesInvoiceDetailModel.PerUnit;
+            salesInvoiceDetail.UnitPrice = salesInvoiceDetailModel.UnitPrice;
             salesInvoiceDetail.GrossAmountFc = 0;
             salesInvoiceDetail.GrossAmount = 0;
             salesInvoiceDetail.TaxAmountFc = 0;
@@ -81,9 +81,9 @@ namespace ERP.Services.Accounts
                 salesInvoiceDetail.SrNo = salesInvoiceDetailModel.SrNo;
                 salesInvoiceDetail.Description = salesInvoiceDetailModel.Description;
                 salesInvoiceDetail.UnitOfMeasurementId = salesInvoiceDetailModel.UnitOfMeasurementId;
-                salesInvoiceDetail.Quantity = salesInvoiceDetailModel.Quantity == null ? 0 : salesInvoiceDetailModel.Quantity;
-                salesInvoiceDetail.PerUnit = salesInvoiceDetailModel.PerUnit == null ? 0 : salesInvoiceDetailModel.PerUnit;
-                salesInvoiceDetail.UnitPrice = salesInvoiceDetailModel.UnitPrice == null ? 0 : salesInvoiceDetailModel.UnitPrice;
+                salesInvoiceDetail.Quantity = salesInvoiceDetailModel.Quantity;
+                salesInvoiceDetail.PerUnit = salesInvoiceDetailModel.PerUnit;
+                salesInvoiceDetail.UnitPrice = salesInvoiceDetailModel.UnitPrice;
                 salesInvoiceDetail.GrossAmountFc = 0;
                 salesInvoiceDetail.GrossAmount = 0;
                 salesInvoiceDetail.TaxAmountFc = 0;

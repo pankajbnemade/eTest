@@ -20,5 +20,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "To Date")]
         public Nullable<DateTime> ToDate { get; set; }
+
+        [Display(Name = "Company")]
+        public int CompanyId { get; set; }
+
+        [Display(Name = "Year")]
+        public int FinancialYearId { get; set; }
     }
 }

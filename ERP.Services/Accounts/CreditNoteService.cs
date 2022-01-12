@@ -403,6 +403,7 @@ namespace ERP.Services.Accounts
                         DebitNoteId = creditNote.CreditNoteId,
                         CurrencyId = creditNote.CurrencyId,
                         CurrencyCode = creditNote.Currency.CurrencyCode,
+                        ExchangeRate = creditNote.ExchangeRate,
                         PartyReferenceNo = creditNote.PartyReferenceNo,
                         OurReferenceNo = creditNote.OurReferenceNo,
                     });
@@ -430,6 +431,9 @@ namespace ERP.Services.Accounts
             IQueryable<Creditnote> query = GetQueryByCondition(w => w.CreditNoteId != 0)
                                                 .Include(w => w.PartyLedger).Include(w => w.Currency)
                                                 .Include(w => w.PreparedByUser).Include(w => w.Status);
+
+            query = query.Where(w => w.CompanyId==searchFilterModel.CompanyId);
+            query = query.Where(w => w.FinancialYearId==searchFilterModel.FinancialYearId);
 
             //sortBy
             if (string.IsNullOrEmpty(sortBy) || sortBy == "0")

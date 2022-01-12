@@ -396,6 +396,7 @@ namespace ERP.Services.Accounts
                         SalesInvoiceId = salesInvoice.SalesInvoiceId,
                         CurrencyId = salesInvoice.CurrencyId,
                         CurrencyCode = salesInvoice.Currency.CurrencyCode,
+                        ExchangeRate = salesInvoice.ExchangeRate,
                         PartyReferenceNo = salesInvoice.CustomerReferenceNo,
                     });
                 }
@@ -425,6 +426,9 @@ namespace ERP.Services.Accounts
             IQueryable<Salesinvoice> query = GetQueryByCondition(w => w.SalesInvoiceId != 0)
                                                 .Include(w => w.CustomerLedger).Include(w => w.Currency)
                                                 .Include(w => w.PreparedByUser).Include(w => w.Status);
+
+            query = query.Where(w => w.CompanyId==searchFilterModel.CompanyId);
+            query = query.Where(w => w.FinancialYearId==searchFilterModel.FinancialYearId);
 
             //sortBy
             if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
