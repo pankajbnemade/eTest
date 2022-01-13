@@ -65,7 +65,17 @@
                 </div>
             </div>
         </div>
-
+        @*<div class="row">
+            <div class="col-sm-4">
+                <div class="form-group-sm">
+                    @Html.LabelFor(model => model.CompanyList, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.CompanyList)
+                </div>
+            </div>
+            <div class="col-sm-4">
+               
+            </div>
+        </div>*@
     </div>
 </div>
 
@@ -73,17 +83,6 @@
     $(document).ready(function () {
 
     });
-
-    // edit ledger master.
-    function fnEditMaster(ledgerId) {
-        var model = { ledgerId: ledgerId };
-        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditLedgerMaster", "Ledger")', 'html', model,
-        function (data) {
-            $('#modal-ledger').empty();
-            $('#modal-ledger').html(data).modal('show');
-            return false;
-        }, null, true, null, false);
-    }
 
 
 </script>

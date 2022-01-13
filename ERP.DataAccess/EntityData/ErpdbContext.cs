@@ -88,19 +88,21 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetup> Vouchersetups { get; set; }
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
-  //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;database=erpdb", x => x.ServerVersion("8.0.27-mysql"));
-        //            }
-        //        }
+
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;persistsecurityinfo=True;database=erpdb", x => x.ServerVersion("8.0.27-mysql"));
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-modelBuilder.Entity<Advanceadjustment>(entity =>
+
+            modelBuilder.Entity<Advanceadjustment>(entity =>
             {
                 entity.ToTable("advanceadjustment");
 
@@ -2327,12 +2329,6 @@ modelBuilder.Entity<Advanceadjustment>(entity =>
 
                 entity.ToTable("errorlog");
 
-                entity.HasIndex(e => e.PreparedByUserId)
-                    .HasName("FK_ErrorLog_User_PreparedByUserId_idx");
-
-                entity.HasIndex(e => e.UpdatedByUserId)
-                    .HasName("FK_ErrorLog_User_UpdatedByUserId_idx");
-
                 entity.Property(e => e.Action)
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
@@ -2363,8 +2359,6 @@ modelBuilder.Entity<Advanceadjustment>(entity =>
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
-
                 entity.Property(e => e.RaiseDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.RawUrl)
@@ -2373,22 +2367,10 @@ modelBuilder.Entity<Advanceadjustment>(entity =>
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
-
                 entity.Property(e => e.UserName)
                     .HasColumnType("varchar(250)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.HasOne(d => d.PreparedByUser)
-                    .WithMany(p => p.ErrorlogPreparedByUsers)
-                    .HasForeignKey(d => d.PreparedByUserId)
-                    .HasConstraintName("FK_ErrorLog_User_PreparedByUserId");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.ErrorlogUpdatedByUsers)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .HasConstraintName("FK_ErrorLog_User_UpdatedByUserId");
             });
 
             modelBuilder.Entity<Financialyear>(entity =>
@@ -2801,6 +2783,11 @@ modelBuilder.Entity<Advanceadjustment>(entity =>
 
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_Ledger_User_UpdatedByUserId_idx");
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("varchar(2000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.LedgerCode)
                     .IsRequired()

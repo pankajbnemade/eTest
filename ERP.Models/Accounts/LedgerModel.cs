@@ -57,5 +57,8 @@ namespace ERP.Models.Accounts
         [Display(Name = "Opening Balance Debit")]
         public decimal DebitAmountOpBal { get; set; }
 
+        [Display(Name = "Relation With Company")]
+        public string CompanyList { get; set; }
+
     }
 }

@@ -17,12 +17,5 @@ namespace ERP.DataAccess.EntityModels
         public string Area { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public int? PreparedByUserId { get; set; }
-        public DateTime? PreparedDateTime { get; set; }
-        public int? UpdatedByUserId { get; set; }
-        public DateTime? UpdatedDateTime { get; set; }
-
-        public virtual Aspnetuser PreparedByUser { get; set; }
-        public virtual Aspnetuser UpdatedByUser { get; set; }
     }
 }

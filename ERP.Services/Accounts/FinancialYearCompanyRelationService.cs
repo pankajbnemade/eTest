@@ -28,24 +28,6 @@ namespace ERP.Services.Accounts
             return financialYearCompanyRelationId; // returns.
         }
 
-        //public async Task<bool> UpdateFinancialYearCompanyRelation(FinancialYearCompanyRelationModel financialYearCompanyRelationModel)
-        //{
-        //    bool isUpdated = false;
-
-        //    // get record.
-        //    Financialyearcompanyrelation financialYearCompanyRelation = await GetByIdAsync(w => w.RelationId == financialYearCompanyRelationModel.RelationId);
-
-        //    if (null != financialYearCompanyRelation)
-        //    {
-        //        // assign values.
-        //        //financialYearCompanyRelation.FinancialYearCompanyRelationName = financialYearCompanyRelationModel.FinancialYearCompanyRelationName;
-
-        //        isUpdated = await Update(financialYearCompanyRelation);
-        //    }
-
-        //    return isUpdated; // returns.
-        //}
-
         public async Task<bool> DeleteFinancialYearCompanyRelation(int financialYearCompanyRelationId)
         {
             bool isDeleted = false;

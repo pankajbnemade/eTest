@@ -17,10 +17,13 @@ namespace ERP.Services.Accounts
     public class LedgerService : Repository<Ledger>, ILedger
     {
         private readonly ICommon common;
+        private readonly ErpDbContext dbContext;
 
-        public LedgerService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+
+        public LedgerService(ErpDbContext _dbContext, ICommon _common) : base(_dbContext)
         {
             common = _common;
+            dbContext = _dbContext;
         }
 
         public async Task<GenerateNoModel> GenerateLedgerCode()
@@ -50,6 +53,7 @@ namespace ERP.Services.Accounts
             ledger.ParentGroupId = ledgerModel.ParentGroupId;
             ledger.IsDeActive = ledgerModel.IsDeActive;
             ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
+            ledger.Description = ledgerModel.Description;
             ledger.MaxNo = ledgerModel.MaxNo;
 
             await Create(ledger);
@@ -71,10 +75,12 @@ namespace ERP.Services.Accounts
                 ledger.LedgerCode = ledgerModel.LedgerCode;
                 ledger.LedgerName = ledgerModel.LedgerName;
                 ledger.IsGroup = Convert.ToSByte(ledgerModel.IsGroup);
-                ledger.IsMasterGroup = Convert.ToSByte(ledgerModel.IsMasterGroup);
+
                 ledger.ParentGroupId = ledgerModel.ParentGroupId;
                 ledger.IsDeActive = ledgerModel.IsDeActive;
                 ledger.TaxRegisteredNo = ledgerModel.TaxRegisteredNo;
+                ledger.Description = ledgerModel.Description;
+
                 isUpdated = await Update(ledger);
             }
 
@@ -164,7 +170,10 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
-                                            .Include(w => w.ParentGroup).Include(w => w.PreparedByUser);
+                                            .Include(w => w.ParentGroup)
+                                            .Include(w => w.PreparedByUser).ThenInclude(w => w.Employee)
+                                            .Include(w => w.Ledgeraddresses)
+                                            .Include(w => w.Ledgercompanyrelations).ThenInclude(w => w.Company);
 
             // apply filters.
             if (0 != ledgerId)
@@ -219,7 +228,9 @@ namespace ERP.Services.Accounts
                                     .Where(w => w.ParentGroupId!=null)
                                     .Where(w => w.IsDeActive==0)
                                     .Include(w => w.ParentGroup)
-                                    .Include(w => w.PreparedByUser);
+                                    .Include(w => w.PreparedByUser).ThenInclude(w => w.Employee)
+                                    ;
+
 
             //sortBy
             if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
@@ -273,7 +284,7 @@ namespace ERP.Services.Accounts
                 LedgerCode = s.LedgerCode,
                 LedgerName = s.LedgerName,
                 ParentGroupName = s.ParentGroup.LedgerName,
-                PreparedByName = s.PreparedByUser.UserName,
+                PreparedByName = s.PreparedByUser.Employee.FirstName + " " + s.PreparedByUser.Employee.LastName,
             }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
 
 
@@ -288,6 +299,7 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 LedgerModel ledgerModel = new LedgerModel();
+
                 ledgerModel.LedgerId = ledger.LedgerId;
                 ledgerModel.LedgerCode = ledger.LedgerCode;
                 ledgerModel.LedgerName = ledger.LedgerName;
@@ -296,10 +308,17 @@ namespace ERP.Services.Accounts
                 ledgerModel.ParentGroupId = ledger.ParentGroupId;
                 ledgerModel.IsDeActive = ledger.IsDeActive;
                 ledgerModel.TaxRegisteredNo = ledger.TaxRegisteredNo;
+                ledgerModel.Description = ledger.Description;
                 //######
                 ledgerModel.ParentGroupName = null != ledger.ParentGroup ? ledger.ParentGroup.LedgerName : null;
-                ledgerModel.PreparedByName = null != ledger.PreparedByUser ? ledger.PreparedByUser.UserName : null;
-                ledgerModel.ClosingBalance = 500;
+                ledgerModel.PreparedByName = null != ledger.PreparedByUser.Employee ? ledger.PreparedByUser.Employee.FirstName + " " + ledger.PreparedByUser.Employee.LastName : null;
+                //ledgerModel.ClosingBalance = 500;
+
+                if (null != ledger.Ledgercompanyrelations)
+                {
+                    ledgerModel.CompanyList = string.Join(",", ledger.Ledgercompanyrelations
+                                                    .Select(p => p.Company.CompanyName.ToString()));
+                }
 
                 return ledgerModel;
             });

@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Update Ledger Balance</h5> }
+            <h5 class="modal-title">Update Ledger Balance</h5> 
             <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
@@ -53,7 +53,7 @@
 
     // begin form
     function BeginUpdateLedgerBalance() {
-        var form = $("#frmLedgerMaster");
+        var form = $("#frmUpdateLedgerBalance");
         $(form).removeData("validator").removeData("unobtrusiveValidation");
         $.validator.unobtrusive.parse($(form));
         var validator = $(form).validate();

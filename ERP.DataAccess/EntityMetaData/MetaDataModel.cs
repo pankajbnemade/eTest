@@ -9,6 +9,9 @@
     public partial class Aspnetuserlogin : IAuditable { }
     public partial class Aspnetuserrole : IAuditable { }
     public partial class Aspnetusertoken : IAuditable { }
+    public partial class Attachment : IAuditable { }
+    public partial class Attachmentcategory : IAuditable { }
+    public partial class Attachmentstorageaccount : IAuditable { }
     public partial class Chargetype : IAuditable { }
     public partial class City : IAuditable { }
     public partial class Company : IAuditable { }

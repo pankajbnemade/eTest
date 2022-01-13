@@ -50,6 +50,7 @@ namespace ERP.DataAccess.EntityModels
         public sbyte IsDeActive { get; set; }
         public string TaxRegisteredNo { get; set; }
         public int MaxNo { get; set; }
+        public string Description { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

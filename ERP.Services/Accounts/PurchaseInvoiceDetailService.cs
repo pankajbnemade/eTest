@@ -75,7 +75,6 @@ namespace ERP.Services.Accounts
 
             if (null != purchaseInvoiceDetail)
             {
-
                 // assign values.
                 purchaseInvoiceDetail.PurchaseInvoiceId = purchaseInvoiceDetailModel.PurchaseInvoiceId;
                 purchaseInvoiceDetail.SrNo = purchaseInvoiceDetailModel.SrNo;

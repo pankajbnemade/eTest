@@ -168,8 +168,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
             LedgerModel ledgerModel = await _ledger.GetLedgerById(ledgerId);
 
             ViewBag.IsAddressVisible = false;
-
             ViewBag.IsEditVisible =false;
+            ViewBag.IsUpdateBalanceVisible =false;
 
             if (ledgerModel.ParentGroupId == (int)LedgerName.SundryDebtor || ledgerModel.ParentGroupId == (int)LedgerName.SundryCreditor)
             {
@@ -179,6 +179,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
             if (ledgerModel.IsMasterGroup == false)
             {
                 ViewBag.IsEditVisible = true;
+            }
+
+            if (ledgerModel.IsGroup == false)
+            {
+                ViewBag.IsUpdateBalanceVisible = true;
             }
 
             return await Task.Run(() =>
@@ -210,7 +215,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             return Json(data); // returns.
         }
 
-        public async Task<IActionResult> UpdateLedgerBalance(int ledgerId)
+        public async Task<IActionResult> EditLedgerBalance(int ledgerId)
         {
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
@@ -219,6 +224,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
             if (ledgerFinancialYearBalanceModel == null)
             {
                 ledgerFinancialYearBalanceModel=new LedgerFinancialYearBalanceModel();
+
+                ledgerFinancialYearBalanceModel.CompanyId=userSession.CompanyId;
+                ledgerFinancialYearBalanceModel.FinancialYearId=userSession.FinancialYearId;
             }
 
             return await Task.Run(() =>
@@ -240,7 +248,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     if (true == await _ledgerFinancialYearBalance.UpdateLedgerFinancialYearBalance(ledgerFinancialYearBalanceModel))
                     {
                         data.Result.Status = true;
-                        data.Result.Data = ledgerFinancialYearBalanceModel.LedgerBalanceId;
+                        data.Result.Data = ledgerFinancialYearBalanceModel.LedgerId;
                     }
                 }
                 else
@@ -251,7 +259,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     if (ledgerFinancialYearBalanceModel.LedgerBalanceId > 0)
                     {
                         data.Result.Status = true;
-                        data.Result.Data = ledgerFinancialYearBalanceModel.LedgerBalanceId;
+                        data.Result.Data = ledgerFinancialYearBalanceModel.LedgerId;
                     }
                 }
             }

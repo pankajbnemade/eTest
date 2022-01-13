@@ -67,8 +67,6 @@ namespace ERP.DataAccess.EntityModels
             DesignationUpdatedByUsers = new HashSet<Designation>();
             EmployeePreparedByUsers = new HashSet<Employee>();
             EmployeeUpdatedByUsers = new HashSet<Employee>();
-            ErrorlogPreparedByUsers = new HashSet<Errorlog>();
-            ErrorlogUpdatedByUsers = new HashSet<Errorlog>();
             FinancialyearPreparedByUsers = new HashSet<Financialyear>();
             FinancialyearUpdatedByUsers = new HashSet<Financialyear>();
             FinancialyearcompanyrelationPreparedByUsers = new HashSet<Financialyearcompanyrelation>();
@@ -219,8 +217,6 @@ namespace ERP.DataAccess.EntityModels
         public virtual ICollection<Designation> DesignationUpdatedByUsers { get; set; }
         public virtual ICollection<Employee> EmployeePreparedByUsers { get; set; }
         public virtual ICollection<Employee> EmployeeUpdatedByUsers { get; set; }
-        public virtual ICollection<Errorlog> ErrorlogPreparedByUsers { get; set; }
-        public virtual ICollection<Errorlog> ErrorlogUpdatedByUsers { get; set; }
         public virtual ICollection<Financialyear> FinancialyearPreparedByUsers { get; set; }
         public virtual ICollection<Financialyear> FinancialyearUpdatedByUsers { get; set; }
         public virtual ICollection<Financialyearcompanyrelation> FinancialyearcompanyrelationPreparedByUsers { get; set; }
