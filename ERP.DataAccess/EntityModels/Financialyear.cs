@@ -25,8 +25,8 @@ namespace ERP.DataAccess.EntityModels
 
         public int FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

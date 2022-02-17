@@ -90,7 +90,16 @@
             return false;
         }
 
+        var fromDate = $("#FromDate").val(); //2013-09-5
+        var toDate = $("#ToDate").val(); //2013-09-10
+
+        if (Date.parse(fromDate) > Date.parse(toDate)) {
+            alert("from date should be less than or equal to date.");
+            return false;
+        }
+
         var filterModel = {
+            /*LedgerName: $('#LedgerId option:selected').text(),*/
             LedgerId: $('#LedgerId').val(),
             FromDate: $('#FromDate').val(),
             ToDate: $('#ToDate').val(),
@@ -104,16 +113,19 @@
     // reset filter.
 
     function fnResetSearch() {
+        $("#SearchFilterModel").val('');
 
-        $('#searchFilterCriteria :input[type=text]').each(function (index) {
-            $(this).val('');
-        });
+        fnBackToIndex();
 
-        $('#searchFilterCriteria select').each(function (index) {
-            $(this).val('');
-        });
+        //$('#searchFilterCriteria :input[type=text]').each(function (index) {
+        //    $(this).val('');
+        //});
 
-        $("#reportGrid").DataTable().clear().draw();
+        //$('#searchFilterCriteria select').each(function (index) {
+        //    $(this).val('');
+        //});
+
+        //$("#reportGrid").DataTable().clear().draw();
 
     }
 

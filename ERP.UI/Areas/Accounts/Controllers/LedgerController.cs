@@ -196,6 +196,22 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             LedgerModel ledgerModel = await _ledger.GetLedgerById(ledgerId);
 
+            if (ledgerModel==null)
+            {
+                return NotFound("Record not exists");
+            }
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            LedgerFinancialYearBalanceModel ledgerFinancialYearBalanceModel = await _ledgerFinancialYearBalance.GetLedgerFinancialYearBalance(ledgerId, userSession.CompanyId, userSession.FinancialYearId);
+
+            if (ledgerFinancialYearBalanceModel != null)
+            {
+                ledgerModel.CreditAmountOpBal=ledgerFinancialYearBalanceModel.CreditAmount;
+                ledgerModel.DebitAmountOpBal=ledgerFinancialYearBalanceModel.DebitAmount;
+            }
+
+
             return await Task.Run(() =>
             {
                 return PartialView("_ViewLedgerMaster", ledgerModel);

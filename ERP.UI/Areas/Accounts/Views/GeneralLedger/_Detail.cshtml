@@ -23,7 +23,9 @@
     </div>
 </div>
 
+
 <script type="text/javascript">
+    
     $(document).ready(function () {
         fnBindDataTable();
     });
@@ -34,9 +36,11 @@
 
         var searchFilter = $("#SearchFilterModel").val();
 
-        //console.log('searchFilter');
+        var jsonFilter = JSON.parse(searchFilter);
 
-        //console.log(searchFilter);
+        var fileName = "General Ledger";
+
+        var reportTitle = "General Ledger Report" + "(From - " + jsonFilter.FromDate + " To - " + jsonFilter.ToDate + ")" ;
 
         $("#reportGrid").DataTable({
             "destroy": true,
@@ -58,10 +62,9 @@
                     titleAttr: 'Excel',
                     className: 'btn btn-default',
                     orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    filename:"General Ledger",
-                    title: "General Ledger Report"
-                   
+                    pageSize: 'A4',
+                    filename: fileName,
+                    title: reportTitle
                 },
                 {
                     extend: 'pdfHtml5',
@@ -69,9 +72,9 @@
                     titleAttr: 'PDF',
                     className: 'btn btn-default',
                     orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    filename: "General Ledger",
-                    title: "General Ledger Report",
+                    pageSize: 'A4',
+                    filename: fileName,
+                    title: reportTitle
                 }
             ],
             "ajax": {
@@ -94,12 +97,82 @@
                 { "data": "PartyReferenceNo", "name": "PartyReferenceNo", "title": "Party Reference No"},
                 { "data": "OurReferenceNo", "name": "OurReferenceNo", "title": "Other Reference No" },
                 { "data": "CurrencyCode", "name": "CurrencyCode", "title": "Currency" },
-                { "data": "ExchangeRate", "name": "ExchangeRate", "title": "Exchenge Rate", render: $.fn.dataTable.render.number(',', '.', 6, '') },
-                { "data": "CreditAmount_FC", "name": "CreditAmount_FC", "title": "Credit Amount FC", render: $.fn.dataTable.render.number(',', '.', 4, '') },
-                { "data": "CreditAmount", "name": "CreditAmount", "title": "Credit Amount", render: $.fn.dataTable.render.number(',', '.', 4, '') },
-                { "data": "DebitAmount_FC", "name": "DebitAmount_FC", "title": "Debit Amount FC", render: $.fn.dataTable.render.number(',', '.', 4, '') },
-                { "data": "DebitAmount", "name": "DebitAmount", "title": "Debit Amount", render: $.fn.dataTable.render.number(',', '.', 4, '') },
-                { "data": "ClosingAmount", "name": "ClosingAmount", "title": "Closing Amount", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                {
+                    "data": "ExchangeRate", "name": "ExchangeRate", "title": "Exchange Rate", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '';
+                        }
+                        else {
+                            return addCommas(full.ExchangeRate);
+                        }
+                    }
+                },
+                {
+                    "data": "CreditAmount_FC", "name": "CreditAmount_FC", "title": "Credit Amount FC", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '';
+                        }
+                        else {
+                            return addCommas(full.CreditAmount_FC);
+                        }
+                    }
+                },
+                {
+                    "data": "CreditAmount", "name": "CreditAmount", "title": "Credit Amount", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '<b>' + addCommas(full.CreditAmount) + '</b>';
+                        }
+                        else {
+                            return addCommas(full.CreditAmount);
+                        }
+                    }
+                },
+                {
+                    "data": "DebitAmount_FC", "name": "DebitAmount_FC", "title": "Debit Amount FC", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '';
+                        }
+                        else {
+                            return addCommas(full.DebitAmount_FC);
+                        }
+                    }
+                },
+                {
+                    "data": "DebitAmount", "name": "DebitAmount", "title": "Debit Amount", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '<b>' + addCommas(full.DebitAmount) + '</b>';
+                        }
+                        else {
+                            return addCommas(full.DebitAmount);
+                        }
+                    }
+                },
+                {
+                    "data": "ClosingAmount", "name": "ClosingAmount", "title": "Closing Amount", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+
+                        var drOrCr = '';
+
+                        if (full.ClosingAmount < 0) {
+                            drOrCr = ' DR';
+                        }
+                        else {
+                            drOrCr = ' CR';
+                        }
+
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '<b>' + addCommas(Math.abs(full.ClosingAmount)) + drOrCr + '</b>';
+                        }
+                        else {
+                            return addCommas(Math.abs(full.ClosingAmount)) + drOrCr ;
+                        }
+                    }
+                },
             ],
         });
 

@@ -23,8 +23,8 @@ namespace ERP.Services.Accounts
             ledgerFinancialYearBalance.LedgerId = ledgerFinancialYearBalanceModel.LedgerId;
             ledgerFinancialYearBalance.FinancialYearId = ledgerFinancialYearBalanceModel.FinancialYearId;
             ledgerFinancialYearBalance.CompanyId = ledgerFinancialYearBalanceModel.CompanyId;
-            ledgerFinancialYearBalance.CreditAmountOpBal = ledgerFinancialYearBalanceModel.CreditAmountOpBal;
-            ledgerFinancialYearBalance.DebitAmountOpBal = ledgerFinancialYearBalanceModel.DebitAmountOpBal;
+            ledgerFinancialYearBalance.CreditAmount = ledgerFinancialYearBalanceModel.CreditAmount;
+            ledgerFinancialYearBalance.DebitAmount = ledgerFinancialYearBalanceModel.DebitAmount;
             await Create(ledgerFinancialYearBalance);
             ledgerFinancialYearBalanceId = ledgerFinancialYearBalance.LedgerBalanceId;
 
@@ -41,8 +41,8 @@ namespace ERP.Services.Accounts
             if (null != ledgerFinancialYearBalance)
             {
                 // assign values.
-                ledgerFinancialYearBalance.CreditAmountOpBal = ledgerFinancialYearBalanceModel.CreditAmountOpBal;
-                ledgerFinancialYearBalance.DebitAmountOpBal = ledgerFinancialYearBalanceModel.DebitAmountOpBal;
+                ledgerFinancialYearBalance.CreditAmount = ledgerFinancialYearBalanceModel.CreditAmount;
+                ledgerFinancialYearBalance.DebitAmount = ledgerFinancialYearBalanceModel.DebitAmount;
 
                 isUpdated = await Update(ledgerFinancialYearBalance);
             }
@@ -155,8 +155,8 @@ namespace ERP.Services.Accounts
                 ledgerFinancialYearBalanceModel.LedgerId = ledgerFinancialYearBalance.LedgerId;
                 ledgerFinancialYearBalanceModel.FinancialYearId = ledgerFinancialYearBalance.FinancialYearId;
                 ledgerFinancialYearBalanceModel.CompanyId = ledgerFinancialYearBalance.CompanyId;
-                ledgerFinancialYearBalanceModel.CreditAmountOpBal = ledgerFinancialYearBalance.CreditAmountOpBal;
-                ledgerFinancialYearBalanceModel.DebitAmountOpBal = ledgerFinancialYearBalance.DebitAmountOpBal;
+                ledgerFinancialYearBalanceModel.CreditAmount = ledgerFinancialYearBalance.CreditAmount;
+                ledgerFinancialYearBalanceModel.DebitAmount = ledgerFinancialYearBalance.DebitAmount;
 
                 //#####
                 ledgerFinancialYearBalanceModel.LedgerName = ledgerFinancialYearBalance.Ledger.LedgerName;

@@ -28,7 +28,7 @@ namespace ERP.Models.Accounts
         public int AccountLedgerId { get; set; }
 
         [Display(Name = "Payment Type")]
-        [Required(ErrorMessage = "Payment Type is required.")]
+        //[Required(ErrorMessage = "Payment Type is required.")]
         public int PaymentTypeId { get; set; }
 
         [Display(Name = "Currency")]

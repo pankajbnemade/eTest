@@ -11,8 +11,8 @@ namespace ERP.DataAccess.EntityModels
         public int LedgerId { get; set; }
         public int FinancialYearId { get; set; }
         public int CompanyId { get; set; }
-        public decimal CreditAmountOpBal { get; set; }
-        public decimal DebitAmountOpBal { get; set; }
+        public decimal CreditAmount { get; set; }
+        public decimal DebitAmount { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

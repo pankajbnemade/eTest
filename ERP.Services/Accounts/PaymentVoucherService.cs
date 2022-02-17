@@ -365,5 +365,52 @@ namespace ERP.Services.Accounts
         }
 
         #endregion Private Methods
+
+
+        public async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = null;
+
+            // create query.
+            IQueryable<Paymentvoucher> query = GetQueryByCondition(w => w.PaymentVoucherId != 0)
+                                                .Include(i => i.Currency)
+                                                .Where((w => w.StatusId == (int)DocumentStatus.Approved && w.FinancialYearId == yearId && w.CompanyId == companyId));
+
+            query = query.Where(w => w.AccountLedgerId == ledgerId);
+
+            query = query.Where(w => w.VoucherDate >= fromDate && w.VoucherDate <= toDate);
+
+            // get records by query.
+            List<Paymentvoucher> paymentVoucherList = await query.ToListAsync();
+
+            generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            if (null != paymentVoucherList && paymentVoucherList.Count > 0)
+            {
+                foreach (Paymentvoucher paymentVoucher in paymentVoucherList)
+                {
+                    generalLedgerModelList.Add(new GeneralLedgerModel()
+                    {
+                        DocumentId = paymentVoucher.PaymentVoucherId,
+                        DocumentType = "Payment Voucher",
+                        DocumentNo = paymentVoucher.VoucherNo,
+                        DocumentDate = paymentVoucher.VoucherDate,
+                        Amount_FC = paymentVoucher.AmountFc,
+                        Amount = paymentVoucher.Amount,
+                        CreditAmount_FC = paymentVoucher.AmountFc,
+                        CreditAmount = paymentVoucher.Amount,
+                        PaymentVoucherId = paymentVoucher.PaymentVoucherId,
+                        CurrencyId = paymentVoucher.CurrencyId,
+                        CurrencyCode = paymentVoucher.Currency.CurrencyCode,
+                        ExchangeRate = paymentVoucher.ExchangeRate,
+                        PartyReferenceNo = paymentVoucher.ChequeNo,
+                    });
+                }
+            }
+
+            return generalLedgerModelList; // returns.
+        }
+
+
     }
 }

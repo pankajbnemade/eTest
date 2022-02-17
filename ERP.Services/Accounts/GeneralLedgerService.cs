@@ -1,4 +1,6 @@
-﻿using ERP.Models.Accounts;
+﻿using ERP.DataAccess.EntityData;
+using ERP.DataAccess.EntityModels;
+using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Services.Accounts.Interface;
 using System;
@@ -10,37 +12,48 @@ namespace ERP.Services.Accounts
 {
     public class GeneralLedgerService : IGeneralLedger
     {
+        ErpDbContext dbContext;
         IPurchaseInvoice purchaseInvoice;
         ISalesInvoice salesInvoice;
         ICreditNote creditNote;
         IDebitNote debitNote;
+
+        IPaymentVoucher paymentVoucher;
+        IReceiptVoucher receiptVoucher;
 
         IPaymentVoucherDetail paymentVoucherDetail;
         IReceiptVoucherDetail receiptVoucherDetail;
         IJournalVoucherDetail journalVoucherDetail;
         IContraVoucherDetail contraVoucherDetail;
 
-        public GeneralLedgerService(IPurchaseInvoice _purchaseInvoice, ISalesInvoice _salesInvoice, ICreditNote _creditNote, IDebitNote _debitNote,
+        public GeneralLedgerService(ErpDbContext _dbContext,
+                                    IPurchaseInvoice _purchaseInvoice, ISalesInvoice _salesInvoice,
+                                    ICreditNote _creditNote, IDebitNote _debitNote,
+                                    IPaymentVoucher _paymentVoucher, IReceiptVoucher _receiptVoucher,
                                     IPaymentVoucherDetail _paymentVoucherDetail, IReceiptVoucherDetail _receiptVoucherDetail,
-                                    IContraVoucherDetail _contraVoucherDetail, IJournalVoucherDetail _journalVoucherDetail)
+                                    IContraVoucherDetail _contraVoucherDetail, IJournalVoucherDetail _journalVoucherDetail
+                                )
         {
+            dbContext = _dbContext;
             purchaseInvoice = _purchaseInvoice;
             salesInvoice = _salesInvoice;
             creditNote = _creditNote;
             debitNote = _debitNote;
+            paymentVoucher = _paymentVoucher;
+            receiptVoucher = _receiptVoucher;
             paymentVoucherDetail = _paymentVoucherDetail;
             receiptVoucherDetail = _receiptVoucherDetail;
             contraVoucherDetail = _contraVoucherDetail;
             journalVoucherDetail = _journalVoucherDetail;
         }
 
-        public async Task<DataTableResultModel<GeneralLedgerModel>> GetTransactionList(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
+        public async Task<DataTableResultModel<GeneralLedgerModel>> GetReport(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
         {
             if (searchFilterModel.FromDate < fromDate_FY) { searchFilterModel.FromDate = fromDate_FY; }
 
             if (searchFilterModel.ToDate > toDate_FY) { searchFilterModel.ToDate = toDate_FY; }
 
-            IList<GeneralLedgerModel> generalLedgerModelList = await GetTransactionList(searchFilterModel.LedgerId, searchFilterModel.FromDate, searchFilterModel.ToDate, searchFilterModel.FinancialYearId, searchFilterModel.CompanyId);
+            IList<GeneralLedgerModel> generalLedgerModelList = await GetList(searchFilterModel.LedgerId, searchFilterModel.FromDate, searchFilterModel.ToDate, searchFilterModel.FinancialYearId, searchFilterModel.CompanyId);
 
             DataTableResultModel<GeneralLedgerModel> resultModel = new DataTableResultModel<GeneralLedgerModel>();
 
@@ -60,7 +73,75 @@ namespace ERP.Services.Accounts
             return resultModel; // returns.
         }
 
-        private async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId)
+        public async Task<GeneralLedgerModel> GetBalanceAsOnDate(int ledgerId, DateTime date, int financialYearId, int companyId)
+        {
+
+            IList<GeneralLedgerModel> generalLedgerModelList;
+
+            date=date.AddDays(-1);
+
+            DateTime fromDate_FY;
+
+            Financialyear financialyear = dbContext.Financialyears.Where(w => w.FinancialYearId==financialYearId).FirstOrDefault();
+
+            if (financialyear==null)
+            {
+                return null;
+            }
+
+            fromDate_FY=(DateTime)financialyear.FromDate;
+
+            generalLedgerModelList= await GetTransactionList(ledgerId, fromDate_FY, date, financialYearId, companyId);
+
+            if (generalLedgerModelList==null)
+            {
+                generalLedgerModelList=new List<GeneralLedgerModel>();
+            }
+
+            Ledgerfinancialyearbalance ledgerFinancialYearBalance = dbContext.Ledgerfinancialyearbalances
+                                                                    .Where(w => w.LedgerId==ledgerId && w.FinancialYearId==financialYearId && w.CompanyId==companyId)
+                                                                    .FirstOrDefault();
+
+            if (ledgerFinancialYearBalance!=null)
+            {
+                generalLedgerModelList.Add(new GeneralLedgerModel()
+                {
+                    SequenceNo=1,
+                    SrNo = 1,
+                    DocumentId=0,
+                    DocumentNo="",
+                    DocumentType="Opening Balance",
+                    DocumentDate = fromDate_FY,
+                    CreditAmount = ledgerFinancialYearBalance.CreditAmount,
+                    DebitAmount = ledgerFinancialYearBalance.DebitAmount,
+                });
+            }
+
+            GeneralLedgerModel generalLedgerModel = new GeneralLedgerModel();
+
+            generalLedgerModel.SequenceNo=1;
+            generalLedgerModel.SrNo = 1;
+            generalLedgerModel.DocumentId=0;
+            generalLedgerModel.DocumentNo="";
+            generalLedgerModel.DocumentType="Opening Balance";
+            generalLedgerModel.DocumentNo="Opening Balance";
+            generalLedgerModel.DocumentDate=fromDate_FY;
+
+            generalLedgerModel.Amount=generalLedgerModelList.Sum(w => w.CreditAmount - w.DebitAmount);
+
+            if (generalLedgerModel.Amount<0)
+            {
+                generalLedgerModel.DebitAmount=Math.Abs(generalLedgerModel.Amount);
+            }
+            else
+            {
+                generalLedgerModel.CreditAmount=Math.Abs(generalLedgerModel.Amount);
+            }
+
+            return generalLedgerModel; // returns.
+        }
+
+        private async Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int financialYearId, int companyId)
         {
             IList<GeneralLedgerModel> generalLedgerModelList = null;
 
@@ -72,23 +153,30 @@ namespace ERP.Services.Accounts
 
             IList<GeneralLedgerModel> debitNoteModelList = null;
 
+            IList<GeneralLedgerModel> paymentVoucherDetailModelList = null;
+
+            IList<GeneralLedgerModel> receiptVoucherDetailModelList = null;
+
             IList<GeneralLedgerModel> paymentVoucherModelList = null;
 
             IList<GeneralLedgerModel> receiptVoucherModelList = null;
 
-            IList<GeneralLedgerModel> contraVoucherModelList = null;
+            IList<GeneralLedgerModel> contraVoucherDetailModelList = null;
 
-            IList<GeneralLedgerModel> journalVoucherModelList = null;
+            IList<GeneralLedgerModel> journalVoucherDetailModelList = null;
 
-            purchaseInvoiceModelList = await purchaseInvoice.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
-            salesInvoiceModelList = await salesInvoice.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
-            debitNoteModelList = await debitNote.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
-            creditNoteModelList = await creditNote.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
+            purchaseInvoiceModelList = await purchaseInvoice.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            salesInvoiceModelList = await salesInvoice.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            debitNoteModelList = await debitNote.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            creditNoteModelList = await creditNote.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
 
-            paymentVoucherModelList = await paymentVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
-            receiptVoucherModelList = await receiptVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
-            contraVoucherModelList = await contraVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
-            journalVoucherModelList = await journalVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, yearId, companyId);
+            paymentVoucherModelList = await paymentVoucher.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            receiptVoucherModelList = await receiptVoucher.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+
+            paymentVoucherDetailModelList = await paymentVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            receiptVoucherDetailModelList = await receiptVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            contraVoucherDetailModelList = await contraVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            journalVoucherDetailModelList = await journalVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
 
             //-----------------------
 
@@ -100,25 +188,163 @@ namespace ERP.Services.Accounts
 
             if (creditNoteModelList == null) { creditNoteModelList = new List<GeneralLedgerModel>(); }
 
-            if (paymentVoucherModelList == null) { paymentVoucherModelList = new List<GeneralLedgerModel>(); }
+            if (paymentVoucherDetailModelList == null) { paymentVoucherDetailModelList = new List<GeneralLedgerModel>(); }
 
-            if (receiptVoucherModelList == null) { receiptVoucherModelList = new List<GeneralLedgerModel>(); }
+            if (receiptVoucherDetailModelList == null) { receiptVoucherDetailModelList = new List<GeneralLedgerModel>(); }
 
-            if (contraVoucherModelList == null) { contraVoucherModelList = new List<GeneralLedgerModel>(); }
+            if (contraVoucherDetailModelList == null) { contraVoucherDetailModelList = new List<GeneralLedgerModel>(); }
 
-            if (journalVoucherModelList == null) { journalVoucherModelList = new List<GeneralLedgerModel>(); }
+            if (journalVoucherDetailModelList == null) { journalVoucherDetailModelList = new List<GeneralLedgerModel>(); }
 
-            generalLedgerModelList = purchaseInvoiceModelList
+            generalLedgerModelList = (purchaseInvoiceModelList
                                     .Union(salesInvoiceModelList)
                                     .Union(debitNoteModelList)
                                     .Union(creditNoteModelList)
                                     .Union(paymentVoucherModelList)
                                     .Union(receiptVoucherModelList)
-                                    .Union(contraVoucherModelList)
-                                    .Union(journalVoucherModelList)
+                                    .Union(paymentVoucherDetailModelList)
+                                    .Union(receiptVoucherDetailModelList)
+                                    .Union(contraVoucherDetailModelList)
+                                    .Union(journalVoucherDetailModelList)
+                                    )
+                                    .OrderBy(o => o.DocumentDate).ThenBy(o => o.DocumentType).ThenBy(o => o.DocumentNo)
+                                    .Select((row, index) => new GeneralLedgerModel
+                                    {
+                                        SequenceNo   =2,
+                                        SrNo =index+1,
+                                        DocumentId  =row.DocumentId,
+                                        DocumentType    =row.DocumentType,
+                                        DocumentNo  =row.DocumentNo,
+                                        DocumentDate    =row.DocumentDate,
+                                        PurchaseInvoiceId   =row.PurchaseInvoiceId,
+                                        SalesInvoiceId  =row.SalesInvoiceId,
+                                        CreditNoteId    =row.CreditNoteId,
+                                        DebitNoteId     =row.DebitNoteId,
+                                        PaymentVoucherId    =row.PaymentVoucherId,
+                                        ReceiptVoucherId    =row.ReceiptVoucherId,
+                                        ContraVoucherId     =row.ContraVoucherId,
+                                        JournalVoucherId    =row.JournalVoucherId,
+                                        CurrencyId  =row.CurrencyId,
+                                        CurrencyCode    =row.CurrencyCode,
+                                        PartyReferenceNo    =row.PartyReferenceNo,
+                                        OurReferenceNo  =row.OurReferenceNo,
+                                        ExchangeRate    =row.ExchangeRate,
+                                        CreditAmount_FC     =row.CreditAmount_FC,
+                                        DebitAmount_FC  =row.DebitAmount_FC,
+                                        CreditAmount    =row.CreditAmount,
+                                        DebitAmount     =row.DebitAmount,
+                                        Amount_FC   =row.Amount_FC,
+                                        Amount  =row.Amount,
+                                        ClosingAmount   =row.ClosingAmount
+                                    })
                                     .ToList();
 
+            if (generalLedgerModelList==null)
+            {
+                generalLedgerModelList= new List<GeneralLedgerModel>();
+            }
+
             return generalLedgerModelList; // returns.
+        }
+
+        private async Task<IList<GeneralLedgerModel>> GetList(int ledgerId, DateTime fromDate, DateTime toDate, int financialYearId, int companyId)
+        {
+            IList<GeneralLedgerModel> generalLedgerModelList = new List<GeneralLedgerModel>();
+
+            GeneralLedgerModel generalLedgerModel_OB = await GetBalanceAsOnDate(ledgerId, fromDate, financialYearId, companyId);
+
+            if (generalLedgerModel_OB==null)
+            {
+                generalLedgerModel_OB=new GeneralLedgerModel();
+            }
+
+            generalLedgerModelList.Add(generalLedgerModel_OB);
+
+            IList<GeneralLedgerModel> generalLedgerModelList_Trans = null;
+
+            generalLedgerModelList_Trans  = await GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+
+            if (generalLedgerModelList_Trans==null)
+            {
+                generalLedgerModelList_Trans= new List<GeneralLedgerModel>();
+            }
+
+            generalLedgerModelList = generalLedgerModelList
+                                    .Union(generalLedgerModelList_Trans)
+                                    .ToList();
+
+            generalLedgerModelList.Add(new GeneralLedgerModel()
+            {
+                SequenceNo=3,
+                SrNo = generalLedgerModelList.Max(w => w.SrNo)+1,
+                DocumentType = "Total - Closing Balance",
+                DocumentNo = "Total - Closing Balance",
+                DocumentDate = toDate,
+                CreditAmount = generalLedgerModelList.Sum(w => w.CreditAmount),
+                DebitAmount = generalLedgerModelList.Sum(w => w.DebitAmount),
+                ClosingAmount=generalLedgerModelList.Sum(w => w.CreditAmount)-generalLedgerModelList.Sum(w => w.DebitAmount)
+            });
+
+            generalLedgerModelList= generalLedgerModelList
+                                    .Select((row, index) => new GeneralLedgerModel
+                                    {
+                                        SequenceNo   = row.SequenceNo,
+                                        SrNo =index+1,
+                                        DocumentId  =row.DocumentId,
+                                        DocumentType    =row.DocumentType,
+                                        DocumentNo  =row.DocumentNo,
+                                        DocumentDate    =row.DocumentDate,
+                                        PurchaseInvoiceId   =row.PurchaseInvoiceId,
+                                        SalesInvoiceId  =row.SalesInvoiceId,
+                                        CreditNoteId    =row.CreditNoteId,
+                                        DebitNoteId     =row.DebitNoteId,
+                                        PaymentVoucherId    =row.PaymentVoucherId,
+                                        ReceiptVoucherId    =row.ReceiptVoucherId,
+                                        ContraVoucherId     =row.ContraVoucherId,
+                                        JournalVoucherId    =row.JournalVoucherId,
+                                        CurrencyId  =row.CurrencyId,
+                                        CurrencyCode    =row.CurrencyCode,
+                                        PartyReferenceNo    =row.PartyReferenceNo,
+                                        OurReferenceNo  =row.OurReferenceNo,
+                                        ExchangeRate    =row.ExchangeRate,
+                                        CreditAmount_FC     =row.CreditAmount_FC,
+                                        DebitAmount_FC  =row.DebitAmount_FC,
+                                        CreditAmount    =row.CreditAmount,
+                                        DebitAmount     =row.DebitAmount,
+                                        Amount_FC   =row.Amount_FC,
+                                        Amount  =row.Amount,
+                                        ClosingAmount   =row.ClosingAmount
+                                    })
+                                    .OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+
+
+            GeneralLedgerModel prvRow = null;
+
+            foreach (GeneralLedgerModel currRow in generalLedgerModelList.OrderBy(o => o.SrNo))
+            {
+                if (prvRow != null)
+                {
+                    if (currRow.SequenceNo==2)
+                    {
+                        currRow.ClosingAmount = prvRow.ClosingAmount + (currRow.CreditAmount - currRow.DebitAmount);
+                    }
+                    else if (currRow.SequenceNo==3)
+                    {
+                        currRow.ClosingAmount = currRow.CreditAmount - currRow.DebitAmount;
+                    }
+                }
+                else
+                {
+                    if (currRow.SequenceNo==1)
+                    {
+                        currRow.ClosingAmount = currRow.CreditAmount - currRow.DebitAmount;
+                    }
+                }
+
+                prvRow = currRow;
+            }
+
+            return generalLedgerModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
         }
 
     }

@@ -228,8 +228,7 @@ namespace ERP.Services.Accounts
                                     .Where(w => w.ParentGroupId!=null)
                                     .Where(w => w.IsDeActive==0)
                                     .Include(w => w.ParentGroup)
-                                    .Include(w => w.PreparedByUser).ThenInclude(w => w.Employee)
-                                    ;
+                                    .Include(w => w.PreparedByUser).ThenInclude(w => w.Employee);
 
 
             //sortBy
@@ -311,7 +310,7 @@ namespace ERP.Services.Accounts
                 ledgerModel.Description = ledger.Description;
                 //######
                 ledgerModel.ParentGroupName = null != ledger.ParentGroup ? ledger.ParentGroup.LedgerName : null;
-                ledgerModel.PreparedByName = null != ledger.PreparedByUser.Employee ? ledger.PreparedByUser.Employee.FirstName + " " + ledger.PreparedByUser.Employee.LastName : null;
+                ledgerModel.PreparedByName = null != ledger.PreparedByUser ? ledger.PreparedByUser.Employee.FirstName + " " + ledger.PreparedByUser.Employee.LastName : null;
                 //ledgerModel.ClosingBalance = 500;
 
                 if (null != ledger.Ledgercompanyrelations)

@@ -1,0 +1,25 @@
+Dashboard dashboard = new Dashboard();
+                dashboard.DashboardName = dashboardModel.DashboardName;
+                dashboard.Order = dashboardModel.Order;
+                dashboard.ApplicationMasterId = dashboardModel.ApplicationMasterId;
+                dashboard.IsPin = dashboardModel.IsPin;
+                dashboard.IsDeleted = false;
+
+
+if (null != dashboardModel.RoleList && dashboardModel.RoleList.Any())
+                {
+                    dashboardModel.RoleList.ToList().ForEach(role =>
+                    {
+                        AssnDashboardRole assnDashboardRole = new AssnDashboardRole();
+                        assnDashboardRole.RoleId = role;
+                        assnDashboardRole.DashboardId = dashboard.DashboardId;
+                        assnDashboardRole.DashboardName = dashboard.DashboardName;
+                        assnDashboardRole.IsDeleted = false;
+                        assnDashboardRole.Edit = false;
+                        assnDashboardRole.Delete = false;
+                        dashboard.AssnDashboardRoles.Add(assnDashboardRole);
+                    });
+                }
+
+await Create(dashboard);
+                dashboardId = dashboard.DashboardId;

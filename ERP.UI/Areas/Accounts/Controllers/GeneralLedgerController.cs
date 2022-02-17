@@ -1,16 +1,11 @@
 ﻿using ERP.Models.Accounts;
-using ERP.Models.Accounts.Enums;
 using ERP.Models.Admin;
 using ERP.Models.Common;
 using ERP.Models.Extension;
-using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
@@ -37,7 +32,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(string searchFilter)
         {
             ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, true);
 
@@ -47,8 +42,23 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             SearchFilterGeneralLedgerModel searchFilterGeneralLedgerModel = new SearchFilterGeneralLedgerModel();
 
-            searchFilterGeneralLedgerModel.FromDate = financialYearModel.FromDate;
-            searchFilterGeneralLedgerModel.ToDate = financialYearModel.ToDate;
+
+            if (searchFilter==null)
+            {
+                searchFilterGeneralLedgerModel.FromDate = financialYearModel.FromDate;
+                searchFilterGeneralLedgerModel.ToDate = financialYearModel.ToDate;
+            }
+            else
+            {
+                // deserilize string search filter.
+
+                SearchFilterGeneralLedgerModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterGeneralLedgerModel>(searchFilter);
+
+                searchFilterGeneralLedgerModel.LedgerId = searchFilterModel.LedgerId;
+                searchFilterGeneralLedgerModel.FromDate = searchFilterModel.FromDate;
+                searchFilterGeneralLedgerModel.ToDate = searchFilterModel.ToDate;
+            }
+
 
             return await Task.Run(() =>
             {
@@ -78,7 +88,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             searchFilterModel.FinancialYearId=userSession.FinancialYearId;
 
             // get data.
-            DataTableResultModel<GeneralLedgerModel> resultModel = await _generalLedger.GetTransactionList(searchFilterModel,
+            DataTableResultModel<GeneralLedgerModel> resultModel = await _generalLedger.GetReport(searchFilterModel,
                                                                                             financialYearModel.FromDate, financialYearModel.ToDate);
 
             return await Task.Run(() =>

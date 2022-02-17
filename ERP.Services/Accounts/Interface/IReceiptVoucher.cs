@@ -2,6 +2,7 @@
 using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,5 +27,7 @@ namespace ERP.Services.Accounts.Interface
         Task<DataTableResultModel<ReceiptVoucherModel>> GetReceiptVoucherList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterReceiptVoucherModel searchFilterModel);
 
         Task<IList<SelectListModel>> GetVocuherSelectList();
+
+        Task<IList<GeneralLedgerModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int yearId, int companyId);
     }
 }

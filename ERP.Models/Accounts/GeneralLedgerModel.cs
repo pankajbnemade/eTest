@@ -6,6 +6,10 @@ namespace ERP.Models.Accounts
 {
     public partial class GeneralLedgerModel
     {
+        public int SequenceNo { get; set; }
+        
+        public int SrNo { get; set; }
+
         public int DocumentId { get; set; }
 
         public string DocumentType { get; set; }

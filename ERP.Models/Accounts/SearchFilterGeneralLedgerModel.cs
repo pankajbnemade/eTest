@@ -9,6 +9,7 @@ namespace ERP.Models.Accounts
 {
     public class SearchFilterGeneralLedgerModel
     {
+
         [Required(ErrorMessage = "Account is required.")]
         [Display(Name = "Account")]
         public int LedgerId { get; set; }

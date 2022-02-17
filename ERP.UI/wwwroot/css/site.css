@@ -224,6 +224,14 @@ table.dataTable thead th, table.dataTable tbody td {
     padding: 4px 5px; /* e.g. change 8x to 4px here */
 }
 
+.dt-right {
+    text-align: right;
+}
+
+.dt-nowrap {
+    white-space: nowrap;
+}
+
 /*Table sorting icon hiding*/
 .no-sort::after {
     display: none !important;
