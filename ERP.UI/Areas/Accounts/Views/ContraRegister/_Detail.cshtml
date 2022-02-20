@@ -89,7 +89,12 @@
                 {
                     "data": "DocumentDate", "name": "DocumentDate", "title": "Voucher Date",
                     "render": function (dt) {
-                        return moment(dt).format("DD/MMM/YYYY");
+                        if (Date.parse(dt)) {
+                            return moment(dt).format("DD/MMM/YYYY");
+                        }
+                        else {
+                            return "";
+                        }
                     }
                 },
                 { "data": "ChequeNo", "name": "ChequeNo", "title": "Cheque No" },

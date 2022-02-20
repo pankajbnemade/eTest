@@ -89,7 +89,12 @@
                 {
                     "data": "InvoiceDate", "name": "InvoiceDate", "title": "Invoice Date",
                     "render": function (dt) {
-                        return moment(dt).format("DD/MMM/YYYY");
+                        if (Date.parse(dt)) {
+                            return moment(dt).format("DD/MMM/YYYY");
+                        }
+                        else {
+                            return "";
+                        }
                     }
                 },
                 { "data": "SupplierLedgerName", "name": "SupplierLedgerName", "title": "Supplier" },

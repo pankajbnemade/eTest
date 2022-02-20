@@ -117,7 +117,7 @@ namespace ERP.UI
             services.AddTransient<IPurchaseRegister, PurchaseRegisterService>();
             services.AddTransient<IPayableStatement, PayableStatementService>();
             services.AddTransient<IReceivableStatement, ReceivableStatementService>();
-
+            services.AddTransient<ITaxReport, TaxReportService>();
 
 
             #endregion // Accounts
