@@ -1,0 +1,139 @@
+﻿@model SearchFilterSalesRegisterModel
+
+<form id="frmSalesRegister" class="width100" method="post"
+              data-ajax-begin="return BeginSearch();" 
+              data-ajax="true" data-ajax-method="post"
+      >
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card m-0">
+                <div class="card-body p-2" id="searchFilterCriteria">
+                    <div class="row">
+                        <div class="col-6 col-sm-3">
+                            <div class="form-group-sm">
+                                @Html.LabelFor(model => model.CustomerLedgerId, new { @class = "" })
+                                @Html.DropDownListFor(model => model.CustomerLedgerId, new SelectList(ViewBag.CustomerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.CustomerLedgerId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="form-group-sm">
+                                @Html.LabelFor(model => model.AccountLedgerId, new { @class = "" })
+                                @Html.DropDownListFor(model => model.AccountLedgerId, new SelectList(ViewBag.AccountLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.AccountLedgerId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="form-group-sm">
+                                @Html.LabelFor(model => model.FromDate)
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="form-group-sm">
+                                @Html.LabelFor(model => model.ToDate)
+                                @Html.TextBoxFor(model => model.ToDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 pt-2 text-right">
+                            <button type="submit" class="btn btn-primary" title="Search">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Reset" onclick="javascript: fnResetSearch();">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+
+    });
+
+
+       //// search data.
+    function BeginSearch() {
+        //fnBindDataTable();
+
+        var form = $("#frmSalesRegister");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+
+        var fromDate = $("#FromDate").val(); //2013-09-5
+        var toDate = $("#ToDate").val(); //2013-09-10
+
+        if (Date.parse(fromDate) > Date.parse(toDate)) {
+            alert("from date should be less than or equal to date.");
+            return false;
+        }
+
+        var filterModel = {
+            CustomerLedgerId: $('#CustomerLedgerId').val(),
+            AccountLedgerId: $('#AccountLedgerId').val(),
+            FromDate: $('#FromDate').val(),
+            ToDate: $('#ToDate').val(),
+        };
+
+        var searchFilterModel = JSON.stringify(filterModel)
+
+        fnSearchData(searchFilterModel);
+    }
+
+    // reset filter.
+
+    function fnResetSearch() {
+        $("#SearchFilterModel").val('');
+
+        fnBackToIndex();
+
+        //$('#searchFilterCriteria :input[type=text]').each(function (index) {
+        //    $(this).val('');
+        //});
+
+        //$('#searchFilterCriteria select').each(function (index) {
+        //    $(this).val('');
+        //});
+
+        //$("#reportGrid").DataTable().clear().draw();
+
+    }
+
+</script>

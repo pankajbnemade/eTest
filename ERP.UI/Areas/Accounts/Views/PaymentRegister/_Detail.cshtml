@@ -3,12 +3,11 @@
     <div class="col-sm-12">
         <table id="reportGrid" class="table table-bordered table-striped w-100">
             @*<thead>
-                <tr class="table-header">
-
-                <th>Debit Amount FC</th>
-                <th>Debit Amount</th>
-                <th>Closing Amount</th>
-                </tr>
+                    <tr class="table-header">
+                        <th>Voucher Type</th>
+                        <th>Voucher No</th>
+                        <th>Voucher Date</th>
+                    </tr>
                 </thead>*@
         </table>
     </div>
@@ -21,7 +20,6 @@
         fnBindDataTable();
     });
 
-
     // search data.
     function fnBindDataTable() {
 
@@ -29,9 +27,9 @@
 
         var jsonFilter = JSON.parse(searchFilter);
 
-        var fileName = "General Ledger";
+        var fileName = "Payment Register";
 
-        var reportTitle = "General Ledger " + "(From - " + jsonFilter.FromDate + " To - " + jsonFilter.ToDate + ")" ;
+        var reportTitle = "Payment Register " + "(From - " + jsonFilter.FromDate + " To - " + jsonFilter.ToDate + ")" ;
 
         $("#reportGrid").DataTable({
             "destroy": true,
@@ -69,7 +67,7 @@
                 }
             ],
             "ajax": {
-                "url": "@Url.Action("GetTransactionList", "GeneralLedger")",
+                "url": "@Url.Action("GetTransactionList", "PaymentRegister")",
                 "type": "POST",
                 "datatype": "json",
                 "data": {
@@ -77,16 +75,40 @@
                 },
             },
             "columns": [
-                { "data": "DocumentType", "name": "DocumentType", "title":"Voucher Type" },
-                { "data": "DocumentNo", "name": "DocumentNo", "title": "Voucher No" },
+                {
+                    "data": "DocumentNo", "name": "DocumentNo", "title": "Voucher No", className: "dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '<b>' + full.DocumentNo + '</b>';
+                        }
+                        else {
+                            return full.DocumentNo;
+                        }
+                    }
+                },
                 {
                     "data": "DocumentDate", "name": "DocumentDate", "title": "Voucher Date",
                     "render": function (dt) {
                         return moment(dt).format("DD/MMM/YYYY");
                     }
                 },
-                { "data": "PartyReferenceNo", "name": "PartyReferenceNo", "title": "Party Reference No"},
-                { "data": "OurReferenceNo", "name": "OurReferenceNo", "title": "Other Reference No" },
+                { "data": "ChequeNo", "name": "ChequeNo", "title": "Cheque No" },
+                {
+                    "data": "ChequeDate", "name": "ChequeDate", "title": "Cheque Date",
+                    "render": function (dt) {
+                        if (Date.parse(dt)) {
+                            return moment(dt).format("DD/MMM/YYYY");
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                { "data": "BankName", "name": "BankName", "title": "Bank" },
+                { "data": "ParticularLedgerName", "name": "ParticularLedgerName", "title": "Particular" },
+                { "data": "Narration", "name": "Narration", "title": "Narration" },
+                { "data": "InvoiceType", "name": "InvoiceType", "title": "Invoice Type" },
+                { "data": "InvoiceNo", "name": "InvoiceNo", "title": "Invoice No" },
                 { "data": "CurrencyCode", "name": "CurrencyCode", "title": "Currency" },
                 {
                     "data": "ExchangeRate", "name": "ExchangeRate", "title": "Exchange Rate", className: "dt-right dt-nowrap",
@@ -100,67 +122,24 @@
                     }
                 },
                 {
-                    "data": "CreditAmount_FC", "name": "CreditAmount_FC", "title": "Credit Amount FC", className: "dt-right dt-nowrap",
+                    "data": "Amount_FC", "name": "Amount_FC", "title": "Amount FC", className: "dt-right dt-nowrap",
                     "render": function (data, type, full, meta) {
                         if (full.SequenceNo == 1 || full.SequenceNo == 3) {
                             return '';
                         }
                         else {
-                            return addCommas(full.CreditAmount_FC);
+                            return addCommas(full.Amount_FC);
                         }
                     }
                 },
                 {
-                    "data": "CreditAmount", "name": "CreditAmount", "title": "Credit Amount", className: "dt-right dt-nowrap",
+                    "data": "Amount", "name": "Amount", "title": "Amount", className: "dt-right dt-nowrap",
                     "render": function (data, type, full, meta) {
                         if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '<b>' + addCommas(full.CreditAmount) + '</b>';
+                            return '<b>' + addCommas(full.Amount) + '</b>';
                         }
                         else {
-                            return addCommas(full.CreditAmount);
-                        }
-                    }
-                },
-                {
-                    "data": "DebitAmount_FC", "name": "DebitAmount_FC", "title": "Debit Amount FC", className: "dt-right dt-nowrap",
-                    "render": function (data, type, full, meta) {
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '';
-                        }
-                        else {
-                            return addCommas(full.DebitAmount_FC);
-                        }
-                    }
-                },
-                {
-                    "data": "DebitAmount", "name": "DebitAmount", "title": "Debit Amount", className: "dt-right dt-nowrap",
-                    "render": function (data, type, full, meta) {
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '<b>' + addCommas(full.DebitAmount) + '</b>';
-                        }
-                        else {
-                            return addCommas(full.DebitAmount);
-                        }
-                    }
-                },
-                {
-                    "data": "ClosingAmount", "name": "ClosingAmount", "title": "Closing Amount", className: "dt-right dt-nowrap",
-                    "render": function (data, type, full, meta) {
-
-                        var drOrCr = '';
-
-                        if (full.ClosingAmount < 0) {
-                            drOrCr = ' DR';
-                        }
-                        else {
-                            drOrCr = ' CR';
-                        }
-
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '<b>' + addCommas(Math.abs(full.ClosingAmount)) + drOrCr + '</b>';
-                        }
-                        else {
-                            return addCommas(Math.abs(full.ClosingAmount)) + drOrCr ;
+                            return addCommas(full.Amount);
                         }
                     }
                 },

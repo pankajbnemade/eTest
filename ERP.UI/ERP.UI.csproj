@@ -11,6 +11,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Accounts\Views\PayableStatement\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PayableStatement\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PayableStatement\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PurchaseRegister\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PurchaseRegister\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PurchaseRegister\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesRegister\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesRegister\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesRegister\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ContraRegister\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ContraRegister\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ContraRegister\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\JournalRegister\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\JournalRegister\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\JournalRegister\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentRegister\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentRegister\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentRegister\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceiptRegister\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceiptRegister\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceiptRegister\_Search.cshtml" />
     <Content Remove="Areas\Accounts\Views\Ledger\_UpdateLedgerBalance.cshtml" />
     <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewVoucherSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceSummary.cshtml" />
@@ -73,6 +94,15 @@
 
   <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\PayableStatement\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\PayableStatement\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\PayableStatement\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\PurchaseRegister\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\PurchaseRegister\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\PurchaseRegister\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesRegister\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesRegister\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesRegister\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNoteDetail\_AddCreditNoteDetail.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNoteDetail\_ConfirmDeleteCreditNoteDetail.cshtml" />
     <None Include="Areas\Accounts\Views\CreditNoteDetail\_CreditNoteDetail.cshtml" />
@@ -110,6 +140,18 @@
     <None Include="Areas\Accounts\Views\Currency\Index.cshtml" />
     <None Include="Areas\Accounts\Views\Currency\_AddCurrency.cshtml" />
     <None Include="Areas\Accounts\Views\Currency\_ConfirmDeleteCurrency.cshtml" />
+    <None Include="Areas\Accounts\Views\ContraRegister\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\ContraRegister\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\ContraRegister\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\JournalRegister\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\JournalRegister\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\JournalRegister\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentRegister\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentRegister\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentRegister\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceiptRegister\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceiptRegister\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceiptRegister\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\GeneralLedger\_Detail.cshtml" />
     <None Include="Areas\Accounts\Views\GeneralLedger\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\LedgerAddress\_AddLedgerAddress.cshtml" />

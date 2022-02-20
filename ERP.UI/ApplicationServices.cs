@@ -1,5 +1,4 @@
-﻿using ERP.DataAccess.Entity;
-using ERP.DataAccess.EntityData;
+﻿using ERP.DataAccess.EntityData;
 using ERP.Services;
 using ERP.Services.Accounts;
 using ERP.Services.Accounts.Interface;
@@ -10,7 +9,6 @@ using ERP.Services.Common.Interface;
 using ERP.Services.Master;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,7 +109,13 @@ namespace ERP.UI
             //Reports
 
             services.AddTransient<IGeneralLedger, GeneralLedgerService>();
-
+            services.AddTransient<IReceiptRegister, ReceiptRegisterService>();
+            services.AddTransient<IPaymentRegister, PaymentRegisterService>();
+            services.AddTransient<IJournalRegister, JournalRegisterService>();
+            services.AddTransient<IContraRegister, ContraRegisterService>();
+            services.AddTransient<ISalesRegister, SalesRegisterService>();
+            services.AddTransient<IPurchaseRegister, PurchaseRegisterService>();
+            services.AddTransient<IPayableStatement, PayableStatementService>();
 
 
 

@@ -416,7 +416,8 @@ namespace ERP.Services.Accounts
             // create query.
             IQueryable<Paymentvoucherdetail> query = GetQueryByCondition(w => w.PaymentVoucherDetId != 0)
                                                 .Include(i => i.PaymentVoucher).ThenInclude(i => i.Currency)
-                                                .Where((w => w.PaymentVoucher.StatusId == (int)DocumentStatus.Approved && w.PaymentVoucher.FinancialYearId == yearId && w.PaymentVoucher.CompanyId == companyId));
+                                                .Where((w => w.PaymentVoucher.StatusId == (int)DocumentStatus.Approved && w.PaymentVoucher.FinancialYearId == yearId 
+                                                && w.PaymentVoucher.CompanyId == companyId));
 
             query = query.Where(w => w.ParticularLedgerId == ledgerId);
 

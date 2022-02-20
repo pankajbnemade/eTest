@@ -1,0 +1,63 @@
+﻿
+@{ ViewBag.Title = "Sales Register Report"; }
+
+<section class="content-header p-2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="row">
+                    <div id="title" class="col-sm-3 h5">@ViewBag.Title</div>
+                    <div id="filterDetails" class="col-sm-9 h6"></div> @*to show party name*@ 
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div id="buttons" class="float-right">
+                    <button type="button" class="btn btn-secondary" id="Back" title="Back" hidden onclick="javascript: fnBackToIndex();">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content p-0">
+    <div class="container-fluid">
+        <input type="hidden" id="SearchFilterModel" />
+        <div id="rptDetails"></div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        fnBackToIndex();
+    });
+
+    function fnBackToIndex() {
+
+        var tabUrl = null;
+
+        tabUrl = '@Url.Action("Search", "SalesRegister")' + '?searchFilter=' + $("#SearchFilterModel").val();;
+
+        $('#rptDetails').empty();
+        $('#rptDetails').load(tabUrl);
+    }
+
+    //// search data.
+    function fnSearchData(searchFilterModel) {
+        //fnBindDataTable();
+
+       var tabUrl = null;
+
+        $("#SearchFilterModel").val(searchFilterModel);
+
+        tabUrl = '@Url.Action("Detail", "SalesRegister")' + '?searchFilter=' + $("#SearchFilterModel").val();
+
+        $("#Back").removeAttr('hidden');
+
+        $('#rptDetails').empty();
+        $('#rptDetails').load(tabUrl);
+    }
+
+
+</script>
