@@ -116,6 +116,7 @@ namespace ERP.UI
             services.AddTransient<ISalesRegister, SalesRegisterService>();
             services.AddTransient<IPurchaseRegister, PurchaseRegisterService>();
             services.AddTransient<IPayableStatement, PayableStatementService>();
+            services.AddTransient<IReceivableStatement, ReceivableStatementService>();
 
 
 

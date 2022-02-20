@@ -27,9 +27,9 @@
 
         var jsonFilter = JSON.parse(searchFilter);
 
-        var fileName = "Payable Statement";
+        var fileName = "Receivable Statement";
 
-        var reportTitle = "Payable Statement " + "(From - " + jsonFilter.FromDate + " To - " + jsonFilter.ToDate + ")" ;
+        var reportTitle = "Receivable Statement " + "(From - " + jsonFilter.FromDate + " To - " + jsonFilter.ToDate + ")" ;
 
         $("#reportGrid").DataTable({
             "destroy": true,
@@ -67,7 +67,7 @@
                 }
             ],
             "ajax": {
-                "url": "@Url.Action("GetTransactionList", "PayableStatement")",
+                "url": "@Url.Action("GetTransactionList", "ReceivableStatement")",
                 "type": "POST",
                 "datatype": "json",
                 "data": {
@@ -147,16 +147,16 @@
                     }
                 },
                 {
-                    "data": "PaidAmount", "name": "PaidAmount", "title": "Paid Amount", className: "dt-right dt-nowrap",
+                    "data": "ReceivedAmount", "name": "ReceivedAmount", "title": "Received Amount", className: "dt-right dt-nowrap",
                     "render": function (data, type, full, meta) {
                         if (full.SequenceNo == 1 || full.SequenceNo == 3 || full.SequenceNo == 4) {
-                            return '<b>' + addCommas(full.PaidAmount) + '</b>';
+                            return '<b>' + addCommas(full.ReceivedAmount) + '</b>';
                         }
                         else if (full.SequenceNo == 5) {
                             return '';
                         }
                         else {
-                            return addCommas(full.PaidAmount);
+                            return addCommas(full.ReceivedAmount);
                         }
                     }
                 },
@@ -177,7 +177,6 @@
                 { "data": "OutstandingDays", "name": "OutstandingDays", "title": "Outstanding Days" },
             ],
         });
-
 
     }
 

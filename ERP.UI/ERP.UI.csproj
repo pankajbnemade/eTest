@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Accounts\Views\ReceivableStatement\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceivableStatement\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceivableStatement\_Search.cshtml" />
     <Content Remove="Areas\Accounts\Views\PayableStatement\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\PayableStatement\_Detail.cshtml" />
     <Content Remove="Areas\Accounts\Views\PayableStatement\_Search.cshtml" />
@@ -94,6 +97,9 @@
 
   <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceivableStatement\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceivableStatement\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceivableStatement\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\PayableStatement\Index.cshtml" />
     <None Include="Areas\Accounts\Views\PayableStatement\_Detail.cshtml" />
     <None Include="Areas\Accounts\Views\PayableStatement\_Search.cshtml" />
