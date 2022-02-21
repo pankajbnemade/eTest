@@ -22,7 +22,7 @@ namespace ERP.DataAccess.EntityModels
         }
 
         public int AttachmentId { get; set; }
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string Description { get; set; }
         public string Guidno { get; set; }
         public string ContainerName { get; set; }
@@ -32,7 +32,7 @@ namespace ERP.DataAccess.EntityModels
         public string ContentType { get; set; }
         public long? ContentLength { get; set; }
         public string Url { get; set; }
-        public int? StorageAccountId { get; set; }
+        public int StorageAccountId { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

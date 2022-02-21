@@ -89,7 +89,6 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
         //            if (!optionsBuilder.IsConfigured)
@@ -102,6 +101,7 @@ namespace ERP.DataAccess.EntityData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Advanceadjustment>(entity =>
             {
                 entity.ToTable("advanceadjustment");
@@ -638,6 +638,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Attachments)
                     .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Attachment_AttachmentCategory_CategoryId");
 
                 entity.HasOne(d => d.PreparedByUser)
@@ -649,6 +650,7 @@ namespace ERP.DataAccess.EntityData
                 entity.HasOne(d => d.StorageAccount)
                     .WithMany(p => p.Attachments)
                     .HasForeignKey(d => d.StorageAccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Attachment_StorageAccount_StorageAccountId");
 
                 entity.HasOne(d => d.UpdatedByUser)

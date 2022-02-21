@@ -141,6 +141,8 @@ namespace ERP.Services.Master
             {
                 // assign values.
                 ChargeTypeModel chargeTypeModel = new ChargeTypeModel();
+
+                chargeTypeModel.ChargeTypeId = chargeType.ChargeTypeId;
                 chargeTypeModel.ChargeTypeName = chargeType.ChargeTypeName;
                 chargeTypeModel.PreparedByName = null != chargeType.PreparedByUser ? chargeType.PreparedByUser.UserName : null;
 
