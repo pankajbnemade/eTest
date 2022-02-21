@@ -55,9 +55,9 @@ namespace ERP.Services.Accounts
 
             receivableStatementModelList_Trans = await GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
 
-            if (receivableStatementModelList_Trans==null)
+            if (receivableStatementModelList_Trans == null)
             {
-                receivableStatementModelList_Trans= new List<ReceivableStatementModel>();
+                receivableStatementModelList_Trans = new List<ReceivableStatementModel>();
             }
 
             receivableStatementModelList = receivableStatementModelList_Trans;
@@ -106,110 +106,109 @@ namespace ERP.Services.Accounts
             {
 
                 IList<ReceivableStatementModel> receivableStatementModelList = null;
-                try
-                {
-                    receivableStatementModelList
-                            = dbContext.Salesinvoices
-                                .Where(w => w.StatusId == (int)DocumentStatus.Approved
-                                        && w.CompanyId == companyId
-                                        && w.CustomerLedgerId == ledgerId
-                                        && w.InvoiceDate >= fromDate
-                                        && w.InvoiceDate <= toDate
-                                    )
-                                .Include(i => i.Currency)
-                                .Include(i => i.Receiptvoucherdetails)  //.ThenInclude(i => i.ReceiptVoucher).Where(x => x.Paymentvoucherdetails.All(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved))
-                                .Include(i => i.Journalvoucherdetails)  //.Include(i => i.Journalvoucherdetails.AsQueryable().All(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved))
-                                 .Include(i => i.Advanceadjustmentdetails)  //.Include(i => i.Advanceadjustmentdetails.AsQueryable().All(w => w.AdvanceAdjustment.StatusId == (int)DocumentStatus.Approved))
-                                .ToList()
-                                .Select((row, Index) => new ReceivableStatementModel
-                                {
-                                    SequenceNo=2,
-                                    SrNo=Index,
-                                    SalesInvoiceId=row.SalesInvoiceId,
-                                    InvoiceType="Sales Invoice",
-                                    InvoiceNo=row.InvoiceNo,
-                                    InvoiceDate=row.InvoiceDate,
-                                    CustomerReferenceNo=row.CustomerReferenceNo,
-                                    CustomerReferenceDate=row.CustomerReferenceDate,
-                                    CreditLimitDays=row.CreditLimitDays,
-                                    PaymentTerm=row.PaymentTerm,
-                                    Remark=row.Remark,
-                                    CurrencyId=row.CurrencyId,
-                                    ExchangeRate=row.ExchangeRate,
-                                    CurrencyCode=row.Currency.CurrencyCode,
-                                    NetAmountFc=row.NetAmountFc,
-                                    NetAmount=row.NetAmount,
-                                    ReceivedAmount= (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
-                                                + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
-                                                + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0)
-                                                ,
-                                    OutstandingAmount = row.NetAmount -
-                                                    (
-                                                      (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
-                                                    + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
-                                                    + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0)
-                                                    ),
-                                    OutstandingDays= (int)(Convert.ToDateTime(DateTime.Now)-Convert.ToDateTime(row.InvoiceDate)).TotalDays,
-                                    DueDate= Convert.ToDateTime(row.InvoiceDate).AddDays(row.CreditLimitDays),
-                                })
-                            .Union
-                            (
-                                dbContext.Creditnotes
-                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
-                                        && w.CompanyId == companyId
-                                        && w.PartyLedgerId == ledgerId
-                                        && w.CreditNoteDate >= fromDate
-                                        && w.CreditNoteDate <= toDate
-                                    )
-                                .Include(i => i.Currency)
-                                .Include(i => i.Receiptvoucherdetails)  //.ThenInclude(i => i.ReceiptVoucher).Where(x => x.Paymentvoucherdetails.All(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved))
-                                .Include(i => i.Journalvoucherdetails)  //.Include(i => i.Journalvoucherdetails.AsQueryable().All(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved))
-                                .Include(i => i.Advanceadjustmentdetails)  //.Include(i => i.Advanceadjustmentdetails.AsQueryable().All(w => w.AdvanceAdjustment.StatusId == (int)DocumentStatus.Approved))
-                                .ToList()
-                                .Select((row, Index) => new ReceivableStatementModel
-                                {
-                                    SequenceNo=2,
-                                    SrNo=Index,
-                                    CreditNoteId=row.CreditNoteId,
-                                    InvoiceType="Credit Note",
-                                    InvoiceNo=row.CreditNoteNo,
-                                    InvoiceDate=row.CreditNoteDate,
-                                    CustomerReferenceNo=row.PartyReferenceNo,
-                                    CustomerReferenceDate=row.PartyReferenceDate,
-                                    CreditLimitDays=row.CreditLimitDays,
-                                    PaymentTerm=row.PaymentTerm,
-                                    Remark=row.Remark,
-                                    CurrencyId=row.CurrencyId,
-                                    ExchangeRate=row.ExchangeRate,
-                                    CurrencyCode=row.Currency.CurrencyCode,
-                                    NetAmountFc=row.NetAmountFc,
-                                    NetAmount=row.NetAmount,
-                                    ReceivedAmount= (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
-                                                + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
-                                                + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0),
-                                    OutstandingAmount = row.NetAmount -
-                                                    (
-                                                      (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
-                                                    + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
-                                                    + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0)
-                                                    ),
-                                    OutstandingDays= EF.Functions.DateDiffDay(row.CreditNoteDate, DateTime.Now),
-                                    DueDate= Convert.ToDateTime(row.CreditNoteDate).AddDays(row.CreditLimitDays),
-                                })
-                            )
-                            .ToList();
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.Message.ToString());
-                }
+                //try
+                //{
+                receivableStatementModelList
+                    = dbContext.Salesinvoices
+                    .Where(w => w.StatusId == (int)DocumentStatus.Approved
+                            && w.CompanyId == companyId
+                            && w.CustomerLedgerId == ledgerId
+                            && w.InvoiceDate >= fromDate
+                            && w.InvoiceDate <= toDate
+                        )
+                    .Include(i => i.Currency)
+                    .Include(i => i.Receiptvoucherdetails)  //.ThenInclude(i => i.ReceiptVoucher).Where(x => x.Paymentvoucherdetails.All(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved))
+                    .Include(i => i.Journalvoucherdetails)  //.Include(i => i.Journalvoucherdetails.AsQueryable().All(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved))
+                    .Include(i => i.Advanceadjustmentdetails)  //.Include(i => i.Advanceadjustmentdetails.AsQueryable().All(w => w.AdvanceAdjustment.StatusId == (int)DocumentStatus.Approved))
+                    .ToList()
+                    .Select((row, Index) => new ReceivableStatementModel
+                    {
+                        SequenceNo=2,
+                        SrNo=Index,
+                        SalesInvoiceId=row.SalesInvoiceId,
+                        InvoiceType="Sales Invoice",
+                        InvoiceNo=row.InvoiceNo,
+                        InvoiceDate=row.InvoiceDate,
+                        CustomerReferenceNo=row.CustomerReferenceNo,
+                        CustomerReferenceDate=row.CustomerReferenceDate,
+                        CreditLimitDays=row.CreditLimitDays,
+                        PaymentTerm=row.PaymentTerm,
+                        Remark=row.Remark,
+                        CurrencyId=row.CurrencyId,
+                        ExchangeRate=row.ExchangeRate,
+                        CurrencyCode=row.Currency.CurrencyCode,
+                        NetAmountFc=row.NetAmountFc,
+                        NetAmount=row.NetAmount,
+                        ReceivedAmount = (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
+                                    + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
+                                    + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0)
+                                    ,
+                        OutstandingAmount = row.NetAmount -
+                                        (
+                                            (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
+                                        + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
+                                        + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0)
+                                        ),
+                        OutstandingDays = (int)(Convert.ToDateTime(DateTime.Now)-Convert.ToDateTime(row.InvoiceDate)).TotalDays,
+                        DueDate = Convert.ToDateTime(row.InvoiceDate).AddDays(row.CreditLimitDays),
+                    })
+                    .Union
+                    (
+                        dbContext.Creditnotes
+                        .Where(w => w.StatusId == (int)DocumentStatus.Approved
+                            && w.CompanyId == companyId
+                            && w.PartyLedgerId == ledgerId
+                            && w.CreditNoteDate >= fromDate
+                            && w.CreditNoteDate <= toDate
+                        )
+                        .Include(i => i.Currency)
+                        .Include(i => i.Receiptvoucherdetails)  //.ThenInclude(i => i.ReceiptVoucher).Where(x => x.Paymentvoucherdetails.All(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved))
+                        .Include(i => i.Journalvoucherdetails)  //.Include(i => i.Journalvoucherdetails.AsQueryable().All(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved))
+                        .Include(i => i.Advanceadjustmentdetails)  //.Include(i => i.Advanceadjustmentdetails.AsQueryable().All(w => w.AdvanceAdjustment.StatusId == (int)DocumentStatus.Approved))
+                        .ToList()
+                        .Select((row, Index) => new ReceivableStatementModel
+                        {
+                            SequenceNo=2,
+                            SrNo=Index,
+                            CreditNoteId=row.CreditNoteId,
+                            InvoiceType="Credit Note",
+                            InvoiceNo=row.CreditNoteNo,
+                            InvoiceDate=row.CreditNoteDate,
+                            CustomerReferenceNo=row.PartyReferenceNo,
+                            CustomerReferenceDate=row.PartyReferenceDate,
+                            CreditLimitDays=row.CreditLimitDays,
+                            PaymentTerm=row.PaymentTerm,
+                            Remark=row.Remark,
+                            CurrencyId=row.CurrencyId,
+                            ExchangeRate=row.ExchangeRate,
+                            CurrencyCode=row.Currency.CurrencyCode,
+                            NetAmountFc=row.NetAmountFc,
+                            NetAmount=row.NetAmount,
+                            ReceivedAmount= (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
+                                        + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
+                                        + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0),
+                            OutstandingAmount = row.NetAmount -
+                                            (
+                                                (null != row.Receiptvoucherdetails ? row.Receiptvoucherdetails.Sum(s => s.Amount) : 0)
+                                            + (null != row.Journalvoucherdetails ? row.Journalvoucherdetails.Sum(s => s.DebitAmount) : 0)
+                                            + (null != row.Advanceadjustmentdetails ? row.Advanceadjustmentdetails.Sum(s => s.Amount) : 0)
+                                            ),
+                            OutstandingDays= EF.Functions.DateDiffDay(row.CreditNoteDate, DateTime.Now),
+                            DueDate= Convert.ToDateTime(row.CreditNoteDate).AddDays(row.CreditLimitDays),
+                        })
+                    )
+                    .ToList();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.Write(ex.Message.ToString());
+                //}
 
-                receivableStatementModelList   =  receivableStatementModelList
-                                                .Where(w => w.OutstandingAmount != 0).ToList();
+                receivableStatementModelList = receivableStatementModelList.Where(w => w.OutstandingAmount != 0).ToList();
 
-                if (receivableStatementModelList==null)
+                if (receivableStatementModelList == null)
                 {
-                    receivableStatementModelList= new List<ReceivableStatementModel>();
+                    receivableStatementModelList = new List<ReceivableStatementModel>();
                 }
 
                 return receivableStatementModelList; // returns.
@@ -223,65 +222,65 @@ namespace ERP.Services.Accounts
             {
                 decimal advanceAmount = 0;
 
-                try
-                {
-                    var advanceList
-                                = dbContext.Receiptvoucherdetails
-                                    .Include(i => i.ReceiptVoucher)
-                                    .Where(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved
-                                            && w.ReceiptVoucher.CompanyId == companyId
-                                            && w.TransactionTypeId == (int)TransactionType.Advance
-                                            && w.ParticularLedgerId == ledgerId
-                                            //&& w.ReceiptVoucher.VoucherDate >= fromDate
-                                            && w.ReceiptVoucher.VoucherDate <= toDate
-                                        )
-                                    .Include(i => i.Advanceadjustments)
-                                    .ToList()
-                                    .Select((row, Index) => new
-                                    {
-                                        VoucherType = "Receipt Voucher",
-                                        VoucherNo = row.ReceiptVoucher.VoucherNo,
-                                        AdvanceAmount = (row.Amount -
-                                                         (null != row.Advanceadjustments ? row.Advanceadjustments.Sum(s => s.Amount) : 0)
-                                                        ),
-                                    })
-                                .Union
-                                (
-                                    dbContext.Journalvoucherdetails
-                                      .Include(i => i.JournalVoucher)
-                                     .Where(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved
-                                            && w.JournalVoucher.CompanyId == companyId
-                                            && w.TransactionTypeId == (int)TransactionType.Advance
-                                            && w.ParticularLedgerId == ledgerId
-                                            //&& w.JournalVoucher.VoucherDate >= fromDate
-                                            && w.JournalVoucher.VoucherDate <= toDate
-                                        )
-                                    .ToList()
-                                    .Select((row, Index) => new
-                                    {
-                                        VoucherType = "Journal Voucher",
-                                        VoucherNo = row.JournalVoucher.VoucherNo,
-                                        AdvanceAmount = row.DebitAmount,
-                                    })
-                                )
-                                .ToList();
-
-                    advanceList = advanceList.Where(w => w.AdvanceAmount != 0).ToList();
-
-
-                    if (advanceList==null)
+                //try
+                //{
+                var advanceList
+                    = dbContext.Receiptvoucherdetails
+                    .Include(i => i.ReceiptVoucher)
+                    .Where(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved
+                            && w.ReceiptVoucher.CompanyId == companyId
+                            && w.TransactionTypeId == (int)TransactionType.Advance
+                            && w.ParticularLedgerId == ledgerId
+                            //&& w.ReceiptVoucher.VoucherDate >= fromDate
+                            && w.ReceiptVoucher.VoucherDate <= toDate
+                        )
+                    .Include(i => i.Advanceadjustments)
+                    .ToList()
+                    .Select((row, Index) => new
                     {
-                        advanceAmount= 0;
-                    }
-                    else
-                    {
-                        advanceAmount=advanceList.Sum(s => s.AdvanceAmount);
-                    }
-                }
-                catch (Exception ex)
+                        VoucherType = "Receipt Voucher",
+                        VoucherNo = row.ReceiptVoucher.VoucherNo,
+                        AdvanceAmount = (row.Amount -
+                                            (null != row.Advanceadjustments ? row.Advanceadjustments.Sum(s => s.Amount) : 0)
+                                        ),
+                    })
+                    .Union
+                    (
+                        dbContext.Journalvoucherdetails
+                        .Include(i => i.JournalVoucher)
+                        .Where(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved
+                            && w.JournalVoucher.CompanyId == companyId
+                            && w.TransactionTypeId == (int)TransactionType.Advance
+                            && w.ParticularLedgerId == ledgerId
+                            //&& w.JournalVoucher.VoucherDate >= fromDate
+                            && w.JournalVoucher.VoucherDate <= toDate
+                        )
+                        .ToList()
+                        .Select((row, Index) => new
+                        {
+                            VoucherType = "Journal Voucher",
+                            VoucherNo = row.JournalVoucher.VoucherNo,
+                            AdvanceAmount = row.DebitAmount,
+                        })
+                    )
+                    .ToList();
+
+                advanceList = advanceList.Where(w => w.AdvanceAmount != 0).ToList();
+
+
+                if (advanceList==null)
                 {
-                    Console.WriteLine(ex.Message.ToString());
+                    advanceAmount= 0;
                 }
+                else
+                {
+                    advanceAmount=advanceList.Sum(s => s.AdvanceAmount);
+                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message.ToString());
+                //}
 
                 return advanceAmount; // returns.
             });
