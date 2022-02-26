@@ -9,7 +9,11 @@ namespace ERP.Models.Accounts
     public class SalesInvoiceAttachmentModel
     {
         public int AssociationId { get; set; }
+
+        [Required(ErrorMessage = "SalesInvoiceId is required.")]
         public int SalesInvoiceId { get; set; }
+
+        [Required(ErrorMessage = "AttachmentId is required.")]
         public int AttachmentId { get; set; }
 
         [Display(Name = "Choose File..")]
@@ -17,7 +21,11 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
+
+        [Display(Name = "Category")]
         public string CategoryName { get; set; }
+
+        [Display(Name = "Description")]
         public string Description { get; set; }
         public string ContainerName { get; set; }
         public string ServerFileName { get; set; }

@@ -14,7 +14,7 @@ namespace ERP.Services.Master
     public class AttachmentCategoryService : Repository<Attachmentcategory>, IAttachmentCategory
     {
         public AttachmentCategoryService(ErpDbContext dbContext) : base(dbContext) { }
-
+        
         public async Task<int> CreateCategory(AttachmentCategoryModel categoryModel)
         {
             int categoryId = 0;
@@ -22,7 +22,9 @@ namespace ERP.Services.Master
             // assign values.
             Attachmentcategory category = new Attachmentcategory();
             category.CategoryName = categoryModel.CategoryName;
+
             await Create(category);
+
             categoryId = category.CategoryId;
 
             return categoryId; // returns.
@@ -41,10 +43,12 @@ namespace ERP.Services.Master
 
             // get record.
             Attachmentcategory category = await GetByIdAsync(w => w.CategoryId == categoryModel.CategoryId);
+
             if (null != category)
             {
                 // assign values.
                 category.CategoryName = categoryModel.CategoryName;
+
                 isUpdated = await Update(category);
             }
 
@@ -64,6 +68,7 @@ namespace ERP.Services.Master
 
             // get record.
             Attachmentcategory category = await GetByIdAsync(w => w.CategoryId == categoryId);
+
             if (null != category)
             {
                 isDeleted = await Delete(category);

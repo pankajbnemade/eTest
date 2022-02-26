@@ -15,7 +15,6 @@
                     <th>AssociationId</th>
                     <th>Category</th>
                     <th>Description</th>
-                    @*<th>Server File Name</th>*@
                     <th>Download</th>
                 </tr>
             </thead>
@@ -53,13 +52,12 @@
                 { "data": "AssociationId", "name": "AssociationId", "visible": false },
                 { "data": "CategoryName", "name": "CategoryName"},
                 { "data": "Description", "name": "Description"},
-                //{ "data": "ContentType", "name": "ContentType" },
                 {
                     "orderable": false,
                     "render": function (data, type, full, meta) {
                         if (full.Url != '') {
                         return  '<div class="action_button">' +
-                                    '<a type="button" title="Click To Download Attachment" target="_blank" href="/' + full.Url + '">' + full.UserFileName + '</a>'
+                                    '<a type="button" title="Click to view attachment file" target="_blank" href="/' + full.Url + '">' + full.UserFileName + '</a>'
                                 '</div>';
                         }
                     }
@@ -98,4 +96,5 @@
 
 
 </script>
+
 @{ await Html.RenderPartialAsync("_ConfirmDeleteAttachment"); }

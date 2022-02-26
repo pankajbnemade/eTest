@@ -9,6 +9,7 @@ namespace ERP.Models.Master
     {
         public int StorageAccountId { get; set; }
 
+        [Required(ErrorMessage = "Storage Type is required.")]
         [Display(Name = "Storage Type")]
         public string StorageType { get; set; }
 
@@ -19,7 +20,8 @@ namespace ERP.Models.Master
         [Display(Name = "Account Key")]
         public string AccountKey { get; set; }
 
-        [Display(Name = "Container")]
+        [Required(ErrorMessage = "Container Name is required.")]
+        [Display(Name = "Container Name")]
         public string ContainerName { get; set; }
 
         [Display(Name = "Allowed File Extension")]

@@ -2,14 +2,11 @@
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
-using ERP.Models.Helpers;
 using ERP.Models.Master;
-using ERP.Models.Utility;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +19,6 @@ namespace ERP.Services.Accounts
         {
             this._attachment = attachment;
         }
-
         public async Task<int> CreateAttachment(SalesInvoiceAttachmentModel attachmentModel)
         {
             int associationId = 0;
@@ -182,7 +178,6 @@ namespace ERP.Services.Accounts
                 attachmentModel.FileExtension = salesInvoiceAttachment.Attachment.FileExtension;
                 attachmentModel.ContentType = salesInvoiceAttachment.Attachment.ContentType;
                 attachmentModel.ContentLength = salesInvoiceAttachment.Attachment.ContentLength;
-
                 attachmentModel.StorageAccountId = salesInvoiceAttachment.Attachment.StorageAccountId;
                 attachmentModel.AccountName = salesInvoiceAttachment.Attachment.StorageAccount.AccountName;
                 attachmentModel.AccountKey = salesInvoiceAttachment.Attachment.StorageAccount.AccountKey;
@@ -210,14 +205,6 @@ namespace ERP.Services.Accounts
 
                 attachmentModel.Url = await _attachment.GetUrl(salesInvoiceAttachment.AttachmentId);
 
-                //if (attachmentModel.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.File).ToLower())
-                //{
-                //    attachmentModel.Url = Path.Combine(attachmentModel.ContainerName, attachmentModel.ServerFileName + attachmentModel.FileExtension);
-                //}
-                //else if (attachmentModel.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.Azure).ToLower())
-                //{
-                //    attachmentModel.Url = Path.Combine(attachmentModel.ContainerName, attachmentModel.ServerFileName + attachmentModel.FileExtension);
-                //}
             }
             else
             {

@@ -2,7 +2,6 @@
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Models.Master;
-using ERP.Models.Utility;
 using ERP.Services.Accounts.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +17,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
     {
         private readonly ISalesInvoiceAttachment _invoiceAttachment;
         private readonly IAttachmentCategory _invoiceAttachmentCategory;
-        //private readonly IAttachment _attachment;
 
         /// <summary>
         /// constructor
         /// </summary>
-        //AttachmentController attachmentController,
         public SalesInvoiceAttachmentController(ISalesInvoiceAttachment invoiceAttachment, IAttachmentCategory attachmentCategory
-            //,IAttachment attachment
             )
         {
             this._invoiceAttachment = invoiceAttachment;
             this._invoiceAttachmentCategory = attachmentCategory;
-            //this._attachment = attachment;
         }
 
         /// <summary>
@@ -93,7 +88,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditAttachment(int associationId)
         {
-
             SalesInvoiceAttachmentModel invoiceAttachmentModel = await _invoiceAttachment.GetAttachmentById(associationId);
 
             invoiceAttachmentModel.CategoryList = await _invoiceAttachmentCategory.GetCategorySelectList();
@@ -122,7 +116,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 attachmentModel.AttachmentId = invoiceAttachmentModel.AttachmentId;
                 attachmentModel.CategoryId = invoiceAttachmentModel.CategoryId;
                 attachmentModel.Description = invoiceAttachmentModel.Description;
-                
                 attachmentModel.FileUpload = invoiceAttachmentModel.FileUpload;
 
                 if (invoiceAttachmentModel.FileUpload != null)
@@ -134,8 +127,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     attachmentModel.ContentLength = invoiceAttachmentModel.FileUpload.Length;
                 }
 
-                //int attachmentId = 0;
-                //attachmentModel = await _attachment.SaveAttachment(attachmentModel);
                 attachmentModel = await _invoiceAttachment.SaveInvoiceAttachment(attachmentModel);
 
                 if (attachmentModel.AttachmentId == 0)

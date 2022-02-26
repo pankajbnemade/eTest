@@ -4,11 +4,13 @@ using ERP.Models.Common;
 using ERP.Models.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
@@ -117,6 +119,7 @@ namespace ERP.UI
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
            
             app.UseSession();
@@ -124,6 +127,7 @@ namespace ERP.UI
             app.UseRouting();
             app.UseCookiePolicy();
             app.UseAuthorization();
+
 
             //app.UseContextAccessor();
             //loggerFactory.AddSeriLog();

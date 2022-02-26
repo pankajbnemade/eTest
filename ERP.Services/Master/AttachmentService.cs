@@ -71,13 +71,6 @@ namespace ERP.Services.Master
                 // assign values.
                 attachment.CategoryId = attachmentModel.CategoryId;
                 attachment.Description = attachmentModel.Description;
-                //attachment.ContainerName = attachmentModel.ContainerName;
-                //attachment.ServerFileName = attachmentModel.ServerFileName;
-                //attachment.UserFileName = attachmentModel.UserFileName;
-                //attachment.FileExtension = attachmentModel.FileExtension;
-                //attachment.ContentType = attachmentModel.ContentType;
-                //attachment.ContentLength = attachmentModel.ContentLength;
-                //attachment.StorageAccountId = attachmentModel.StorageAccountId;
 
                 isUpdated = await Update(attachment);
             }
@@ -337,10 +330,6 @@ namespace ERP.Services.Master
             //try
             //{
             var fileName = attachmentModel.ServerFileName + attachmentModel.FileExtension;
-
-            //var uploads = Path.Combine(_webHostEnvironment.WebRootPath, attachmentModel.ContainerName);
-
-            //var filePath = Path.Combine(uploads, uniqueFileName);
 
             BlobServiceClient blobServiceClient = new BlobServiceClient(attachmentModel.AccountKey);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(attachmentModel.ContainerName);
