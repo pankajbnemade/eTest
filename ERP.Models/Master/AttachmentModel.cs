@@ -13,7 +13,7 @@ namespace ERP.Models.Master
         public string UserFileName { get; set; }
         public string FileExtension { get; set; }
         public string ContentType { get; set; }
-        public long? ContentLength { get; set; }
+        public long ContentLength { get; set; }
         public string Url { get; set; }
         public int StorageAccountId { get; set; }
 
@@ -25,7 +25,8 @@ namespace ERP.Models.Master
 
         [Display(Name = "Account Key")]
         public string AccountKey { get; set; }
-
+        public string AllowedFileExtension { get; set; }
+        public long AllowedContentLength { get; set; }
         public IFormFile FileUpload { get; set; }
 
         [Display(Name = "Prepared By Name")]

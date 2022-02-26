@@ -87,7 +87,7 @@ else
             $("#attachmentGrid").DataTable().ajax.reload();
         }
         else {
-            fnDangerNotify('Error occured while processing request.');
+            fnDangerNotify(data.Result.Message);
             return false;
         }
     }

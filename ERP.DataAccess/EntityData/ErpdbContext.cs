@@ -713,6 +713,11 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e => e.AllowedFileExtension)
+                    .HasColumnType("varchar(200)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
                 entity.Property(e => e.ContainerName)
                     .IsRequired()
                     .HasColumnType("varchar(250)")

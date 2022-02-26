@@ -3,8 +3,10 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
+using ERP.Models.Master;
 using ERP.Models.Utility;
 using ERP.Services.Accounts.Interface;
+using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +17,11 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceAttachmentService : Repository<Salesinvoiceattachment>, ISalesInvoiceAttachment
     {
-        public SalesInvoiceAttachmentService(ErpDbContext dbContext) : base(dbContext) { }
+        private readonly IAttachment _attachment;
+        public SalesInvoiceAttachmentService(ErpDbContext dbContext, IAttachment attachment) : base(dbContext)
+        {
+            this._attachment = attachment;
+        }
 
         public async Task<int> CreateAttachment(SalesInvoiceAttachmentModel attachmentModel)
         {
@@ -158,76 +164,88 @@ namespace ERP.Services.Accounts
 
         private async Task<SalesInvoiceAttachmentModel> AssignValueToModel(Salesinvoiceattachment salesInvoiceAttachment)
         {
-            return await Task.Run(() =>
+            //return await Task.Run(() =>
+            //{
+            SalesInvoiceAttachmentModel attachmentModel = new SalesInvoiceAttachmentModel();
+
+            attachmentModel.AssociationId = salesInvoiceAttachment.AssociationId;
+            attachmentModel.SalesInvoiceId = salesInvoiceAttachment.SalesInvoiceId;
+            attachmentModel.AttachmentId = salesInvoiceAttachment.AttachmentId;
+
+            if (salesInvoiceAttachment.Attachment!=null)
             {
-                SalesInvoiceAttachmentModel attachmentModel = new SalesInvoiceAttachmentModel();
+                attachmentModel.CategoryId = salesInvoiceAttachment.Attachment.CategoryId;
+                attachmentModel.Description = salesInvoiceAttachment.Attachment.Description;
+                attachmentModel.ContainerName = salesInvoiceAttachment.Attachment.ContainerName;
+                attachmentModel.ServerFileName = salesInvoiceAttachment.Attachment.ServerFileName;
+                attachmentModel.UserFileName = salesInvoiceAttachment.Attachment.UserFileName;
+                attachmentModel.FileExtension = salesInvoiceAttachment.Attachment.FileExtension;
+                attachmentModel.ContentType = salesInvoiceAttachment.Attachment.ContentType;
+                attachmentModel.ContentLength = salesInvoiceAttachment.Attachment.ContentLength;
 
-                attachmentModel.AssociationId = salesInvoiceAttachment.AssociationId;
-                attachmentModel.SalesInvoiceId = salesInvoiceAttachment.SalesInvoiceId;
-                attachmentModel.AttachmentId = salesInvoiceAttachment.AttachmentId;
+                attachmentModel.StorageAccountId = salesInvoiceAttachment.Attachment.StorageAccountId;
+                attachmentModel.AccountName = salesInvoiceAttachment.Attachment.StorageAccount.AccountName;
+                attachmentModel.AccountKey = salesInvoiceAttachment.Attachment.StorageAccount.AccountKey;
 
-                if (salesInvoiceAttachment.Attachment!=null)
+                if (salesInvoiceAttachment.Attachment.Category != null)
                 {
-                    attachmentModel.CategoryId = salesInvoiceAttachment.Attachment.CategoryId;
-                    attachmentModel.Description = salesInvoiceAttachment.Attachment.Description;
-                    attachmentModel.ContainerName = salesInvoiceAttachment.Attachment.ContainerName;
-                    attachmentModel.ServerFileName = salesInvoiceAttachment.Attachment.ServerFileName;
-                    attachmentModel.UserFileName = salesInvoiceAttachment.Attachment.UserFileName;
-                    attachmentModel.FileExtension = salesInvoiceAttachment.Attachment.FileExtension;
-                    attachmentModel.ContentType = salesInvoiceAttachment.Attachment.ContentType;
-                    attachmentModel.ContentLength = salesInvoiceAttachment.Attachment.ContentLength;
-
-                    attachmentModel.StorageAccountId = salesInvoiceAttachment.Attachment.StorageAccountId;
-                    attachmentModel.AccountName = salesInvoiceAttachment.Attachment.StorageAccount.AccountName;
-                    attachmentModel.AccountKey = salesInvoiceAttachment.Attachment.StorageAccount.AccountKey;
-
-                    if (salesInvoiceAttachment.Attachment.Category != null)
-                    {
-                        attachmentModel.CategoryName = salesInvoiceAttachment.Attachment.Category.CategoryName;
-                    }
-                    else
-                    {
-                        attachmentModel.CategoryName = "";
-                    }
-
-                    if (salesInvoiceAttachment.Attachment.StorageAccount!=null)
-                    {
-                        attachmentModel.AccountName = salesInvoiceAttachment.Attachment.StorageAccount.AccountName;
-                        attachmentModel.AccountKey = salesInvoiceAttachment.Attachment.StorageAccount.AccountKey;
-                        attachmentModel.StorageType = salesInvoiceAttachment.Attachment.StorageAccount.StorageType;
-                    }
-                    else
-                    {
-                        attachmentModel.AccountName = "";
-                        attachmentModel.AccountKey = "";
-                    }
-
-                    if (attachmentModel.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.File).ToLower())
-                    {
-                        attachmentModel.Url = Path.Combine(attachmentModel.ContainerName, attachmentModel.ServerFileName + attachmentModel.FileExtension);
-                    }
+                    attachmentModel.CategoryName = salesInvoiceAttachment.Attachment.Category.CategoryName;
                 }
                 else
                 {
-                    attachmentModel.CategoryId = 0;
                     attachmentModel.CategoryName = "";
-                    attachmentModel.Description = "";
-                    attachmentModel.ContainerName = "";
-                    attachmentModel.ServerFileName = "";
-                    attachmentModel.UserFileName = "";
-                    attachmentModel.FileExtension = "";
-                    attachmentModel.ContentType = "";
-                    attachmentModel.ContentLength =0;
-                    attachmentModel.Url = "";
-                    attachmentModel.StorageAccountId = 0;
-                    attachmentModel.StorageType = "";
+                }
+
+                if (salesInvoiceAttachment.Attachment.StorageAccount!=null)
+                {
+                    attachmentModel.AccountName = salesInvoiceAttachment.Attachment.StorageAccount.AccountName;
+                    attachmentModel.AccountKey = salesInvoiceAttachment.Attachment.StorageAccount.AccountKey;
+                    attachmentModel.StorageType = salesInvoiceAttachment.Attachment.StorageAccount.StorageType;
+                }
+                else
+                {
                     attachmentModel.AccountName = "";
                     attachmentModel.AccountKey = "";
                 }
 
-                return attachmentModel;
-            });
+                attachmentModel.Url = await _attachment.GetUrl(salesInvoiceAttachment.AttachmentId);
+
+                //if (attachmentModel.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.File).ToLower())
+                //{
+                //    attachmentModel.Url = Path.Combine(attachmentModel.ContainerName, attachmentModel.ServerFileName + attachmentModel.FileExtension);
+                //}
+                //else if (attachmentModel.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.Azure).ToLower())
+                //{
+                //    attachmentModel.Url = Path.Combine(attachmentModel.ContainerName, attachmentModel.ServerFileName + attachmentModel.FileExtension);
+                //}
+            }
+            else
+            {
+                attachmentModel.CategoryId = 0;
+                attachmentModel.CategoryName = "";
+                attachmentModel.Description = "";
+                attachmentModel.ContainerName = "";
+                attachmentModel.ServerFileName = "";
+                attachmentModel.UserFileName = "";
+                attachmentModel.FileExtension = "";
+                attachmentModel.ContentType = "";
+                attachmentModel.ContentLength =0;
+                attachmentModel.Url = "";
+                attachmentModel.StorageAccountId = 0;
+                attachmentModel.StorageType = "";
+                attachmentModel.AccountName = "";
+                attachmentModel.AccountKey = "";
+            }
+
+            return attachmentModel;
+            //});
         }
 
+        public async Task<AttachmentModel> SaveInvoiceAttachment(AttachmentModel attachmentModel)
+        {
+            attachmentModel = await _attachment.SaveAttachment(attachmentModel);
+
+            return attachmentModel;
+        }
     }
 }

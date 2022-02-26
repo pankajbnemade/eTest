@@ -17,8 +17,12 @@ namespace ERP.Services.Accounts.Interface
         Task<bool> DeleteAttachment(int associationId);
         
         Task<SalesInvoiceAttachmentModel> GetAttachmentById(int associationId);
+
         Task<DataTableResultModel<SalesInvoiceAttachmentModel>> GetAttachmentBySalesInvoiceId(int salesInvoiceId);
+
         Task<DataTableResultModel<SalesInvoiceAttachmentModel>> GetAttachmentList();
+
+        Task<AttachmentModel> SaveInvoiceAttachment(AttachmentModel attachmentModel);
 
     }
 }

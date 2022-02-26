@@ -17,6 +17,8 @@ namespace ERP.DataAccess.EntityModels
         public string AccountName { get; set; }
         public string AccountKey { get; set; }
         public string ContainerName { get; set; }
+        public string AllowedFileExtension { get; set; }
+        public long AllowedContentLength { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

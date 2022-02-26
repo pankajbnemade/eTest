@@ -14,6 +14,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Choose File..")]
         public IFormFile FileUpload { set; get; }
+
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }

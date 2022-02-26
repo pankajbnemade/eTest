@@ -18,18 +18,19 @@ namespace ERP.UI.Areas.Accounts.Controllers
     {
         private readonly ISalesInvoiceAttachment _invoiceAttachment;
         private readonly IAttachmentCategory _invoiceAttachmentCategory;
-        private readonly IAttachment _attachment;
+        //private readonly IAttachment _attachment;
 
         /// <summary>
         /// constructor
         /// </summary>
         //AttachmentController attachmentController,
-        public SalesInvoiceAttachmentController(ISalesInvoiceAttachment invoiceAttachment, IAttachmentCategory attachmentCategory,
-                                                 IAttachment attachment)
+        public SalesInvoiceAttachmentController(ISalesInvoiceAttachment invoiceAttachment, IAttachmentCategory attachmentCategory
+            //,IAttachment attachment
+            )
         {
             this._invoiceAttachment = invoiceAttachment;
             this._invoiceAttachmentCategory = attachmentCategory;
-            this._attachment = attachment;
+            //this._attachment = attachment;
         }
 
         /// <summary>
@@ -134,12 +135,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 }
 
                 //int attachmentId = 0;
-                attachmentModel = await _attachment.SaveAttachment(attachmentModel);
+                //attachmentModel = await _attachment.SaveAttachment(attachmentModel);
+                attachmentModel = await _invoiceAttachment.SaveInvoiceAttachment(attachmentModel);
 
                 if (attachmentModel.AttachmentId == 0)
                 {
                     data.Result.Status = false;
-                    data.Result.Message = "Attachment not saved to file storage, please try again.";
+                    data.Result.Message = attachmentModel.ErrorMessage;
                     return Json(data);
                 }
                 else
@@ -166,8 +168,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
             }
             else
             {
+                data.Result.Status = false;
                 data.Result.Message = "Model state is not valid, please enter all required value.";
             }
+
             return Json(data);
         }
 

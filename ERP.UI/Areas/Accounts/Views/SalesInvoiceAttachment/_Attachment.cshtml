@@ -57,9 +57,11 @@
                 {
                     "orderable": false,
                     "render": function (data, type, full, meta) {
-                        return '<div class="action_button">' +
-                            '<a type="button" title="Click To Download Attachment" target="_new" href="/' + full.Url + '">' + full.UserFileName + '</a>'
-                            '</div>';
+                        if (full.Url != '') {
+                        return  '<div class="action_button">' +
+                                    '<a type="button" title="Click To Download Attachment" target="_blank" href="/' + full.Url + '">' + full.UserFileName + '</a>'
+                                '</div>';
+                        }
                     }
                 }
             ],

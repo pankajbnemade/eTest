@@ -11,6 +11,8 @@ namespace ERP.Services.Master.Interface
     {
         Task<AttachmentModel> SaveAttachment(AttachmentModel attachmentModel);
 
+        Task<string> GetUrl(int attachmentId);
+
         Task<int> CreateAttachment(AttachmentModel attachmentModel);
 
         Task<bool> UpdateAttachment(AttachmentModel attachmentModel);

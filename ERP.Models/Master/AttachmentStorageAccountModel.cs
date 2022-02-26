@@ -22,6 +22,12 @@ namespace ERP.Models.Master
         [Display(Name = "Container")]
         public string ContainerName { get; set; }
 
+        [Display(Name = "Allowed File Extension")]
+        public string AllowedFileExtension { get; set; }
+
+        [Display(Name = "Allowed Content Length")]
+        public long AllowedContentLength { get; set; }
+
         [Display(Name = "Prepared By Name")]
         public string PreparedByName { get; set; }
     }

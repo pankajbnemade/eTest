@@ -29,7 +29,7 @@ namespace ERP.DataAccess.EntityModels
         public string UserFileName { get; set; }
         public string FileExtension { get; set; }
         public string ContentType { get; set; }
-        public long? ContentLength { get; set; }
+        public long ContentLength { get; set; }
         public int StorageAccountId { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }

@@ -152,6 +152,8 @@ namespace ERP.Services.Master
                 storageAccountModel.StorageType = storageAccount.StorageType;
                 storageAccountModel.AccountName = storageAccount.AccountName;
                 storageAccountModel.ContainerName = storageAccount.ContainerName;
+                storageAccountModel.AllowedFileExtension = storageAccount.AllowedFileExtension;
+                storageAccountModel.AllowedContentLength = storageAccount.AllowedContentLength;
                 storageAccountModel.PreparedByName = null != storageAccount.PreparedByUser ? storageAccount.PreparedByUser.UserName : null;
 
                 return storageAccountModel;

@@ -29,144 +29,6 @@ namespace ERP.Services.Master
             this._attachmentStorageAccount = attachmentStorageAccount;
         }
 
-        public async Task<AttachmentModel> SaveAttachment(AttachmentModel attachmentModel)
-        {
-            int attachmentId = 0;
-
-            try
-            {
-                if (attachmentModel.FileUpload != null)
-                {
-                    attachmentModel.AttachmentId = 0;
-
-                    AttachmentStorageAccountModel storageAccountModel;
-
-                    storageAccountModel = await _attachmentStorageAccount.GetStorageAccountById(StaticData.StorageAccountId);
-
-                    if (storageAccountModel == null)
-                    {
-                        
-                        attachmentModel.ErrorMessage = "Storage account details not available.";
-                        return attachmentModel;
-                    }
-
-                    attachmentModel.ContainerName = storageAccountModel.ContainerName;
-                    attachmentModel.StorageAccountId = storageAccountModel.StorageAccountId;
-                    attachmentModel.StorageType = storageAccountModel.StorageType;
-                    attachmentModel.AccountName = storageAccountModel.AccountName;
-                    attachmentModel.AccountKey = storageAccountModel.AccountKey;
-
-                    IQueryable<Attachment> query = GetQueryByCondition(w => w.AttachmentId != 0)
-                                            .Where(w => w.ServerFileName == attachmentModel.ServerFileName);
-
-                    List<Attachment> attachmentList = await query.ToListAsync();
-
-                    if (null != attachmentList && attachmentList.Any())
-                    {
-                        attachmentModel.ErrorMessage = "Attachment with same name exists, please try again";
-                        return attachmentModel;
-                    }
-
-                    if (attachmentModel.StorageType.ToLower() == EnumHelper.GetDescription(StorageType.File).ToLower())
-                    {
-                        if (await UploadToFileStorage(attachmentModel) == false)
-                        {
-                            attachmentModel.ErrorMessage = "Attachment not uploaded to file storage, please try again";
-                            return attachmentModel;
-                        }
-                    }
-                    else if (attachmentModel.StorageType.ToLower() == EnumHelper.GetDescription(StorageType.Azure).ToLower())
-                    {
-                        if (await UploadToAzureStorage(attachmentModel) == false)
-                        {
-                            attachmentModel.ErrorMessage = "Attachment not uploaded to azure storage, please try again";
-                            return attachmentModel;
-                        }
-                    }
-                    else
-                    {
-                        attachmentModel.ErrorMessage = "Storage type not provided, please try again";
-                        return attachmentModel;
-                    }
-                }
-
-                if (attachmentModel.AttachmentId > 0)
-                {
-                    // update record.
-                    if (false == await UpdateAttachment(attachmentModel))
-                    {
-                        attachmentModel.ErrorMessage = "Attachement details not updated, please try again";
-                    }
-                }
-                else
-                {
-                    // add new record.
-                    attachmentId = await CreateAttachment(attachmentModel);
-                    attachmentModel.AttachmentId = attachmentId;
-
-                    if (attachmentModel.AttachmentId == 0)
-                    {
-                        attachmentModel.ErrorMessage = "Attachment details not created. Please try again.";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
-
-            return attachmentModel;
-        }
-
-        private async Task<bool> UploadToFileStorage(AttachmentModel attachmentModel)
-        {
-            //return await Task.Run(() =>
-            //{
-            var fileName = attachmentModel.ServerFileName + attachmentModel.FileExtension;
-
-            var uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, attachmentModel.ContainerName);
-
-            var filePath = Path.Combine(uploadFolder, fileName);
-
-            FileStream fileStream = new FileStream(filePath, FileMode.Create);
-
-            await attachmentModel.FileUpload.CopyToAsync(fileStream);
-
-            fileStream.Close();
-
-            return true;
-            //});
-        }
-        private async Task<bool> UploadToAzureStorage(AttachmentModel attachmentModel)
-        {
-            //try
-            //{
-                var fileName = attachmentModel.ServerFileName + attachmentModel.FileExtension;
-
-                //var uploads = Path.Combine(_webHostEnvironment.WebRootPath, attachmentModel.ContainerName);
-
-                //var filePath = Path.Combine(uploads, uniqueFileName);
-
-                BlobServiceClient blobServiceClient = new BlobServiceClient(attachmentModel.AccountKey);
-                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(attachmentModel.ContainerName);
-
-                BlobClient blobClient = containerClient.GetBlobClient(fileName);
-
-                using var fileStream = attachmentModel.FileUpload.OpenReadStream();
-
-                await blobClient.UploadAsync(fileStream, true);
-
-                fileStream.Close();
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-
-            return true;
-        }
-
         public async Task<int> CreateAttachment(AttachmentModel attachmentModel)
         {
             int attachmentId = 0;
@@ -345,5 +207,191 @@ namespace ERP.Services.Master
             });
         }
 
+        public async Task<AttachmentModel> SaveAttachment(AttachmentModel attachmentModel)
+        {
+            int attachmentId = 0;
+
+            //try
+            //{
+            if (attachmentModel.FileUpload != null)
+            {
+                attachmentModel.AttachmentId = 0;
+
+                AttachmentStorageAccountModel storageAccountModel;
+
+                storageAccountModel = await _attachmentStorageAccount.GetStorageAccountById(StaticData.StorageAccountId);
+
+                if (storageAccountModel == null)
+                {
+
+                    attachmentModel.ErrorMessage = "Storage account details not available.";
+                    return attachmentModel;
+                }
+
+                attachmentModel.ContainerName = storageAccountModel.ContainerName;
+                attachmentModel.StorageAccountId = storageAccountModel.StorageAccountId;
+                attachmentModel.StorageType = storageAccountModel.StorageType;
+                attachmentModel.AccountName = storageAccountModel.AccountName;
+                attachmentModel.AccountKey = storageAccountModel.AccountKey;
+                attachmentModel.AllowedFileExtension = storageAccountModel.AllowedFileExtension;
+                attachmentModel.AllowedContentLength = storageAccountModel.AllowedContentLength;
+
+                if (attachmentModel.AllowedFileExtension.ToLower().Contains(attachmentModel.FileExtension.ToLower()) == false
+                   && attachmentModel.AllowedFileExtension != "")
+                {
+                    attachmentModel.ErrorMessage = attachmentModel.FileExtension + " file extension is not allowed. Allowed file extensions are " + attachmentModel.AllowedFileExtension;
+                    return attachmentModel;
+                } /* check file extension*/
+
+                if (attachmentModel.AllowedContentLength < attachmentModel.ContentLength && attachmentModel.AllowedContentLength != 0)
+                {
+                    attachmentModel.ErrorMessage = attachmentModel.ContentLength.ToString() + " file size is greater than allowed file size. Allowed file size is " + attachmentModel.AllowedContentLength.ToString();
+
+                    return attachmentModel;
+                } /*'' check file size*/
+
+                IQueryable<Attachment> query = GetQueryByCondition(w => w.AttachmentId != 0)
+                                        .Where(w => w.ServerFileName == attachmentModel.ServerFileName);
+
+                List<Attachment> attachmentList = await query.ToListAsync();
+
+                if (null != attachmentList && attachmentList.Any())
+                {
+                    attachmentModel.ErrorMessage = "File with same name already exists, please try again";
+                    return attachmentModel;
+                }
+
+                if (attachmentModel.StorageType.ToLower() == EnumHelper.GetDescription(StorageType.File).ToLower())
+                {
+                    if (await UploadToFileStorage(attachmentModel) == false)
+                    {
+                        attachmentModel.ErrorMessage = "File not uploaded to file storage, please try again";
+                        return attachmentModel;
+                    }
+                }
+                else if (attachmentModel.StorageType.ToLower() == EnumHelper.GetDescription(StorageType.Azure).ToLower())
+                {
+                    if (await UploadToAzureStorage(attachmentModel) == false)
+                    {
+                        attachmentModel.ErrorMessage = "File not uploaded to azure storage, please try again";
+                        return attachmentModel;
+                    }
+                }
+                else
+                {
+                    attachmentModel.ErrorMessage = "Storage type not provided, please try again";
+                    return attachmentModel;
+                }
+            }
+
+            if (attachmentModel.AttachmentId > 0)
+            {
+                // update record.
+                if (false == await UpdateAttachment(attachmentModel))
+                {
+                    attachmentModel.AttachmentId = 0;
+                    attachmentModel.ErrorMessage = "Attachement details not updated, please try again";
+                }
+            }
+            else
+            {
+                // add new record.
+                attachmentId = await CreateAttachment(attachmentModel);
+                attachmentModel.AttachmentId = attachmentId;
+
+                if (attachmentModel.AttachmentId == 0)
+                {
+                    attachmentModel.ErrorMessage = "Attachment details not created. Please try again.";
+                }
+            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message.ToString());
+            //}
+
+            return attachmentModel;
+        }
+
+        private async Task<bool> UploadToFileStorage(AttachmentModel attachmentModel)
+        {
+            //return await Task.Run(() =>
+            //{
+            var fileName = attachmentModel.ServerFileName + attachmentModel.FileExtension;
+
+            var uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, attachmentModel.ContainerName);
+
+            var filePath = Path.Combine(uploadFolder, fileName);
+
+            FileStream fileStream = new FileStream(filePath, FileMode.Create);
+
+            await attachmentModel.FileUpload.CopyToAsync(fileStream);
+
+            fileStream.Close();
+
+            return true;
+            //});
+        }
+        private async Task<bool> UploadToAzureStorage(AttachmentModel attachmentModel)
+        {
+            //try
+            //{
+            var fileName = attachmentModel.ServerFileName + attachmentModel.FileExtension;
+
+            //var uploads = Path.Combine(_webHostEnvironment.WebRootPath, attachmentModel.ContainerName);
+
+            //var filePath = Path.Combine(uploads, uniqueFileName);
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(attachmentModel.AccountKey);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(attachmentModel.ContainerName);
+
+            BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+            using var fileStream = attachmentModel.FileUpload.OpenReadStream();
+
+            await blobClient.UploadAsync(fileStream, true);
+
+            fileStream.Close();
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+            return true;
+        }
+
+        public async Task<string> GetUrl(int attachmentId)
+        {
+            string Url = "";
+
+            //try
+            //{
+            IQueryable<Attachment> query = GetQueryByCondition(w => w.AttachmentId == attachmentId)
+                                            .Include(i => i.StorageAccount);
+
+            Attachment attachment = await query.FirstOrDefaultAsync();
+
+            if (null != attachment)
+            {
+                if (attachment.StorageAccount.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.File).ToLower())
+                {
+                    Url = Path.Combine(attachment.ContainerName, attachment.ServerFileName + attachment.FileExtension);
+                }
+                else if (attachment.StorageAccount.StorageType.ToLower()==EnumHelper.GetDescription(StorageType.Azure).ToLower())
+                {
+                    Url = Path.Combine(attachment.ContainerName, attachment.ServerFileName + attachment.FileExtension);
+                }
+            }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+            return Url;
+        }
     }
 }
