@@ -5,12 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Accounts\Controllers\AttachmentController.cs" />
     <Compile Remove="Areas\Common\Controllers\MailController.cs" />
     <Compile Remove="Areas\Common\Controllers\ReportController.cs" />
     <Compile Remove="Controllers\ReportController.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxReport\_Detail.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxReport\_Search.cshtml" />
@@ -100,6 +104,9 @@
 
   <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\TaxReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\TaxReport\_Detail.cshtml" />
     <None Include="Areas\Accounts\Views\TaxReport\_Search.cshtml" />

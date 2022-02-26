@@ -117,4 +117,5 @@ namespace ERP.Models.Accounts.Enums
         [Description("Outstanding")]
         Outstanding = 2,
     }
+   
 }

@@ -9,6 +9,8 @@ namespace ERP.Services.Master.Interface
 {
     public interface IAttachment : IRepository<Attachment>
     {
+        Task<AttachmentModel> SaveAttachment(AttachmentModel attachmentModel);
+
         Task<int> CreateAttachment(AttachmentModel attachmentModel);
 
         Task<bool> UpdateAttachment(AttachmentModel attachmentModel);

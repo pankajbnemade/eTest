@@ -37,6 +37,10 @@ namespace ERP.UI
 
             #region Master
 
+            services.AddTransient<IAttachment, AttachmentService>();
+            services.AddTransient<IAttachmentCategory, AttachmentCategoryService>();
+            services.AddTransient<IAttachmentStorageAccount, AttachmentStorageAccountService>();
+
             services.AddTransient<ICompany, CompanyService>();
             services.AddTransient<ICity, CityService>();
             services.AddTransient<IState, StateService>();
@@ -70,6 +74,7 @@ namespace ERP.UI
             services.AddTransient<ISalesInvoiceDetail, SalesInvoiceDetailService>();
             services.AddTransient<ISalesInvoiceTax, SalesInvoiceTaxService>();
             services.AddTransient<ISalesInvoiceDetailTax, SalesInvoiceDetailTaxService>();
+            services.AddTransient<ISalesInvoiceAttachment, SalesInvoiceAttachmentService>();
 
             services.AddTransient<IPurchaseInvoice, PurchaseInvoiceService>();
             services.AddTransient<IPurchaseInvoiceDetail, PurchaseInvoiceDetailService>();

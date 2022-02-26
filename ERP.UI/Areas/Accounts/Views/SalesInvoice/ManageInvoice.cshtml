@@ -56,9 +56,11 @@
                             {
                 <li class="nav-item">
                     <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
-                </li> } @*<li class="nav-item">
-                                    <a class="nav-link" id="summary-tab" data-toggle="tab" href="#invsummary" role="tab" aria-controls="invsummary" aria-selected="false">Summary</a>
-                                </li>*@
+                </li>
+}
+                            <li class="nav-item">
+                                <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachment</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body p-3">
@@ -67,7 +69,8 @@
                             <div class="tab-pane fade" id="invdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
                             @if (ViewBag.IsTaxMasterVisible == true)
                             {
-                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div> } @*<div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>*@
+                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div> } 
+                            <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab"></div>
                         </div>
                     </div>
                 </div>
@@ -116,9 +119,9 @@
                 $('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("InvoiceTaxMaster", "SalesInvoiceTaxMaster", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
                 break;
-            @*case 'invsummary':
-                tabUrl = '@Url.Action("ViewInvoiceSummary", "SalesInvoice", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
-                break;*@
+            case 'attachment':
+                tabUrl = '@Url.Action("Attachment", "SalesInvoiceAttachment", new { salesInvoiceId = ViewBag.SalesInvoiceId })';
+                break;
             default:
                 break;
         }

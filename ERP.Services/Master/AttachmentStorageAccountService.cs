@@ -149,7 +149,9 @@ namespace ERP.Services.Master
                 AttachmentStorageAccountModel storageAccountModel = new AttachmentStorageAccountModel();
 
                 storageAccountModel.StorageAccountId = storageAccount.StorageAccountId;
+                storageAccountModel.StorageType = storageAccount.StorageType;
                 storageAccountModel.AccountName = storageAccount.AccountName;
+                storageAccountModel.ContainerName = storageAccount.ContainerName;
                 storageAccountModel.PreparedByName = null != storageAccount.PreparedByUser ? storageAccount.PreparedByUser.UserName : null;
 
                 return storageAccountModel;

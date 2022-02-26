@@ -1,0 +1,99 @@
+﻿@*<div class="row">
+        <div class="col-sm-12">
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-sm-12">
+        <table id="attachmentGrid" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr>
+                    <th class="no-sort">
+                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-attachment" title="Add New">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </th>
+                    <th>AssociationId</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    @*<th>Server File Name</th>*@
+                    <th>Download</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#attachmentGrid").DataTable({
+            "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            //"dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+            //    "<'row'<'col-sm-12'tr>>" +
+            //    "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetAttachmentList", "SalesInvoiceAttachment", new { salesInvoiceId = ViewBag.SalesInvoiceId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditAttachment(' + full.AssociationId + ')"><i class="far fa-edit"></i></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" title="Delete" data-toggle="modal" onclick="javascript: fnDeleteAttachment(this, ' + full.AssociationId + ')"><i class="fa fa-trash-alt"></i></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "AssociationId", "name": "AssociationId", "visible": false },
+                { "data": "CategoryName", "name": "CategoryName"},
+                { "data": "Description", "name": "Description"},
+                //{ "data": "ContentType", "name": "ContentType" },
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<a type="button" title="Click To Download Attachment" target="_new" href="/' + full.Url + '">' + full.UserFileName + '</a>'
+                            '</div>';
+                    }
+                }
+            ],
+        });
+    });
+
+     // add new attachment.
+    $('#add-new-attachment').click(function () {
+        var model = { salesInvoiceId: '@ViewBag.SalesInvoiceId' };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddAttachment", "SalesInvoiceAttachment")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+            },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error");
+            }, true, null, false);
+    });
+
+    // edit attachment.
+    function fnEditAttachment(_associationId) {
+        var model = { associationId: _associationId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditAttachment", "SalesInvoiceAttachment")', 'html', model,
+        function (data) {
+            $('#modal-invoice').empty();
+            $('#modal-invoice').html(data).modal('show');
+            return false;
+            },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error");
+            }, true, null, false);
+    }
+
+
+</script>
+@{ await Html.RenderPartialAsync("_ConfirmDeleteAttachment"); }

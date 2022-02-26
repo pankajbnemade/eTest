@@ -9,12 +9,18 @@ namespace ERP.Models.Master
     {
         public int StorageAccountId { get; set; }
 
-        [Required(ErrorMessage = "Charge Type Name is required.")]
-        [Display(Name = "Category Name")]
+        [Display(Name = "Storage Type")]
+        public string StorageType { get; set; }
+
+        [Required(ErrorMessage = "Account Name is required.")]
+        [Display(Name = "Account Name")]
         public string AccountName { get; set; }
 
         [Display(Name = "Account Key")]
         public string AccountKey { get; set; }
+
+        [Display(Name = "Container")]
+        public string ContainerName { get; set; }
 
         [Display(Name = "Prepared By Name")]
         public string PreparedByName { get; set; }

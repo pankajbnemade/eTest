@@ -53,6 +53,7 @@
     public partial class Salesinvoicedetail : IAuditable { }
     public partial class Salesinvoicedetailtax : IAuditable { }
     public partial class Salesinvoicetax : IAuditable { }
+    public partial class Salesinvoiceattachment : IAuditable { }
     public partial class State : IAuditable { }
     public partial class Status : IAuditable { }
     public partial class Taxregister : IAuditable { }
