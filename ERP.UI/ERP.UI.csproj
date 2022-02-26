@@ -12,6 +12,33 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\CreditNoteAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\CreditNoteAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\CreditNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucherAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucherAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PaymentVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\JournalVoucherAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\JournalVoucherAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\JournalVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PurchaseInvoiceAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PurchaseInvoiceAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PurchaseInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\LedgerAttachment\_AddAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\LedgerAttachment\_Attachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\LedgerAttachment\_ConfirmDeleteAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -104,6 +131,33 @@
 
   <ItemGroup>
     <None Include="Areas\Accounts\Views\AccountDashboard\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\CreditNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\DebitNoteAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\DebitNoteAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\DebitNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentVoucherAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentVoucherAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PaymentVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\JournalVoucherAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\JournalVoucherAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\JournalVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PurchaseInvoiceAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PurchaseInvoiceAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PurchaseInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\LedgerAttachment\_AddAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\LedgerAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\LedgerAttachment\_ConfirmDeleteAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_Attachment.cshtml" />

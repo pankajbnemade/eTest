@@ -26,12 +26,16 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="detail-tab" data-toggle="tab" href="#voucherdetail" role="tab" aria-controls="voucherdetail" aria-selected="false">Detail</a>
                             </li>
+                             <li class="nav-item">
+                                <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachment</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="vouchermaster" role="tabpanel" aria-labelledby="master-tab"></div>
                             <div class="tab-pane fade" id="voucherdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
+                            <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab"></div>
                         </div>
                     </div>
                 </div>
@@ -52,7 +56,6 @@
 
     function fnShowHideMasterButtons() {
         var tabUrl = '@Url.Action("MasterButtons", "ReceiptVoucher")?receiptVoucherId=' + '@ViewBag.ReceiptVoucherId';
-        /*console.log(tabUrl);*/
         $('#masterbuttons').empty();
         $('#masterbuttons').load(tabUrl);
     }
@@ -61,12 +64,13 @@
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
         switch ($(e.target).attr('aria-controls')) {
             case 'vouchermaster':
-                //$('#btn-edit-master').show();
                 tabUrl = '@Url.Action("ViewVoucherMaster", "ReceiptVoucher", new { receiptVoucherId = ViewBag.ReceiptVoucherId })';
                 break;
             case 'voucherdetail':
-                //$('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("VoucherDetail", "ReceiptVoucherDetail", new { receiptVoucherId = ViewBag.ReceiptVoucherId, addRow_Blank=0 })';
+                break;
+            case 'attachment':
+                tabUrl = '@Url.Action("Attachment", "ReceiptVoucherAttachment", new { receiptVoucherId = ViewBag.ReceiptVoucherId })';
                 break;
             default:
                 break;

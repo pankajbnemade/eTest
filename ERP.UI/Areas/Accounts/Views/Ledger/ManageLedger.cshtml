@@ -1,6 +1,8 @@
 ﻿@using ERP.Models.Accounts.Enums;
 
-@{ ViewBag.Title = "Ledger"; }
+@{
+    ViewBag.Title = "Ledger";
+}
 
 <section class="content-header">
     <div class="container-fluid">
@@ -12,14 +14,16 @@
                 <div class="float-right">
                     @if (ViewBag.IsEditVisible == true)
                     {
-                <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditMaster('@ViewBag.LedgerId');">
-                    <i class="far fa-edit"></i> Edit
-                </button>}
+                        <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditMaster('@ViewBag.LedgerId');">
+                            <i class="far fa-edit"></i> Edit
+                        </button>
+                    }
                     @if (ViewBag.IsUpdateBalanceVisible == true)
                     {
-                <button type="button" class="btn btn-primary" id="btn-edit-balance" title="Edit Opening Balance" onclick="javascript: fnEditBalance('@ViewBag.LedgerId');">
-                    <i class="far fa-edit"></i> Edit Balance
-                </button>}
+                        <button type="button" class="btn btn-primary" id="btn-edit-balance" title="Edit Opening Balance" onclick="javascript: fnEditBalance('@ViewBag.LedgerId');">
+                            <i class="far fa-edit"></i> Edit Balance
+                        </button>
+                    }
                     <button type="button" class="btn btn-secondary " title="Back" onclick="javascript: fnBackToIndex();">
                         <i class="fas fa-arrow-left"></i> Back
                     </button>
@@ -40,10 +44,13 @@
                             </li>
                             @if (ViewBag.IsAddressVisible == true)
                             {
-                        <li class="nav-item">
-                            <a class="nav-link" id="address-tab" data-toggle="tab" href="#lederaddress" role="tab" aria-controls="lederaddress" aria-selected="false">Address</a>
-                        </li>}
-
+                                <li class="nav-item">
+                                    <a class="nav-link" id="address-tab" data-toggle="tab" href="#lederaddress" role="tab" aria-controls="lederaddress" aria-selected="false">Address</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachment</a>
+                            </li>
 
                         </ul>
                     </div>
@@ -52,7 +59,9 @@
                             <div class="tab-pane fade show active" id="ledermaster" role="tabpanel" aria-labelledby="master-tab"></div>
                             @if (ViewBag.IsAddressVisible == true)
                             {
-                <div class="tab-pane fade" id="lederaddress" role="tabpanel" aria-labelledby="address-tab"></div>}
+                                <div class="tab-pane fade" id="lederaddress" role="tabpanel" aria-labelledby="address-tab"></div>
+                            }
+                            <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab"></div>
                         </div>
                     </div>
                 </div>
@@ -65,86 +74,88 @@
 <div id="modal-ledger-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
 
 <script type="text/javascript">
-   $(document).ready(function () {
-        $('#tab-list li:first-child a').tab('show');
-    });
+    $(document).ready(function () {
+         $('#tab-list li:first-child a').tab('show');
+     });
 
 
-    // edit ledger master.
-    function fnEditMaster(ledgerId) {
-        var model = { ledgerId: ledgerId };
-        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditLedgerMaster", "Ledger")', 'html', model,
-        function (data) {
-            $('#modal-ledger').empty();
-            $('#modal-ledger').html(data).modal('show');
-            return false;
-        }, null, true, null, false);
-    }
+     // edit ledger master.
+     function fnEditMaster(ledgerId) {
+         var model = { ledgerId: ledgerId };
+         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditLedgerMaster", "Ledger")', 'html', model,
+         function (data) {
+             $('#modal-ledger').empty();
+             $('#modal-ledger').html(data).modal('show');
+             return false;
+         }, null, true, null, false);
+     }
 
 
-    // edit ledger balance.
-    function fnEditBalance(ledgerId) {
-        var model = { ledgerId: ledgerId };
-        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditLedgerBalance", "Ledger")', 'html', model,
-        function (data) {
-            $('#modal-ledger').empty();
-            $('#modal-ledger').html(data).modal('show');
-            return false;
-        }, null, true, null, false);
-    }
+     // edit ledger balance.
+     function fnEditBalance(ledgerId) {
+         var model = { ledgerId: ledgerId };
+         AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditLedgerBalance", "Ledger")', 'html', model,
+         function (data) {
+             $('#modal-ledger').empty();
+             $('#modal-ledger').html(data).modal('show');
+             return false;
+         }, null, true, null, false);
+     }
 
 
-        // back to index ledger.
-    function fnBackToIndex() {
-        window.location.href = '@Url.Action("Index", "Ledger")';
-    }
+         // back to index ledger.
+     function fnBackToIndex() {
+         window.location.href = '@Url.Action("Index", "Ledger")';
+     }
 
-    // back to print ledger.
-    function fnPrintLedger() {
-        alert("Print");
-    }
+     // back to print ledger.
+     function fnPrintLedger() {
+         alert("Print");
+     }
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
-        var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
 
-        switch ($(e.target).attr('aria-controls')) {
-            case 'ledermaster':
-                tabUrl = '@Url.Action("ViewLedgerMaster", "Ledger", new { ledgerId = ViewBag.LedgerId })';
+         switch ($(e.target).attr('aria-controls')) {
+             case 'ledermaster':
+                 tabUrl = '@Url.Action("ViewLedgerMaster", "Ledger", new { ledgerId = ViewBag.LedgerId })';
+                 break;
+             case 'lederaddress':
+                 tabUrl = '@Url.Action("LedgerAddress", "LedgerAddress", new { ledgerId = ViewBag.LedgerId })';
+                 break;
+             case 'attachment':
+                tabUrl = '@Url.Action("Attachment", "LedgerAttachment", new { ledgerId = ViewBag.LedgerId })';
                 break;
-            case 'lederaddress':
-                tabUrl = '@Url.Action("LedgerAddress", "LedgerAddress", new { ledgerId = ViewBag.LedgerId })';
-                break;
+             default:
+                 break;
+         }
 
-            default:
-                break;
-        }
+         $('#' + tabPanel).empty();
+         $('#' + tabPanel).load(tabUrl);
 
-        $('#' + tabPanel).empty();
-        $('#' + tabPanel).load(tabUrl);
+     });
 
-    });
+     // edit ledger master.
+     function fnUpdateStatusLedgerMaster(ledgerId, action) {
+         var model = {
+             ledgerId: ledgerId,
+             action: action
+         };
 
-    // edit ledger master.
-    function fnUpdateStatusLedgerMaster(ledgerId, action) {
-        var model = {
-            ledgerId: ledgerId,
-            action: action
-        };
-
-        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusLedgerMaster", "Ledger")', 'html', model,
-            function (data) {
-                if (data.Result.Status) {
-                    fnSuccessNotify('Status updated sucessfully.');
-                    var tabUrl = '@Url.Action("ManageLedger", "Ledger")?ledgerId=' + data.Result.Data;
-                    window.location.href = tabUrl;
-                    return false;
-                }
-                else {
-                    fnDangerNotify(data.Result.Data);
-                    return false;
-                }
-            }, null, true, null, false);
-    }
+         AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusLedgerMaster", "Ledger")', 'html', model,
+             function (data) {
+                 if (data.Result.Status) {
+                     fnSuccessNotify('Status updated sucessfully.');
+                     var tabUrl = '@Url.Action("ManageLedger", "Ledger")?ledgerId=' + data.Result.Data;
+                     window.location.href = tabUrl;
+                     return false;
+                 }
+                 else {
+                     fnDangerNotify(data.Result.Data);
+                     return false;
+                 }
+             }, null, true, null, false);
+     }
 
 </script>

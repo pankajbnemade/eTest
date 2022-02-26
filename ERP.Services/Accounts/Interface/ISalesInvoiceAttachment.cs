@@ -10,9 +10,9 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ISalesInvoiceAttachment : IRepository<Salesinvoiceattachment>
     {
-        Task<int> CreateAttachment(SalesInvoiceAttachmentModel currencyModel);
+        Task<int> CreateAttachment(SalesInvoiceAttachmentModel attachmentModel);
        
-        Task<bool> UpdateAttachment(SalesInvoiceAttachmentModel currencyModel);
+        Task<bool> UpdateAttachment(SalesInvoiceAttachmentModel attachmentModel);
       
         Task<bool> DeleteAttachment(int associationId);
         

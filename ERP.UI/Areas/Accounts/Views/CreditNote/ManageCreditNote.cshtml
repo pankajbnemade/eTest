@@ -1,6 +1,8 @@
 ﻿@using ERP.Models.Accounts.Enums;
 
-@{ ViewBag.Title = "Credit Note"; }
+@{
+    ViewBag.Title = "Credit Note";
+}
 
 <section class="content-header">
     <div class="container-fluid">
@@ -15,19 +17,22 @@
                     </button>
                     @if (ViewBag.IsApprovalRequestVisible == true)
                     {
-                <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.ApprovalRequested');">
-                    <i class="fas fa-download"></i> Request
-                </button>}
+                        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.ApprovalRequested');">
+                            <i class="fas fa-download"></i> Request
+                        </button>
+                    }
                     @if (ViewBag.IsApproveVisible == true)
                     {
-                <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Approved');">
-                    <i class="far fa-calendar-check"></i> Approve
-                </button>}
+                        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Approved');">
+                            <i class="far fa-calendar-check"></i> Approve
+                        </button>
+                    }
                     @if (ViewBag.IsCancelVisible == true)
                     {
-                <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Cancelled');">
-                    <i class="far fa-times-circle"></i> Cancel
-                </button>}
+                        <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusCreditNoteMaster('@ViewBag.CreditNoteId','@DocumentStatus.Cancelled');">
+                            <i class="far fa-times-circle"></i> Cancel
+                        </button>
+                    }
                     <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintCreditNote('@ViewBag.CreditNoteId');">
                         <i class="fas fa-file-pdf"></i> Print
                     </button>
@@ -54,12 +59,13 @@
                             </li>
                             @if (ViewBag.IsTaxMasterVisible == true)
                             {
-                <li class="nav-item">
-                    <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
-                </li>
- } @*<li class="nav-item">
-                    <a class="nav-link" id="summary-tab" data-toggle="tab" href="#invsummary" role="tab" aria-controls="invsummary" aria-selected="false">Summary</a>
-                </li>*@
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tax-master-tab" data-toggle="tab" href="#invtaxmaster" role="tab" aria-controls="invtaxmaster" aria-selected="false">Tax Master</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachment</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body p-3">
@@ -68,7 +74,9 @@
                             <div class="tab-pane fade" id="invdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
                             @if (ViewBag.IsTaxMasterVisible == true)
                             {
-                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div> } @*<div class="tab-pane fade" id="invsummary" role="tabpanel" aria-labelledby="summary-tab"></div>*@
+                                <div class="tab-pane fade" id="invtaxmaster" role="tabpanel" aria-labelledby="tax-master-tab"></div>
+                            }
+                            <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab"></div>
                         </div>
                     </div>
                 </div>
@@ -79,7 +87,9 @@
 <div id="modal-creditnote" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
 <div id="modal-creditnote-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
 
-@{ await Html.RenderPartialAsync("~/Areas/Accounts/Views/CreditNoteTaxDetail/_ConfirmDeleteCreditNoteTaxDetail.cshtml"); }
+@{
+    await Html.RenderPartialAsync("~/Areas/Accounts/Views/CreditNoteTaxDetail/_ConfirmDeleteCreditNoteTaxDetail.cshtml");
+}
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -112,9 +122,9 @@
                 $('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("CreditNoteTaxMaster", "CreditNoteTaxMaster", new { creditNoteId = ViewBag.CreditNoteId })';
                 break;
-            @*case 'invsummary':
-                tabUrl = '@Url.Action("ViewCreditNoteSummary", "CreditNote", new { creditNoteId = ViewBag.CreditNoteId })';
-                break;*@
+            case 'attachment':
+                tabUrl = '@Url.Action("Attachment", "CreditNoteAttachment", new { creditNoteId = ViewBag.CreditNoteId })';
+                break;
             default:
                 break;
         }

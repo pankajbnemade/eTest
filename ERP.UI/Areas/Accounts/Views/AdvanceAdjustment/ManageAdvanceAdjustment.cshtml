@@ -1,5 +1,6 @@
-﻿
-@{ ViewBag.Title = "Advance Adjustment"; }
+﻿@{
+    ViewBag.Title = "Advance Adjustment";
+}
 
 <section class="content-header p-1">
     <div class="container-fluid">
@@ -26,12 +27,16 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="detail-tab" data-toggle="tab" href="#advanceadjustmentdetail" role="tab" aria-controls="advanceadjustmentdetail" aria-selected="false">Detail</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachment</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="advanceadjustmentmaster" role="tabpanel" aria-labelledby="master-tab"></div>
                             <div class="tab-pane fade" id="advanceadjustmentdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
+                            <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab"></div>
                         </div>
                     </div>
                 </div>
@@ -52,7 +57,6 @@
 
     function fnShowHideMasterButtons() {
         var tabUrl = '@Url.Action("MasterButtons", "AdvanceAdjustment")?advanceAdjustmentId=' + '@ViewBag.AdvanceAdjustmentId';
-        /*console.log(tabUrl);*/
         $('#masterbuttons').empty();
         $('#masterbuttons').load(tabUrl);
     }
@@ -61,12 +65,13 @@
         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
         switch ($(e.target).attr('aria-controls')) {
             case 'advanceadjustmentmaster':
-                //$('#btn-edit-master').show();
                 tabUrl = '@Url.Action("ViewAdvanceAdjustmentMaster", "AdvanceAdjustment", new { advanceAdjustmentId = ViewBag.AdvanceAdjustmentId })';
                 break;
             case 'advanceadjustmentdetail':
-                //$('#btn-edit-master').hide();
                 tabUrl = '@Url.Action("AdvanceAdjustmentDetail", "AdvanceAdjustmentDetail", new { advanceAdjustmentId = ViewBag.AdvanceAdjustmentId })';
+                break;
+            case 'attachment':
+                tabUrl = '@Url.Action("Attachment", "AdvanceAdjustmentAttachment", new { advanceAdjustmentId = ViewBag.AdvanceAdjustmentId })';
                 break;
             default:
                 break;

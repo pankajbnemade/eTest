@@ -62,10 +62,14 @@ namespace ERP.UI
 
             services.AddTransient<ILedger, LedgerService>();
             services.AddTransient<ILedgerAddress, LedgerAddressService>();
+            services.AddTransient<ILedgerAttachment, LedgerAttachmentService>();
+
             services.AddTransient<ITaxRegister, TaxRegisterService>();
             services.AddTransient<ITaxRegisterDetail, TaxRegisterDetailService>();
+
             services.AddTransient<ICurrency, CurrencyService>();
             services.AddTransient<ICurrencyConversion, CurrencyConversionService>();
+
             services.AddTransient<IFinancialYear, FinancialYearService>();
             services.AddTransient<IFinancialYearCompanyRelation, FinancialYearCompanyRelationService>();
             services.AddTransient<ILedgerFinancialYearBalance, LedgerFinancialYearBalanceService>();
@@ -80,31 +84,39 @@ namespace ERP.UI
             services.AddTransient<IPurchaseInvoiceDetail, PurchaseInvoiceDetailService>();
             services.AddTransient<IPurchaseInvoiceTax, PurchaseInvoiceTaxService>();
             services.AddTransient<IPurchaseInvoiceDetailTax, PurchaseInvoiceDetailTaxService>();
+            services.AddTransient<IPurchaseInvoiceAttachment, PurchaseInvoiceAttachmentService>();
 
             services.AddTransient<ICreditNote, CreditNoteService>();
             services.AddTransient<ICreditNoteDetail, CreditNoteDetailService>();
             services.AddTransient<ICreditNoteTax, CreditNoteTaxService>();
             services.AddTransient<ICreditNoteDetailTax, CreditNoteDetailTaxService>();
+            services.AddTransient<ICreditNoteAttachment, CreditNoteAttachmentService>();
 
             services.AddTransient<IDebitNote, DebitNoteService>();
             services.AddTransient<IDebitNoteDetail, DebitNoteDetailService>();
             services.AddTransient<IDebitNoteTax, DebitNoteTaxService>();
             services.AddTransient<IDebitNoteDetailTax, DebitNoteDetailTaxService>();
+            services.AddTransient<IDebitNoteAttachment, DebitNoteAttachmentService>();
 
             services.AddTransient<IPaymentVoucher, PaymentVoucherService>();
             services.AddTransient<IPaymentVoucherDetail, PaymentVoucherDetailService>();
+            services.AddTransient<IPaymentVoucherAttachment, PaymentVoucherAttachmentService>();
 
             services.AddTransient<IReceiptVoucher, ReceiptVoucherService>();
             services.AddTransient<IReceiptVoucherDetail, ReceiptVoucherDetailService>();
+            services.AddTransient<IReceiptVoucherAttachment, ReceiptVoucherAttachmentService>();
 
             services.AddTransient<IContraVoucher, ContraVoucherService>();
             services.AddTransient<IContraVoucherDetail, ContraVoucherDetailService>();
+            services.AddTransient<IContraVoucherAttachment, ContraVoucherAttachmentService>();
 
             services.AddTransient<IJournalVoucher, JournalVoucherService>();
             services.AddTransient<IJournalVoucherDetail, JournalVoucherDetailService>();
+            services.AddTransient<IJournalVoucherAttachment, JournalVoucherAttachmentService>();
 
             services.AddTransient<IAdvanceAdjustment, AdvanceAdjustmentService>();
             services.AddTransient<IAdvanceAdjustmentDetail, AdvanceAdjustmentDetailService>();
+            services.AddTransient<IAdvanceAdjustmentAttachment, AdvanceAdjustmentAttachmentService>();
 
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
             services.AddTransient<IOutstandingInvoice, OutstandingInvoiceService>();

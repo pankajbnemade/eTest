@@ -1,0 +1,96 @@
+﻿@model LedgerAttachmentModel;
+
+<div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.AttachmentId > 0)
+            {
+<h5 class="modal-title">Edit Attachment</h5> }
+else
+{
+<h5 class="modal-title">Add Attachment</h5>}
+            <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="frmAttachment" class="width100" method="post"
+              asp-action="SaveAttachment" asp-controller="LedgerAttachment" asp-area="Accounts"
+              data-ajax-begin="return BeginAttachment();" data-ajax-success="SuccessAttachment"
+              data-ajax="true" data-ajax-method="post" enctype="multipart/form-data">
+            <div class="modal-body">
+
+                @Html.HiddenFor(model => model.AssociationId)
+                @Html.HiddenFor(model => model.AttachmentId)
+                @Html.HiddenFor(model => model.LedgerId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CategoryId, new { @class = "required" })
+                    @Html.DropDownListFor(model => model.CategoryId, new SelectList(Model.CategoryList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                    @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, new { @class = "required" })
+                    @Html.TextBoxFor(model => model.Description, new { @class = "form-control form-control-sm" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input asp-for="FileUpload" class="form-control custom-file-input">
+                        <label asp-for="FileUpload" class="custom-file-label"></label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // This code is for showing selected file name in file upload control
+        $('.custom-file-input').on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).next('.custom-file-label').html(fileName);
+        });
+
+    });
+
+    // begin form
+    function BeginAttachment() {
+        var form = $("#frmAttachment");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+
+        if ($("#AttachmentId").val() == "0" && $("#FileUpload").val() == '') {
+            alert("Please choose file..");
+            $("#FileUpload").focus();
+            return false;
+        }
+
+    }
+    // success form
+    function SuccessAttachment(data) {
+        if (data.Result.Status) {
+            $('#modal-ledger').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+            $("#attachmentGrid").DataTable().ajax.reload();
+        }
+        else {
+            fnDangerNotify(data.Result.Message);
+            return false;
+        }
+    }
+</script>
