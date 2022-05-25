@@ -142,12 +142,17 @@ namespace ERP.Models.Accounts
         //####
 
         public string CustomerLedgerName { get; set; }
-        public string BillToAddress { get; set; }
         public string AccountLedgerName { get; set; }
         public string BankLedgerName { get; set; }
         public string TaxRegisterName { get; set; }
         public string CurrencyCode { get; set; }
-
+        public string BillToAddress { get; set; }
+        public string BillToAddressCountryName { get; set; }
+        public string BillToAddressStateName { get; set; }
+        public string BillToAddressCityName { get; set; }
+        public string BillToAddressEmailAddress { get; set; }
+        public string BillToAddressPhoneNo { get; set; }
+        public string BillToAddressFaxNo { get; set; }
         public string StatusName { get; set; }
         public string PreparedByName { get; set; }
 

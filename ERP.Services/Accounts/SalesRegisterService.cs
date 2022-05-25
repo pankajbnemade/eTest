@@ -35,7 +35,7 @@ namespace ERP.Services.Accounts
             if (searchFilterModel.ToDate > toDate_FY) { searchFilterModel.ToDate = toDate_FY; }
 
             IList<SalesRegisterModel> salesRegisterModelList = await GetList(customerLedgerId, accountLedgerId, searchFilterModel.FromDate, searchFilterModel.ToDate, searchFilterModel.FinancialYearId, searchFilterModel.CompanyId);
-            
+
             DataTableResultModel<SalesRegisterModel> resultModel = new DataTableResultModel<SalesRegisterModel>();
 
             if (null != salesRegisterModelList && salesRegisterModelList.Any())
@@ -69,20 +69,26 @@ namespace ERP.Services.Accounts
 
             salesRegisterModelList = salesRegisterModelList_Trans;
 
-            salesRegisterModelList.Add(new SalesRegisterModel()
+            if (salesRegisterModelList.Any())
             {
-                SequenceNo = 3,
-                SrNo = salesRegisterModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Amount",
-                InvoiceDate = toDate,
-                TotalLineItemAmount = salesRegisterModelList.Sum(w => w.TotalLineItemAmount),
-                TaxAmount = salesRegisterModelList.Sum(w => w.TaxAmount),
-                DiscountAmount = salesRegisterModelList.Sum(w => w.DiscountAmount),
-                GrossAmount = salesRegisterModelList.Sum(w => w.GrossAmount),
-                NetAmount = salesRegisterModelList.Sum(w => w.NetAmount),
-            });
+                salesRegisterModelList.Add(new SalesRegisterModel()
+                {
+                    SequenceNo = 3,
+                    SrNo = salesRegisterModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Amount",
+                    InvoiceDate = toDate,
+                    TotalLineItemAmount = salesRegisterModelList.Sum(w => w.TotalLineItemAmount),
+                    TaxAmount = salesRegisterModelList.Sum(w => w.TaxAmount),
+                    DiscountAmount = salesRegisterModelList.Sum(w => w.DiscountAmount),
+                    GrossAmount = salesRegisterModelList.Sum(w => w.GrossAmount),
+                    NetAmount = salesRegisterModelList.Sum(w => w.NetAmount),
+                });
 
-            return salesRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                return salesRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+
+            return salesRegisterModelList;
+
         }
 
         private async Task<IList<SalesRegisterModel>> GetTransactionList(int customerLedgerId, int accountLedgerId, DateTime fromDate, DateTime toDate, int financialYearId, int companyId)

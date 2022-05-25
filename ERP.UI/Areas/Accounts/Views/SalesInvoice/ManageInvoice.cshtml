@@ -97,7 +97,7 @@
 
     // back to print invoice.
     function fnPrintInvoice(salesInvoiceId) {
-        var url  = '@Url.Action("SalesInvoice", "Report")?id=' + salesInvoiceId;
+        var url  = '@Url.Action("SalesInvoiceReport", "Report")?id=' + salesInvoiceId;
         var win= window.open(url, '_blank');
         win.focus();
         return false;

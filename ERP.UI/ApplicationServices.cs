@@ -135,6 +135,7 @@ namespace ERP.UI
             services.AddTransient<IPayableStatement, PayableStatementService>();
             services.AddTransient<IReceivableStatement, ReceivableStatementService>();
             services.AddTransient<ITaxReport, TaxReportService>();
+            services.AddTransient<ISalesInvoiceReport, SalesInvoiceReportService>();
 
 
             #endregion // Accounts

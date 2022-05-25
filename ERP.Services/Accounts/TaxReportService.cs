@@ -506,74 +506,52 @@ namespace ERP.Services.Accounts
                                     .Union(generalLedgerModelList_Trans)
                                     .ToList();
 
-            generalLedgerModelList.Add(new TaxReportModel()
+            if (generalLedgerModelList.Any())
             {
-                SequenceNo=3,
-                SrNo = generalLedgerModelList.Max(w => w.SrNo)+1,
-                DocumentType = "Total - Closing Balance",
-                DocumentNo = "Total - Closing Balance",
-                DocumentDate = toDate,
-                CreditAmount = generalLedgerModelList.Sum(w => w.CreditAmount),
-                DebitAmount = generalLedgerModelList.Sum(w => w.DebitAmount),
-                ClosingAmount=generalLedgerModelList.Sum(w => w.CreditAmount)-generalLedgerModelList.Sum(w => w.DebitAmount)
-            });
+                generalLedgerModelList.Add(new TaxReportModel()
+                {
+                    SequenceNo=3,
+                    SrNo = generalLedgerModelList.Max(w => w.SrNo)+1,
+                    DocumentType = "Total - Closing Balance",
+                    DocumentNo = "Total - Closing Balance",
+                    DocumentDate = toDate,
+                    CreditAmount = generalLedgerModelList.Sum(w => w.CreditAmount),
+                    DebitAmount = generalLedgerModelList.Sum(w => w.DebitAmount),
+                    ClosingAmount=generalLedgerModelList.Sum(w => w.CreditAmount)-generalLedgerModelList.Sum(w => w.DebitAmount)
+                });
 
-            generalLedgerModelList= generalLedgerModelList
-                                    .Select((row, index) => new TaxReportModel
-                                    {
-                                        SequenceNo   = row.SequenceNo,
-                                        SrNo =index + 1,
-                                        DocumentId  =row.DocumentId,
-                                        DocumentType    =row.DocumentType,
-                                        DocumentNo  =row.DocumentNo,
-                                        DocumentDate    =row.DocumentDate,
-                                        PurchaseInvoiceId   =row.PurchaseInvoiceId,
-                                        SalesInvoiceId  =row.SalesInvoiceId,
-                                        CreditNoteId    =row.CreditNoteId,
-                                        DebitNoteId     =row.DebitNoteId,
-                                        CurrencyId  =row.CurrencyId,
-                                        CurrencyCode    =row.CurrencyCode,
-                                        PartyReferenceNo    =row.PartyReferenceNo,
-                                        OurReferenceNo  =row.OurReferenceNo,
-                                        ExchangeRate    =row.ExchangeRate,
-                                        CreditAmount_FC     =row.CreditAmount_FC,
-                                        DebitAmount_FC  =row.DebitAmount_FC,
-                                        CreditAmount    =row.CreditAmount,
-                                        DebitAmount     =row.DebitAmount,
-                                        Amount_FC   =row.Amount_FC,
-                                        Amount  =row.Amount,
-                                        ClosingAmount   =row.ClosingAmount
-                                    })
-                                    .OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                generalLedgerModelList= generalLedgerModelList
+                                        .Select((row, index) => new TaxReportModel
+                                        {
+                                            SequenceNo   = row.SequenceNo,
+                                            SrNo =index + 1,
+                                            DocumentId  =row.DocumentId,
+                                            DocumentType    =row.DocumentType,
+                                            DocumentNo  =row.DocumentNo,
+                                            DocumentDate    =row.DocumentDate,
+                                            PurchaseInvoiceId   =row.PurchaseInvoiceId,
+                                            SalesInvoiceId  =row.SalesInvoiceId,
+                                            CreditNoteId    =row.CreditNoteId,
+                                            DebitNoteId     =row.DebitNoteId,
+                                            CurrencyId  =row.CurrencyId,
+                                            CurrencyCode    =row.CurrencyCode,
+                                            PartyReferenceNo    =row.PartyReferenceNo,
+                                            OurReferenceNo  =row.OurReferenceNo,
+                                            ExchangeRate    =row.ExchangeRate,
+                                            CreditAmount_FC     =row.CreditAmount_FC,
+                                            DebitAmount_FC  =row.DebitAmount_FC,
+                                            CreditAmount    =row.CreditAmount,
+                                            DebitAmount     =row.DebitAmount,
+                                            Amount_FC   =row.Amount_FC,
+                                            Amount  =row.Amount,
+                                            ClosingAmount   =row.ClosingAmount
+                                        })
+                                        .OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
 
+                return generalLedgerModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
 
-            //TaxReportModel prvRow = null;
-
-            //foreach (TaxReportModel currRow in generalLedgerModelList.OrderBy(o => o.SrNo))
-            //{
-            //    if (prvRow != null)
-            //    {
-            //        if (currRow.SequenceNo==2)
-            //        {
-            //            currRow.ClosingAmount = prvRow.ClosingAmount + (currRow.CreditAmount - currRow.DebitAmount);
-            //        }
-            //        else if (currRow.SequenceNo==3)
-            //        {
-            //            currRow.ClosingAmount = currRow.CreditAmount - currRow.DebitAmount;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (currRow.SequenceNo==1)
-            //        {
-            //            currRow.ClosingAmount = currRow.CreditAmount - currRow.DebitAmount;
-            //        }
-            //    }
-
-            //    prvRow = currRow;
-            //}
-
-            return generalLedgerModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+            return generalLedgerModelList;
         }
 
     }

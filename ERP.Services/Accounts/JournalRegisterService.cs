@@ -62,17 +62,22 @@ namespace ERP.Services.Accounts
 
             journalRegisterModelList = journalRegisterModelList_Trans;
 
-            journalRegisterModelList.Add(new JournalRegisterModel()
+            if (journalRegisterModelList.Any())
             {
-                SequenceNo = 3,
-                SrNo = journalRegisterModelList.Max(w => w.SrNo)+1,
-                DocumentNo = "Total Amount",
-                DocumentDate = toDate,
-                CreditAmount = journalRegisterModelList.Sum(w => w.CreditAmount),
-                DebitAmount = journalRegisterModelList.Sum(w => w.DebitAmount),
-            });
+                journalRegisterModelList.Add(new JournalRegisterModel()
+                {
+                    SequenceNo = 3,
+                    SrNo = journalRegisterModelList.Max(w => w.SrNo)+1,
+                    DocumentNo = "Total Amount",
+                    DocumentDate = toDate,
+                    CreditAmount = journalRegisterModelList.Sum(w => w.CreditAmount),
+                    DebitAmount = journalRegisterModelList.Sum(w => w.DebitAmount),
+                });
 
-            return journalRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                return journalRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+
+            return journalRegisterModelList;
         }
 
         private async Task<IList<JournalRegisterModel>> GetTransactionList(DateTime fromDate, DateTime toDate, int financialYearId, int companyId)
@@ -123,9 +128,9 @@ namespace ERP.Services.Accounts
                                                 : row.CreditNoteId != 0 && row.CreditNoteId != null ? "Credit Note"
                                                 : "",
                                 InvoiceNo = row.PurchaseInvoiceId != 0 && row.PurchaseInvoiceId != null ? (null != row.PurchaseInvoice ? row.PurchaseInvoice.InvoiceNo : "")
-                                            : row.SalesInvoiceId != 0 && row.SalesInvoiceId != null ? (null != row.SalesInvoice ? row.SalesInvoice.InvoiceNo : "") 
-                                            : row.DebitNoteId != 0 && row.DebitNoteId != null ? (null != row.DebitNote ? row.DebitNote.DebitNoteNo : "") 
-                                            : row.CreditNoteId != 0 && row.CreditNoteId != null ? (null != row.CreditNote ? row.CreditNote.CreditNoteNo : "") 
+                                            : row.SalesInvoiceId != 0 && row.SalesInvoiceId != null ? (null != row.SalesInvoice ? row.SalesInvoice.InvoiceNo : "")
+                                            : row.DebitNoteId != 0 && row.DebitNoteId != null ? (null != row.DebitNote ? row.DebitNote.DebitNoteNo : "")
+                                            : row.CreditNoteId != 0 && row.CreditNoteId != null ? (null != row.CreditNote ? row.CreditNote.CreditNoteNo : "")
                                             : "",
                                 CreditAmount_FC = row.CreditAmountFc,
                                 CreditAmount = row.CreditAmount,

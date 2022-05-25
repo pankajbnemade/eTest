@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Accounts\Controllers\AttachmentController.cs" />
+    <Compile Remove="Areas\Accounts\Controllers\ReportRDLCController.cs" />
     <Compile Remove="Areas\Common\Controllers\MailController.cs" />
     <Compile Remove="Areas\Common\Controllers\ReportController.cs" />
     <Compile Remove="Controllers\ReportController.cs" />
@@ -15,6 +16,9 @@
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PDCReport\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TrialBalanceReport\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ProfitAndLossReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -24,6 +28,7 @@
     <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\BalanceSheet\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -42,6 +47,8 @@
     <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\SalesInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\OpeningBalanceTransfer\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegister\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxReport\_Detail.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxReport\_Search.cshtml" />
@@ -89,6 +96,7 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="Grpc.Core" Version="2.42.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.12" />
@@ -134,6 +142,9 @@
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\PDCReport\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\TrialBalanceReport\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\ProfitAndLossReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -143,6 +154,7 @@
     <None Include="Areas\Accounts\Views\DebitNoteAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\BalanceSheet\Index.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -161,6 +173,8 @@
     <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_ConfirmDeleteAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\SalesInvoiceAttachment\_Attachment.cshtml" />
+    <None Include="Areas\Accounts\Views\OpeningBalanceTransfer\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegister\Index.cshtml" />
     <None Include="Areas\Accounts\Views\TaxReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\TaxReport\_Detail.cshtml" />
     <None Include="Areas\Accounts\Views\TaxReport\_Search.cshtml" />
@@ -348,7 +362,7 @@
     <None Include="wwwroot\lib\jquery\jquery-3.4.1.min.js" />
     <None Include="wwwroot\lib\moment\moment.js" />
     <None Include="wwwroot\lib\moment\moment.min.js" />
-    <None Include="wwwroot\Templates\MailTemplates\WelcomeTemplate.html" />
+    <None Include="wwwroot\templates\MailTemplates\WelcomeTemplate.html" />
   </ItemGroup>
 
   <ItemGroup>

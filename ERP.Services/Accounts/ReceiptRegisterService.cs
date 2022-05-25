@@ -63,16 +63,21 @@ namespace ERP.Services.Accounts
 
             receiptRegisterModelList = receiptRegisterModelList_Trans;
 
-            receiptRegisterModelList.Add(new ReceiptRegisterModel()
+            if (receiptRegisterModelList.Any())
             {
-                SequenceNo = 3,
-                SrNo = receiptRegisterModelList.Max(w => w.SrNo)+1,
-                DocumentNo = "Total Amount",
-                DocumentDate = toDate,
-                Amount = receiptRegisterModelList.Sum(w => w.Amount),
-            });
+                receiptRegisterModelList.Add(new ReceiptRegisterModel()
+                {
+                    SequenceNo = 3,
+                    SrNo = receiptRegisterModelList.Max(w => w.SrNo)+1,
+                    DocumentNo = "Total Amount",
+                    DocumentDate = toDate,
+                    Amount = receiptRegisterModelList.Sum(w => w.Amount),
+                });
 
-            return receiptRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                return receiptRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+
+            return receiptRegisterModelList;
         }
 
         private async Task<IList<ReceiptRegisterModel>> GetTransactionList(DateTime fromDate, DateTime toDate, int financialYearId, int companyId)

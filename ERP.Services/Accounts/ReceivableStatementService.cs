@@ -62,42 +62,47 @@ namespace ERP.Services.Accounts
 
             receivableStatementModelList = receivableStatementModelList_Trans;
 
-            receivableStatementModelList.Add(new ReceivableStatementModel()
+            if (receivableStatementModelList.Any())
             {
-                SequenceNo = 3,
-                SrNo = receivableStatementModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Amount",
-                InvoiceDate = null,
-                NetAmount = receivableStatementModelList.Sum(w => w.NetAmount),
-                ReceivedAmount = receivableStatementModelList.Sum(w => w.ReceivedAmount),
-                OutstandingAmount = receivableStatementModelList.Sum(w => w.OutstandingAmount),
-            });
+                receivableStatementModelList.Add(new ReceivableStatementModel()
+                {
+                    SequenceNo = 3,
+                    SrNo = receivableStatementModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Amount",
+                    InvoiceDate = null,
+                    NetAmount = receivableStatementModelList.Sum(w => w.NetAmount),
+                    ReceivedAmount = receivableStatementModelList.Sum(w => w.ReceivedAmount),
+                    OutstandingAmount = receivableStatementModelList.Sum(w => w.OutstandingAmount),
+                });
 
-            decimal advanceamount = await GetAdvanceAmount(ledgerId, fromDate, toDate, financialYearId, companyId);
+                decimal advanceamount = await GetAdvanceAmount(ledgerId, fromDate, toDate, financialYearId, companyId);
 
-            receivableStatementModelList.Add(new ReceivableStatementModel()
-            {
-                SequenceNo = 4,
-                SrNo = receivableStatementModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Advance Amount",
-                InvoiceDate = null,
-                NetAmount = 0,
-                ReceivedAmount = advanceamount,
-                OutstandingAmount = 0,
-            });
+                receivableStatementModelList.Add(new ReceivableStatementModel()
+                {
+                    SequenceNo = 4,
+                    SrNo = receivableStatementModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Advance Amount",
+                    InvoiceDate = null,
+                    NetAmount = 0,
+                    ReceivedAmount = advanceamount,
+                    OutstandingAmount = 0,
+                });
 
-            receivableStatementModelList.Add(new ReceivableStatementModel()
-            {
-                SequenceNo = 5,
-                SrNo = receivableStatementModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Outstanding Amount",
-                InvoiceDate = null,
-                NetAmount = 0,
-                ReceivedAmount = receivableStatementModelList.Sum(w => w.ReceivedAmount),
-                OutstandingAmount = receivableStatementModelList.Where(w => w.SequenceNo==2).Sum(w => w.OutstandingAmount),
-            });
+                receivableStatementModelList.Add(new ReceivableStatementModel()
+                {
+                    SequenceNo = 5,
+                    SrNo = receivableStatementModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Outstanding Amount",
+                    InvoiceDate = null,
+                    NetAmount = 0,
+                    ReceivedAmount = receivableStatementModelList.Sum(w => w.ReceivedAmount),
+                    OutstandingAmount = receivableStatementModelList.Where(w => w.SequenceNo==2).Sum(w => w.OutstandingAmount),
+                });
 
-            return receivableStatementModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                return receivableStatementModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+
+            return receivableStatementModelList;
         }
 
         private async Task<IList<ReceivableStatementModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int financialYearId, int companyId)

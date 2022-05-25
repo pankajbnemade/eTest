@@ -62,17 +62,22 @@ namespace ERP.Services.Accounts
 
             contraRegisterModelList = contraRegisterModelList_Trans;
 
-            contraRegisterModelList.Add(new ContraRegisterModel()
+            if (contraRegisterModelList.Any())
             {
-                SequenceNo = 3,
-                SrNo = contraRegisterModelList.Max(w => w.SrNo)+1,
-                DocumentNo = "Total Amount",
-                DocumentDate = toDate,
-                CreditAmount = contraRegisterModelList.Sum(w => w.CreditAmount),
-                DebitAmount = contraRegisterModelList.Sum(w => w.DebitAmount),
-            });
+                contraRegisterModelList.Add(new ContraRegisterModel()
+                {
+                    SequenceNo = 3,
+                    SrNo = contraRegisterModelList.Max(w => w.SrNo)+1,
+                    DocumentNo = "Total Amount",
+                    DocumentDate = toDate,
+                    CreditAmount = contraRegisterModelList.Sum(w => w.CreditAmount),
+                    DebitAmount = contraRegisterModelList.Sum(w => w.DebitAmount),
+                });
 
-            return contraRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                return contraRegisterModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+
+            return contraRegisterModelList;
         }
 
         private async Task<IList<ContraRegisterModel>> GetTransactionList(DateTime fromDate, DateTime toDate, int financialYearId, int companyId)

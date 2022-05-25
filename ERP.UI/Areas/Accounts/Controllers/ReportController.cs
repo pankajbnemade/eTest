@@ -1,13 +1,13 @@
-﻿using AspNetCore.Reporting;
-using ERP.Models.Accounts;
-using ERP.Models.Master;
+﻿using ERP.Models.Accounts;
 using ERP.Services.Accounts.Interface;
-using ERP.Services.Master.Interface;
+using ERP.UI.Report.Accounts;
+using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ERP.UI.Areas.Accounts.Controllers
@@ -15,43 +15,36 @@ namespace ERP.UI.Areas.Accounts.Controllers
     [Area("Accounts")]
     public class ReportController : Controller
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ISalesInvoiceReport _salesInvoiceReport;
+        IWebHostEnvironment _webHostEnvironment;
 
-        private readonly ISalesInvoiceDetail _salesInvoiceDetail;
-
-        public ReportController(
-            IWebHostEnvironment webHostEnvironment,
-             ISalesInvoiceDetail salesInvoiceDetail)
+        public ReportController(IWebHostEnvironment webHostEnvironment, ISalesInvoiceReport salesInvoiceReport)
         {
-            this._salesInvoiceDetail = salesInvoiceDetail;
+            this._salesInvoiceReport = salesInvoiceReport;
             this._webHostEnvironment = webHostEnvironment;
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
-        public async Task<IActionResult> SalesInvoice(int id)
+        public async Task<ActionResult> SalesInvoiceReport(int id)
         {
-            IList<SalesInvoiceReportModel> salesInvoiceReportModelList = await _salesInvoiceDetail.GetSalesInvoiceReportDataById(id);
+            SalesInvoiceModel salesInvoiceModel = new SalesInvoiceModel();
+            IList<SalesInvoiceDetailModel> salesInvoiceDetailModelList = new List<SalesInvoiceDetailModel>();
+            IList<SalesInvoiceTaxModel> salesInvoiceTaxModelList = new List<SalesInvoiceTaxModel>();
+            IList<SalesInvoiceDetailTaxModel> salesInvoiceDetailTaxModelList = new List<SalesInvoiceDetailTaxModel>();
 
-            int exetension = 1;
+            salesInvoiceModel = await _salesInvoiceReport.GetSalesInvoice(id);
+            salesInvoiceDetailModelList = await _salesInvoiceReport.GetSalesInvoiceDetailList(id);
+            salesInvoiceTaxModelList = await _salesInvoiceReport.GetSalesInvoiceTaxList(id);
+            salesInvoiceDetailTaxModelList = await _salesInvoiceReport.GetSalesInvoiceDetailTaxList(id);
 
-            string rdlcFilePath = $"{this._webHostEnvironment.ContentRootPath}\\Report\\Accounts\\rptSalesInvoice.rdlc";
+            SalesInvoiceReport salesInvoiceReport = new SalesInvoiceReport();
 
-            string fileName = salesInvoiceReportModelList.FirstOrDefault().InvoiceNo + ".pdf";
+            string webRootPath = _webHostEnvironment.WebRootPath;
 
-            LocalReport localReport = new LocalReport(rdlcFilePath);
+            byte[] bytes = salesInvoiceReport.PrepareReport(salesInvoiceModel, salesInvoiceDetailModelList, salesInvoiceTaxModelList, salesInvoiceDetailTaxModelList, webRootPath);
 
-            localReport.AddDataSource("dsSalesInvoiceDet", salesInvoiceReportModelList);
-
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
-
-            parameters.Add("salesInvoiceId", id.ToString());
-
-            ReportResult result = localReport.Execute(RenderType.Pdf, exetension, parameters);
-
-            //To Download File in new tab
-            return File(result.MainStream, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
-
+            return File(bytes, "application/pdf");
         }
+
 
     }
 }

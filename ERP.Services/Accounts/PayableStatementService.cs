@@ -62,42 +62,47 @@ namespace ERP.Services.Accounts
 
             payableStatementModelList = payableStatementModelList_Trans;
 
-            payableStatementModelList.Add(new PayableStatementModel()
+            if (payableStatementModelList.Any())
             {
-                SequenceNo = 3,
-                SrNo = payableStatementModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Amount",
-                InvoiceDate = null,
-                NetAmount = payableStatementModelList.Sum(w => w.NetAmount),
-                PaidAmount = payableStatementModelList.Sum(w => w.PaidAmount),
-                OutstandingAmount = payableStatementModelList.Sum(w => w.OutstandingAmount),
-            });
+                payableStatementModelList.Add(new PayableStatementModel()
+                {
+                    SequenceNo = 3,
+                    SrNo = payableStatementModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Amount",
+                    InvoiceDate = null,
+                    NetAmount = payableStatementModelList.Sum(w => w.NetAmount),
+                    PaidAmount = payableStatementModelList.Sum(w => w.PaidAmount),
+                    OutstandingAmount = payableStatementModelList.Sum(w => w.OutstandingAmount),
+                });
 
-            decimal advanceamount = await GetAdvanceAmount(ledgerId, fromDate, toDate, financialYearId, companyId);
+                decimal advanceamount = await GetAdvanceAmount(ledgerId, fromDate, toDate, financialYearId, companyId);
 
-            payableStatementModelList.Add(new PayableStatementModel()
-            {
-                SequenceNo = 4,
-                SrNo = payableStatementModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Advance Amount",
-                InvoiceDate = null,
-                NetAmount = 0,
-                PaidAmount = advanceamount,
-                OutstandingAmount = 0,
-            });
+                payableStatementModelList.Add(new PayableStatementModel()
+                {
+                    SequenceNo = 4,
+                    SrNo = payableStatementModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Advance Amount",
+                    InvoiceDate = null,
+                    NetAmount = 0,
+                    PaidAmount = advanceamount,
+                    OutstandingAmount = 0,
+                });
 
-            payableStatementModelList.Add(new PayableStatementModel()
-            {
-                SequenceNo = 5,
-                SrNo = payableStatementModelList.Max(w => w.SrNo) + 1,
-                InvoiceNo = "Total Outstanding Amount",
-                InvoiceDate = null,
-                NetAmount = 0,
-                PaidAmount = payableStatementModelList.Sum(w => w.PaidAmount),
-                OutstandingAmount = payableStatementModelList.Where(w => w.SequenceNo==2).Sum(w => w.OutstandingAmount),
-            });
+                payableStatementModelList.Add(new PayableStatementModel()
+                {
+                    SequenceNo = 5,
+                    SrNo = payableStatementModelList.Max(w => w.SrNo) + 1,
+                    InvoiceNo = "Total Outstanding Amount",
+                    InvoiceDate = null,
+                    NetAmount = 0,
+                    PaidAmount = payableStatementModelList.Sum(w => w.PaidAmount),
+                    OutstandingAmount = payableStatementModelList.Where(w => w.SequenceNo==2).Sum(w => w.OutstandingAmount),
+                });
 
-            return payableStatementModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+                return payableStatementModelList.OrderBy(o => o.SequenceNo).ThenBy(o => o.SrNo).ToList();
+            }
+
+            return payableStatementModelList;
         }
 
         private async Task<IList<PayableStatementModel>> GetTransactionList(int ledgerId, DateTime fromDate, DateTime toDate, int financialYearId, int companyId)
@@ -106,8 +111,8 @@ namespace ERP.Services.Accounts
             {
 
                 IList<PayableStatementModel> payableStatementModelList = null;
-                try
-                {
+                //try
+                //{
                     payableStatementModelList
                             = dbContext.Purchaseinvoices
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
@@ -198,11 +203,11 @@ namespace ERP.Services.Accounts
                                 })
                             )
                             .ToList();
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.Message.ToString());
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.Write(ex.Message.ToString());
+                //}
 
                 payableStatementModelList   =  payableStatementModelList
                                                 .Where(w => w.OutstandingAmount != 0).ToList();
