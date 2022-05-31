@@ -17,6 +17,13 @@
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\PDCReport\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegisterDetail\_AddTaxRegisterDetail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegisterDetail\_ConfirmDeleteTaxRegisterDetail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegisterDetail\_TaxRegisterDetail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegister\ManageTaxRegister.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegister\_AddTaxRegisterMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegister\_ConfirmDeleteTaxRegisterMaster.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TaxRegister\_ViewTaxRegisterMaster.cshtml" />
     <Content Remove="Areas\Accounts\Views\TrialBalanceReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\ProfitAndLossReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\ContraVoucherAttachment\_AddAttachment.cshtml" />
@@ -143,6 +150,13 @@
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\PDCReport\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegisterDetail\_AddTaxRegisterDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegisterDetail\_ConfirmDeleteTaxRegisterDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegisterDetail\_TaxRegisterDetail.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegister\ManageTaxRegister.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegister\_AddTaxRegisterMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegister\_ConfirmDeleteTaxRegisterMaster.cshtml" />
+    <None Include="Areas\Accounts\Views\TaxRegister\_ViewTaxRegisterMaster.cshtml" />
     <None Include="Areas\Accounts\Views\TrialBalanceReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\ProfitAndLossReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\ContraVoucherAttachment\_AddAttachment.cshtml" />

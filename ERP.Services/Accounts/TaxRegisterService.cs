@@ -1,12 +1,17 @@
 ﻿using ERP.DataAccess.EntityData;
 using ERP.DataAccess.EntityModels;
 using ERP.Models.Accounts;
+using ERP.Models.Accounts.Enums;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
+using ERP.Services.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace ERP.Services.Accounts
@@ -21,9 +26,13 @@ namespace ERP.Services.Accounts
 
             // assign values.
             Taxregister taxRegister = new Taxregister();
+
             taxRegister.TaxRegisterName = taxRegisterModel.TaxRegisterName;
+
             await Create(taxRegister);
+
             taxRegisterId = taxRegister.TaxRegisterId;
+
             return taxRegisterId; // returns.
         }
 
@@ -33,6 +42,7 @@ namespace ERP.Services.Accounts
 
             // get record.
             Taxregister taxRegister = await GetByIdAsync(w => w.TaxRegisterId == taxRegisterModel.TaxRegisterId);
+
             if (null != taxRegister)
             {
                 // assign values.
@@ -50,6 +60,7 @@ namespace ERP.Services.Accounts
 
             // get record.
             Taxregister taxRegister = await GetByIdAsync(w => w.TaxRegisterId == taxRegisterId);
+
             if (null != taxRegister)
             {
                 isDeleted = await Delete(taxRegister);
@@ -63,6 +74,7 @@ namespace ERP.Services.Accounts
             TaxRegisterModel taxRegisterModel = null;
 
             IList<TaxRegisterModel> taxRegisterModelList = await GetTaxRegisterList(taxRegisterId);
+
             if (null != taxRegisterModelList && taxRegisterModelList.Any())
             {
                 taxRegisterModel = taxRegisterModelList.FirstOrDefault();
@@ -71,22 +83,72 @@ namespace ERP.Services.Accounts
             return taxRegisterModel; // returns.
         }
 
-        public async Task<IList<TaxRegisterModel>> GetTaxRegisterByStateId(int stateId)
+        public async Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterTaxRegisterModel searchFilterModel)
         {
-            return await GetTaxRegisterList(0);
+            string searchBy = dataTableAjaxPostModel.search?.value;
+            int take = dataTableAjaxPostModel.length;
+            int skip = dataTableAjaxPostModel.start;
+
+            string sortBy = string.Empty;
+            string sortDir = string.Empty;
+
+            if (dataTableAjaxPostModel.order != null)
+            {
+                sortBy = dataTableAjaxPostModel.columns[dataTableAjaxPostModel.order[0].column].data;
+                sortDir = dataTableAjaxPostModel.order[0].dir.ToLower();
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            DataTableResultModel<TaxRegisterModel> resultModel = await GetDataFromDbase(searchFilterModel, searchBy, take, skip, sortBy, sortDir);
+
+            return resultModel; // returns.
         }
 
-        public async Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList()
+        private async Task<DataTableResultModel<TaxRegisterModel>> GetDataFromDbase(SearchFilterTaxRegisterModel searchFilterModel, string searchBy, int take, int skip, string sortBy, string sortDir)
         {
             DataTableResultModel<TaxRegisterModel> resultModel = new DataTableResultModel<TaxRegisterModel>();
 
-            IList<TaxRegisterModel> taxRegisterModelList = await GetTaxRegisterList(0);
-            if (null != taxRegisterModelList && taxRegisterModelList.Any())
+            IQueryable<Taxregister> query = GetQueryByCondition(w => w.TaxRegisterId != 0)
+                                             .Include(w => w.PreparedByUser);
+
+            //sortBy
+            if (string.IsNullOrEmpty(sortBy) || sortBy == "0")
             {
-                resultModel = new DataTableResultModel<TaxRegisterModel>();
-                resultModel.ResultList = taxRegisterModelList;
-                resultModel.TotalResultCount = taxRegisterModelList.Count();
+                sortBy = "TaxRegisterName";
             }
+
+            //sortDir
+            if (string.IsNullOrEmpty(sortDir) || sortDir == "")
+            {
+                sortDir = "asc";
+            }
+
+            if (!string.IsNullOrEmpty(searchFilterModel.TaxRegisterName))
+            {
+                query = query.Where(w => w.TaxRegisterName.Contains(searchFilterModel.TaxRegisterName));
+            }
+
+            // get total count.
+            resultModel.TotalResultCount = await query.CountAsync();
+
+            // datatable search
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                query = query.Where(w => w.TaxRegisterName.ToLower().Contains(searchBy.ToLower()));
+            }
+
+            // get records based on pagesize.
+            query = query.Skip(skip).Take(take);
+
+            resultModel.ResultList = await query.Select(s => new TaxRegisterModel
+            {
+                TaxRegisterId = s.TaxRegisterId,
+                TaxRegisterName = s.TaxRegisterName,
+                PreparedByName = s.PreparedByUser.UserName,
+            }).OrderBy($"{sortBy} {sortDir}").ToListAsync();
+
+            // get filter record count.
+            resultModel.FilterResultCount = await query.CountAsync();
 
             return resultModel; // returns.
         }
@@ -104,6 +166,7 @@ namespace ERP.Services.Accounts
 
             // get records by query.
             List<Taxregister> taxRegisterList = await query.ToListAsync();
+
             if (null != taxRegisterList && taxRegisterList.Count > 0)
             {
                 taxRegisterModelList = new List<TaxRegisterModel>();

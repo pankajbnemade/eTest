@@ -1,0 +1,107 @@
+﻿@model TaxRegisterModel
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            @if (Model.TaxRegisterId > 0)
+            {
+<h5 class="modal-title">Edit TaxRegister</h5> }
+            else
+            {
+<h5 class="modal-title">Add TaxRegister</h5>            }
+        <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        </div>
+        <form id="frmTaxRegisterMaster" class="width100" method="post"
+              asp-action="SaveTaxRegisterMaster" asp-controller="TaxRegister" asp-area="Accounts"
+              data-ajax-begin="return BeginTaxRegisterMaster();" data-ajax-success="SuccessTaxRegisterMaster"
+              data-ajax="true" data-ajax-method="post">
+
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.TaxRegisterId)
+              @*  @Html.HiddenFor(model => model.CompanyId)
+                @Html.HiddenFor(model => model.FinancialYearId)
+                @Html.HiddenFor(model => model.TaxRegisterNo)*@
+
+                <div class="row">
+                   @* <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TaxRegisterNo, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.TaxRegisterNo, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.TaxRegisterNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TaxRegisterName, new { @class = "required" })
+                            @Html.TextBoxFor(model => model.TaxRegisterName, new { @class = "form-control form-control-sm" })
+                            @Html.ValidationMessageFor(model => model.TaxRegisterName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                <button type="submit" class="btn btn-primary" title="Save"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    }); //document ready
+
+    // begin form
+    function BeginTaxRegisterMaster() {
+        var form = $("#frmTaxRegisterMaster");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($(form));
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+    // success form
+    function SuccessTaxRegisterMaster(data) {
+
+        if (data.Result.Status) {
+            $('#modal-taxregister').modal('hide');
+            fnSuccessNotify('Record saved sucessfully.');
+
+            //$("#taxRegisterGrid").DataTable().ajax.reload();
+             var tabUrl = '@Url.Action("ManageTaxRegister", "TaxRegister")?taxRegisterId=' + data.Result.Data;
+            window.location.href = tabUrl;
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+</script>
+
+<style type="text/css">
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @@media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @@media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+</style>

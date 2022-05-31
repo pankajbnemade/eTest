@@ -1,0 +1,101 @@
+﻿
+<div class="row">
+    <div class="col-sm-12">
+        <table id="taxRegisterDetailGrid" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr class="table-header">
+                    <th class="no-sort">
+                        <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-taxregister-dtl" title="Add New Line">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </th>
+                    <th>TaxRegisterDetId</th>
+                    <th>Sr No</th>
+                    <th>Tax Ledger</th>
+                    <th>Per / Amount</th>
+                    <th>Tax Per Or Amount FC</th>
+                    <th>Add or Deduct</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#taxRegisterDetailGrid").DataTable({
+            "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'><'col-sm-4'p>>",
+            "bPaginate": true,
+            "scrollX": true,
+            "ajax": {
+                "url": "@Url.Action("GetTaxRegisterDetailList", "TaxRegisterDetail", new { taxRegisterId = ViewBag.TaxRegisterId })",
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        var control = '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditTaxRegisterDetail(' + full.TaxRegisterDetId + ')"><i class="far fa-edit"></i></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" title="Delete" onclick="javascript: fnDeleteTaxRegisterDetail(this, ' + full.TaxRegisterDetId + ')"><i class="fa fa-trash-alt"></i></button>';
+
+                        control = control + '</div>';
+
+                        return control;
+                    }
+                },
+                { "data": "TaxRegisterDetId", "name": "TaxRegisterDetId", "visible": false  },
+                { "data": "SrNo", "name": "SrNo" },
+                { "data": "TaxLedgerName", "name": "TaxLedgerName" },
+                { "data": "TaxPercentageOrAmount", "name": "TaxPercentageOrAmount" },
+                { "data": "Rate", "name": "Rate", render: $.fn.dataTable.render.number(',', '.', 4, '') },
+                { "data": "TaxAddOrDeduct", "name": "TaxAddOrDeduct" }
+            ],
+        });
+    });
+
+    // add new taxregister detail.
+    $('#add-new-taxregister-dtl').click(function () {
+        var model = { taxRegisterId: '@ViewBag.TaxRegisterId' };
+
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddTaxRegisterDetail", "TaxRegisterDetail")', 'html', model,
+        function (data) {
+            $('#modal-taxregister').empty();
+            $('#modal-taxregister').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    });
+
+    // edit taxregister detail.
+    function fnEditTaxRegisterDetail(taxRegisterDetId) {
+        var model = { taxRegisterDetId: taxRegisterDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditTaxRegisterDetail", "TaxRegisterDetail")', 'html', model,
+        function (data) {
+            $('#modal-taxregister').empty();
+            $('#modal-taxregister').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+    // taxregister tax deatil.
+    function fnTaxRegisterTaxDetail(taxRegisterDetId) {
+        var model = { taxRegisterDetId: taxRegisterDetId };
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("TaxRegisterTaxDetail", "TaxRegisterTaxDetail")', 'html', model,
+        function (data) {
+            $('#modal-taxregister').empty();
+            $('#modal-taxregister').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+</script>
+
+@{
+    await Html.RenderPartialAsync("_ConfirmDeleteTaxRegisterDetail");
+}

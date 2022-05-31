@@ -17,7 +17,9 @@ namespace ERP.Services.Accounts.Interface
 
         Task<TaxRegisterModel> GetTaxRegisterById(int taxRegisterId);
 
-        Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList();
+        //Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList();
+
+        Task<DataTableResultModel<TaxRegisterModel>> GetTaxRegisterList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterTaxRegisterModel searchFilterModel);
 
         Task<IList<SelectListModel>> GetTaxRegisterSelectList();
 

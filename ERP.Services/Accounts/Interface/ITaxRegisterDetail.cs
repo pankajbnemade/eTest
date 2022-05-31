@@ -8,6 +8,7 @@ namespace ERP.Services.Accounts.Interface
 {
     public interface ITaxRegisterDetail : IRepository<Taxregisterdetail>
     {
+        Task<int> GenerateSrNo(int taxRegisterId);
         Task<int> CreateTaxRegisterDetail(TaxRegisterDetailModel taxRegisterDetailModel);
 
         Task<bool> UpdateTaxRegisterDetail(TaxRegisterDetailModel taxRegisterDetailModel);
@@ -20,6 +21,6 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<TaxRegisterDetailModel>> GetTaxRegisterDetailListByTaxRegisterId(int taxRegisterId);
 
-        Task<DataTableResultModel<TaxRegisterDetailModel>> GetTaxRegisterDetailList();
+        //Task<DataTableResultModel<TaxRegisterDetailModel>> GetTaxRegisterDetailList();
     }
 }

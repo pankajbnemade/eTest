@@ -1,22 +1,172 @@
-﻿
-@{ ViewBag.Title = "Tax Register Report"; }
+﻿@model SearchFilterTaxRegisterModel
 
-<section class="content-header p-2">
+@{ ViewBag.Title = "Tax Register List"; }
+
+<section class="content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-10">
-                <div class="row">
-                    <div id="title" class="col-sm-3 h5">@ViewBag.Title</div>
-                    <div id="filterDetails" class="col-sm-9 h6"></div> @*to show party name*@ 
-                </div>
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
             </div>
-           
         </div>
     </div>
 </section>
-<section class="content p-0">
+<section class="content">
     <div class="container-fluid">
-        <input type="hidden" id="SearchFilterModel" />
-         <img src="~/images/progress/comingsoon.png" class="img-fluid" alt="Coming Soon">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body p-2" id="searchFilterCriteria">
+                        <div class="row">
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.TaxRegisterName, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.TaxRegisterName, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                                                       
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 pt-2 text-right">
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnSearchTaxRegister();">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnAddTaxRegister();">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                @*<div class="col-sm-12 table-responsive">*@
+                <table id="taxRegisterGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort"></th>
+                            <th>TaxRegisterId</th>
+                            <th>Tax Register Name</th>
+                            <th>Prepared By</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
+
+<div id="modal-taxregister" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+<script type="text/javascript">
+    const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+    const TO_PATTERN = 'DD/MM/YYYY HH:mm';
+
+    $(document).ready(function () {
+        $("#taxRegisterGrid").DataTable({
+            "processing": true,
+            "scrollX": true,
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
+            "serverSide": true,
+            "ajax": {
+                "url": "@Url.Action("GetTaxRegisterList", "TaxRegister")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: function () {
+                        var searchFilterModel = {
+                            TaxRegisterName: $('#TaxRegisterName').val(),
+                        };
+
+                        console.log(searchFilterModel);
+
+                        return JSON.stringify(searchFilterModel);
+                    }
+                },
+            },
+            "columns": [
+                {
+                    "orderable": false,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditTaxRegisterMaster(' + full.TaxRegisterId + ')"><i class="far fa-edit"></i></button>' +
+                            '</div>';
+                    }
+                },
+                { "data": "TaxRegisterId", "name": "TaxRegisterId", "visible": false },
+                { "data": "TaxRegisterName", "name": "Tax Register Name" },
+                { "data": "PreparedByName", "name": "Prepared By Name" }
+            ],
+        });
+
+        $('#FromDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $('#ToDate').datetimepicker({
+            format: 'DD/MMM/YYYY',
+            useCurrent: false,
+            defaultDate: false, // setValue:''
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'bottom'
+            }
+        });
+    });
+
+    // edit tax register.
+    function fnEditTaxRegisterMaster(taxRegisterId) {
+        window.location.href = '@Url.Action("ManageTaxRegister", "TaxRegister")?taxRegisterId=' + taxRegisterId;
+    }
+
+    // delete tax register.
+    function fnDeleteTaxRegisterMaster(taxRegisterId) {
+
+    }
+
+    // search data.
+    function fnSearchTaxRegister() {
+        $("#taxRegisterGrid").DataTable().ajax.reload();
+    }
+
+    // reset filter.
+    function fnResetSearch() {
+        $('#searchFilterCriteria :input[type=text]').each(function (index) {
+            $(this).val('');
+        });
+        $('#searchFilterCriteria select').each(function (index) {
+            $(this).val('');
+        });
+        $('#searchFilterCriteria :input[type=checkbox]').each(function (index) {
+            $(this).is(":checked")==false;
+        });
+
+        $("#taxRegisterGrid").DataTable().ajax.reload();
+    }
+
+    // new button click.
+    function fnAddTaxRegister() {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddTaxRegisterMaster", "TaxRegister")', 'html', '',
+        function (data) {
+            $('#modal-taxregister').empty();
+            $('#modal-taxregister').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
+    }
+
+</script>
+@*@{ await Html.RenderPartialAsync("_ConfirmDeleteTaxRegisterMaster"); }*@

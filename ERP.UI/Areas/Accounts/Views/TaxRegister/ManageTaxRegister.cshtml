@@ -1,0 +1,144 @@
+﻿@using ERP.Models.Accounts.Enums;
+
+@{
+    ViewBag.Title = "Tax Register";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h5>@ViewBag.Title</h5>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-right">
+                    <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditMaster('@ViewBag.TaxRegisterId');">
+                        <i class="far fa-edit"></i> Edit
+                    </button>
+                   @* @if (ViewBag.IsApprovalRequestVisible == true)
+                    {
+                        <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusTaxRegisterMaster('@ViewBag.TaxRegisterId','@DocumentStatus.ApprovalRequested');">
+                            <i class="fas fa-download"></i> Request
+                        </button>
+                    }*@
+                   @* @if (ViewBag.IsApproveVisible == true)
+                    {
+                        <button type="button" class="btn btn-info" id="btn-approve-master" title="Approve" onclick="javascript: fnUpdateStatusTaxRegisterMaster('@ViewBag.TaxRegisterId','@DocumentStatus.Approved');">
+                            <i class="far fa-calendar-check"></i> Approve
+                        </button>
+                    }
+                    @if (ViewBag.IsCancelVisible == true)
+                    {
+                        <button type="button" class="btn btn-danger" id="btn-cancel-master" title="Cancel" onclick="javascript: fnUpdateStatusTaxRegisterMaster('@ViewBag.TaxRegisterId','@DocumentStatus.Cancelled');">
+                            <i class="far fa-times-circle"></i> Cancel
+                        </button>
+                    }
+                    <button type="button" class="btn btn-success" id="btn-print" title="Print" onclick="javascript: fnPrintTaxRegister('@ViewBag.TaxRegisterId');">
+                        <i class="fas fa-file-pdf"></i> Print
+                    </button>*@
+                    <button type="button" class="btn btn-secondary " title="Back" onclick="javascript: fnBackToIndex();">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary card-outline card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="tab-list" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link" id="master-tab" data-toggle="tab" href="#taxregistermaster" role="tab" aria-controls="taxregistermaster" aria-selected="true">Master</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="detail-tab" data-toggle="tab" href="#taxregisterdetail" role="tab" aria-controls="taxregisterdetail" aria-selected="false">Detail</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="taxregistermaster" role="tabpanel" aria-labelledby="master-tab"></div>
+                            <div class="tab-pane fade" id="taxregisterdetail" role="tabpanel" aria-labelledby="detail-tab"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="modal-taxregister" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+<div id="modal-taxregister-detail" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
+@*@{
+    await Html.RenderPartialAsync("~/Areas/Accounts/Views/TaxRegisterTaxDetail/_ConfirmDeleteTaxRegisterTaxDetail.cshtml");
+}
+*@
+<script type="text/javascript">
+    $(document).ready(function () {
+         $('#tab-list li:first-child a').tab('show');
+     });
+
+         // back to index taxregister.
+     function fnBackToIndex() {
+         window.location.href = '@Url.Action("Index", "TaxRegister")';
+     }
+
+     //// back to print taxregister.
+     //function fnPrintTaxRegister(taxRegisterId) {
+     //    var url  = '@Url.Action("TaxRegisterReport", "Report")?id=' + taxRegisterId;
+     //    var win= window.open(url, '_blank');
+     //    win.focus();
+     //    return false;
+     //}
+
+     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+         var tabPanel = $(e.target).attr('aria-controls'), tabUrl = null;
+
+         switch ($(e.target).attr('aria-controls')) {
+             case 'taxregistermaster':
+                 $('#btn-edit-master').show();
+                 tabUrl = '@Url.Action("ViewTaxRegisterMaster", "TaxRegister", new { taxRegisterId = ViewBag.TaxRegisterId })';
+                 break;
+             case 'taxregisterdetail':
+                 $('#btn-edit-master').hide();
+                 tabUrl = '@Url.Action("TaxRegisterDetail", "TaxRegisterDetail", new { taxRegisterId = ViewBag.TaxRegisterId })';
+                 break;
+
+             default:
+                 break;
+         }
+
+         $('#' + tabPanel).empty();
+         $('#' + tabPanel).load(tabUrl);
+
+     });
+
+
+     //// edit taxregister master.
+     //function fnUpdateStatusTaxRegisterMaster(taxRegisterId, action) {
+     //    var model = {
+     //        taxRegisterId: taxRegisterId,
+     //        action: action
+     //    };
+     //    AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdateStatusTaxRegisterMaster", "TaxRegister")', 'html', model,
+     //    function (data) {
+     //        if (data.Result.Status) {
+     //            fnSuccessNotify('Status updated sucessfully.');
+     //            var tabUrl = '@Url.Action("ManageTaxRegister", "TaxRegister")?taxRegisterId=' + data.Result.Data;
+     //            window.location.href = tabUrl;
+     //            return false;
+     //        }
+     //        else {
+     //            fnDangerNotify(data.Result.Data);
+     //            return false;
+     //        }
+     //    }, null, true, null, false);
+     //}
+
+</script>
