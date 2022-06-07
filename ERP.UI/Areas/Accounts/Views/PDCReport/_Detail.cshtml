@@ -1,0 +1,156 @@
+﻿
+<div class="row">
+    <div class="col-sm-12">
+        <table id="reportGrid" class="table table-bordered table-striped w-100">
+            @*<thead>
+                    <tr class="table-header">
+                        <th>Voucher Type</th>
+                        <th>Voucher No</th>
+                        <th>Voucher Date</th>
+                    </tr>
+                </thead>*@
+        </table>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        fnBindDataTable();
+    });
+
+    // search data.
+    function fnBindDataTable() {
+
+        var searchFilter = $("#SearchFilterModel").val();
+
+        var jsonFilter = JSON.parse(searchFilter);
+
+        var fileName = "PDC Report";
+
+        var reportTitle = "PDC Report " + "(From - " + jsonFilter.FromDate + " To - " + jsonFilter.ToDate + ")" ;
+
+        $("#reportGrid").DataTable({
+            "destroy": true,
+            "pageLength": 25,
+            "paging": false,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "scrollX": true,
+            //"dom": "<'row'<'col-sm-12'tr>>" +
+            //    "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+            //'lrtip',
+            /*"serverSide": true,*/
+            "dom":"Bfrtip",
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    titleAttr: 'Excel',
+                    className: 'btn btn-default',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    filename: fileName,
+                    title: reportTitle
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    titleAttr: 'PDF',
+                    className: 'btn btn-default',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    filename: fileName,
+                    title: reportTitle
+                }
+            ],
+            "ajax": {
+                "url": "@Url.Action("GetTransactionList", "PDCReport")",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    searchFilter: searchFilter
+                },
+            },
+            "columns": [
+                {
+                    "data": "DocumentNo", "name": "DocumentNo", "title": "Voucher No", className: "dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '<b>' + full.DocumentNo + '</b>';
+                        }
+                        else {
+                            return full.DocumentNo;
+                        }
+                    }
+                },
+                {
+                    "data": "DocumentDate", "name": "DocumentDate", "title": "Voucher Date",
+                    "render": function (dt) {
+                        if (Date.parse(dt)) {
+                            return moment(dt).format("DD/MMM/YYYY");
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                { "data": "ChequeNo", "name": "ChequeNo", "title": "Cheque No" },
+                {
+                    "data": "ChequeDate", "name": "ChequeDate", "title": "Cheque Date",
+                    "render": function (dt) {
+                        if (Date.parse(dt)) {
+                            return moment(dt).format("DD/MMM/YYYY");
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                { "data": "BankName", "name": "BankName", "title": "Bank" },
+                { "data": "ParticularLedgerName", "name": "ParticularLedgerName", "title": "Particular" },
+                { "data": "Narration", "name": "Narration", "title": "Narration" },
+                { "data": "CurrencyCode", "name": "CurrencyCode", "title": "Currency" },
+                {
+                    "data": "ExchangeRate", "name": "ExchangeRate", "title": "Exchange Rate", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '';
+                        }
+                        else {
+                            return addCommas(full.ExchangeRate);
+                        }
+                    }
+                },
+                {
+                    "data": "Amount_FC", "name": "Amount_FC", "title": "Amount FC", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '';
+                        }
+                        else {
+                            return addCommas(full.Amount_FC);
+                        }
+                    }
+                },
+                {
+                    "data": "Amount", "name": "Amount", "title": "Amount", className: "dt-right dt-nowrap",
+                    "render": function (data, type, full, meta) {
+                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
+                            return '<b>' + addCommas(full.Amount) + '</b>';
+                        }
+                        else {
+                            return addCommas(full.Amount);
+                        }
+                    }
+                },
+            ],
+        });
+
+
+    }
+
+</script>
+

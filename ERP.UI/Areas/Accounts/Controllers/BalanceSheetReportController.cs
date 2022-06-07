@@ -12,16 +12,16 @@ using System.Threading.Tasks;
 namespace ERP.UI.Areas.Accounts.Controllers
 {
     [Area("Accounts")]
-    public class TrialBalanceReportController : Controller
+    public class BalanceSheetReportController : Controller
     {
 
-        private readonly ITrialBalanceReport _trialBalanceReport;
+        private readonly IBalanceSheetReport _balanceSheetReport;
         private readonly IFinancialYear _financialYear;
         private readonly ILedger _ledger;
 
-        public TrialBalanceReportController(ILedger ledger, IFinancialYear financialYear, ITrialBalanceReport trialBalanceReport)
+        public BalanceSheetReportController(ILedger ledger, IFinancialYear financialYear, IBalanceSheetReport balanceSheetReport)
         {
-            this._trialBalanceReport = trialBalanceReport;
+            this._balanceSheetReport = balanceSheetReport;
             this._ledger = ledger;
             this._financialYear = financialYear;
         }
@@ -43,28 +43,28 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             FinancialYearModel financialYearModel = await _financialYear.GetFinancialYearById(userSession.FinancialYearId);
 
-            SearchFilterTrialBalanceReportModel searchFilterTrialBalanceReportModel = new SearchFilterTrialBalanceReportModel();
+            SearchFilterBalanceSheetReportModel searchFilterBalanceSheetReportModel = new SearchFilterBalanceSheetReportModel();
 
             if (searchFilter==null)
             {
-                searchFilterTrialBalanceReportModel.FromDate = financialYearModel.FromDate;
-                searchFilterTrialBalanceReportModel.ToDate = financialYearModel.ToDate;
+                searchFilterBalanceSheetReportModel.FromDate = financialYearModel.FromDate;
+                searchFilterBalanceSheetReportModel.ToDate = financialYearModel.ToDate;
             }
             else
             {
                 // deserilize string search filter.
 
-                SearchFilterTrialBalanceReportModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterTrialBalanceReportModel>(searchFilter);
+                SearchFilterBalanceSheetReportModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterBalanceSheetReportModel>(searchFilter);
 
-                searchFilterTrialBalanceReportModel.ReportType = searchFilterModel.ReportType;
-                searchFilterTrialBalanceReportModel.FromDate = searchFilterModel.FromDate;
-                searchFilterTrialBalanceReportModel.ToDate = searchFilterModel.ToDate;
+                searchFilterBalanceSheetReportModel.ReportType = searchFilterModel.ReportType;
+                searchFilterBalanceSheetReportModel.FromDate = searchFilterModel.FromDate;
+                searchFilterBalanceSheetReportModel.ToDate = searchFilterModel.ToDate;
             }
 
 
             return await Task.Run(() =>
             {
-                return PartialView("_Search", searchFilterTrialBalanceReportModel);
+                return PartialView("_Search", searchFilterBalanceSheetReportModel);
             });
         }
 
@@ -84,13 +84,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
             FinancialYearModel financialYearModel = await _financialYear.GetFinancialYearById(userSession.FinancialYearId);
 
             // deserilize string search filter.
-            SearchFilterTrialBalanceReportModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterTrialBalanceReportModel>(searchFilter);
+            SearchFilterBalanceSheetReportModel searchFilterModel = JsonConvert.DeserializeObject<SearchFilterBalanceSheetReportModel>(searchFilter);
 
             searchFilterModel.CompanyId=userSession.CompanyId;
             searchFilterModel.FinancialYearId=userSession.FinancialYearId;
 
             // get data.
-            DataTableResultModel<TrialBalanceReportModel> resultModel = await _trialBalanceReport.GetReport(searchFilterModel, financialYearModel.FromDate, financialYearModel.ToDate);
+            DataTableResultModel<BalanceSheetReportModel> resultModel = await _balanceSheetReport.GetReport(searchFilterModel, financialYearModel.FromDate, financialYearModel.ToDate);
 
             return await Task.Run(() =>
             {

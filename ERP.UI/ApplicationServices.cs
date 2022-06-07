@@ -137,6 +137,10 @@ namespace ERP.UI
             services.AddTransient<ITaxReport, TaxReportService>();
             services.AddTransient<ISalesInvoiceReport, SalesInvoiceReportService>();
 
+            services.AddTransient<IPDCReport, PDCReportService>();
+            services.AddTransient<IProfitAndLossReport, ProfitAndLossReportService>();
+            services.AddTransient<IBalanceSheetReport, BalanceSheetReportService>();
+            services.AddTransient<ITrialBalanceReport, TrialBalanceReportService>();
 
             #endregion // Accounts
 

@@ -16,7 +16,13 @@
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <Content Remove="Areas\Accounts\Views\BalanceSheetReport\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\BalanceSheetReport\_Search.cshtml" />
     <Content Remove="Areas\Accounts\Views\PDCReport\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PDCReport\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\PDCReport\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ProfitAndLossReport\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\ProfitAndLossReport\_Search.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxRegisterDetail\_AddTaxRegisterDetail.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxRegisterDetail\_ConfirmDeleteTaxRegisterDetail.cshtml" />
     <Content Remove="Areas\Accounts\Views\TaxRegisterDetail\_TaxRegisterDetail.cshtml" />
@@ -35,7 +41,7 @@
     <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\DebitNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
-    <Content Remove="Areas\Accounts\Views\BalanceSheet\Index.cshtml" />
+    <Content Remove="Areas\Accounts\Views\BalanceSheetReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_AddAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_Attachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\ReceiptVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -86,6 +92,8 @@
     <Content Remove="Areas\Accounts\Views\Ledger\_UpdateLedgerBalance.cshtml" />
     <Content Remove="Areas\Accounts\Views\PaymentVoucher\_ViewVoucherSummary.cshtml" />
     <Content Remove="Areas\Accounts\Views\PurchaseInvoice\_ViewInvoiceSummary.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TrialBalanceReport\_Detail.cshtml" />
+    <Content Remove="Areas\Accounts\Views\TrialBalanceReport\_Search.cshtml" />
     <Content Remove="Areas\Admin\Views\AssignRole\Index.cshtml" />
     <Content Remove="Areas\Admin\Views\AssignRole\_AddUserRole.cshtml" />
     <Content Remove="Areas\Admin\Views\AssignRole\_ConfirmDeleteUserRole.cshtml" />
@@ -149,7 +157,13 @@
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
+    <None Include="Areas\Accounts\Views\BalanceSheetReport\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\BalanceSheetReport\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\PDCReport\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\PDCReport\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\PDCReport\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\ProfitAndLossReport\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\ProfitAndLossReport\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\TaxRegisterDetail\_AddTaxRegisterDetail.cshtml" />
     <None Include="Areas\Accounts\Views\TaxRegisterDetail\_ConfirmDeleteTaxRegisterDetail.cshtml" />
     <None Include="Areas\Accounts\Views\TaxRegisterDetail\_TaxRegisterDetail.cshtml" />
@@ -168,7 +182,7 @@
     <None Include="Areas\Accounts\Views\DebitNoteAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\DebitNoteAttachment\_ConfirmDeleteAttachment.cshtml" />
-    <None Include="Areas\Accounts\Views\BalanceSheet\Index.cshtml" />
+    <None Include="Areas\Accounts\Views\BalanceSheetReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_AddAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_Attachment.cshtml" />
     <None Include="Areas\Accounts\Views\ReceiptVoucherAttachment\_ConfirmDeleteAttachment.cshtml" />
@@ -302,6 +316,8 @@
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\Index.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_AddFinancialYearCompanyRelation.cshtml" />
     <None Include="Areas\Accounts\Views\FinancialYearCompanyRelation\_ConfirmDeleteFinancialYearCompanyRelation.cshtml" />
+    <None Include="Areas\Accounts\Views\TrialBalanceReport\_Detail.cshtml" />
+    <None Include="Areas\Accounts\Views\TrialBalanceReport\_Search.cshtml" />
     <None Include="Areas\Admin\Views\AssignRole\Index.cshtml" />
     <None Include="Areas\Admin\Views\AssignRole\_AddUserRole.cshtml" />
     <None Include="Areas\Admin\Views\AssignRole\_ConfirmDeleteUserRole.cshtml" />

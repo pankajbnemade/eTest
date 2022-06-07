@@ -1,5 +1,5 @@
 ﻿
-@{ ViewBag.Title = "Trial Balance"; }
+@{ ViewBag.Title = "Balance Sheet"; }
 
 <section class="content-header p-2">
     <div class="container-fluid">
@@ -37,7 +37,7 @@
 
         var tabUrl = null;
 
-        tabUrl = '@Url.Action("Search", "TrialBalanceReport")' + '?searchFilter=' + $("#SearchFilterModel").val();;
+        tabUrl = '@Url.Action("Search", "BalanceSheetReport")' + '?searchFilter=' + $("#SearchFilterModel").val();;
 
         $('#rptDetails').empty();
         $('#rptDetails').load(tabUrl);
@@ -51,7 +51,7 @@
 
         $("#SearchFilterModel").val(searchFilterModel);
 
-        tabUrl = '@Url.Action("Detail", "TrialBalanceReport")' + '?searchFilter=' + $("#SearchFilterModel").val();
+        tabUrl = '@Url.Action("Detail", "BalanceSheetReport")' + '?searchFilter=' + $("#SearchFilterModel").val();
 
         $("#Back").removeAttr('hidden');
 
