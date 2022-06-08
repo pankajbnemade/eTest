@@ -18,6 +18,7 @@
     <Content Remove="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
     <Content Remove="Areas\Accounts\Views\BalanceSheetReport\_Detail.cshtml" />
     <Content Remove="Areas\Accounts\Views\BalanceSheetReport\_Search.cshtml" />
+    <Content Remove="Areas\Accounts\Views\OpeningBalanceTransfer\_Search.cshtml" />
     <Content Remove="Areas\Accounts\Views\PDCReport\Index.cshtml" />
     <Content Remove="Areas\Accounts\Views\PDCReport\_Detail.cshtml" />
     <Content Remove="Areas\Accounts\Views\PDCReport\_Search.cshtml" />
@@ -159,6 +160,7 @@
     <None Include="Areas\Accounts\Views\AdvanceAdjustmentAttachment\_ConfirmDeleteAttachment.cshtml" />
     <None Include="Areas\Accounts\Views\BalanceSheetReport\_Detail.cshtml" />
     <None Include="Areas\Accounts\Views\BalanceSheetReport\_Search.cshtml" />
+    <None Include="Areas\Accounts\Views\OpeningBalanceTransfer\_Search.cshtml" />
     <None Include="Areas\Accounts\Views\PDCReport\Index.cshtml" />
     <None Include="Areas\Accounts\Views\PDCReport\_Detail.cshtml" />
     <None Include="Areas\Accounts\Views\PDCReport\_Search.cshtml" />

@@ -13,6 +13,7 @@
   <ItemGroup>
     <Compile Remove="Accounts\PurchaseInvoiceChargeModel.cs" />
     <Compile Remove="Accounts\SalesInvoiceChargeModel.cs" />
+    <Compile Remove="Accounts\SearchFilterOpeningBalanceTransferModel.cs" />
     <Compile Remove="Accounts\_Model.cs" />
     <Compile Remove="Common\DataTableResultModel.cs" />
     <Compile Remove="Common\LogModel.cs" />

@@ -1,0 +1,105 @@
+﻿@model OpeningBalanceTransferModel
+
+<form id="frmOpeningBalanceTransfer" class="width100" method="post"
+      asp-action="SaveOpeningBalanceTransfer" asp-controller="OpeningBalanceTransfer" asp-area="Accounts"
+      data-ajax-begin="return BeginOpeningBalanceTransfer();" data-ajax-success="SuccessOpeningBalanceTransfer"
+      data-ajax="true" data-ajax-method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card m-0">
+                <div class="card-body p-2" id="searchFilterCriteria">
+                    <div class="row">
+                        <div class="col-6 col-sm-4">
+                            <div class="form-group-sm">
+                                @Html.LabelFor(model => model.FromYearId, new { @class = "" })
+                                @Html.DropDownListFor(model => model.FromYearId, new SelectList(ViewBag.FromYearList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.FromYearId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <div class="form-group-sm">
+                                @Html.LabelFor(model => model.ToYearId, new { @class = "" })
+                                @Html.DropDownListFor(model => model.ToYearId, new SelectList(ViewBag.ToYearList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.ToYearId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 pt-2 text-right">
+                            <button type="submit" class="btn btn-primary" title="Save Balance Transfer">
+                                <i class="fas fa-search"></i> Save Balance Transfer
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" title="Reset" onclick="javascript: fnResetControl();">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    });
+
+
+       //// search data.
+    function BeginOpeningBalanceTransfer() {
+
+        var form = $("#frmOpeningBalanceTransfer");
+        $(form).removeData("validator").removeData("unobtrusiveValidation");
+
+        $.validator.unobtrusive.parse($(form));
+
+        var validator = $(form).validate();
+        var isModelValid = $(form).valid();
+
+        if (false == isModelValid) {
+            validator.focusInvalid();
+            return false;
+        }
+    }
+
+    
+    // success form
+    function SuccessOpeningBalanceTransfer(data) {
+        if (data.Result.Status) {
+            $('#modal-openingbalancetransfer').modal('hide');
+
+            fnSuccessNotify('Record saved sucessfully.');
+
+            var tabUrl = '@Url.Action("Index", "OpeningBalanceTransfer")';
+         
+            window.location.href = tabUrl;
+        }
+        else {
+            fnDangerNotify('Error occured while processing request.');
+            return false;
+        }
+    }
+
+    // reset filter.
+
+    function fnResetControl() {
+        $("#SearchFilterModel").val('');
+
+        fnBackToIndex();
+
+        //$('#searchFilterCriteria :input[type=text]').each(function (index) {
+        //    $(this).val('');
+        //});
+
+        //$('#searchFilterCriteria select').each(function (index) {
+        //    $(this).val('');
+        //});
+
+        //$("#reportGrid").DataTable().clear().draw();
+
+    }
+
+</script>
