@@ -10,9 +10,15 @@ namespace ERP.Models.Accounts
         [Display(Name = "From Year")]
         public int FromYearId { get; set; }
 
+
         [Required(ErrorMessage = "To Year is required.")]
+
         [Display(Name = "To Year")]
         public int ToYearId { get; set; }
+
+        [Display(Name = "To Year")]
+        public string ToYearName { get; set; }
+
 
         [Display(Name = "Company")]
         public int CompanyId { get; set; }

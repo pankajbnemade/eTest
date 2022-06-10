@@ -120,6 +120,7 @@ namespace ERP.UI
 
             services.AddTransient<IVoucherSetupDetail, VoucherSetupDetailService>();
             services.AddTransient<IOutstandingInvoice, OutstandingInvoiceService>();
+            services.AddTransient<IOpeningBalanceTransfer, OpeningBalanceTransferService>();
 
 
 

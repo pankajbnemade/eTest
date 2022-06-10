@@ -32,25 +32,26 @@ namespace ERP.UI.Areas.Accounts.Controllers
             });
         }
 
-
-        public async Task<IActionResult> Search(string searchFilter)
+        public async Task<IActionResult> OpeningBalanceTransfer()
         {
-            ViewBag.FromYearList = await _financialYear.GetFinancialYearList();
-            ViewBag.ToYearList = await _financialYear.GetFinancialYearList();
-
-            // deserilize string search filter.
-            OpeningBalanceTransferModel openingBalanceTransferModel = JsonConvert.DeserializeObject<OpeningBalanceTransferModel>(searchFilter);
+            ViewBag.FromYearList = await _financialYear.GetFinancialYearSelectList();
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            OpeningBalanceTransferModel openingBalanceTransferModel = new OpeningBalanceTransferModel();
 
             openingBalanceTransferModel.CompanyId=userSession.CompanyId;
             openingBalanceTransferModel.FinancialYearId=userSession.FinancialYearId;
 
+            openingBalanceTransferModel.ToYearId=userSession.FinancialYearId;
+            openingBalanceTransferModel.ToYearName=userSession.FinancialYearName;
+
             return await Task.Run(() =>
             {
-                return PartialView("_Search", openingBalanceTransferModel);
+                return PartialView("_OpeningBalanceTransfer", openingBalanceTransferModel);
             });
         }
+
 
         [HttpPost]
         public async Task<JsonResult> SaveOpeningBalanceTransfer(OpeningBalanceTransferModel openingBalanceTransferModel)
@@ -65,15 +66,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     if (true == await _openingBalanceTransfer.UpdateOpeningBalanceTransfer(openingBalanceTransferModel))
                     {
                         data.Result.Status = true;
-                        data.Result.Message = "Opening Balance Saved Successfully";
+                        data.Result.Message = "Opening Balance Transfer Saved Successfully";
                     }
                     else
                     {
                         data.Result.Status = false;
-                        data.Result.Message = "Opening Balance Not Saved";
+                        data.Result.Message = "Opening Balance Transfer Not Saved. Please Try Again.";
                     }
                 }
-                
             }
 
             return Json(data);

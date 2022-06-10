@@ -188,6 +188,10 @@ namespace ERP.Services.Accounts
 
             if (creditNoteModelList == null) { creditNoteModelList = new List<GeneralLedgerModel>(); }
 
+            if (paymentVoucherModelList == null) { paymentVoucherModelList = new List<GeneralLedgerModel>(); }
+
+            if (receiptVoucherModelList == null) { receiptVoucherModelList = new List<GeneralLedgerModel>(); }
+
             if (paymentVoucherDetailModelList == null) { paymentVoucherDetailModelList = new List<GeneralLedgerModel>(); }
 
             if (receiptVoucherDetailModelList == null) { receiptVoucherDetailModelList = new List<GeneralLedgerModel>(); }
@@ -195,6 +199,7 @@ namespace ERP.Services.Accounts
             if (contraVoucherDetailModelList == null) { contraVoucherDetailModelList = new List<GeneralLedgerModel>(); }
 
             if (journalVoucherDetailModelList == null) { journalVoucherDetailModelList = new List<GeneralLedgerModel>(); }
+
 
             generalLedgerModelList = (purchaseInvoiceModelList
                                     .Union(salesInvoiceModelList)

@@ -1,62 +1,181 @@
-﻿
-@{ ViewBag.Title = "Opening Balance Transfer"; }
+﻿@*@model SearchFilterOpeningBalanceTransferModel*@
 
-<section class="content-header p-2">
+@{ ViewBag.Title = "OpeningBalanceTransfer List"; }
+
+<section class="content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-10">
-                <div class="row">
-                    <div id="title" class="col-sm-3 h5">@ViewBag.Title</div>
-                    <div id="filterDetails" class="col-sm-9 h6"></div> @*to show party name*@ 
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div id="buttons" class="float-right">
-                    <button type="button" class="btn btn-secondary" id="Back" title="Back" hidden onclick="javascript: fnBackToIndex();">
-                        <i class="fas fa-arrow-left"></i> Back
-                    </button>
-                </div>
+            <div class="col-sm-12">
+                <h5>@ViewBag.Title</h5>
             </div>
         </div>
     </div>
 </section>
-<section class="content p-0">
+<section class="content">
     <div class="container-fluid">
-        <input type="hidden" id="SearchFilterModel" />
-        <div id="rptDetails"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body p-2" id="searchFilterCriteria">
+                       @* <div class="row">
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.OpeningBalanceTransferName, new { @class = "" })
+                                    @Html.TextBoxFor(model => model.OpeningBalanceTransferName, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.FromDate)
+                                    @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ToDate)
+                                    @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.ParentGroupId, new { @class = "" })
+                                    @Html.DropDownListFor(model => model.ParentGroupId, new SelectList(ViewBag.ParentGroupList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-2">
+                                <div class="form-group-sm">
+                                    @Html.LabelFor(model => model.IsGroup, new { @class = "" })
+                                    <div class="col-1">
+                                        @Html.CheckBoxFor(model => model.IsGroup, new { @class = "" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="row">
+                            <div class="col-sm-12 pt-2 text-right">
+                                @*<button class="btn btn-primary" type="button" onclick="javascript: fnSearchOpeningBalanceTransfer();">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <button class="btn btn-secondary" type="button" onclick="javascript: fnResetSearch();">
+                                    <i class="fas fa-undo"></i> Reset
+                                </button>*@
+                                <button class="btn btn-primary" type="button" onclick="javascript: fnOpeningBalanceTransfer();">
+                                    <i class="fas fa-plus"></i> New Transfer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                @*<div class="col-sm-12 table-responsive">*@
+               @* <table id="detailsGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort"></th>
+                            <th>OpeningBalanceTransferId</th>
+                            <th>Prepared By</th>
+                        </tr>
+                    </thead>
+                </table>*@
+            </div>
+        </div>
     </div>
 </section>
 
+<div id="modal-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>
+
 <script type="text/javascript">
+    //const FROM_PATTERN = 'YYYY-MM-DD HH:mm:ss.SSS';
+    //const TO_PATTERN = 'DD/MM/YYYY HH:mm';
 
     $(document).ready(function () {
-        fnBackToIndex();
+       
+       //fnBindDetailGrid();
+
     });
 
-    function fnBackToIndex() {
+    //function fnBindDetailGrid(){
+    //     $("#detailsGrid").DataTable({
+    //        "processing": true,
+    //        "scrollX": true,
+    //        "dom": "<'row'<'col-sm-12'tr>>" +
+    //            "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
+    //        "serverSide": true,
+    //        "ajax": {
+    //            "url": "@Url.Action("GetOpeningBalanceTransferList", "OpeningBalanceTransfer")",
+    //            "type": "POST",
+    //            "datatype": "json",
+    //            "data": {
+    //                searchFilter: function () {
+    //                    var searchFilterModel = {
+    //                        OpeningBalanceTransferName: $('#OpeningBalanceTransferName').val(),
+    //                        ParentGroupId: $('#ParentGroupId').val(),
+    //                        FromDate: $('#FromDate').val(),
+    //                        ToDate: $('#ToDate').val(),
+    //                        IsGroup: $('#IsGroup').is(":checked"),
+    //                    };
 
-        var tabUrl = null;
+    //                    console.log(searchFilterModel);
 
-        tabUrl = '@Url.Action("Search", "OpeningBalanceTransfer")' + '?searchFilter=' + $("#SearchFilterModel").val();
+    //                    return JSON.stringify(searchFilterModel);
+    //                }
+    //            },
+    //        },
+    //        "columns": [
+    //            {
+    //                "orderable": false,
+    //                "render": function (data, type, full, meta) {
+    //                    return '<div class="action_button">' 
+    //                        +
+    //                        '<button type="button" class="border-0 rounded-0 text-success" title="Edit" onclick="javascript: fnEditOpeningBalanceTransfer(' + full.OpeningBalanceTransferId + ')"><i class="far fa-edit"></i></button>' 
+    //                        +
+    //                        '</div>';
+    //                }
+    //            },
+    //            { "data": "OpeningBalanceTransferId", "name": "OpeningBalanceTransferId", "visible": false },
+    //            { "data": "PreparedByName", "name": "Prepared By Name" }
+    //        ],
+    //    });
+    //}
 
-        $('#rptDetails').empty();
-        $('#rptDetails').load(tabUrl);
-    }
+    //// edit year.
+    //function fnEditOpeningBalanceTransfer(yearId) {
+    //    window.location.href = '@Url.Action("ManageOpeningBalanceTransfer", "OpeningBalanceTransfer")?yearId=' + yearId;
+    //}
 
     //// search data.
-    function fnSearchData(searchFilterModel) {
+    //function fnSearchOpeningBalanceTransfer() {
+    //    $("#detailsGrid").DataTable().ajax.reload();
+    //}
 
-       var tabUrl = null;
+    //// reset filter.
+    //function fnResetSearch() {
+    //    $('#searchFilterCriteria :input[type=text]').each(function (index) {
+    //        $(this).val('');
+    //    });
+    //    $('#searchFilterCriteria select').each(function (index) {
+    //        $(this).val('');
+    //    });
+    //    $('#searchFilterCriteria :input[type=checkbox]').each(function (index) {
+    //        $(this).is(":checked")==false;
+    //    });
 
-        $("#SearchFilterModel").val(searchFilterModel);
+    //    $("#detailsGrid").DataTable().ajax.reload();
+    //}
 
-        tabUrl = '@Url.Action("SaveBalanceTransfer", "OpeningBalanceTransfer")' + '?searchFilter=' + $("#SearchFilterModel").val();
-
-        $("#Back").removeAttr('hidden');
-
-        $('#rptDetails').empty();
-        $('#rptDetails').load(tabUrl);
+    // new button click.
+    function fnOpeningBalanceTransfer() {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("OpeningBalanceTransfer", "OpeningBalanceTransfer")', 'html', '',
+        function (data) {
+            $('#modal-master').empty();
+            $('#modal-master').html(data).modal('show');
+            return false;
+        }, null, true, null, false);
     }
 
-
 </script>
+
+@*@{ await Html.RenderPartialAsync("_ConfirmDeleteOpeningBalanceTransfer"); }*@
