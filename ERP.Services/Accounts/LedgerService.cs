@@ -69,6 +69,7 @@ namespace ERP.Services.Accounts
 
             // get record.
             Ledger ledger = await GetByIdAsync(w => w.LedgerId == ledgerModel.LedgerId);
+
             if (null != ledger)
             {
                 // assign values.
