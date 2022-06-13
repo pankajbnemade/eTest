@@ -14,7 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class FinancialYearService : Repository<Financialyear>, IFinancialYear
     {
-        public FinancialYearService(ErpDbContext dbContext) : base(dbContext) { }
+        private readonly ErpDbContext dbContext;
+
+        public FinancialYearService(ErpDbContext _dbContext) : base(_dbContext) {
+            dbContext = _dbContext;
+        }
 
         public async Task<int> CreateFinancialYear(FinancialYearModel financialYearModel)
         {
@@ -26,8 +30,29 @@ namespace ERP.Services.Accounts
             financialYear.FinancialYearName = financialYearModel.FinancialYearName;
             financialYear.FromDate = financialYearModel.FromDate;
             financialYear.ToDate = financialYearModel.ToDate;
+
             await Create(financialYear);
+
             financialYearId = financialYear.FinancialYearId;
+
+            //---------------------------------
+
+            IList<Company> companyList = dbContext.Companies.ToList();
+
+            Financialyearcompanyrelation financialYearCompanyRelation;
+
+            foreach (Company company in companyList)
+            {
+                financialYearCompanyRelation = new Financialyearcompanyrelation()
+                {
+                    CompanyId = company.CompanyId,
+                    FinancialYearId = financialYearId,
+                };
+
+                dbContext.Financialyearcompanyrelations.Add(financialYearCompanyRelation);
+            }
+
+            await dbContext.SaveChangesAsync();
 
             return financialYearId; // returns.
         }

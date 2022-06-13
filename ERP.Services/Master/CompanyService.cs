@@ -14,7 +14,11 @@ namespace ERP.Services.Master
 {
     public class CompanyService : Repository<Company>, ICompany
     {
-        public CompanyService(ErpDbContext dbContext) : base(dbContext) { }
+        private readonly ErpDbContext dbContext;
+
+        public CompanyService(ErpDbContext _dbContext) : base(_dbContext) {
+            dbContext = _dbContext;
+        }
 
         public async Task<int> CreateCompany(CompanyModel companyModel)
         {
@@ -34,6 +38,40 @@ namespace ERP.Services.Master
             company.NoOfDecimals = companyModel.NoOfDecimals;
             await Create(company);
             companyId = company.CompanyId;
+
+            IList<Ledger> ledgerList = dbContext.Ledgers.ToList();
+
+            Ledgercompanyrelation ledgerCompanyRelation;
+
+            foreach (Ledger ledger in ledgerList)
+            {
+                ledgerCompanyRelation = new Ledgercompanyrelation()
+                {
+                    CompanyId = companyId,
+                    LedgerId = ledger.LedgerId,
+                };
+
+                dbContext.Ledgercompanyrelations.Add(ledgerCompanyRelation);
+            }
+
+            //---------------------------------
+
+            IList<Financialyear> financialYearList = dbContext.Financialyears.ToList();
+
+            Financialyearcompanyrelation financialYearCompanyRelation;
+
+            foreach (Financialyear financialYear in financialYearList)
+            {
+                financialYearCompanyRelation = new Financialyearcompanyrelation()
+                {
+                    CompanyId = companyId,
+                    FinancialYearId = financialYear.FinancialYearId,
+                };
+
+                dbContext.Financialyearcompanyrelations.Add(financialYearCompanyRelation);
+            }
+
+            await dbContext.SaveChangesAsync();
 
             return companyId; // returns.
         }
