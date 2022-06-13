@@ -88,31 +88,32 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
 
-                    await _aplicationIdentityUser.SetDefaultSession(Input.Email);
+                    bool IsSucceed = await _aplicationIdentityUser.SetDefaultSession(Input.Email);
 
-                    //ApplicationIdentityUserModel applicationUser = await _signInManager.get(Input.Email);
+                    if (IsSucceed)
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-                    /////Added to set default session -- By Pankaj
+                        if (userSessionModel.CompanyId==0)
+                        {
+                            return RedirectToAction("ChangeCompany", "Home", new { area = "" });
+                        }
 
-                    //UserSessionModel userSessionModel = new UserSessionModel();
+                        if (userSessionModel.FinancialYearId==0)
+                        {
+                            return RedirectToAction("ChangeYear", "Home", new { area = "" });
+                        }
+                    }
 
-                    //userSessionModel.UserId = applicationUser.Id;
-                    //userSessionModel.UserName = applicationUser.UserName;
-
-                    ////start temporary avoid branch/financial year  selection
-
-                    //userSessionModel.CompanyId = 1;
-                    //userSessionModel.FinancialYearId = 1;
-
-                    //temporary avoid branch/financial year  selection
-
-                    //SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
-
-                    return LocalRedirect(returnUrl);
                 }
 
 

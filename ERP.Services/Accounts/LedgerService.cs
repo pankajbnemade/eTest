@@ -60,6 +60,24 @@ namespace ERP.Services.Accounts
 
             ledgerId = ledger.LedgerId;
 
+
+            IList<Company> companyList = dbContext.Companies.ToList();
+
+            Ledgercompanyrelation ledgerCompanyRelation;
+
+            foreach (Company company in companyList)
+            {
+                ledgerCompanyRelation = new Ledgercompanyrelation()
+                {
+                    CompanyId = company.CompanyId,
+                    LedgerId = ledgerId,
+                };
+
+                dbContext.Ledgercompanyrelations.Add(ledgerCompanyRelation);
+            }
+
+            await dbContext.SaveChangesAsync();
+
             return ledgerId; // returns.
         }
 
@@ -226,6 +244,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<LedgerModel> resultModel = new DataTableResultModel<LedgerModel>();
 
             IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
+                                    .Where(w => w.IsMasterGroup==0)
                                     .Where(w => w.ParentGroupId!=null)
                                     .Where(w => w.IsDeActive==0)
                                     .Include(w => w.ParentGroup)

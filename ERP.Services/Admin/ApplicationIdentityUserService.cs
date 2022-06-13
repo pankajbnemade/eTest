@@ -232,16 +232,19 @@ namespace ERP.Services.Admin
             userSessionModel.UserName = applicationUser.UserName;
 
             var companyId = 1;
-            //var financialYearId = 1;
 
             CompanyModel companyModel = await company.GetCompanyById(companyId);
-            FinancialYearModel financialYearModel = await financialYear.GetFinancialYearByDateNCompanyId(companyId, DateTime.Now);
 
             userSessionModel.CompanyId = companyModel.CompanyId;
             userSessionModel.CompanyName = companyModel.CompanyName;
 
-            userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
-            userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
+            FinancialYearModel financialYearModel = await financialYear.GetFinancialYearByDateNCompanyId(companyId, DateTime.Now);
+
+            if (financialYearModel.FinancialYearId > 0)
+            {
+                userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
+                userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
+            }
 
             SessionExtension.SetComplexData(httpContextAccessor.HttpContext.Session, "UserSession", userSessionModel);
 

@@ -9,7 +9,6 @@
                 <h1>Change Financial Year</h1>
             </div>
             <div class="col-sm-6">
-
             </div>
         </div>
     </div>
@@ -54,9 +53,7 @@
                             '</div>';
                     }, "orderable": false, "width": "20px"
                 },
-                /*{ "data": "FinancialYearId", "name": "FinancialYear Id" },*/
-                { "data": "FinancialYearName", "name": "FinancialYear Name" }
-                
+                { "data": "FinancialYearName", "name": "Financial Year Name" }
             ],
         });
     });
@@ -66,7 +63,19 @@
         var model = { financialYearId: financialYearId };
         AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("ChooseFinancialYear", "Home")', '', model,
             function (data) {
-                window.location.href = '@Url.Action("Index", "Home")';
+               if (true == data.Result.Status) {
+                    //window.location.href = '@Url.Action("Index", "Home")';
+
+                    if (1 == data.Result.data) {
+                        window.location.href = '@Url.Action("ChangeCompany", "Home")';
+                    }
+                    else {
+                        window.location.href = '@Url.Action("Index", "Home")';
+                    }
+                }
+                else {
+                    fnDangerNotify(data.Result.Message);
+                }
         }, null, true, null, false);
     }
 </script>

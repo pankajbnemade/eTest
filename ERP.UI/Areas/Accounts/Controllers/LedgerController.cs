@@ -149,6 +149,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                     ledgerModel.MaxNo = generateNoModel.MaxNo;
 
                     ledgerModel.LedgerId = await _ledger.CreateLedger(ledgerModel);
+
                     // add new record.
                     if (ledgerModel.LedgerId > 0)
                     {

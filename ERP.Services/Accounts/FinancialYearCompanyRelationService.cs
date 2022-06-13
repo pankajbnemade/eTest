@@ -47,9 +47,29 @@ namespace ERP.Services.Accounts
             FinancialYearCompanyRelationModel financialYearCompanyRelationModel = null;
 
             IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(financialYearCompanyRelationId, 0);
+
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
                 financialYearCompanyRelationModel = financialYearCompanyRelationModelList.FirstOrDefault();
+            }
+
+            return financialYearCompanyRelationModel; // returns.
+        }
+
+        public async Task<FinancialYearCompanyRelationModel> GetFinancialYearCompanyRelation(int financialYearId, int companyId)
+        {
+            FinancialYearCompanyRelationModel financialYearCompanyRelationModel = new FinancialYearCompanyRelationModel();
+
+            // create query.
+            IQueryable<Financialyearcompanyrelation> query = GetQueryByCondition(w => w.RelationId != 0)
+                                                            .Where(w => w.FinancialYearId == financialYearId && w.CompanyId == companyId);
+
+            // get records by query.
+            Financialyearcompanyrelation financialYearCompanyRelation = await query.FirstOrDefaultAsync();
+
+            if (null != financialYearCompanyRelation)
+            {
+                financialYearCompanyRelationModel = await AssignValueToModel(financialYearCompanyRelation);
             }
 
             return financialYearCompanyRelationModel; // returns.
@@ -60,6 +80,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
 
             IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0, financialYearId);
+
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
                 resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
@@ -75,6 +96,7 @@ namespace ERP.Services.Accounts
             DataTableResultModel<FinancialYearCompanyRelationModel> resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
 
             IList<FinancialYearCompanyRelationModel> financialYearCompanyRelationModelList = await GetFinancialYearCompanyRelationList(0, 0);
+
             if (null != financialYearCompanyRelationModelList && financialYearCompanyRelationModelList.Any())
             {
                 resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
@@ -120,12 +142,13 @@ namespace ERP.Services.Accounts
             return await Task.Run(() =>
             {
                 FinancialYearCompanyRelationModel financialYearCompanyRelationModel = new FinancialYearCompanyRelationModel();
+
                 financialYearCompanyRelationModel.RelationId = financialYearCompanyRelation.RelationId;
                 financialYearCompanyRelationModel.CompanyId = financialYearCompanyRelation.CompanyId;
                 financialYearCompanyRelationModel.FinancialYearId = financialYearCompanyRelation.FinancialYearId;
-                financialYearCompanyRelationModel.CompanyName = financialYearCompanyRelation.Company.CompanyName;
-                financialYearCompanyRelationModel.FinancialYearName = financialYearCompanyRelation.FinancialYear.FinancialYearName;
-                financialYearCompanyRelationModel.PreparedByName = financialYearCompanyRelation.PreparedByUser.UserName;
+                financialYearCompanyRelationModel.CompanyName = null != financialYearCompanyRelation.Company ? financialYearCompanyRelation.Company.CompanyName : "";
+                financialYearCompanyRelationModel.FinancialYearName = null != financialYearCompanyRelation.FinancialYear ? financialYearCompanyRelation.FinancialYear.FinancialYearName : "";
+                financialYearCompanyRelationModel.PreparedByName =null != financialYearCompanyRelation.PreparedByUser ? financialYearCompanyRelation.PreparedByUser.UserName : "";
 
                 return financialYearCompanyRelationModel;
             });

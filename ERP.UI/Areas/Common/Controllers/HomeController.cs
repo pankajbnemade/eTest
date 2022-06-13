@@ -10,6 +10,7 @@ using ERP.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -23,17 +24,29 @@ namespace ERP.UI.Areas.Common.Controllers
 
         private readonly ICompany _company;
         private readonly IFinancialYear _financialYear;
+        private readonly IFinancialYearCompanyRelation _financialYearCompanyRelation;
 
-        public HomeController(ILogger<HomeController> logger, ICompany company, IFinancialYear financialYear)
+        public HomeController(ILogger<HomeController> logger, ICompany company, IFinancialYear financialYear, IFinancialYearCompanyRelation financialYearCompanyRelation)
         {
             _logger = logger;
             _company = company;
             _financialYear = financialYear;
+            _financialYearCompanyRelation = financialYearCompanyRelation;
         }
 
         public IActionResult Index()
         {
             UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            if (userSessionModel.CompanyId==0)
+            {
+                return RedirectToAction("ChangeCompany", "Home", new { area = "" });
+            }
+
+            if (userSessionModel.FinancialYearId==0)
+            {
+                return RedirectToAction("ChangeYear", "Home", new { area = "" });
+            }
 
             return View();
         }
@@ -72,18 +85,47 @@ namespace ERP.UI.Areas.Common.Controllers
         /// <param name="companyId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> ChooseCommpany(int companyId)
+        public async Task<ActionResult> ChooseCompany(int companyId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+            CompanyModel companyModel = await _company.GetCompanyById(companyId);
 
-            return await Task.Run(() =>
+            UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            if (userSessionModel.FinancialYearId==0)
             {
-                UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
-                userSessionModel.CompanyId = companyId;
+                userSessionModel.CompanyId = companyModel.CompanyId;
+                userSessionModel.CompanyName = companyModel.CompanyName;
+
                 SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
+                //return RedirectToAction("ChangeYear", "Home", new { area = "" });
+                data.Result.Data = 1;
+                data.Result.Status = true;
+
                 return Json(data);
-            });
+            }
+
+            FinancialYearCompanyRelationModel financialYearCompanyRelationModel = await _financialYearCompanyRelation.GetFinancialYearCompanyRelation(userSessionModel.FinancialYearId, companyId);
+
+            if (financialYearCompanyRelationModel.RelationId > 0)
+            {
+                userSessionModel.CompanyId = companyModel.CompanyId;
+                userSessionModel.CompanyName = companyModel.CompanyName;
+
+                SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+
+                data.Result.Status=true;
+                data.Result.Message="Company Changed Successfully";
+                data.Result.Data = 2;
+            }
+            else
+            {
+                data.Result.Status = false;
+                data.Result.Message = $"{companyModel.CompanyName}{" & "}{userSessionModel.FinancialYearName}{" dont have any relation."}";
+            }
+
+            return Json(data);
         }
 
         public IActionResult ChangeYear()
@@ -108,23 +150,50 @@ namespace ERP.UI.Areas.Common.Controllers
         /// <param name="financialYearId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> ChooseFinancialYear(int financialYearId)
+        public async Task<ActionResult> ChooseFinancialYear(int financialYearId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
             FinancialYearModel financialYearModel = await _financialYear.GetFinancialYearById(financialYearId);
 
-            return await Task.Run(() =>
-            {
-                UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+            UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
+            if (userSessionModel.CompanyId==0)
+            {
                 userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
                 userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
 
                 SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
+                //return RedirectToAction("ChangeCompany", "Home", new { area = "" });
+
+                data.Result.Data = 1;
+                data.Result.Status = true;
+                //data.Result.Message = "Financial Year Changed Successfully";
+
                 return Json(data);
-            });
+            }
+
+            FinancialYearCompanyRelationModel financialYearCompanyRelationModel = await _financialYearCompanyRelation.GetFinancialYearCompanyRelation(financialYearId, userSessionModel.CompanyId);
+
+            if (financialYearCompanyRelationModel.RelationId > 0)
+            {
+                userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
+                userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
+
+                SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+
+                data.Result.Data = 2;
+                data.Result.Status=true;
+                data.Result.Message="Financial Year Changed Successfully";
+            }
+            else
+            {
+                data.Result.Status = false;
+                data.Result.Message = $"{userSessionModel.CompanyName}{" & "}{financialYearModel.FinancialYearName}{" dont have any relation."}";
+            }
+
+            return Json(data);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

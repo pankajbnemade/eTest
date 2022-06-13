@@ -139,7 +139,7 @@ namespace ERP.Services.Accounts
         public async Task<FinancialYearModel> GetFinancialYearByDateNCompanyId(int companyId, DateTime date)
         {
 
-            FinancialYearModel financialYearModel = null;
+            FinancialYearModel financialYearModel = new FinancialYearModel();
 
             // create query.
             IQueryable<Financialyear> query = GetQueryByCondition(w => w.FinancialYearId != 0)

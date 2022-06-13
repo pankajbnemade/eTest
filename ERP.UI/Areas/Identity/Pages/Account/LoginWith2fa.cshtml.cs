@@ -105,25 +105,27 @@ namespace ERP.UI.Areas.Identity.Pages.Account
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
 
-                await _aplicationIdentityUser.SetDefaultSession(user.Email);
 
-                //ApplicationIdentityUserModel applicationUser = await _aplicationIdentityUser.GetApplicationIdentityUserByEmail(user.Email);
+                bool IsSucceed = await _aplicationIdentityUser.SetDefaultSession(user.Email);
 
-                /////Added to set default session -- By Pankaj
+                if (IsSucceed)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-                //UserSessionModel userSessionModel = new UserSessionModel();
+                    if (userSessionModel.CompanyId==0)
+                    {
+                        return RedirectToAction("ChangeCompany", "Home", new { area = "" });
+                    }
 
-                //userSessionModel.UserId = applicationUser.Id;
-                //userSessionModel.UserName = applicationUser.UserName;
-
-                ////start temporary avoid branch/financial year  selection
-
-                //userSessionModel.CompanyId = 1;
-                //userSessionModel.FinancialYearId = 1;
-
-                ////temporary avoid branch/financial year  selection
-
-                //SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
+                    if (userSessionModel.FinancialYearId==0)
+                    {
+                        return RedirectToAction("ChangeYear", "Home", new { area = "" });
+                    }
+                }
 
                 return LocalRedirect(returnUrl);
             }

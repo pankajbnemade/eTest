@@ -30,10 +30,13 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group-sm">
+                @* <div class="form-group-sm">
                     @Html.LabelFor(model => model.IsMasterGroup, new { @class = "font-weight-bold" }) :
                     @Html.CheckBoxFor(model => model.IsMasterGroup, new { @class = "", @disabled = "disabled" })
-                </div>
+
+                    </div>*@
+                @Html.HiddenFor(model => model.IsMasterGroup)
+
             </div>
         </div>
 
@@ -67,15 +70,15 @@
         </div>
         @*<div class="row">
             <div class="col-sm-4">
-                <div class="form-group-sm">
-                    @Html.LabelFor(model => model.CompanyList, new { @class = "font-weight-bold" }) :
-                    @Html.DisplayFor(model => model.CompanyList)
-                </div>
+            <div class="form-group-sm">
+            @Html.LabelFor(model => model.CompanyList, new { @class = "font-weight-bold" }) :
+            @Html.DisplayFor(model => model.CompanyList)
+            </div>
             </div>
             <div class="col-sm-4">
-               
+
             </div>
-        </div>*@
+            </div>*@
     </div>
 </div>
 

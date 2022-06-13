@@ -9,7 +9,6 @@
                 <h1>Change Company</h1>
             </div>
             <div class="col-sm-6">
-
             </div>
         </div>
     </div>
@@ -62,9 +61,19 @@
     // choose company.
     function fnSelectCompany(companyId) {
         var model = { companyId: companyId };
-        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("ChooseCommpany", "Home")', '', model,
+        AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("ChooseCompany", "Home")', '', model,
             function (data) {
-                window.location.href = '@Url.Action("Index", "Home")';
+                if (true == data.Result.Status) {
+                   if (1 == data.Result.data) {
+                        window.location.href = '@Url.Action("ChangeYear", "Home")';
+                    }
+                    else {
+                        window.location.href = '@Url.Action("Index", "Home")';
+                    }
+                }
+                else {
+                    fnDangerNotify(data.Result.Message);
+                }
         }, null, true, null, false);
     }
 </script>
