@@ -19,6 +19,7 @@ namespace ERP.DataAccess.EntityModels
         public int DesignationId { get; set; }
         public int DepartmentId { get; set; }
         public string EmailAddress { get; set; }
+        public int MaxNo { get; set; }
         public int PreparedByUserId { get; set; }
         public DateTime? PreparedDateTime { get; set; }
         public int UpdatedByUserId { get; set; }

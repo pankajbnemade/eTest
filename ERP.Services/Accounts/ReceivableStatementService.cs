@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class ReceivableStatementService : IReceivableStatement
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public ReceivableStatementService(ErpDbContext _dbContext)
+        public ReceivableStatementService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<ReceivableStatementModel>> GetReport(SearchFilterReceivableStatementModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -114,7 +114,7 @@ namespace ERP.Services.Accounts
                 //try
                 //{
                 receivableStatementModelList
-                    = dbContext.Salesinvoices
+                    = _dbContext.Salesinvoices
                     .Where(w => w.StatusId == (int)DocumentStatus.Approved
                             && w.CompanyId == companyId
                             && w.CustomerLedgerId == ledgerId
@@ -159,7 +159,7 @@ namespace ERP.Services.Accounts
                     })
                     .Union
                     (
-                        dbContext.Creditnotes
+                        _dbContext.Creditnotes
                         .Where(w => w.StatusId == (int)DocumentStatus.Approved
                             && w.CompanyId == companyId
                             && w.PartyLedgerId == ledgerId
@@ -230,7 +230,7 @@ namespace ERP.Services.Accounts
                 //try
                 //{
                 var advanceList
-                    = dbContext.Receiptvoucherdetails
+                    = _dbContext.Receiptvoucherdetails
                     .Include(i => i.ReceiptVoucher)
                     .Where(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved
                             && w.ReceiptVoucher.CompanyId == companyId
@@ -251,7 +251,7 @@ namespace ERP.Services.Accounts
                     })
                     .Union
                     (
-                        dbContext.Journalvoucherdetails
+                        _dbContext.Journalvoucherdetails
                         .Include(i => i.JournalVoucher)
                         .Where(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved
                             && w.JournalVoucher.CompanyId == companyId

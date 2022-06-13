@@ -17,11 +17,11 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceService : Repository<Salesinvoice>, ISalesInvoice
     {
-        private readonly ICommon common;
+        private readonly ICommon _common;
 
-        public SalesInvoiceService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        public SalesInvoiceService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -249,7 +249,7 @@ namespace ERP.Services.Accounts
                 salesInvoice.NetAmountFc = salesInvoice.GrossAmountFc + salesInvoice.TaxAmountFc;
                 salesInvoice.NetAmount = salesInvoice.NetAmountFc / salesInvoice.ExchangeRate;
 
-                salesInvoice.NetAmountFcinWord = await common.AmountInWord_Million(salesInvoice.NetAmountFc.ToString(), salesInvoice.Currency.CurrencyCode, salesInvoice.Currency.Denomination);
+                salesInvoice.NetAmountFcinWord = await _common.AmountInWord_Million(salesInvoice.NetAmountFc.ToString(), salesInvoice.Currency.CurrencyCode, salesInvoice.Currency.Denomination);
 
                 if (salesInvoice.StatusId == (int)DocumentStatus.Approved || salesInvoice.StatusId == (int)DocumentStatus.ApprovalRequested || salesInvoice.StatusId == (int)DocumentStatus.Cancelled)
                 {

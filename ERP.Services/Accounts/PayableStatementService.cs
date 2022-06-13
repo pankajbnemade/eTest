@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class PayableStatementService : IPayableStatement
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public PayableStatementService(ErpDbContext _dbContext)
+        public PayableStatementService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<PayableStatementModel>> GetReport(SearchFilterPayableStatementModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -114,7 +114,7 @@ namespace ERP.Services.Accounts
                 //try
                 //{
                     payableStatementModelList
-                            = dbContext.Purchaseinvoices
+                            = _dbContext.Purchaseinvoices
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
                                         && w.CompanyId == companyId
                                         && w.SupplierLedgerId == ledgerId
@@ -159,7 +159,7 @@ namespace ERP.Services.Accounts
                                 })
                             .Union
                             (
-                                dbContext.Debitnotes
+                                _dbContext.Debitnotes
                                  .Where(w => w.StatusId == (int)DocumentStatus.Approved
                                         && w.CompanyId == companyId
                                         && w.PartyLedgerId == ledgerId
@@ -231,7 +231,7 @@ namespace ERP.Services.Accounts
                 try
                 {
                     var advanceList
-                                = dbContext.Paymentvoucherdetails
+                                = _dbContext.Paymentvoucherdetails
                                     .Include(i => i.PaymentVoucher)
                                     .Where(w => w.PaymentVoucher.StatusId == (int)DocumentStatus.Approved
                                             && w.PaymentVoucher.CompanyId == companyId
@@ -252,7 +252,7 @@ namespace ERP.Services.Accounts
                                     })
                                 .Union
                                 (
-                                    dbContext.Journalvoucherdetails
+                                    _dbContext.Journalvoucherdetails
                                       .Include(i => i.JournalVoucher)
                                      .Where(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved
                                             && w.JournalVoucher.CompanyId == companyId

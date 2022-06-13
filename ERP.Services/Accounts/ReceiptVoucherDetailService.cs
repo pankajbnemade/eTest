@@ -15,13 +15,13 @@ namespace ERP.Services.Accounts
 {
     public class ReceiptVoucherDetailService : Repository<Receiptvoucherdetail>, IReceiptVoucherDetail
     {
-        IReceiptVoucher receiptVoucher;
-        ILedger ledger;
+        private readonly IReceiptVoucher _receiptVoucher;
+        private readonly ILedger _ledger;
 
-        public ReceiptVoucherDetailService(ErpDbContext dbContext, IReceiptVoucher _receiptVoucher, ILedger _ledger) : base(dbContext)
+        public ReceiptVoucherDetailService(ErpDbContext dbContext, IReceiptVoucher receiptVoucher, ILedger ledger) : base(dbContext)
         {
-            receiptVoucher = _receiptVoucher;
-            ledger = _ledger;
+            _receiptVoucher = receiptVoucher;
+            _ledger = ledger;
         }
 
         public async Task<int> CreateReceiptVoucherDetail(ReceiptVoucherDetailModel receiptVoucherDetailModel)
@@ -117,7 +117,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await receiptVoucher.UpdateReceiptVoucherMasterAmount(receiptVoucherDetail.ReceiptVoucherId);
+                await _receiptVoucher.UpdateReceiptVoucherMasterAmount(receiptVoucherDetail.ReceiptVoucherId);
             }
 
             return isDeleted; // returns.

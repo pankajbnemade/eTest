@@ -11,7 +11,7 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceReportService : ISalesInvoiceReport
     {
-        ErpDbContext _dbContext;
+        private readonly ErpDbContext _dbContext;
 
         public SalesInvoiceReportService(ErpDbContext dbContext)
         {

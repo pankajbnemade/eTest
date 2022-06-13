@@ -16,14 +16,14 @@ namespace ERP.Services.Accounts
 {
     public class LedgerService : Repository<Ledger>, ILedger
     {
-        private readonly ICommon common;
-        private readonly ErpDbContext dbContext;
+        private readonly ICommon _common;
+        private readonly ErpDbContext _dbContext;
 
 
-        public LedgerService(ErpDbContext _dbContext, ICommon _common) : base(_dbContext)
+        public LedgerService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
-            dbContext = _dbContext;
+            _common = common;
+            _dbContext = dbContext;
         }
 
         public async Task<GenerateNoModel> GenerateLedgerCode()
@@ -34,7 +34,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, 1, 1);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, 0, 0);
 
             return generateNoModel; // returns.
         }
@@ -61,7 +61,7 @@ namespace ERP.Services.Accounts
             ledgerId = ledger.LedgerId;
 
 
-            IList<Company> companyList = dbContext.Companies.ToList();
+            IList<Company> companyList = _dbContext.Companies.ToList();
 
             Ledgercompanyrelation ledgerCompanyRelation;
 
@@ -73,10 +73,10 @@ namespace ERP.Services.Accounts
                     LedgerId = ledgerId,
                 };
 
-                dbContext.Ledgercompanyrelations.Add(ledgerCompanyRelation);
+                _dbContext.Ledgercompanyrelations.Add(ledgerCompanyRelation);
             }
 
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return ledgerId; // returns.
         }

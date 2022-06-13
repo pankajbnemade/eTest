@@ -14,13 +14,13 @@ namespace ERP.Services.Accounts
 {
     public class CreditNoteTaxService : Repository<Creditnotetax>, ICreditNoteTax
     {
-        private readonly ICreditNote creditNote;
-        private readonly ITaxRegisterDetail taxRegisterDetail;
+        private readonly ICreditNote _creditNote;
+        private readonly ITaxRegisterDetail _taxRegisterDetail;
 
-        public CreditNoteTaxService(ErpDbContext dbContext, ICreditNote _creditNote, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
+        public CreditNoteTaxService(ErpDbContext dbContext, ICreditNote creditNote, ITaxRegisterDetail taxRegisterDetail) : base(dbContext)
         {
-            creditNote = _creditNote;
-            taxRegisterDetail = _taxRegisterDetail;
+            _creditNote = creditNote;
+            _taxRegisterDetail = taxRegisterDetail;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace ERP.Services.Accounts
             // assign values.
             CreditNoteModel creditNoteModel = null;
 
-            creditNoteModel = await creditNote.GetCreditNoteById((int)creditNoteTaxModel.CreditNoteId);
+            creditNoteModel = await _creditNote.GetCreditNoteById((int)creditNoteTaxModel.CreditNoteId);
 
             Creditnotetax creditNoteTax = new Creditnotetax();
 
@@ -116,7 +116,7 @@ namespace ERP.Services.Accounts
             Creditnotetax creditNoteTax = await GetQueryByCondition(w => w.CreditNoteTaxId == creditNoteTaxId)
                                                                  .Include(w => w.CreditNote).FirstOrDefaultAsync();
 
-            if (null != creditNote)
+            if (null != _creditNote)
             {
                 if (DiscountType.Percentage.ToString() == creditNoteTax.TaxPercentageOrAmount)
                 {
@@ -141,7 +141,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await creditNote.UpdateCreditNoteMasterAmount(creditNoteTax.CreditNoteId);
+                await _creditNote.UpdateCreditNoteMasterAmount(creditNoteTax.CreditNoteId);
             }
 
             return isUpdated; // returns.
@@ -161,7 +161,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await creditNote.UpdateCreditNoteMasterAmount(creditNoteId);
+                await _creditNote.UpdateCreditNoteMasterAmount(creditNoteId);
             }
 
             return isUpdated; // returns.
@@ -181,7 +181,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await creditNote.UpdateCreditNoteMasterAmount(creditNoteTax.CreditNoteId);
+                await _creditNote.UpdateCreditNoteMasterAmount(creditNoteTax.CreditNoteId);
             }
 
             return isDeleted; // returns.
@@ -192,7 +192,7 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await _taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
 
             CreditNoteTaxModel creditNoteTaxModel = null;
 

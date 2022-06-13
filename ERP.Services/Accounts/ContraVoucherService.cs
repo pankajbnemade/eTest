@@ -18,11 +18,11 @@ namespace ERP.Services.Accounts
 {
     public class ContraVoucherService : Repository<Contravoucher>, IContraVoucher
     {
-        ICommon common;
+        private readonly ICommon _common;
 
-        public ContraVoucherService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        public ContraVoucherService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         public async Task<GenerateNoModel> GenerateContraVoucherNo(int companyId, int financialYearId)
@@ -33,7 +33,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -173,7 +173,7 @@ namespace ERP.Services.Accounts
                 contraVoucher.DebitAmountFc = contraVoucher.Contravoucherdetails.Sum(w => w.DebitAmountFc);
                 contraVoucher.DebitAmount = contraVoucher.DebitAmountFc / contraVoucher.ExchangeRate;
 
-                contraVoucher.AmountFcinWord = await common.AmountInWord_Million(contraVoucher.AmountFc.ToString(), contraVoucher.Currency.CurrencyCode, contraVoucher.Currency.Denomination);
+                contraVoucher.AmountFcinWord = await _common.AmountInWord_Million(contraVoucher.AmountFc.ToString(), contraVoucher.Currency.CurrencyCode, contraVoucher.Currency.Denomination);
 
                 if (contraVoucher.StatusId == (int)DocumentStatus.Approved || contraVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || contraVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {

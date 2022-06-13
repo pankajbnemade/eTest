@@ -63,7 +63,14 @@ namespace ERP.UI.Areas.Master.Controllers
             ViewBag.DesignationList = await _designation.GetDesignationSelectList();
             ViewBag.DepartmentList = await _department.GetDepartmentSelectList();
 
-            return PartialView("_AddEmployee", new EmployeeModel());
+            EmployeeModel employeeModel = new EmployeeModel();
+
+            // generate no.
+            GenerateNoModel generateNoModel = await _employee.GenerateEmployeeCode();
+
+            employeeModel.EmployeeCode = generateNoModel.VoucherNo;
+
+            return PartialView("_AddEmployee", employeeModel);
         }
 
         /// <summary>
@@ -103,6 +110,12 @@ namespace ERP.UI.Areas.Master.Controllers
                 }
                 else
                 {
+                    // generate no.
+                    GenerateNoModel generateNoModel = await _employee.GenerateEmployeeCode();
+
+                    employeeModel.EmployeeCode = generateNoModel.VoucherNo;
+                    employeeModel.MaxNo = generateNoModel.MaxNo;
+
                     // add new record.
                     if (await _employee.CreateEmployee(employeeModel) > 0)
                     {
@@ -113,8 +126,6 @@ namespace ERP.UI.Areas.Master.Controllers
 
             return Json(data);
         }
-
-        
 
         /// <summary>
         /// delete employee by employeeid.

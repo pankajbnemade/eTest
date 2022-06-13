@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class ContraRegisterService : IContraRegister
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public ContraRegisterService(ErpDbContext _dbContext)
+        public ContraRegisterService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<ContraRegisterModel>> GetReport(SearchFilterContraRegisterModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -86,7 +86,7 @@ namespace ERP.Services.Accounts
             {
                 IList<ContraRegisterModel> contraRegisterModelList = null;
 
-                contraRegisterModelList = dbContext
+                contraRegisterModelList = _dbContext
                             .Contravoucherdetails
                             .Include(i => i.ParticularLedger)
                             //.Include(i => i.PurchaseInvoice)

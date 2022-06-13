@@ -14,12 +14,12 @@ namespace ERP.Services.Accounts
 {
     public class ReceiptRegisterService : IReceiptRegister
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public ReceiptRegisterService(ErpDbContext _dbContext
+        public ReceiptRegisterService(ErpDbContext dbContext
                                 )
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<ReceiptRegisterModel>> GetReport(SearchFilterReceiptRegisterModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -86,7 +86,7 @@ namespace ERP.Services.Accounts
             {
                 IList<ReceiptRegisterModel> receiptRegisterModelList = null;
 
-                receiptRegisterModelList = dbContext
+                receiptRegisterModelList = _dbContext
                             .Receiptvoucherdetails
                             .Include(i => i.ParticularLedger)
                             .Include(i => i.SalesInvoice)

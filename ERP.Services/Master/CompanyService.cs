@@ -14,10 +14,10 @@ namespace ERP.Services.Master
 {
     public class CompanyService : Repository<Company>, ICompany
     {
-        private readonly ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public CompanyService(ErpDbContext _dbContext) : base(_dbContext) {
-            dbContext = _dbContext;
+        public CompanyService(ErpDbContext dbContext) : base(dbContext) {
+            _dbContext = dbContext;
         }
 
         public async Task<int> CreateCompany(CompanyModel companyModel)
@@ -39,7 +39,7 @@ namespace ERP.Services.Master
             await Create(company);
             companyId = company.CompanyId;
 
-            IList<Ledger> ledgerList = dbContext.Ledgers.ToList();
+            IList<Ledger> ledgerList = _dbContext.Ledgers.ToList();
 
             Ledgercompanyrelation ledgerCompanyRelation;
 
@@ -51,12 +51,12 @@ namespace ERP.Services.Master
                     LedgerId = ledger.LedgerId,
                 };
 
-                dbContext.Ledgercompanyrelations.Add(ledgerCompanyRelation);
+                _dbContext.Ledgercompanyrelations.Add(ledgerCompanyRelation);
             }
 
             //---------------------------------
 
-            IList<Financialyear> financialYearList = dbContext.Financialyears.ToList();
+            IList<Financialyear> financialYearList = _dbContext.Financialyears.ToList();
 
             Financialyearcompanyrelation financialYearCompanyRelation;
 
@@ -68,10 +68,10 @@ namespace ERP.Services.Master
                     FinancialYearId = financialYear.FinancialYearId,
                 };
 
-                dbContext.Financialyearcompanyrelations.Add(financialYearCompanyRelation);
+                _dbContext.Financialyearcompanyrelations.Add(financialYearCompanyRelation);
             }
 
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return companyId; // returns.
         }

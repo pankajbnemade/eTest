@@ -19,15 +19,15 @@ namespace ERP.Services.Admin
 {
     public class AssignRoleService : Repository<Aspnetuserrole>, IAssignRole
     {
-        private readonly RoleManager<ApplicationRole> roleManager;
-        private readonly UserManager<ApplicationIdentityUser> userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly UserManager<ApplicationIdentityUser> _userManager;
 
         public AssignRoleService(ErpDbContext dbContext,
-             RoleManager<ApplicationRole> _roleManager,
-              UserManager<ApplicationIdentityUser> _userManager) : base(dbContext)
+             RoleManager<ApplicationRole> roleManager,
+              UserManager<ApplicationIdentityUser> userManager) : base(dbContext)
         {
-            roleManager = _roleManager;
-            userManager = _userManager;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async Task<bool> AddUserRole(AssignRoleModel assignRoleModel)
@@ -35,12 +35,12 @@ namespace ERP.Services.Admin
             bool isAdded = false;
 
             // assign values.
-            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(assignRoleModel.UserId.ToString());
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(assignRoleModel.RoleId.ToString());
+            ApplicationIdentityUser applicationIdentityUser = await _userManager.FindByIdAsync(assignRoleModel.UserId.ToString());
+            ApplicationRole applicationRole = await _roleManager.FindByIdAsync(assignRoleModel.RoleId.ToString());
 
-            if (applicationIdentityUser != null && applicationRole != null && !(await userManager.IsInRoleAsync(applicationIdentityUser, applicationRole.Name)))
+            if (applicationIdentityUser != null && applicationRole != null && !(await _userManager.IsInRoleAsync(applicationIdentityUser, applicationRole.Name)))
             {
-                IdentityResult result = await userManager.AddToRoleAsync(applicationIdentityUser, applicationRole.Name);
+                IdentityResult result = await _userManager.AddToRoleAsync(applicationIdentityUser, applicationRole.Name);
 
                 isAdded = result.Succeeded;
             }
@@ -53,12 +53,13 @@ namespace ERP.Services.Admin
             bool isDeleted = false;
 
             // get record.
-            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(userId.ToString());
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(roleId.ToString());
+            ApplicationIdentityUser applicationIdentityUser = await _userManager.FindByIdAsync(userId.ToString());
 
-            if (applicationIdentityUser != null && applicationRole != null && (await userManager.IsInRoleAsync(applicationIdentityUser, applicationRole.Name)))
+            ApplicationRole applicationRole = await _roleManager.FindByIdAsync(roleId.ToString());
+
+            if (applicationIdentityUser != null && applicationRole != null && (await _userManager.IsInRoleAsync(applicationIdentityUser, applicationRole.Name)))
             {
-                IdentityResult result = await userManager.RemoveFromRoleAsync(applicationIdentityUser, applicationRole.Name);
+                IdentityResult result = await _userManager.RemoveFromRoleAsync(applicationIdentityUser, applicationRole.Name);
 
                 isDeleted = result.Succeeded;
             }

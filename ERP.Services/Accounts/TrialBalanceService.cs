@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class TrialBalanceReportService : ITrialBalanceReport
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public TrialBalanceReportService(ErpDbContext _dbContext)
+        public TrialBalanceReportService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<TrialBalanceReportModel>> GetReport(SearchFilterTrialBalanceReportModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -89,7 +89,7 @@ namespace ERP.Services.Accounts
                 if (profitAndLossType=="P")
                 {
 
-                    trialBalanceReportModelList = dbContext
+                    trialBalanceReportModelList = _dbContext
                                 .Paymentvouchers.Include(i => i.AccountLedger)
                                 .Include(i => i.Currency)
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
@@ -109,7 +109,7 @@ namespace ERP.Services.Accounts
                 }
                 else
                 {
-                    trialBalanceReportModelList = dbContext.
+                    trialBalanceReportModelList = _dbContext.
                                Receiptvouchers.Include(i => i.AccountLedger)
                                .Include(i => i.Currency)
                                .Where(w => w.StatusId == (int)DocumentStatus.Approved

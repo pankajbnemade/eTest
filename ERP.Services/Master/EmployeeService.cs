@@ -3,6 +3,7 @@ using ERP.DataAccess.EntityModels;
 using ERP.Models.Common;
 using ERP.Models.Helpers;
 using ERP.Models.Master;
+using ERP.Services.Common.Interface;
 using ERP.Services.Master.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -13,7 +14,23 @@ namespace ERP.Services.Master
 {
     public class EmployeeService : Repository<Employee>, IEmployee
     {
-        public EmployeeService(ErpDbContext dbContext) : base(dbContext) { }
+        private readonly ICommon _common;
+        public EmployeeService(ErpDbContext dbContext, ICommon common) : base(dbContext) {
+            _common = common;
+        }
+
+        public async Task<GenerateNoModel> GenerateEmployeeCode()
+        {
+            int voucherSetupId = 1;
+
+            int? maxNo = await GetQueryByCondition(w => w.EmployeeId != 0).MaxAsync(m => (int?)m.MaxNo);
+
+            maxNo = maxNo == null ? 0 : maxNo;
+
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, 0, 0);
+
+            return generateNoModel; // returns.
+        }
 
         public async Task<int> CreateEmployee(EmployeeModel employeeModel)
         {
@@ -27,7 +44,10 @@ namespace ERP.Services.Master
             employee.DesignationId = employeeModel.DesignationId;
             employee.DepartmentId = employeeModel.DepartmentId;
             employee.EmailAddress = employeeModel.EmailAddress;
+            employee.MaxNo = employeeModel.MaxNo;
+
             await Create(employee);
+
             employeeId = employee.EmployeeId;
 
             return employeeId; // returns.
@@ -48,6 +68,7 @@ namespace ERP.Services.Master
                 employee.DesignationId = employeeModel.DesignationId;
                 employee.DepartmentId = employeeModel.DepartmentId;
                 employee.EmailAddress = employeeModel.EmailAddress;
+
                 isUpdated = await Update(employee);
             }
 

@@ -25,20 +25,20 @@ namespace ERP.Services.Admin
 {
     public class ApplicationIdentityUserService : Repository<ApplicationIdentityUser>, IApplicationIdentityUser
     {
-        private readonly UserManager<ApplicationIdentityUser> userManager;
-        private readonly ICompany company;
-        private readonly IFinancialYear financialYear;
-        IHttpContextAccessor httpContextAccessor;
+        private readonly UserManager<ApplicationIdentityUser> _userManager;
+        private readonly ICompany _company;
+        private readonly IFinancialYear _financialYear;
+        IHttpContextAccessor _httpContextAccessor;
 
         public ApplicationIdentityUserService(ErpDbContext dbContext,
-            UserManager<ApplicationIdentityUser> _userManager, ICompany _company, IFinancialYear _financialYear,
-            IHttpContextAccessor _httpContextAccessor
+            UserManager<ApplicationIdentityUser> userManager, ICompany company, IFinancialYear financialYear,
+            IHttpContextAccessor httpContextAccessor
             ) : base(dbContext)
         {
-            userManager = _userManager;
-            company = _company;
-            financialYear = _financialYear;
-            httpContextAccessor = _httpContextAccessor;
+            _userManager = userManager;
+            _company = company;
+            _financialYear = financialYear;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<int> CreateUser(ApplicationIdentityUserModel applicationIdentityUserModel)
@@ -59,14 +59,14 @@ namespace ERP.Services.Admin
             bool isUpdated = false;
 
             // get record.
-            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(applicationIdentityUserModel.Id.ToString());
+            ApplicationIdentityUser applicationIdentityUser = await _userManager.FindByIdAsync(applicationIdentityUserModel.Id.ToString());
 
             if (null != applicationIdentityUser)
             {
                 // assign values.
                 applicationIdentityUser.EmployeeId = applicationIdentityUserModel.EmployeeId;
 
-                IdentityResult result = await userManager.UpdateAsync(applicationIdentityUser);
+                IdentityResult result = await _userManager.UpdateAsync(applicationIdentityUser);
 
                 isUpdated = result.Succeeded;
             }
@@ -79,7 +79,7 @@ namespace ERP.Services.Admin
             bool isUpdated = false;
 
             // get record.
-            ApplicationIdentityUser applicationIdentityUser = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationIdentityUser applicationIdentityUser = await _userManager.FindByIdAsync(userId.ToString());
 
             if (null != applicationIdentityUser)
             {
@@ -94,7 +94,7 @@ namespace ERP.Services.Admin
                     applicationIdentityUser.LockoutEnd = DateTime.Now.AddYears(1000);
                 }
 
-                IdentityResult result = await userManager.UpdateAsync(applicationIdentityUser);
+                IdentityResult result = await _userManager.UpdateAsync(applicationIdentityUser);
 
                 isUpdated = result.Succeeded;
             }
@@ -151,7 +151,7 @@ namespace ERP.Services.Admin
             IList<ApplicationIdentityUserModel> applicationIdentityUserModelList = null;
 
             // create query.
-            IQueryable<ApplicationIdentityUser> query = userManager.Users.Where(w => w.Id != 0).Include(w => w.Employee);
+            IQueryable<ApplicationIdentityUser> query = _userManager.Users.Where(w => w.Id != 0).Include(w => w.Employee);
 
             // apply filters.
             if (0 != userId)
@@ -208,7 +208,7 @@ namespace ERP.Services.Admin
 
             if (await Any(w => w.Id != 0))
             {
-                IQueryable<ApplicationIdentityUser> roleList = userManager.Users;
+                IQueryable<ApplicationIdentityUser> roleList = _userManager.Users;
 
                 resultModel = await roleList.Select(s => new SelectListModel
                 {
@@ -233,12 +233,12 @@ namespace ERP.Services.Admin
 
             var companyId = 1;
 
-            CompanyModel companyModel = await company.GetCompanyById(companyId);
+            CompanyModel companyModel = await _company.GetCompanyById(companyId);
 
             userSessionModel.CompanyId = companyModel.CompanyId;
             userSessionModel.CompanyName = companyModel.CompanyName;
 
-            FinancialYearModel financialYearModel = await financialYear.GetFinancialYearByDateNCompanyId(companyId, DateTime.Now);
+            FinancialYearModel financialYearModel = await _financialYear.GetFinancialYearByDateNCompanyId(companyId, DateTime.Now);
 
             if (financialYearModel.FinancialYearId > 0)
             {
@@ -246,7 +246,7 @@ namespace ERP.Services.Admin
                 userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
             }
 
-            SessionExtension.SetComplexData(httpContextAccessor.HttpContext.Session, "UserSession", userSessionModel);
+            SessionExtension.SetComplexData(_httpContextAccessor.HttpContext.Session, "UserSession", userSessionModel);
 
             return IsSucceed;
         }

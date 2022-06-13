@@ -12,39 +12,39 @@ namespace ERP.Services.Accounts
 {
     public class GeneralLedgerService : IGeneralLedger
     {
-        ErpDbContext dbContext;
-        IPurchaseInvoice purchaseInvoice;
-        ISalesInvoice salesInvoice;
-        ICreditNote creditNote;
-        IDebitNote debitNote;
+        private readonly ErpDbContext _dbContext;
+        private readonly IPurchaseInvoice _purchaseInvoice;
+        private readonly ISalesInvoice _salesInvoice;
+        private readonly ICreditNote _creditNote;
+        private readonly IDebitNote _debitNote;
 
-        IPaymentVoucher paymentVoucher;
-        IReceiptVoucher receiptVoucher;
+        private readonly IPaymentVoucher _paymentVoucher;
+        private readonly IReceiptVoucher _receiptVoucher;
 
-        IPaymentVoucherDetail paymentVoucherDetail;
-        IReceiptVoucherDetail receiptVoucherDetail;
-        IJournalVoucherDetail journalVoucherDetail;
-        IContraVoucherDetail contraVoucherDetail;
+        private readonly IPaymentVoucherDetail _paymentVoucherDetail;
+        private readonly IReceiptVoucherDetail _receiptVoucherDetail;
+        private readonly IJournalVoucherDetail _journalVoucherDetail;
+        private readonly IContraVoucherDetail _contraVoucherDetail;
 
-        public GeneralLedgerService(ErpDbContext _dbContext,
-                                    IPurchaseInvoice _purchaseInvoice, ISalesInvoice _salesInvoice,
-                                    ICreditNote _creditNote, IDebitNote _debitNote,
-                                    IPaymentVoucher _paymentVoucher, IReceiptVoucher _receiptVoucher,
-                                    IPaymentVoucherDetail _paymentVoucherDetail, IReceiptVoucherDetail _receiptVoucherDetail,
-                                    IContraVoucherDetail _contraVoucherDetail, IJournalVoucherDetail _journalVoucherDetail
+        public GeneralLedgerService(ErpDbContext dbContext,
+                                    IPurchaseInvoice purchaseInvoice, ISalesInvoice salesInvoice,
+                                    ICreditNote creditNote, IDebitNote debitNote,
+                                    IPaymentVoucher paymentVoucher, IReceiptVoucher receiptVoucher,
+                                    IPaymentVoucherDetail paymentVoucherDetail, IReceiptVoucherDetail receiptVoucherDetail,
+                                    IContraVoucherDetail contraVoucherDetail, IJournalVoucherDetail journalVoucherDetail
                                 )
         {
-            dbContext = _dbContext;
-            purchaseInvoice = _purchaseInvoice;
-            salesInvoice = _salesInvoice;
-            creditNote = _creditNote;
-            debitNote = _debitNote;
-            paymentVoucher = _paymentVoucher;
-            receiptVoucher = _receiptVoucher;
-            paymentVoucherDetail = _paymentVoucherDetail;
-            receiptVoucherDetail = _receiptVoucherDetail;
-            contraVoucherDetail = _contraVoucherDetail;
-            journalVoucherDetail = _journalVoucherDetail;
+            _dbContext = dbContext;
+            _purchaseInvoice = purchaseInvoice;
+            _salesInvoice = salesInvoice;
+            _creditNote = creditNote;
+            _debitNote = debitNote;
+            _paymentVoucher = paymentVoucher;
+            _receiptVoucher = receiptVoucher;
+            _paymentVoucherDetail = paymentVoucherDetail;
+            _receiptVoucherDetail = receiptVoucherDetail;
+            _contraVoucherDetail = contraVoucherDetail;
+            _journalVoucherDetail = journalVoucherDetail;
         }
 
         public async Task<DataTableResultModel<GeneralLedgerModel>> GetReport(SearchFilterGeneralLedgerModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -82,7 +82,7 @@ namespace ERP.Services.Accounts
 
             DateTime fromDate_FY;
 
-            Financialyear financialyear = dbContext.Financialyears.Where(w => w.FinancialYearId==financialYearId).FirstOrDefault();
+            Financialyear financialyear = _dbContext.Financialyears.Where(w => w.FinancialYearId==financialYearId).FirstOrDefault();
 
             if (financialyear==null)
             {
@@ -98,7 +98,7 @@ namespace ERP.Services.Accounts
                 generalLedgerModelList=new List<GeneralLedgerModel>();
             }
 
-            Ledgerfinancialyearbalance ledgerFinancialYearBalance = dbContext.Ledgerfinancialyearbalances
+            Ledgerfinancialyearbalance ledgerFinancialYearBalance = _dbContext.Ledgerfinancialyearbalances
                                                                     .Where(w => w.LedgerId==ledgerId && w.FinancialYearId==financialYearId && w.CompanyId==companyId)
                                                                     .FirstOrDefault();
 
@@ -165,18 +165,18 @@ namespace ERP.Services.Accounts
 
             IList<GeneralLedgerModel> journalVoucherDetailModelList = null;
 
-            purchaseInvoiceModelList = await purchaseInvoice.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            salesInvoiceModelList = await salesInvoice.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            debitNoteModelList = await debitNote.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            creditNoteModelList = await creditNote.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            purchaseInvoiceModelList = await _purchaseInvoice.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            salesInvoiceModelList = await _salesInvoice.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            debitNoteModelList = await _debitNote.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            creditNoteModelList = await _creditNote.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
 
-            paymentVoucherModelList = await paymentVoucher.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            receiptVoucherModelList = await receiptVoucher.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            paymentVoucherModelList = await _paymentVoucher.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            receiptVoucherModelList = await _receiptVoucher.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
 
-            paymentVoucherDetailModelList = await paymentVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            receiptVoucherDetailModelList = await receiptVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            contraVoucherDetailModelList = await contraVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
-            journalVoucherDetailModelList = await journalVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            paymentVoucherDetailModelList = await _paymentVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            receiptVoucherDetailModelList = await _receiptVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            contraVoucherDetailModelList = await _contraVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
+            journalVoucherDetailModelList = await _journalVoucherDetail.GetTransactionList(ledgerId, fromDate, toDate, financialYearId, companyId);
 
             //-----------------------
 

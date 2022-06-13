@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class SalesRegisterService : ISalesRegister
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public SalesRegisterService(ErpDbContext _dbContext)
+        public SalesRegisterService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<SalesRegisterModel>> GetReport(SearchFilterSalesRegisterModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -97,7 +97,7 @@ namespace ERP.Services.Accounts
             {
                 IList<SalesRegisterModel> salesRegisterModelList = null;
 
-                salesRegisterModelList = dbContext
+                salesRegisterModelList = _dbContext
                             .Salesinvoices
                             .Include(w => w.CustomerLedger).Include(w => w.BillToAddress)
                             .Include(w => w.AccountLedger).Include(w => w.BankLedger)

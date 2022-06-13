@@ -29,8 +29,10 @@ namespace ERP.Models.Master
          [Display(Name = "Email Address")]
         public string EmailAddress { get; set; }
 
+        public int MaxNo { get; set; }
+
         //#####
-         [Display(Name = "Designation")]
+        [Display(Name = "Designation")]
         public string DesignationName { get; set; }
 
         [Display(Name = "Department")]

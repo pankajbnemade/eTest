@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseRegisterService : IPurchaseRegister
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public PurchaseRegisterService(ErpDbContext _dbContext)
+        public PurchaseRegisterService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<PurchaseRegisterModel>> GetReport(SearchFilterPurchaseRegisterModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -96,7 +96,7 @@ namespace ERP.Services.Accounts
             {
                 IList<PurchaseRegisterModel> purchaseRegisterModelList = null;
 
-                purchaseRegisterModelList = dbContext
+                purchaseRegisterModelList = _dbContext
                             .Purchaseinvoices
                             .Include(w => w.SupplierLedger).Include(w => w.BillToAddress)
                             .Include(w => w.AccountLedger)

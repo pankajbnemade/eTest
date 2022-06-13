@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class CreditNoteDetailService : Repository<Creditnotedetail>, ICreditNoteDetail
     {
-        ICreditNote creditNote;
+        private readonly ICreditNote _creditNote;
 
-        public CreditNoteDetailService(ErpDbContext dbContext, ICreditNote _creditNote) : base(dbContext)
+        public CreditNoteDetailService(ErpDbContext dbContext, ICreditNote creditNote) : base(dbContext)
         {
-            creditNote = _creditNote;
+            _creditNote = creditNote;
         }
 
         public async Task<int> GenerateSrNo(int creditNoteId)
@@ -124,7 +124,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await creditNote.UpdateCreditNoteMasterAmount(creditNoteDetail.CreditNoteId);
+                await _creditNote.UpdateCreditNoteMasterAmount(creditNoteDetail.CreditNoteId);
             }
 
             return isUpdated; // returns.
@@ -144,7 +144,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await creditNote.UpdateCreditNoteMasterAmount(creditNoteDetail.CreditNoteId);
+                await _creditNote.UpdateCreditNoteMasterAmount(creditNoteDetail.CreditNoteId);
             }
 
             return isDeleted; // returns.

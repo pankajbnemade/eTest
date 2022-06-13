@@ -14,13 +14,13 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceTaxService : Repository<Purchaseinvoicetax>, IPurchaseInvoiceTax
     {
-        private readonly IPurchaseInvoice purchaseInvoice;
-        private readonly ITaxRegisterDetail taxRegisterDetail;
+        private readonly IPurchaseInvoice _purchaseInvoice;
+        private readonly ITaxRegisterDetail _taxRegisterDetail;
 
-        public PurchaseInvoiceTaxService(ErpDbContext dbContext, IPurchaseInvoice _purchaseInvoice, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
+        public PurchaseInvoiceTaxService(ErpDbContext dbContext, IPurchaseInvoice purchaseInvoice, ITaxRegisterDetail taxRegisterDetail) : base(dbContext)
         {
-            purchaseInvoice = _purchaseInvoice;
-            taxRegisterDetail = _taxRegisterDetail;
+            _purchaseInvoice = purchaseInvoice;
+            _taxRegisterDetail = taxRegisterDetail;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace ERP.Services.Accounts
             // assign values.
             PurchaseInvoiceModel purchaseInvoiceModel = null;
 
-            purchaseInvoiceModel = await purchaseInvoice.GetPurchaseInvoiceById((int)purchaseInvoiceTaxModel.PurchaseInvoiceId);
+            purchaseInvoiceModel = await _purchaseInvoice.GetPurchaseInvoiceById((int)purchaseInvoiceTaxModel.PurchaseInvoiceId);
 
             Purchaseinvoicetax purchaseInvoiceTax = new Purchaseinvoicetax();
 
@@ -116,7 +116,7 @@ namespace ERP.Services.Accounts
             Purchaseinvoicetax purchaseInvoiceTax = await GetQueryByCondition(w => w.PurchaseInvoiceTaxId == purchaseInvoiceTaxId)
                                                                  .Include(w => w.PurchaseInvoice).FirstOrDefaultAsync();
 
-            if (null != purchaseInvoice)
+            if (null != _purchaseInvoice)
             {
                 if (DiscountType.Percentage.ToString() == purchaseInvoiceTax.TaxPercentageOrAmount)
                 {
@@ -141,7 +141,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTax.PurchaseInvoiceId);
+                await _purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTax.PurchaseInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -161,7 +161,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceId);
+                await _purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -181,7 +181,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTax.PurchaseInvoiceId);
+                await _purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceTax.PurchaseInvoiceId);
             }
 
             return isDeleted; // returns.
@@ -192,7 +192,7 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await _taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
 
             PurchaseInvoiceTaxModel purchaseInvoiceTaxModel = null;
 

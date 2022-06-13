@@ -18,9 +18,7 @@ namespace ERP.Services.Master.Interface
        
         Task<EmployeeModel> GetEmployeeById(int employeeId);
 
-        //Task<IList<EmployeeModel>> GetEmployeeByDepartmentId(int departmentId);
-
-        //Task<IList<EmployeeModel>> GetEmployeeByDesignationId(int designationId);
+        Task<GenerateNoModel> GenerateEmployeeCode();
 
         Task<IList<SelectListModel>> GetEmployeeSelectList();
 

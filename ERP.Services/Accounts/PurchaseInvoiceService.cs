@@ -16,10 +16,10 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceService : Repository<Purchaseinvoice>, IPurchaseInvoice
     {
-        private readonly ICommon common;
-        public PurchaseInvoiceService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        private readonly ICommon _common;
+        public PurchaseInvoiceService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -245,7 +245,7 @@ namespace ERP.Services.Accounts
                 purchaseInvoice.NetAmountFc = purchaseInvoice.GrossAmountFc + purchaseInvoice.TaxAmountFc;
                 purchaseInvoice.NetAmount = purchaseInvoice.NetAmountFc / purchaseInvoice.ExchangeRate;
 
-                purchaseInvoice.NetAmountFcinWord = await common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
+                purchaseInvoice.NetAmountFcinWord = await _common.AmountInWord_Million(purchaseInvoice.NetAmountFc.ToString(), purchaseInvoice.Currency.CurrencyCode, purchaseInvoice.Currency.Denomination);
 
                 if (purchaseInvoice.StatusId == (int)DocumentStatus.Approved || purchaseInvoice.StatusId == (int)DocumentStatus.ApprovalRequested || purchaseInvoice.StatusId == (int)DocumentStatus.Cancelled)
                 {

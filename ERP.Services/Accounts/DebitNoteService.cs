@@ -16,10 +16,10 @@ namespace ERP.Services.Accounts
 {
     public class DebitNoteService : Repository<Debitnote>, IDebitNote
     {
-        private readonly ICommon common;
-        public DebitNoteService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        private readonly ICommon _common;
+        public DebitNoteService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -256,7 +256,7 @@ namespace ERP.Services.Accounts
                 debitNote.NetAmountFc = debitNote.GrossAmountFc + debitNote.TaxAmountFc;
                 debitNote.NetAmount = debitNote.NetAmountFc / debitNote.ExchangeRate;
 
-                debitNote.NetAmountFcinWord = await common.AmountInWord_Million(debitNote.NetAmountFc.ToString(), debitNote.Currency.CurrencyCode, debitNote.Currency.Denomination);
+                debitNote.NetAmountFcinWord = await _common.AmountInWord_Million(debitNote.NetAmountFc.ToString(), debitNote.Currency.CurrencyCode, debitNote.Currency.Denomination);
 
                 if (debitNote.StatusId == (int)DocumentStatus.Approved || debitNote.StatusId == (int)DocumentStatus.ApprovalRequested || debitNote.StatusId == (int)DocumentStatus.Cancelled)
                 {

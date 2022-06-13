@@ -11,11 +11,11 @@ namespace ERP.Services.Common
 {
     public class CommonService : ICommon
     {
-        IVoucherSetupDetail voucherSetupDetail;
+        IVoucherSetupDetail _voucherSetupDetail;
 
-        public CommonService(IVoucherSetupDetail _voucherSetupDetail)
+        public CommonService(IVoucherSetupDetail voucherSetupDetail)
         {
-            voucherSetupDetail = _voucherSetupDetail;
+            _voucherSetupDetail = voucherSetupDetail;
         }
 
         //public async Task<IList<SelectListModel>> GetTaxModelTypeSelectList()
@@ -74,7 +74,7 @@ namespace ERP.Services.Common
         {
             VoucherSetupDetailModel voucherSetupDetailModel = null;
 
-            voucherSetupDetailModel = await voucherSetupDetail.GetVoucherSetupDetailForNoGeneration(voucherSetupId, companyId, financialYearId);
+            voucherSetupDetailModel = await _voucherSetupDetail.GetVoucherSetupDetailForNoGeneration(voucherSetupId, companyId, financialYearId);
 
             return await Task.Run(() =>
             {

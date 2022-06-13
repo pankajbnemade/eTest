@@ -18,11 +18,11 @@ namespace ERP.Services.Accounts
 {
     public class ReceiptVoucherService : Repository<Receiptvoucher>, IReceiptVoucher
     {
-        ICommon common;
+        private readonly ICommon _common;
 
-        public ReceiptVoucherService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        public ReceiptVoucherService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         public async Task<GenerateNoModel> GenerateReceiptVoucherNo(int companyId, int financialYearId)
@@ -33,7 +33,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -166,7 +166,7 @@ namespace ERP.Services.Accounts
                 receiptVoucher.AmountFc = receiptVoucher.Receiptvoucherdetails.Sum(w => w.AmountFc);
                 receiptVoucher.Amount = receiptVoucher.AmountFc / receiptVoucher.ExchangeRate;
 
-                receiptVoucher.AmountFcinWord = await common.AmountInWord_Million(receiptVoucher.AmountFc.ToString(), receiptVoucher.Currency.CurrencyCode, receiptVoucher.Currency.Denomination);
+                receiptVoucher.AmountFcinWord = await _common.AmountInWord_Million(receiptVoucher.AmountFc.ToString(), receiptVoucher.Currency.CurrencyCode, receiptVoucher.Currency.Denomination);
 
                 if (receiptVoucher.StatusId == (int)DocumentStatus.Approved || receiptVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || receiptVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {

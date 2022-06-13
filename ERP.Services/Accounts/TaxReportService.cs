@@ -14,39 +14,39 @@ namespace ERP.Services.Accounts
 {
     public class TaxReportService : ITaxReport
     {
-        ErpDbContext dbContext;
-        IPurchaseInvoice purchaseInvoice;
-        ISalesInvoice salesInvoice;
-        ICreditNote creditNote;
-        IDebitNote debitNote;
+        private readonly ErpDbContext _dbContext;
+        private readonly IPurchaseInvoice _purchaseInvoice;
+        private readonly ISalesInvoice _salesInvoice;
+        private readonly ICreditNote _creditNote;
+        private readonly IDebitNote _debitNote;
 
-        IPaymentVoucher paymentVoucher;
-        IReceiptVoucher receiptVoucher;
+        private readonly IPaymentVoucher _paymentVoucher;
+        private readonly IReceiptVoucher _receiptVoucher;
 
-        IPaymentVoucherDetail paymentVoucherDetail;
-        IReceiptVoucherDetail receiptVoucherDetail;
-        IJournalVoucherDetail journalVoucherDetail;
-        IContraVoucherDetail contraVoucherDetail;
+        private readonly IPaymentVoucherDetail _paymentVoucherDetail;
+        private readonly IReceiptVoucherDetail _receiptVoucherDetail;
+        private readonly IJournalVoucherDetail _journalVoucherDetail;
+        private readonly IContraVoucherDetail _contraVoucherDetail;
 
-        public TaxReportService(ErpDbContext _dbContext,
-                                    IPurchaseInvoice _purchaseInvoice, ISalesInvoice _salesInvoice,
-                                    ICreditNote _creditNote, IDebitNote _debitNote,
-                                    IPaymentVoucher _paymentVoucher, IReceiptVoucher _receiptVoucher,
-                                    IPaymentVoucherDetail _paymentVoucherDetail, IReceiptVoucherDetail _receiptVoucherDetail,
-                                    IContraVoucherDetail _contraVoucherDetail, IJournalVoucherDetail _journalVoucherDetail
+        public TaxReportService(ErpDbContext dbContext,
+                                    IPurchaseInvoice purchaseInvoice, ISalesInvoice salesInvoice,
+                                    ICreditNote creditNote, IDebitNote debitNote,
+                                    IPaymentVoucher paymentVoucher, IReceiptVoucher receiptVoucher,
+                                    IPaymentVoucherDetail paymentVoucherDetail, IReceiptVoucherDetail receiptVoucherDetail,
+                                    IContraVoucherDetail contraVoucherDetail, IJournalVoucherDetail journalVoucherDetail
                                 )
         {
-            dbContext = _dbContext;
-            purchaseInvoice = _purchaseInvoice;
-            salesInvoice = _salesInvoice;
-            creditNote = _creditNote;
-            debitNote = _debitNote;
-            paymentVoucher = _paymentVoucher;
-            receiptVoucher = _receiptVoucher;
-            paymentVoucherDetail = _paymentVoucherDetail;
-            receiptVoucherDetail = _receiptVoucherDetail;
-            contraVoucherDetail = _contraVoucherDetail;
-            journalVoucherDetail = _journalVoucherDetail;
+            _dbContext = dbContext;
+            _purchaseInvoice = purchaseInvoice;
+            _salesInvoice = salesInvoice;
+            _creditNote = creditNote;
+            _debitNote = debitNote;
+            _paymentVoucher = paymentVoucher;
+            _receiptVoucher = receiptVoucher;
+            _paymentVoucherDetail = paymentVoucherDetail;
+            _receiptVoucherDetail = receiptVoucherDetail;
+            _contraVoucherDetail = contraVoucherDetail;
+            _journalVoucherDetail = journalVoucherDetail;
         }
 
         public async Task<DataTableResultModel<TaxReportModel>> GetReport(SearchFilterTaxReportModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -86,7 +86,7 @@ namespace ERP.Services.Accounts
 
             DateTime fromDate_FY;
 
-            Financialyear financialyear = dbContext.Financialyears.Where(w => w.FinancialYearId==financialYearId).FirstOrDefault();
+            Financialyear financialyear = _dbContext.Financialyears.Where(w => w.FinancialYearId==financialYearId).FirstOrDefault();
 
             if (financialyear==null)
             {
@@ -102,7 +102,7 @@ namespace ERP.Services.Accounts
                 generalLedgerModelList=new List<TaxReportModel>();
             }
 
-            Ledgerfinancialyearbalance ledgerFinancialYearBalance = dbContext.Ledgerfinancialyearbalances
+            Ledgerfinancialyearbalance ledgerFinancialYearBalance = _dbContext.Ledgerfinancialyearbalances
                                                                     .Where(w => w.LedgerId==ledgerId
                                                                         && w.FinancialYearId==financialYearId
                                                                         && w.CompanyId==companyId)
@@ -167,7 +167,7 @@ namespace ERP.Services.Accounts
 
             IList<TaxReportModel> creditNoteDetTaxModelList = null;
 
-            purchaseInvoiceTaxModelList = dbContext.Purchaseinvoicetaxes
+            purchaseInvoiceTaxModelList = _dbContext.Purchaseinvoicetaxes
                                             .Include(i => i.PurchaseInvoice)
                                             .ThenInclude(i => i.Currency)
                                             .Where(w => w.TaxLedgerId == ledgerId
@@ -198,7 +198,7 @@ namespace ERP.Services.Accounts
                                             .ToList();
 
 
-            salesInvoiceTaxModelList = dbContext.Salesinvoicetaxes
+            salesInvoiceTaxModelList = _dbContext.Salesinvoicetaxes
                                             .Include(i => i.SalesInvoice)
                                             .ThenInclude(i => i.Currency)
                                             .Where(w => w.TaxLedgerId == ledgerId
@@ -228,7 +228,7 @@ namespace ERP.Services.Accounts
                                             })
                                             .ToList();
 
-            debitNoteTaxModelList = dbContext.Debitnotetaxes
+            debitNoteTaxModelList = _dbContext.Debitnotetaxes
                                             .Include(i => i.DebitNote)
                                             .ThenInclude(i => i.Currency)
                                             .Where(w => w.TaxLedgerId == ledgerId
@@ -259,7 +259,7 @@ namespace ERP.Services.Accounts
                                             .ToList();
 
 
-            creditNoteTaxModelList = dbContext.Creditnotetaxes
+            creditNoteTaxModelList = _dbContext.Creditnotetaxes
                                             .Include(i => i.CreditNote)
                                             .ThenInclude(i => i.Currency)
                                             .Where(w => w.TaxLedgerId == ledgerId
@@ -289,7 +289,7 @@ namespace ERP.Services.Accounts
                                             })
                                             .ToList();
 
-            purchaseInvoiceDetTaxModelList = dbContext.Purchaseinvoicedetailtaxes
+            purchaseInvoiceDetTaxModelList = _dbContext.Purchaseinvoicedetailtaxes
                                             .Include(i => i.PurchaseInvoiceDet)
                                             .ThenInclude(i => i.PurchaseInvoice)
                                             .ThenInclude(i => i.Currency)
@@ -321,7 +321,7 @@ namespace ERP.Services.Accounts
                                             .ToList();
 
 
-            salesInvoiceDetTaxModelList = dbContext.Salesinvoicedetailtaxes
+            salesInvoiceDetTaxModelList = _dbContext.Salesinvoicedetailtaxes
                                             .Include(i => i.SalesInvoiceDet)
                                             .ThenInclude(i => i.SalesInvoice)
                                             .ThenInclude(i => i.Currency)
@@ -352,7 +352,7 @@ namespace ERP.Services.Accounts
                                             })
                                             .ToList();
 
-            debitNoteDetTaxModelList = dbContext.Debitnotedetailtaxes
+            debitNoteDetTaxModelList = _dbContext.Debitnotedetailtaxes
                                             .Include(i => i.DebitNoteDet)
                                             .ThenInclude(i => i.DebitNote)
                                             .ThenInclude(i => i.Currency)
@@ -384,7 +384,7 @@ namespace ERP.Services.Accounts
                                             .ToList();
 
 
-            creditNoteDetTaxModelList = dbContext.Creditnotedetailtaxes
+            creditNoteDetTaxModelList = _dbContext.Creditnotedetailtaxes
                                             .Include(i => i.CreditNoteDet)
                                             .ThenInclude(i => i.CreditNote)
                                             .ThenInclude(i => i.Currency)

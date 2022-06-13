@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class PDCReportService : IPDCReport
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public PDCReportService(ErpDbContext _dbContext)
+        public PDCReportService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<PDCReportModel>> GetReport(SearchFilterPDCReportModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -176,7 +176,7 @@ namespace ERP.Services.Accounts
                 if (pdcType=="P")
                 {
 
-                    pdcReportModelList = dbContext
+                    pdcReportModelList = _dbContext
                                 .Paymentvouchers.Include(i => i.AccountLedger)
                                 .Include(i => i.Currency)
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
@@ -208,7 +208,7 @@ namespace ERP.Services.Accounts
                 }
                 else
                 {
-                    pdcReportModelList = dbContext.
+                    pdcReportModelList = _dbContext.
                                Receiptvouchers.Include(i => i.AccountLedger)
                                .Include(i => i.Currency)
                                .Where(w => w.StatusId == (int)DocumentStatus.Approved

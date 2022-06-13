@@ -17,11 +17,11 @@ namespace ERP.Services.Accounts
 {
     public class AdvanceAdjustmentService : Repository<Advanceadjustment>, IAdvanceAdjustment
     {
-        ICommon common;
+        private readonly ICommon _common;
 
-        public AdvanceAdjustmentService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        public AdvanceAdjustmentService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         public async Task<GenerateNoModel> GenerateAdvanceAdjustmentNo(int companyId, int financialYearId)
@@ -32,7 +32,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -157,7 +157,7 @@ namespace ERP.Services.Accounts
                 advanceAdjustment.AmountFc = advanceAdjustment.Advanceadjustmentdetails.Sum(w => w.AmountFc);
                 advanceAdjustment.Amount = advanceAdjustment.AmountFc / advanceAdjustment.ExchangeRate;
 
-                advanceAdjustment.AmountFcinWord = await common.AmountInWord_Million(advanceAdjustment.AmountFc.ToString(), advanceAdjustment.Currency.CurrencyCode, advanceAdjustment.Currency.Denomination);
+                advanceAdjustment.AmountFcinWord = await _common.AmountInWord_Million(advanceAdjustment.AmountFc.ToString(), advanceAdjustment.Currency.CurrencyCode, advanceAdjustment.Currency.Denomination);
                 
                 if (advanceAdjustment.StatusId == (int)DocumentStatus.Approved || advanceAdjustment.StatusId == (int)DocumentStatus.ApprovalRequested || advanceAdjustment.StatusId == (int)DocumentStatus.Cancelled)
                 {

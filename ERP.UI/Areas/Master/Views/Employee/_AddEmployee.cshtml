@@ -25,7 +25,7 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.EmployeeCode, new { @class = "required" })
-                    @Html.TextBoxFor(model => model.EmployeeCode, new { @class = "form-control", @maxlength = "100" })
+                    @Html.TextBoxFor(model => model.EmployeeCode, new { @class = "form-control", @maxlength = "100", @readonly = "readonly" })
                     @Html.ValidationMessageFor(model => model.EmployeeCode)
                 </div>
 

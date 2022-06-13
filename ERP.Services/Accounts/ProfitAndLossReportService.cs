@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class ProfitAndLossReportService : IProfitAndLossReport
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public ProfitAndLossReportService(ErpDbContext _dbContext)
+        public ProfitAndLossReportService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<ProfitAndLossReportModel>> GetReport(SearchFilterProfitAndLossReportModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -89,7 +89,7 @@ namespace ERP.Services.Accounts
                 if (profitAndLossType=="P")
                 {
 
-                    profitAndLossReportModelList = dbContext
+                    profitAndLossReportModelList = _dbContext
                                 .Paymentvouchers.Include(i => i.AccountLedger)
                                 .Include(i => i.Currency)
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
@@ -109,7 +109,7 @@ namespace ERP.Services.Accounts
                 }
                 else
                 {
-                    profitAndLossReportModelList = dbContext.
+                    profitAndLossReportModelList = _dbContext.
                                Receiptvouchers.Include(i => i.AccountLedger)
                                .Include(i => i.Currency)
                                .Where(w => w.StatusId == (int)DocumentStatus.Approved

@@ -13,11 +13,11 @@ namespace ERP.Services.Accounts
 {
     public class AdvanceAdjustmentDetailService : Repository<Advanceadjustmentdetail>, IAdvanceAdjustmentDetail
     {
-        IAdvanceAdjustment advanceAdjustment;
+        private readonly IAdvanceAdjustment _advanceAdjustment;
 
-        public AdvanceAdjustmentDetailService(ErpDbContext dbContext, IAdvanceAdjustment _advanceAdjustment) : base(dbContext)
+        public AdvanceAdjustmentDetailService(ErpDbContext dbContext, IAdvanceAdjustment advanceAdjustment) : base(dbContext)
         {
-            advanceAdjustment = _advanceAdjustment;
+            _advanceAdjustment = advanceAdjustment;
         }
 
         public async Task<int> CreateAdvanceAdjustmentDetail(AdvanceAdjustmentDetailModel advanceAdjustmentDetailModel)
@@ -117,7 +117,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await advanceAdjustment.UpdateAdvanceAdjustmentMasterAmount(advanceAdjustmentDetail.AdvanceAdjustmentId);
+                await _advanceAdjustment.UpdateAdvanceAdjustmentMasterAmount(advanceAdjustmentDetail.AdvanceAdjustmentId);
             }
 
             return isDeleted; // returns.

@@ -18,11 +18,11 @@ namespace ERP.Services.Accounts
 {
     public class PaymentVoucherService : Repository<Paymentvoucher>, IPaymentVoucher
     {
-        ICommon common;
+        private readonly ICommon _common;
 
-        public PaymentVoucherService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        public PaymentVoucherService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         public async Task<GenerateNoModel> GeneratePaymentVoucherNo(int companyId, int financialYearId)
@@ -33,7 +33,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -166,7 +166,7 @@ namespace ERP.Services.Accounts
                 paymentVoucher.AmountFc = paymentVoucher.Paymentvoucherdetails.Sum(w => w.AmountFc);
                 paymentVoucher.Amount = paymentVoucher.AmountFc / paymentVoucher.ExchangeRate;
 
-                paymentVoucher.AmountFcinWord = await common.AmountInWord_Million(paymentVoucher.AmountFc.ToString(), paymentVoucher.Currency.CurrencyCode, paymentVoucher.Currency.Denomination);
+                paymentVoucher.AmountFcinWord = await _common.AmountInWord_Million(paymentVoucher.AmountFc.ToString(), paymentVoucher.Currency.CurrencyCode, paymentVoucher.Currency.Denomination);
 
                 if (paymentVoucher.StatusId == (int)DocumentStatus.Approved || paymentVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || paymentVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {

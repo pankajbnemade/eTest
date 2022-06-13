@@ -9,27 +9,29 @@ namespace ERP.Services.Accounts
 {
     public class OutstandingInvoiceService : IOutstandingInvoice
     {
-        IPurchaseInvoice purchaseInvoice;
-        ISalesInvoice salesInvoice;
-        ICreditNote creditNote;
-        IDebitNote debitNote;
+        private readonly IPurchaseInvoice _purchaseInvoice;
+        private readonly ISalesInvoice _salesInvoice;
+        private readonly ICreditNote _creditNote;
+        private readonly IDebitNote _debitNote;
 
-        IPaymentVoucherDetail paymentVoucherDetail;
-        IReceiptVoucherDetail receiptVoucherDetail;
-        IJournalVoucherDetail journalVoucherDetail;
-        IAdvanceAdjustmentDetail advanceAdjustmentDetail;
+        private readonly IPaymentVoucherDetail _paymentVoucherDetail;
+        private readonly IReceiptVoucherDetail _receiptVoucherDetail;
+        private readonly IJournalVoucherDetail _journalVoucherDetail;
+        private readonly IAdvanceAdjustmentDetail _advanceAdjustmentDetail;
 
-        public OutstandingInvoiceService(IPurchaseInvoice _purchaseInvoice, ISalesInvoice _salesInvoice, ICreditNote _creditNote, IDebitNote _debitNote,
-            IPaymentVoucherDetail _paymentVoucherDetail, IReceiptVoucherDetail _receiptVoucherDetail, IJournalVoucherDetail _journalVoucherDetail, IAdvanceAdjustmentDetail _advanceAdjustmentDetail)
+        public OutstandingInvoiceService(IPurchaseInvoice purchaseInvoice, ISalesInvoice salesInvoice, 
+            ICreditNote creditNote, IDebitNote debitNote,
+            IPaymentVoucherDetail paymentVoucherDetail, IReceiptVoucherDetail receiptVoucherDetail, 
+            IJournalVoucherDetail journalVoucherDetail, IAdvanceAdjustmentDetail advanceAdjustmentDetail)
         {
-            purchaseInvoice = _purchaseInvoice;
-            salesInvoice = _salesInvoice;
-            creditNote = _creditNote;
-            debitNote = _debitNote;
-            paymentVoucherDetail = _paymentVoucherDetail;
-            receiptVoucherDetail = _receiptVoucherDetail;
-            journalVoucherDetail = _journalVoucherDetail;
-            advanceAdjustmentDetail = _advanceAdjustmentDetail;
+            _purchaseInvoice = purchaseInvoice;
+            _salesInvoice = salesInvoice;
+            _creditNote = creditNote;
+            _debitNote = debitNote;
+            _paymentVoucherDetail = paymentVoucherDetail;
+            _receiptVoucherDetail = receiptVoucherDetail;
+            _journalVoucherDetail = journalVoucherDetail;
+            _advanceAdjustmentDetail = advanceAdjustmentDetail;
         }
 
         public async Task<IList<OutstandingInvoiceModel>> GetOutstandingInvoiceListByLedgerId(int ledgerId, string voucherType, int voucherId, DateTime voucherDate, decimal exchangeRate)
@@ -54,31 +56,31 @@ namespace ERP.Services.Accounts
 
             if (voucherType == "Payment Voucher" || voucherType == "Journal Voucher" || voucherType == "Advance Adjustment")
             {
-                purchaseInvoiceModelList = await purchaseInvoice.GetPurchaseInvoiceListBySupplierLedgerId(ledgerId, voucherDate);
+                purchaseInvoiceModelList = await _purchaseInvoice.GetPurchaseInvoiceListBySupplierLedgerId(ledgerId, voucherDate);
             }
 
             if (voucherType == "Receipt Voucher" || voucherType == "Journal Voucher" || voucherType == "Advance Adjustment")
             {
-                salesInvoiceModelList = await salesInvoice.GetSalesInvoiceListByCustomerLedgerId(ledgerId, voucherDate);
+                salesInvoiceModelList = await _salesInvoice.GetSalesInvoiceListByCustomerLedgerId(ledgerId, voucherDate);
             }
 
             if (voucherType == "Payment Voucher" || voucherType == "Journal Voucher" || voucherType == "Advance Adjustment")
             {
-                debitNoteModelList = await debitNote.GetDebitNoteListByPartyLedgerId(ledgerId, voucherDate);
+                debitNoteModelList = await _debitNote.GetDebitNoteListByPartyLedgerId(ledgerId, voucherDate);
             }
 
             if (voucherType == "Receipt Voucher" || voucherType == "Journal Voucher" || voucherType == "Advance Adjustment")
             {
-                creditNoteModelList = await creditNote.GetCreditNoteListByPartyLedgerId(ledgerId, voucherDate);
+                creditNoteModelList = await _creditNote.GetCreditNoteListByPartyLedgerId(ledgerId, voucherDate);
             }
 
-            IList<PaymentVoucherDetailModel> paymentVoucherDetailModel = await paymentVoucherDetail.GetInvoiceListByParticularLedgerId(ledgerId);
+            IList<PaymentVoucherDetailModel> paymentVoucherDetailModel = await _paymentVoucherDetail.GetInvoiceListByParticularLedgerId(ledgerId);
 
-            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModel = await receiptVoucherDetail.GetInvoiceListByParticularLedgerId(ledgerId);
+            IList<ReceiptVoucherDetailModel> receiptVoucherDetailModel = await _receiptVoucherDetail.GetInvoiceListByParticularLedgerId(ledgerId);
 
-            IList<JournalVoucherDetailModel> journalVoucherDetailModel = await journalVoucherDetail.GetInvoiceListByParticularLedgerId(ledgerId);
+            IList<JournalVoucherDetailModel> journalVoucherDetailModel = await _journalVoucherDetail.GetInvoiceListByParticularLedgerId(ledgerId);
 
-            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModel = await advanceAdjustmentDetail.GetInvoiceListByParticularLedgerId(ledgerId);
+            IList<AdvanceAdjustmentDetailModel> advanceAdjustmentDetailModel = await _advanceAdjustmentDetail.GetInvoiceListByParticularLedgerId(ledgerId);
 
 
             IList<PaymentVoucherDetailModel> paymentVoucherDetailModel_Current = null;
@@ -88,22 +90,22 @@ namespace ERP.Services.Accounts
 
             if (voucherType == "Payment Voucher")
             {
-                paymentVoucherDetailModel_Current = await paymentVoucherDetail.GetPaymentVoucherDetailByVoucherId(voucherId, 0);
+                paymentVoucherDetailModel_Current = await _paymentVoucherDetail.GetPaymentVoucherDetailByVoucherId(voucherId, 0);
             }
 
             if (voucherType == "Receipt Voucher")
             {
-                receiptVoucherDetailModel_Current = await receiptVoucherDetail.GetReceiptVoucherDetailByVoucherId(voucherId, 0);
+                receiptVoucherDetailModel_Current = await _receiptVoucherDetail.GetReceiptVoucherDetailByVoucherId(voucherId, 0);
             }
 
             if (voucherType == "Journal Voucher")
             {
-                journalVoucherDetailModel_Current = await journalVoucherDetail.GetJournalVoucherDetailByVoucherId(voucherId, 0);
+                journalVoucherDetailModel_Current = await _journalVoucherDetail.GetJournalVoucherDetailByVoucherId(voucherId, 0);
             }
 
             if (voucherType == "Advance Adjustment")
             {
-                advanceAdjustmentDetailModel_Current = await advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdjustmentId(voucherId);
+                advanceAdjustmentDetailModel_Current = await _advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdjustmentId(voucherId);
             }
 
             if (purchaseInvoiceModelList != null)

@@ -15,13 +15,13 @@ namespace ERP.Services.Accounts
 {
     public class JournalVoucherDetailService : Repository<Journalvoucherdetail>, IJournalVoucherDetail
     {
-        IJournalVoucher journalVoucher;
-        ILedger ledger;
+        private readonly IJournalVoucher _journalVoucher;
+        private readonly ILedger _ledger;
 
-        public JournalVoucherDetailService(ErpDbContext dbContext, IJournalVoucher _journalVoucher, ILedger _ledger) : base(dbContext)
+        public JournalVoucherDetailService(ErpDbContext dbContext, IJournalVoucher journalVoucher, ILedger ledger) : base(dbContext)
         {
-            journalVoucher = _journalVoucher;
-            ledger = _ledger;
+            _journalVoucher = journalVoucher;
+            _ledger = ledger;
         }
 
         public async Task<int> CreateJournalVoucherDetail(JournalVoucherDetailModel journalVoucherDetailModel)
@@ -127,7 +127,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await journalVoucher.UpdateJournalVoucherMasterAmount(journalVoucherDetail.JournalVoucherId);
+                await _journalVoucher.UpdateJournalVoucherMasterAmount(journalVoucherDetail.JournalVoucherId);
             }
 
             return isDeleted; // returns.

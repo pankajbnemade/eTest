@@ -14,14 +14,14 @@ namespace ERP.Services.Accounts
 {
     public class DebitNoteDetailTaxService : Repository<Debitnotedetailtax>, IDebitNoteDetailTax
     {
-        IDebitNoteDetail debitNoteDetail;
-        private readonly ITaxRegisterDetail taxRegisterDetail;
+        private readonly IDebitNoteDetail _debitNoteDetail;
+        private readonly ITaxRegisterDetail _taxRegisterDetail;
 
 
-        public DebitNoteDetailTaxService(ErpDbContext dbContext, IDebitNoteDetail _debitNoteDetail, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
+        public DebitNoteDetailTaxService(ErpDbContext dbContext, IDebitNoteDetail debitNoteDetail, ITaxRegisterDetail taxRegisterDetail) : base(dbContext)
         {
-            debitNoteDetail = _debitNoteDetail;
-            taxRegisterDetail = _taxRegisterDetail;
+            _debitNoteDetail = debitNoteDetail;
+            _taxRegisterDetail = taxRegisterDetail;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace ERP.Services.Accounts
             Debitnotedetailtax debitNoteDetailTax = await GetQueryByCondition(w => w.DebitNoteDetTaxId == debitNoteDetailTaxId)
                                                                 .Include(w => w.DebitNoteDet).ThenInclude(w => w.DebitNote).FirstOrDefaultAsync();
 
-            if (null != debitNoteDetail)
+            if (null != _debitNoteDetail)
             {
                 if (DiscountType.Percentage.ToString() == debitNoteDetailTax.TaxPercentageOrAmount)
                 {
@@ -138,7 +138,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await debitNoteDetail.UpdateDebitNoteDetailAmount(debitNoteDetailTax.DebitNoteDetId);
+                await _debitNoteDetail.UpdateDebitNoteDetailAmount(debitNoteDetailTax.DebitNoteDetId);
             }
 
             return isUpdated; // returns.
@@ -158,7 +158,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await debitNoteDetail.UpdateDebitNoteDetailAmount(debitNoteDetailId);
+                await _debitNoteDetail.UpdateDebitNoteDetailAmount(debitNoteDetailId);
             }
 
             return isUpdated; // returns.
@@ -178,7 +178,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await debitNoteDetail.UpdateDebitNoteDetailAmount(debitNoteDetailTax.DebitNoteDetId);
+                await _debitNoteDetail.UpdateDebitNoteDetailAmount(debitNoteDetailTax.DebitNoteDetId);
             }
 
             return isDeleted; // returns.
@@ -188,9 +188,9 @@ namespace ERP.Services.Accounts
         {
             bool isUpdated = false;
 
-            IList<DebitNoteDetailModel> debitNoteDetailModelList = await debitNoteDetail.GetDebitNoteDetailListByDebitNoteId(debitNoteId);
+            IList<DebitNoteDetailModel> debitNoteDetailModelList = await _debitNoteDetail.GetDebitNoteDetailListByDebitNoteId(debitNoteId);
 
-            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await _taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
 
             DebitNoteDetailTaxModel debitNoteDetailTaxModel = null;
 
@@ -226,7 +226,7 @@ namespace ERP.Services.Accounts
         {
             bool isUpdated = false;
 
-            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await _taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
 
             DebitNoteDetailTaxModel debitNoteDetailTaxModel = null;
 

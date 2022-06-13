@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class DebitNoteDetailService : Repository<Debitnotedetail>, IDebitNoteDetail
     {
-        IDebitNote debitNote;
+        private readonly IDebitNote _debitNote;
 
-        public DebitNoteDetailService(ErpDbContext dbContext, IDebitNote _debitNote) : base(dbContext)
+        public DebitNoteDetailService(ErpDbContext dbContext, IDebitNote debitNote) : base(dbContext)
         {
-            debitNote = _debitNote;
+            _debitNote = debitNote;
         }
 
         public async Task<int> GenerateSrNo(int debitNoteId)
@@ -124,7 +124,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await debitNote.UpdateDebitNoteMasterAmount(debitNoteDetail.DebitNoteId);
+                await _debitNote.UpdateDebitNoteMasterAmount(debitNoteDetail.DebitNoteId);
             }
 
             return isUpdated; // returns.
@@ -144,7 +144,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await debitNote.UpdateDebitNoteMasterAmount(debitNoteDetail.DebitNoteId);
+                await _debitNote.UpdateDebitNoteMasterAmount(debitNoteDetail.DebitNoteId);
             }
 
             return isDeleted; // returns.

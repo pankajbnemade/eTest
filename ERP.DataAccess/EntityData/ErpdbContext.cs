@@ -89,14 +89,14 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;persistsecurityinfo=True;database=erpdb", x => x.ServerVersion("8.0.27-mysql"));
-        //            }
-        //        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;persistsecurityinfo=True;database=erpdb;allowuservariables=True", x => x.ServerVersion("8.0.27-mysql"));
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

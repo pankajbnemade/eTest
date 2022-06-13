@@ -18,11 +18,11 @@ namespace ERP.Services.Accounts
 {
     public class JournalVoucherService : Repository<Journalvoucher>, IJournalVoucher
     {
-        ICommon common;
+        private readonly ICommon _common;
 
-        public JournalVoucherService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        public JournalVoucherService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         public async Task<GenerateNoModel> GenerateJournalVoucherNo(int companyId, int financialYearId)
@@ -33,7 +33,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -168,7 +168,7 @@ namespace ERP.Services.Accounts
                 journalVoucher.DebitAmountFc = journalVoucher.Journalvoucherdetails.Sum(w => w.DebitAmountFc);
                 journalVoucher.DebitAmount = journalVoucher.DebitAmountFc / journalVoucher.ExchangeRate;
 
-                journalVoucher.AmountFcinWord = await common.AmountInWord_Million(journalVoucher.AmountFc.ToString(), journalVoucher.Currency.CurrencyCode, journalVoucher.Currency.Denomination);
+                journalVoucher.AmountFcinWord = await _common.AmountInWord_Million(journalVoucher.AmountFc.ToString(), journalVoucher.Currency.CurrencyCode, journalVoucher.Currency.Denomination);
 
                 if (journalVoucher.StatusId == (int)DocumentStatus.Approved || journalVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || journalVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {

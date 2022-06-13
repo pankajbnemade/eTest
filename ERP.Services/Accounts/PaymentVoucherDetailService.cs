@@ -15,13 +15,13 @@ namespace ERP.Services.Accounts
 {
     public class PaymentVoucherDetailService : Repository<Paymentvoucherdetail>, IPaymentVoucherDetail
     {
-        IPaymentVoucher paymentVoucher;
-        ILedger ledger;
+        private readonly IPaymentVoucher _paymentVoucher;
+        private readonly ILedger _ledger;
 
-        public PaymentVoucherDetailService(ErpDbContext dbContext, IPaymentVoucher _paymentVoucher, ILedger _ledger) : base(dbContext)
+        public PaymentVoucherDetailService(ErpDbContext dbContext, IPaymentVoucher paymentVoucher, ILedger ledger) : base(dbContext)
         {
-            paymentVoucher = _paymentVoucher;
-            ledger = _ledger;
+            _paymentVoucher = paymentVoucher;
+            _ledger = ledger;
         }
 
         public async Task<int> CreatePaymentVoucherDetail(PaymentVoucherDetailModel paymentVoucherDetailModel)
@@ -117,7 +117,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await paymentVoucher.UpdatePaymentVoucherMasterAmount(paymentVoucherDetail.PaymentVoucherId);
+                await _paymentVoucher.UpdatePaymentVoucherMasterAmount(paymentVoucherDetail.PaymentVoucherId);
             }
 
             return isDeleted; // returns.

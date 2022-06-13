@@ -14,7 +14,7 @@ namespace ERP.Services.Accounts
 {
     public class OpeningBalanceTransferService : Repository<Ledgerfinancialyearbalance>, IOpeningBalanceTransfer
     {
-        ErpDbContext _dbContext;
+        private readonly ErpDbContext _dbContext;
 
         public OpeningBalanceTransferService(ErpDbContext dbContext) : base(dbContext)
         {

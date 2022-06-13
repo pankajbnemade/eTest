@@ -16,7 +16,7 @@ namespace ERP.Models.Master
         [Display(Name = "Number Pre String")]
         public string NoPreString { get; set; }
 
-        [Display(Name = "NNumber Post String")]
+        [Display(Name = "Number Post String")]
         public string NoPostString { get; set; }
 
         [Display(Name = "Number Separator")]

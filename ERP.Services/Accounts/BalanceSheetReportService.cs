@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class BalanceSheetReportService : IBalanceSheetReport
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public BalanceSheetReportService(ErpDbContext _dbContext)
+        public BalanceSheetReportService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<BalanceSheetReportModel>> GetReport(SearchFilterBalanceSheetReportModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -89,7 +89,7 @@ namespace ERP.Services.Accounts
                 if (profitAndLossType=="P")
                 {
 
-                    balanceSheetReportModelList = dbContext
+                    balanceSheetReportModelList = _dbContext
                                 .Paymentvouchers.Include(i => i.AccountLedger)
                                 .Include(i => i.Currency)
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
@@ -109,7 +109,7 @@ namespace ERP.Services.Accounts
                 }
                 else
                 {
-                    balanceSheetReportModelList = dbContext.
+                    balanceSheetReportModelList = _dbContext.
                                Receiptvouchers.Include(i => i.AccountLedger)
                                .Include(i => i.Currency)
                                .Where(w => w.StatusId == (int)DocumentStatus.Approved

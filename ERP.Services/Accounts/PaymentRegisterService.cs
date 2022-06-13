@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class PaymentRegisterService : IPaymentRegister
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public PaymentRegisterService(ErpDbContext _dbContext)
+        public PaymentRegisterService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<PaymentRegisterModel>> GetReport(SearchFilterPaymentRegisterModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -85,7 +85,7 @@ namespace ERP.Services.Accounts
             {
                 IList<PaymentRegisterModel> paymentRegisterModelList = null;
 
-                paymentRegisterModelList = dbContext
+                paymentRegisterModelList = _dbContext
                             .Paymentvoucherdetails
                             .Include(i => i.ParticularLedger)
                             .Include(i => i.PurchaseInvoice)

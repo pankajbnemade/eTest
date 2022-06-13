@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class JournalRegisterService : IJournalRegister
     {
-        ErpDbContext dbContext;
+        private readonly ErpDbContext _dbContext;
 
-        public JournalRegisterService(ErpDbContext _dbContext)
+        public JournalRegisterService(ErpDbContext dbContext)
         {
-            dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<DataTableResultModel<JournalRegisterModel>> GetReport(SearchFilterJournalRegisterModel searchFilterModel, DateTime fromDate_FY, DateTime toDate_FY)
@@ -86,7 +86,7 @@ namespace ERP.Services.Accounts
             {
                 IList<JournalRegisterModel> journalRegisterModelList = null;
 
-                journalRegisterModelList = dbContext
+                journalRegisterModelList = _dbContext
                             .Journalvoucherdetails
                             .Include(i => i.ParticularLedger)
                             .Include(i => i.PurchaseInvoice)

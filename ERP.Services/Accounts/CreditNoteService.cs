@@ -16,10 +16,10 @@ namespace ERP.Services.Accounts
 {
     public class CreditNoteService : Repository<Creditnote>, ICreditNote
     {
-        private readonly ICommon common;
-        public CreditNoteService(ErpDbContext dbContext, ICommon _common) : base(dbContext)
+        private readonly ICommon _common;
+        public CreditNoteService(ErpDbContext dbContext, ICommon common) : base(dbContext)
         {
-            common = _common;
+            _common = common;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ERP.Services.Accounts
 
             maxNo = maxNo == null ? 0 : maxNo;
 
-            GenerateNoModel generateNoModel = await common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
+            GenerateNoModel generateNoModel = await _common.GenerateVoucherNo((int)maxNo, voucherSetupId, companyId, financialYearId);
 
             return generateNoModel; // returns.
         }
@@ -256,7 +256,7 @@ namespace ERP.Services.Accounts
                 creditNote.NetAmountFc = creditNote.GrossAmountFc + creditNote.TaxAmountFc;
                 creditNote.NetAmount = creditNote.NetAmountFc / creditNote.ExchangeRate;
 
-                creditNote.NetAmountFcinWord = await common.AmountInWord_Million(creditNote.NetAmountFc.ToString(), creditNote.Currency.CurrencyCode, creditNote.Currency.Denomination);
+                creditNote.NetAmountFcinWord = await _common.AmountInWord_Million(creditNote.NetAmountFc.ToString(), creditNote.Currency.CurrencyCode, creditNote.Currency.Denomination);
 
                 if (creditNote.StatusId == (int)DocumentStatus.Approved || creditNote.StatusId == (int)DocumentStatus.ApprovalRequested || creditNote.StatusId == (int)DocumentStatus.Cancelled)
                 {

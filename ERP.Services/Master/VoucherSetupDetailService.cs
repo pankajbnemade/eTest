@@ -90,6 +90,7 @@ namespace ERP.Services.Master
             VoucherSetupDetailModel voucherSetupDetailModel = null;
 
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(0, voucherSetupId, companyId, financialYearId);
+
             if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
             {
                 voucherSetupDetailModel = voucherSetupDetailModelList.FirstOrDefault();
@@ -139,6 +140,7 @@ namespace ERP.Services.Master
 
             if (0 != financialYearId)
                 query = query.Where(w => w.FinancialYearId == financialYearId);
+
             // get record.
             IList<Vouchersetupdetail> voucherSetupDetailList = await query.ToListAsync();
             if (null != voucherSetupDetailList && voucherSetupDetailList.Count > 0)

@@ -19,12 +19,12 @@ namespace ERP.Services.Admin
 {
     public class ApplicationRoleService : Repository<ApplicationRole>, IApplicationRole
     {
-        private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public ApplicationRoleService(ErpDbContext dbContext,
-             RoleManager<ApplicationRole> _roleManager) : base(dbContext)
+             RoleManager<ApplicationRole> roleManager) : base(dbContext)
         {
-            roleManager = _roleManager;
+            _roleManager = roleManager;
         }
 
         public async Task<int> CreateRole(ApplicationRoleModel roleModel)
@@ -36,7 +36,7 @@ namespace ERP.Services.Admin
 
             applicationRole.Name = roleModel.Name;
 
-            IdentityResult result = await roleManager.CreateAsync(applicationRole);
+            IdentityResult result = await _roleManager.CreateAsync(applicationRole);
 
             applicationRoleId = applicationRole.Id;
 
@@ -48,14 +48,14 @@ namespace ERP.Services.Admin
             bool isUpdated = false;
 
             // get record.
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(roleModel.Id.ToString());
+            ApplicationRole applicationRole = await _roleManager.FindByIdAsync(roleModel.Id.ToString());
 
             if (null != applicationRole)
             {
                 // assign values.
                 applicationRole.Name = roleModel.Name;
                 
-                IdentityResult result = await roleManager.UpdateAsync(applicationRole);
+                IdentityResult result = await _roleManager.UpdateAsync(applicationRole);
 
                 isUpdated = result.Succeeded;
             }
@@ -68,11 +68,11 @@ namespace ERP.Services.Admin
             bool isDeleted = false;
 
             // get record.
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(applicationRoleId.ToString());
+            ApplicationRole applicationRole = await _roleManager.FindByIdAsync(applicationRoleId.ToString());
 
             if (null != applicationRole)
             {
-                IdentityResult result = await roleManager.DeleteAsync(applicationRole);
+                IdentityResult result = await _roleManager.DeleteAsync(applicationRole);
 
                 isDeleted = result.Succeeded;
             }
@@ -84,7 +84,7 @@ namespace ERP.Services.Admin
         {
             ApplicationRoleModel roleModel = null;
 
-            ApplicationRole applicationRole = await roleManager.FindByIdAsync(applicationRoleId.ToString());
+            ApplicationRole applicationRole = await _roleManager.FindByIdAsync(applicationRoleId.ToString());
 
             if (null != applicationRole)
             {
@@ -121,7 +121,7 @@ namespace ERP.Services.Admin
         {
             IList<ApplicationRoleModel> roleModelList = null;
 
-            IList<ApplicationRole> roleList = await roleManager.Roles.ToListAsync();
+            IList<ApplicationRole> roleList = await _roleManager.Roles.ToListAsync();
 
             if (null != roleList && roleList.Count > 0)
             {
@@ -157,7 +157,7 @@ namespace ERP.Services.Admin
 
             if (await Any(w => w.Id != 0))
             {
-                IQueryable<ApplicationRole> roleList = roleManager.Roles;
+                IQueryable<ApplicationRole> roleList = _roleManager.Roles;
 
                 resultModel = await roleList.Select(s => new SelectListModel
                 {

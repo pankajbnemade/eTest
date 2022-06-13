@@ -14,13 +14,13 @@ namespace ERP.Services.Accounts
 {
     public class SalesInvoiceTaxService : Repository<Salesinvoicetax>, ISalesInvoiceTax
     {
-        private readonly ISalesInvoice salesInvoice;
-        private readonly ITaxRegisterDetail taxRegisterDetail;
+        private readonly ISalesInvoice _salesInvoice;
+        private readonly ITaxRegisterDetail _taxRegisterDetail;
 
-        public SalesInvoiceTaxService(ErpDbContext dbContext, ISalesInvoice _salesInvoice, ITaxRegisterDetail _taxRegisterDetail) : base(dbContext)
+        public SalesInvoiceTaxService(ErpDbContext dbContext, ISalesInvoice salesInvoice, ITaxRegisterDetail taxRegisterDetail) : base(dbContext)
         {
-            salesInvoice = _salesInvoice;
-            taxRegisterDetail = _taxRegisterDetail;
+            _salesInvoice = salesInvoice;
+            _taxRegisterDetail = taxRegisterDetail;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace ERP.Services.Accounts
             // assign values.
             SalesInvoiceModel salesInvoiceModel = null;
 
-            salesInvoiceModel = await salesInvoice.GetSalesInvoiceById((int)salesInvoiceTaxModel.SalesInvoiceId);
+            salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById((int)salesInvoiceTaxModel.SalesInvoiceId);
 
             Salesinvoicetax salesInvoiceTax = new Salesinvoicetax();
 
@@ -116,7 +116,7 @@ namespace ERP.Services.Accounts
             Salesinvoicetax salesInvoiceTax = await GetQueryByCondition(w => w.SalesInvoiceTaxId == salesInvoiceTaxId)
                                                                  .Include(w => w.SalesInvoice).FirstOrDefaultAsync();
 
-            if (null != salesInvoice)
+            if (null != _salesInvoice)
             {
                 if (DiscountType.Percentage.ToString() == salesInvoiceTax.TaxPercentageOrAmount)
                 {
@@ -141,7 +141,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTax.SalesInvoiceId);
+                await _salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTax.SalesInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -161,7 +161,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceId);
+                await _salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -181,7 +181,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTax.SalesInvoiceId);
+                await _salesInvoice.UpdateSalesInvoiceMasterAmount(salesInvoiceTax.SalesInvoiceId);
             }
 
             return isDeleted; // returns.
@@ -192,7 +192,7 @@ namespace ERP.Services.Accounts
             bool isUpdated = false;
 
             // get record.
-            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
+            IList<TaxRegisterDetailModel> taxRegisterDetailModelList = await _taxRegisterDetail.GetTaxRegisterDetailListByTaxRegisterId(taxRegisterId);
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = null;
 

@@ -15,13 +15,13 @@ namespace ERP.Services.Accounts
 {
     public class ContraVoucherDetailService : Repository<Contravoucherdetail>, IContraVoucherDetail
     {
-        IContraVoucher contraVoucher;
-        ILedger ledger;
+        private readonly IContraVoucher _contraVoucher;
+        private readonly ILedger _ledger;
 
-        public ContraVoucherDetailService(ErpDbContext dbContext, IContraVoucher _contraVoucher, ILedger _ledger) : base(dbContext)
+        public ContraVoucherDetailService(ErpDbContext dbContext, IContraVoucher contraVoucher, ILedger ledger) : base(dbContext)
         {
-            contraVoucher = _contraVoucher;
-            ledger = _ledger;
+            _contraVoucher = contraVoucher;
+            _ledger = ledger;
         }
 
         public async Task<int> CreateContraVoucherDetail(ContraVoucherDetailModel contraVoucherDetailModel)
@@ -117,7 +117,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await contraVoucher.UpdateContraVoucherMasterAmount(contraVoucherDetail.ContraVoucherId);
+                await _contraVoucher.UpdateContraVoucherMasterAmount(contraVoucherDetail.ContraVoucherId);
             }
 
             return isDeleted; // returns.

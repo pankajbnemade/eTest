@@ -14,11 +14,11 @@ namespace ERP.Services.Accounts
 {
     public class PurchaseInvoiceDetailService : Repository<Purchaseinvoicedetail>, IPurchaseInvoiceDetail
     {
-        IPurchaseInvoice purchaseInvoice;
+        private readonly IPurchaseInvoice _purchaseInvoice;
 
-        public PurchaseInvoiceDetailService(ErpDbContext dbContext, IPurchaseInvoice _purchaseInvoice) : base(dbContext)
+        public PurchaseInvoiceDetailService(ErpDbContext dbContext, IPurchaseInvoice purchaseInvoice) : base(dbContext)
         {
-            purchaseInvoice = _purchaseInvoice;
+            _purchaseInvoice = purchaseInvoice;
         }
 
         public async Task<int> GenerateSrNo(int purchaseInvoiceId)
@@ -123,7 +123,7 @@ namespace ERP.Services.Accounts
 
             if (isUpdated != false)
             {
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
+                await _purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
             return isUpdated; // returns.
@@ -143,7 +143,7 @@ namespace ERP.Services.Accounts
 
             if (isDeleted != false)
             {
-                await purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
+                await _purchaseInvoice.UpdatePurchaseInvoiceMasterAmount(purchaseInvoiceDetail.PurchaseInvoiceId);
             }
 
             return isDeleted; // returns.
