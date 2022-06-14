@@ -47,7 +47,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
 
             return await Task.Run(() =>
             {
@@ -136,11 +138,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> AddAdvanceAdjustmentMaster()
         {
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
-
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
+
             AdvanceAdjustmentModel advanceAdjustmentModel = new AdvanceAdjustmentModel();
+
             advanceAdjustmentModel.CompanyId = userSession.CompanyId;
             advanceAdjustmentModel.FinancialYearId = userSession.FinancialYearId;
             advanceAdjustmentModel.NoOfLineItems = 0;
@@ -158,9 +161,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> EditAdvanceAdjustmentMaster(int advanceAdjustmentId)
         {
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
 
             AdvanceAdjustmentModel advanceAdjustmentModel = await _advanceAdjustment.GetAdvanceAdjustmentById(advanceAdjustmentId);
+
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, advanceAdjustmentModel.CompanyId, true);
 
             DataTableResultModel<AdvanceAdjustmentDetailModel> resultModel = await _advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(advanceAdjustmentId, 0);
 

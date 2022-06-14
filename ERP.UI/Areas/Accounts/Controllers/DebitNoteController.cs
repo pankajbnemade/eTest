@@ -52,8 +52,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
 
             return await Task.Run(() =>
             {
@@ -99,14 +101,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddDebitNoteMaster()
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
 
-            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
             DebitNoteModel debitNoteModel = new DebitNoteModel();
             debitNoteModel.CompanyId = userSession.CompanyId;
             debitNoteModel.FinancialYearId = userSession.FinancialYearId;
@@ -128,14 +131,15 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditDebitNoteMaster(int debitNoteId)
         {
-            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            DebitNoteModel debitNoteModel = await _debitNote.GetDebitNoteById(debitNoteId);
+
+            ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor,debitNoteModel.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, debitNoteModel.CompanyId, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
 
-            DebitNoteModel debitNoteModel = await _debitNote.GetDebitNoteById(debitNoteId);
 
             return await Task.Run(() =>
             {

@@ -32,8 +32,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<IActionResult> VoucherDetail(int receiptVoucherId, int addRow_Blank)
         {
             ViewBag.ReceiptVoucherId = receiptVoucherId;
+            
+            ReceiptVoucherModel receiptVoucherModel = await _receiptVoucher.GetReceiptVoucherById(receiptVoucherId);
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, receiptVoucherModel.CompanyId, true);
             ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
 
             IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = await _receiptVoucherDetail.GetReceiptVoucherDetailByVoucherId(receiptVoucherId, addRow_Blank);

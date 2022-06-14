@@ -40,8 +40,10 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Index()
         {
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             ViewBag.TypeCorBList = EnumHelper.GetEnumListFor<TypeCorB>();
-            ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, true);
+            ViewBag.LedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
 
             return await Task.Run(() =>
             {
@@ -258,7 +260,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetAccountLedgerByTypeCorB(string typeCorB)
+        public async Task<JsonResult> GetAccountLedgerByTypeCorB(string typeCorB, int companyId)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
@@ -266,11 +268,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (typeCorB == "C")
             {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount, true);
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount, companyId, true);
             }
             else
             {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, true);
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, companyId, true);
             }
 
             if (null != selectList && selectList.Any())

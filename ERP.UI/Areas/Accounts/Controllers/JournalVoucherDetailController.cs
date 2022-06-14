@@ -33,7 +33,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.JournalVoucherId = journalVoucherId;
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            JournalVoucherModel journalVoucherModel = await _journalVoucher.GetJournalVoucherById(journalVoucherId);
+
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, journalVoucherModel.CompanyId, true);
             ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
 
             IList<JournalVoucherDetailModel> journalVoucherDetailModelList = await _journalVoucherDetail.GetJournalVoucherDetailByVoucherId(journalVoucherId, addRow_Blank);

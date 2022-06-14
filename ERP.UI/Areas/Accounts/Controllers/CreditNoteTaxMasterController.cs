@@ -1,6 +1,8 @@
 ﻿using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
+using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -65,9 +67,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddCreditNoteTaxMaster(int creditNoteId)
         {
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, userSession.CompanyId, true);
 
             CreditNoteTaxModel creditNoteTaxModel = new CreditNoteTaxModel();
             creditNoteTaxModel.CreditNoteId = creditNoteId;
@@ -86,11 +91,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditCreditNoteTaxMaster(int creditNoteTaxId)
         {
+            CreditNoteTaxModel creditNoteTaxModel = await _creditNoteTax.GetCreditNoteTaxById(creditNoteTaxId);
+
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, userSession.CompanyId, true);
 
-            CreditNoteTaxModel creditNoteTaxModel = await _creditNoteTax.GetCreditNoteTaxById(creditNoteTaxId);
 
             return await Task.Run(() =>
             {

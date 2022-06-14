@@ -28,7 +28,7 @@ namespace ERP.Services.Accounts.Interface
 
         Task<IList<SelectListModel>> GetGroupSelectList(int parentGroupId);
 
-        Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId, Boolean IsLegderOnly);
+        Task<IList<SelectListModel>> GetLedgerSelectList(int parentGroupId, int companyId, Boolean IsLegderOnly);
 
         Task<DataTableResultModel<LedgerModel>> GetLedgerList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterLedgerModel searchFilterModel);
 

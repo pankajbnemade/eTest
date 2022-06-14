@@ -33,7 +33,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.ContraVoucherId = contraVoucherId;
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            ContraVoucherModel contraVoucherModel = await _contraVoucher.GetContraVoucherById(contraVoucherId);
+
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, contraVoucherModel.CompanyId, true);
 
             IList<ContraVoucherDetailModel> contraVoucherDetailModelList = await _contraVoucherDetail.GetContraVoucherDetailByVoucherId(contraVoucherId, addRow_Blank);
 

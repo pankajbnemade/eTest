@@ -5,10 +5,12 @@
         <div class="modal-header">
             @if (Model.ReceiptVoucherId > 0)
             {
-<h5 class="modal-title">Edit Voucher</h5> }
-else
-{
-<h5 class="modal-title">Add Voucher</h5>}
+                <h5 class="modal-title">Edit Voucher</h5>
+            }
+            else
+            {
+                <h5 class="modal-title">Add Voucher</h5>
+            }
             <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
@@ -78,41 +80,43 @@ else
 
                 @if (Model.NoOfLineItems > 0)
                 {
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="form-group">
-                @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
-                @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem> { new SelectListItem { Text = Model.CurrencyCode, Value = Model.CurrencyId.ToString() } },
-                                              new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="form-group">
-                @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </div> }
-else
-{
-<div class="row">
-    <div class="col-sm-6">
-        <div class="form-group">
-            @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
-            @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-            @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-            @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
-            @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
-        </div>
-    </div>
-</div>}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem> { new SelectListItem { Text = Model.CurrencyCode, Value = Model.CurrencyId.ToString() } },
+                            new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+                                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -214,7 +218,10 @@ else
     function GetAccountLedger(typeCorB) {
 
         if ('' != typeCorB) {
-            var model = { typeCorB: typeCorB };
+            var model = {
+                typeCorB: typeCorB,
+                companyId : $("#CompanyId").val()
+            };
 
             AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetAccountLedgerByTypeCorB", "ReceiptVoucher")', '', model,
                 function (response) {
@@ -226,8 +233,14 @@ else
                             $('#AccountLedgerId').append("<option value='" + item.Value + "'>" + item.DisplayText + "</option>");
                         });
 
+
                         if ('@Model.TypeCorB' != "") {
-                            $('#AccountLedgerId').val('@Model.AccountLedgerId');
+                            $('#AccountLedgerId option').each(function(){
+                                if (this.value == '@Model.AccountLedgerId') {
+                                    $('#AccountLedgerId').val('@Model.AccountLedgerId');
+                                    return false;
+                                }
+                            });
                         }
                     }
                     else {

@@ -1,6 +1,8 @@
 ﻿using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
+using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -80,9 +82,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddDebitNoteTaxDetail(int debitNoteDetId)
         {
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, true);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, userSession.CompanyId, true);
 
             DebitNoteDetailTaxModel debitNoteDetailTaxModel = new DebitNoteDetailTaxModel();
             debitNoteDetailTaxModel.DebitNoteDetId = debitNoteDetId;
@@ -101,9 +105,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditDebitNoteTaxDetail(int debitNoteDetTaxId)
         {
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, true);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, userSession.CompanyId, true);
 
             DebitNoteDetailTaxModel debitNoteDetailTaxModel = await _debitNoteDetailTax.GetDebitNoteDetailTaxById(debitNoteDetTaxId);
 

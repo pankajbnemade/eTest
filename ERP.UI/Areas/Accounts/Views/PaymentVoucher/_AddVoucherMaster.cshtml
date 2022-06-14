@@ -212,9 +212,18 @@ else
 
     // get Account Ledger by TypeCorB.
     function GetAccountLedger(typeCorB) {
+         //console.log(typeCorB);
+
+         //var _companyId = $("#CompanyId").val();
 
         if ('' != typeCorB) {
-            var model = { typeCorB: typeCorB };
+
+             var model = {
+                typeCorB: typeCorB,
+                companyId : $("#CompanyId").val()
+            };
+
+            //console.log(model);
 
             AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("GetAccountLedgerByTypeCorB", "PaymentVoucher")', '', model,
                 function (response) {
@@ -227,7 +236,12 @@ else
                         });
 
                         if ('@Model.TypeCorB' != "") {
-                            $('#AccountLedgerId').val('@Model.AccountLedgerId');
+                            $('#AccountLedgerId option').each(function(){
+                                if (this.value == '@Model.AccountLedgerId') {
+                                    $('#AccountLedgerId').val('@Model.AccountLedgerId');
+                                    return false;
+                                }
+                            });
                         }
                     }
                     else {

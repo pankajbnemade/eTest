@@ -36,10 +36,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
         public async Task<IActionResult> Search(string searchFilter)
         {
-            ViewBag.LedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, true);
-
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            ViewBag.LedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryCreditor, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
+
 
             FinancialYearModel financialYearModel = await _financialYear.GetFinancialYearById(userSession.FinancialYearId);
 

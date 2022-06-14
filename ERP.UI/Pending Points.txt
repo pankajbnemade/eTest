@@ -1,1 +1,15 @@
-Tax register - Company Id & Code in addition, Status
+Print
+Transaction Date in Payment Voucher
+
+2nd Phase
+
+Chart of account 
+Changing Tax Report and Other reports like PDC (using dbcontext)
+contra voucher ledger fill list only bank or cash account
+
+
+shortcut need to be worked
+
+Company & Financial Relation
+Company Id in tax details ledger fill dropdown should be from master not from session (debit note, credit note, purchase invoice, sales invoice)
+

@@ -1,6 +1,8 @@
 ﻿using ERP.Models.Accounts;
 using ERP.Models.Accounts.Enums;
+using ERP.Models.Admin;
 using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Services.Accounts.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -65,11 +67,14 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddInvoiceTaxMaster(int salesInvoiceId)
         {
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
             ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
             ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, userSession.CompanyId, true);
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = new SalesInvoiceTaxModel();
+
             salesInvoiceTaxModel.SalesInvoiceId = salesInvoiceId;
             salesInvoiceTaxModel.SrNo = await _salesInvoiceTax.GenerateSrNo(salesInvoiceId);
 
@@ -86,11 +91,13 @@ namespace ERP.UI.Areas.Accounts.Controllers
         /// <returns></returns>
         public async Task<IActionResult> EditInvoiceTaxMaster(int salesInvoiceTaxId)
         {
-            ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
-            ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
-            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList(17, true);
+            UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
             SalesInvoiceTaxModel salesInvoiceTaxModel = await _salesInvoiceTax.GetSalesInvoiceTaxById(salesInvoiceTaxId);
+
+            ViewBag.DiscountTypeList = EnumHelper.GetEnumListFor<DiscountType>();
+            ViewBag.TaxAddOrDeductList = EnumHelper.GetEnumListFor<TaxAddOrDeduct>();
+            ViewBag.TaxLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.DutiesAndTaxes, userSession.CompanyId, true);
 
             return await Task.Run(() =>
             {

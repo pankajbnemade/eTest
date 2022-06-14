@@ -33,7 +33,9 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.PaymentVoucherId = paymentVoucherId;
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, true);
+            PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, paymentVoucherModel.CompanyId, true);
             ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
 
             IList<PaymentVoucherDetailModel> paymentVoucherDetailModelList = await _paymentVoucherDetail.GetPaymentVoucherDetailByVoucherId(paymentVoucherId, addRow_Blank);

@@ -109,6 +109,8 @@
     $(document).ready(function () {
         $("#advanceAdjustmentGrid").DataTable({
             "processing": true,
+            //"pageLength": 25,
+            //"lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
             "scrollX": true,
             "dom": "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-4'i><'col-sm-4 text-center'l><'col-sm-4'p>>",
