@@ -1,6 +1,15 @@
 Print
-Transaction Date in Payment Voucher
+Transaction Date not mandatory in Payment Voucher
 Erro show on error in jQuery
+PDC Radeem button in payment voucher
+exchange rate should be greater than 0 to avoid devide by 0 error and base currency calculation
+
+
+devide by zero error cross checking in all service 
+
+
+error catching in log file
+
 
 2nd Phase
 
@@ -14,3 +23,7 @@ shortcut need to be worked
 Company & Financial Relation
 Company Id in tax details ledger fill dropdown should be from master not from session (debit note, credit note, purchase invoice, sales invoice)
 
+
+Main bugs
+
+validating for all types of error (like possible error devide by 0)

@@ -45,19 +45,19 @@ namespace ERP.Models.Accounts
         public string CurrencyCode { get; set; }
 
         [Display(Name = "Net Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal NetAmountFc { get; set; }
 
         [Display(Name = "Net Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal NetAmount { get; set; }
 
         [Display(Name = "Paid Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal PaidAmount { get; set; }
 
         [Display(Name = "Outstanding Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal OutstandingAmount { get; set; }
 
         [Display(Name = "Outstanding Days")]

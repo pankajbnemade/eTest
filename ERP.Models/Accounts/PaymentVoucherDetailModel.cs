@@ -20,13 +20,13 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Amount { get; set; }
 
         [Display(Name = "Narration")]

@@ -28,7 +28,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = RegexHelper.Decimal6DigitMessage)]
+        [Range(0.000001, Double.MaxValue, ErrorMessage = "Value must be greater than 0.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 

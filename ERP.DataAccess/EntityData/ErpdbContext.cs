@@ -89,14 +89,14 @@ namespace ERP.DataAccess.EntityData
         public virtual DbSet<Vouchersetupdetail> Vouchersetupdetails { get; set; }
         public virtual DbSet<Voucherstyle> Voucherstyles { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;persistsecurityinfo=True;database=erpdb;allowuservariables=True", x => x.ServerVersion("8.0.27-mysql"));
-//            }
-//        }
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        //                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=pgp_dev;persistsecurityinfo=True;database=erpdb;allowuservariables=True", x => x.ServerVersion("8.0.27-mysql"));
+        //            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -147,11 +147,11 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFcinWord)
                     .HasColumnName("Amount_FCInWord")
@@ -305,11 +305,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_AdvanceAdjustmentDetails_UpdatedByUserId");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")
@@ -930,11 +930,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_ContraVoucher_VoucherStyleId");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFcinWord)
                     .HasColumnName("Amount_FCInWord")
@@ -949,17 +949,17 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.CreditAmountFc)
                     .HasColumnName("CreditAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DebitAmountFc)
                     .HasColumnName("DebitAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
@@ -1089,17 +1089,17 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_ContraVoucherDetails_UpdatedByUserId");
 
-                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.CreditAmountFc)
                     .HasColumnName("CreditAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DebitAmountFc)
                     .HasColumnName("DebitAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")
@@ -1220,15 +1220,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountAmountFc)
                     .HasColumnName("DiscountAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPerOrAmountFc)
                     .HasColumnName("DiscountPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -1237,17 +1237,17 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFcinWord)
                     .HasColumnName("NetAmount_FCInWord")
@@ -1281,22 +1281,22 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxModelType)
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TotalLineItemAmountFc)
                     .HasColumnName("TotalLineItemAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -1439,29 +1439,29 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -1509,15 +1509,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -1579,15 +1579,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -1771,15 +1771,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountAmountFc)
                     .HasColumnName("DiscountAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPerOrAmountFc)
                     .HasColumnName("DiscountPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -1788,17 +1788,17 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFcinWord)
                     .HasColumnName("NetAmount_FCInWord")
@@ -1832,22 +1832,22 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxModelType)
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TotalLineItemAmountFc)
                     .HasColumnName("TotalLineItemAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -1990,29 +1990,29 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -2072,15 +2072,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -2142,15 +2142,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -2543,11 +2543,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_JournalVoucher_VoucherStyleId");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFcinWord)
                     .HasColumnName("Amount_FCInWord")
@@ -2555,17 +2555,17 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.CreditAmountFc)
                     .HasColumnName("CreditAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DebitAmountFc)
                     .HasColumnName("DebitAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
@@ -2707,17 +2707,17 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_JournalVoucherDetails_UpdatedByUserId_idx");
 
-                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.CreditAmountFc)
                     .HasColumnName("CreditAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DebitAmountFc)
                     .HasColumnName("DebitAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")
@@ -3043,9 +3043,9 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("FK_LedgerFinancialYearBalance_User_UpdatedByUserId_idx");
 
-                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.CreditAmount).HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DebitAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
@@ -3151,11 +3151,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("IX_PaymentVoucher_VoucherStyleId");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFcinWord)
                     .HasColumnName("Amount_FCInWord")
@@ -3165,7 +3165,7 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ChequeAmountFc)
                     .HasColumnName("ChequeAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.ChequeDate).HasColumnType("datetime");
 
@@ -3319,11 +3319,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_PaymentVoucherDetails_UpdatedByUserId");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")
@@ -3410,15 +3410,15 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf_idx");
 
-                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountAmountFc)
                     .HasColumnName("DiscountAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPerOrAmountFc)
                     .HasColumnName("DiscountPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
                     .IsRequired()
@@ -3428,11 +3428,11 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.InvoiceDate).HasColumnType("datetime");
 
@@ -3441,11 +3441,11 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFcinWord)
                     .HasColumnName("NetAmount_FCInWord")
@@ -3472,11 +3472,11 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxModelType)
                     .IsRequired()
@@ -3484,11 +3484,11 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TotalLineItemAmountFc)
                     .HasColumnName("TotalLineItemAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -3631,29 +3631,29 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -3713,15 +3713,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .IsRequired()
@@ -3784,15 +3784,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .IsRequired()
@@ -3859,11 +3859,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.VoucherStyleId)
                     .HasName("tf");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFcinWord)
                     .HasColumnName("Amount_FCInWord")
@@ -3873,7 +3873,7 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ChequeAmountFc)
                     .HasColumnName("ChequeAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.ChequeDate).HasColumnType("datetime");
 
@@ -4029,11 +4029,11 @@ namespace ERP.DataAccess.EntityData
                 entity.HasIndex(e => e.UpdatedByUserId)
                     .HasName("IX_ReceiptVoucherDetails_UpdatedByUserId");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.AmountFc)
                     .HasColumnName("Amount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")
@@ -4130,15 +4130,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountAmountFc)
                     .HasColumnName("DiscountAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPerOrAmountFc)
                     .HasColumnName("DiscountPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.DiscountPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -4147,11 +4147,11 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.InvoiceDate).HasColumnType("datetime");
 
@@ -4160,11 +4160,11 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFcinWord)
                     .HasColumnName("NetAmount_FCInWord")
@@ -4184,22 +4184,22 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxModelType)
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TotalLineItemAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TotalLineItemAmountFc)
                     .HasColumnName("TotalLineItemAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -4348,29 +4348,29 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.GrossAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.GrossAmountFc)
                     .HasColumnName("GrossAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.NetAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.NetAmountFc)
                     .HasColumnName("NetAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
-                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
@@ -4430,15 +4430,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -4500,15 +4500,15 @@ namespace ERP.DataAccess.EntityData
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.TaxAmount).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAmountFc)
                     .HasColumnName("TaxAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPerOrAmountFc)
                     .HasColumnName("TaxPerOrAmount_FC")
-                    .HasColumnType("decimal(18,4)");
+                    .HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxPercentageOrAmount)
                     .HasColumnType("varchar(250)")
@@ -4682,7 +4682,7 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.PreparedDateTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Rate).HasColumnType("decimal(18,4)");
+                entity.Property(e => e.Rate).HasColumnType("decimal(18,2)");
 
                 entity.Property(e => e.TaxAddOrDeduct)
                     .HasColumnType("varchar(250)")

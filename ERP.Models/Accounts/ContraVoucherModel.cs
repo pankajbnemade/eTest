@@ -25,7 +25,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = RegexHelper.Decimal6DigitMessage)]
+        [Range(0.000001, Double.MaxValue, ErrorMessage = "Value must be greater than 0.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
@@ -46,31 +47,31 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Cheque/Trans. Amount FC")]
         [Required(ErrorMessage = "Cheque/Trans. Amount FC is required.")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal AmountFc { get; set; }
 
         [Display(Name = "Cheque/Trans. Amount FC In word")]
         public string AmountFcInWord { get; set; }
 
         [Display(Name = "Cheque/Trans. Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Amount { get; set; }
 
         [Display(Name = "Debit Amount FC")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal DebitAmountFc { get; set; }
 
         [Display(Name = "Debit Amount")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal DebitAmount { get; set; }
 
         [Display(Name = "Credit Amount FC")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal CreditAmountFc { get; set; }
 
         [Display(Name = "Credit Amount")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal CreditAmount { get; set; }
 
         [Display(Name = "Status")]

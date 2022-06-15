@@ -3,7 +3,6 @@
     public partial class Advanceadjustment : IAuditable { }
     public partial class Advanceadjustmentdetail : IAuditable { }
     public partial class Advanceadjustmentattachment : IAuditable { }
-
     public partial class Aspnetrole : IAuditable { }
     public partial class Aspnetroleclaim : IAuditable { }
     public partial class Aspnetuser : IAuditable { }

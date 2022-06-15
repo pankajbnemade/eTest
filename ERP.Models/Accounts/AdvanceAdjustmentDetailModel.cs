@@ -13,31 +13,26 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Amount FC")]
         [Required(ErrorMessage = "Amount FC is required.")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
-        //[Required(ErrorMessage = "Amount is required.")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal Amount { get; set; }
 
         [Display(Name = "Narration")]
         public string Narration { get; set; }
 
         [Display(Name = "Sales Invoice")]
-        //[Required(ErrorMessage = "Sales Invoice is required.")]
         public int? SalesInvoiceId { get; set; }
 
         [Display(Name = "Purchase Invoice")]
-        //[Required(ErrorMessage = "Purchase Invoice is required.")]
         public int? PurchaseInvoiceId { get; set; }
 
         [Display(Name = "Credit Note")]
-        //[Required(ErrorMessage = "Credit Note is required.")]
         public int? CreditNoteId { get; set; }
 
         [Display(Name = "Debit Note")]
-        //[Required(ErrorMessage = "Debit Note is required.")]
         public int? DebitNoteId { get; set; }
 
         public string InvoiceType { get; set; }

@@ -49,34 +49,34 @@ namespace ERP.Models.Accounts
         //[DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         //public decimal ExchangeRate { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         //public decimal CreditAmount_FC { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         //public decimal DebitAmount_FC { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal CreditAmount { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DebitAmount { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal ClosingAmount { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal CreditAmount_OP { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DebitAmount_OP { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         //public decimal Amount_FC { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         //public decimal Amount { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         //public decimal ClosingAmount { get; set; }
     }
 }

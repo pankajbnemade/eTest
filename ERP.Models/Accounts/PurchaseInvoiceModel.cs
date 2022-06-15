@@ -69,45 +69,46 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = RegexHelper.Decimal6DigitMessage)]
+        [Range(0.000001, Double.MaxValue, ErrorMessage = "Value must be greater than 0.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
         [Display(Name = "Line Total Amount FC")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TotalLineItemAmountFc { get; set; }
 
         [Display(Name = "Line Total Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TotalLineItemAmount { get; set; }
 
         [Display(Name = "Gross Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal GrossAmountFc { get; set; }
 
         [Display(Name = "Gross Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal GrossAmount { get; set; }
 
         [Display(Name = "Net Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal NetAmountFc { get; set; }
 
         [Display(Name = "Net Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal NetAmount { get; set; }
 
         [Display(Name = "Net Amount FC In Word")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public string NetAmountFcInWord { get; set; }
 
         [Display(Name = "Tax Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxAmountFc { get; set; }
 
         [Display(Name = "Tax Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxAmount { get; set; }
 
         [Display(Name = "Discount Type")]
@@ -115,16 +116,16 @@ namespace ERP.Models.Accounts
         public string DiscountPercentageOrAmount { get; set; }
 
         [Display(Name = "Discount Per / Amount")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DiscountPerOrAmountFc { get; set; }
 
         [Display(Name = "Discount Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DiscountAmountFc { get; set; }
 
         [Display(Name = "Discount Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DiscountAmount { get; set; }
 
         [Display(Name = "Status")]

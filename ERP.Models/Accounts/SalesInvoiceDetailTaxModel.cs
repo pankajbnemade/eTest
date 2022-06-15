@@ -24,8 +24,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Tax Per or Amount FC")]
         [Required(ErrorMessage = "Tax Per or Amount FC is required.")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxPerOrAmountFc { get; set; }
 
         [Display(Name = "Add or Deduct")]
@@ -33,11 +33,11 @@ namespace ERP.Models.Accounts
         public string TaxAddOrDeduct { get; set; }
 
         [Display(Name = "Tax Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxAmountFc { get; set; }
 
         [Display(Name = "Tax Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxAmount { get; set; }
 
         [Display(Name = "Remark")]

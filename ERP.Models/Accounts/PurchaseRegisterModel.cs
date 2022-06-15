@@ -60,35 +60,35 @@ namespace ERP.Models.Accounts
         public decimal TotalLineItemAmountFc { get; set; }
 
         [Display(Name = "Line Total Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TotalLineItemAmount { get; set; }
 
         [Display(Name = "Gross Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal GrossAmountFc { get; set; }
 
         [Display(Name = "Gross Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal GrossAmount { get; set; }
 
         [Display(Name = "Net Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal NetAmountFc { get; set; }
 
         [Display(Name = "Net Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal NetAmount { get; set; }
 
         [Display(Name = "Net Amount FC In Word")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public string NetAmountFcInWord { get; set; }
 
         [Display(Name = "Tax Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxAmountFc { get; set; }
 
         [Display(Name = "Tax Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal TaxAmount { get; set; }
 
         [Display(Name = "Discount Type")]
@@ -96,15 +96,15 @@ namespace ERP.Models.Accounts
         public string DiscountPercentageOrAmount { get; set; }
 
         [Display(Name = "Discount Per / Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DiscountPerOrAmountFc { get; set; }
 
         [Display(Name = "Discount Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DiscountAmountFc { get; set; }
 
         [Display(Name = "Discount Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal DiscountAmount { get; set; }
 
         public string SupplierLedgerName { get; set; }

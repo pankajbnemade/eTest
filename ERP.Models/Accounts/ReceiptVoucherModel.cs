@@ -37,7 +37,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = "Up to 6 Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal6Digit, ErrorMessage = RegexHelper.Decimal6DigitMessage)]
+        [Range(0.000001, Double.MaxValue, ErrorMessage = "Value must be greater than 0.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
@@ -54,8 +55,8 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Cheque/Trans. Amount FC")]
         [Required(ErrorMessage = "Cheque/Trans. Amount FC is required.")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal ChequeAmountFc { get; set; }
 
         [Display(Name = "Narration")]
@@ -63,11 +64,11 @@ namespace ERP.Models.Accounts
         public string Narration { get; set; }
 
         [Display(Name = "Amount FC")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal AmountFc { get; set; }
 
         [Display(Name = "Amount")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
@@ -90,7 +91,7 @@ namespace ERP.Models.Accounts
         public string PreparedByName { get; set; }
 
         [Display(Name = "Closing Balance")]
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal ClosingBalance { get; set; }
 
         public int NoOfLineItems { get; set; }

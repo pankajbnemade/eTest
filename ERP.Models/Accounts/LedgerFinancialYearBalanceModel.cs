@@ -20,11 +20,11 @@ namespace ERP.Models.Accounts
         public int CompanyId { get; set; }
 
         [Display(Name = "Opening Balance Credit")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal CreditAmount { get; set; }
 
         [Display(Name = "Opening Balance Debit")]
-        [RegularExpression(RegexHelper.Decimal4Digit, ErrorMessage = "Decimal only.")]
+        [RegularExpression(RegexHelper.Decimal2Digit, ErrorMessage = RegexHelper.Decimal2DigitMessage)]
         public decimal DebitAmount { get; set; }
 
         //####

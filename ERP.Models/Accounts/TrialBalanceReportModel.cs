@@ -13,19 +13,19 @@ namespace ERP.Models.Accounts
         [Display(Name = "Particular Liability")]
         public string ParticularLedgerName_Liability { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Amount_Liability { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal ClosingAmount_Liability { get; set; }
 
         [Display(Name = "Particular Asset")]
         public string ParticularLedgerName_Asset { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Amount_Asset { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:0.0000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal ClosingAmount_Asset { get; set; }
 
     }
