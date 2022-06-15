@@ -164,7 +164,10 @@ else
                 else {
                     $('#ExchangeRate').val(0);
                 }
-            }, null, true, null, false);
+            }, 
+            function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
         }
         else {
             $('#ExchangeRate').val(0);

@@ -5,10 +5,12 @@
         <div class="modal-header">
             @if (Model.AdvanceAdjustmentId > 0)
             {
-<h5 class="modal-title">Edit Advance Adjustment</h5> }
-else
-{
-<h5 class="modal-title">Add Advance Adjustment</h5>}
+                <h5 class="modal-title">Edit Advance Adjustment</h5>
+            }
+            else
+            {
+                <h5 class="modal-title">Add Advance Adjustment</h5>
+            }
             <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
@@ -41,10 +43,12 @@ else
 
                             @if (Model.NoOfLineItems > 0)
                             {
-                @Html.TextBoxFor(model => model.AdvanceAdjustmentDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @readonly = "readonly", autocomplete = "off", @placeholder = "DD/MMM/YYYY" }) }
-            else
-            {
-@Html.TextBoxFor(model => model.AdvanceAdjustmentDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })}
+                                @Html.TextBoxFor(model => model.AdvanceAdjustmentDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", @readonly = "readonly", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.AdvanceAdjustmentDate, "{0:dd/MMM/yyyy}", new { @class = "form-control form-control-sm", autocomplete = "off", @placeholder = "DD/MMM/YYYY" })
+                            }
 
                             @Html.ValidationMessageFor(model => model.AdvanceAdjustmentDate, "", new { @class = "text-danger" })
                         </div>
@@ -57,12 +61,14 @@ else
                             @Html.LabelFor(model => model.ParticularLedgerId, new { @class = "required" })
                             @if (Model.NoOfLineItems > 0)
                             {
-                @Html.DropDownListFor(model => model.ParticularLedgerId,
-                                             new List<SelectListItem> { new SelectListItem { Text = Model.ParticularLedgerName, Value = Model.ParticularLedgerId.ToString() } },
-                                             new { @class = "form-control form-control-sm", @readonly = "readonly" }) }
-            else
-            {
-@Html.DropDownListFor(model => model.ParticularLedgerId, new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })}
+                                @Html.DropDownListFor(model => model.ParticularLedgerId,
+                            new List<SelectListItem> { new SelectListItem { Text = Model.ParticularLedgerName, Value = Model.ParticularLedgerId.ToString() } },
+                            new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.ParticularLedgerId, new SelectList(ViewBag.ParticularLedgerList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                            }
                             @Html.ValidationMessageFor(model => model.ParticularLedgerId, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -146,7 +152,10 @@ else
                                 $("span[data-valmsg-for='VoucherDetId']").html('<span for="VoucherDetId" class="">No data found.</span>');
                             }
                         }
-                    }, null, true, null, false);
+                    },
+                    function (XMLHttpRequest, textStatus, errorThrown) {
+                        errorCallback(XMLHttpRequest, textStatus, errorThrown);
+                    }, true, null, false);
             }
             else {
                 $('#VoucherDetId').empty();

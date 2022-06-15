@@ -75,9 +75,11 @@
             $('#modal-advanceadjustment').html(data).modal('show');
             return false;
             },
+           
             function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("some error");
-            }, true, null, false);
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }
+            , true, null, false);
     });
 
     // edit attachment.
@@ -89,9 +91,10 @@
             $('#modal-advanceadjustment').html(data).modal('show');
             return false;
             },
+            
             function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("some error");
-            }, true, null, false);
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 
 

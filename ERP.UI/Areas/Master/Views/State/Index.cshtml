@@ -90,7 +90,10 @@ $('#add-new-state').click(function () {
         $('#modal-state-master').empty();
         $('#modal-state-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit state
@@ -101,7 +104,10 @@ $('#add-new-state').click(function () {
             $('#modal-state-master').empty();
             $('#modal-state-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

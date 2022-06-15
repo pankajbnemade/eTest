@@ -249,7 +249,10 @@
                             $("span[data-valmsg-for='AccountLedgerId']").html('<span for="AccountLedgerId" class="">No data found.</span>');
                         }
                     }
-                }, null, true, null, false);
+                }, 
+                function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
         }
         else {
             $('#AccountLedgerId').empty();
@@ -271,7 +274,10 @@
                 else {
                     $('#ClosingBalance').val(0);
                 }
-            }, null, true, null, false);
+            }, 
+            function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 
         }
         else {
@@ -293,7 +299,10 @@
                 else {
                     $('#ExchangeRate').val(0);
                 }
-            }, null, true, null, false);
+            }, 
+            function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
         }
         else {
             $('#ExchangeRate').val(0);

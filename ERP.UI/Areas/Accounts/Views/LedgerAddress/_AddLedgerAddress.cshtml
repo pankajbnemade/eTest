@@ -172,7 +172,10 @@ else
                             $("span[data-valmsg-for='StateId']").html('<span for="StateId" class="">No data found.</span>');
                         }
                     }
-                }, null, true, null, false);
+                }, 
+                function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
         }
         else {
             $('#StateId').empty();
@@ -209,7 +212,10 @@ else
                             $("span[data-valmsg-for='CityId']").html('<span for="CityId" class="">No data found.</span>');
                         }
                     }
-                }, null, true, null, false);
+                }, 
+                function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
         }
         else {
             $('#CityId').empty();

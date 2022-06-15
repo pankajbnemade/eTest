@@ -137,7 +137,11 @@
                     else {
                         //console.log(response.Result.Data);
                     }
-                }, null, true, null, false);
+                }, 
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    errorCallback(XMLHttpRequest, textStatus, errorThrown);
+                }, 
+                true, null, false);
 
         });
 

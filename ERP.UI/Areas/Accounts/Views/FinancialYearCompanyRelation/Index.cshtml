@@ -89,7 +89,10 @@ $('#add-new-financialYearCompanyRelation').click(function () {
         $('#modal-financialYearCompanyRelation-master').empty();
         $('#modal-financialYearCompanyRelation-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 @*// edit financialYearCompanyRelation
@@ -100,7 +103,10 @@ $('#add-new-financialYearCompanyRelation').click(function () {
             $('#modal-financialYearCompanyRelation-master').empty();
             $('#modal-financialYearCompanyRelation-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }*@
 </script>
 

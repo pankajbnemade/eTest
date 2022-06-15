@@ -82,7 +82,11 @@
             $('#modal-invoice').empty();
             $('#modal-invoice').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, 
+        true, null, false);
     });
 
     // edit invoice detail.
@@ -93,7 +97,11 @@
             $('#modal-invoice').empty();
             $('#modal-invoice').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, 
+        true, null, false);
     }
 
     // invoice tax deatil.
@@ -104,7 +112,11 @@
             $('#modal-invoice').empty();
             $('#modal-invoice').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, 
+        true, null, false);
     }
 </script>
 

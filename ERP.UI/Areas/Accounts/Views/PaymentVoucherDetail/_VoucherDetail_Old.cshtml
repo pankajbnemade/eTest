@@ -71,7 +71,11 @@
                         $('#modal-voucher').empty();
                         $('#modal-voucher').html(data).modal('show');
                         return false;
-                    }, null, true, null, false);
+                    }, 
+                    function (XMLHttpRequest, textStatus, errorThrown) {
+                        errorCallback(XMLHttpRequest, textStatus, errorThrown);
+                    }, 
+                    true, null, false);
             }
 
         });
@@ -140,7 +144,11 @@
                     else {
                         //console.log(model);
                     }
-                }, null, true, null, false);
+                }, 
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    errorCallback(XMLHttpRequest, textStatus, errorThrown);
+                }, 
+                true, null, false);
 
             });
 

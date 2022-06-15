@@ -43,65 +43,74 @@
 </section>
 
 <script type="text/javascript">
-$(document).ready(function () {
-    $("#countryGrid").DataTable({
+    $(document).ready(function () {
+        $("#countryGrid").DataTable({
 
-        //dom: 'lftip',
-        "pageLength": 25,
-        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
-        "bPaginate": true,
-        //"bInfo": true,
-        //"bRetrieve": true,
-        //"bFilter": true,
-        //"iDisplayLength": 5,
-        //"bSort": true,
-        //"aaSorting": [],
-        //"order": [],
-        //scrollY: "50vh",
-        //scrollCollapse: true,
+            //dom: 'lftip',
+            "pageLength": 25,
+            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "bPaginate": true,
+            //"bInfo": true,
+            //"bRetrieve": true,
+            //"bFilter": true,
+            //"iDisplayLength": 5,
+            //"bSort": true,
+            //"aaSorting": [],
+            //"order": [],
+            //scrollY: "50vh",
+            //scrollCollapse: true,
 
-        "ajax": {
-            "url": "@Url.Action("GetCountryList", "Country")",
-            "type": "POST",
-            "datatype": "json",
-        },
-        "columns": [
-        /*{ "data": "CountryId", "name": "Country Id" },*/
-
-            {
-                "render": function (data, type, full, meta) {
-                    return '<div class="action_button">' +
-                        '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCountry(' + full.CountryId + ')"><i class="far fa-edit"></i></button>' +
-                        '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCountry(this, ' + full.CountryId + ')"><i class="fa fa-trash-alt"></i></button>' +
-                        '</div>';
-                }, "orderable": false
+            "ajax": {
+                "url": "@Url.Action("GetCountryList", "Country")",
+                "type": "POST",
+                "datatype": "json",
             },
-            { "data": "CountryName", "name": "Country Name" }
-        ],
+            "columns": [
+            /*{ "data": "CountryId", "name": "Country Id" },*/
+
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<div class="action_button">' +
+                            '<button type="button" class="border-0 rounded-0 text-success" onclick="javascript: fnEditCountry(' + full.CountryId + ')"><i class="far fa-edit"></i></button>' +
+                            '<button type="button" class="border-0 rounded-0 text-danger" data-toggle="modal" onclick="javascript: fnDeleteCountry(this, ' + full.CountryId + ')"><i class="fa fa-trash-alt"></i></button>' +
+                            '</div>';
+                    }, "orderable": false
+                },
+                { "data": "CountryName", "name": "Country Name" }
+            ],
+        });
     });
-});
 
-// add new record.
-$('#add-new-country').click(function () {
-    AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddCountry", "Country")', 'html', '',
-    function (data) {
-        $('#modal-country-master').empty();
-        $('#modal-country-master').html(data).modal('show');
-        return false;
-    }, null, true, null, false);
-});
-
-// edit country
-    function fnEditCountry(countryId) {
-        var model = { countryId: countryId };
-        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCountry", "Country")', 'html', model,
+    // add new record.
+    $('#add-new-country').click(function () {
+        AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("AddCountry", "Country")', 'html', '',
         function (data) {
             $('#modal-country-master').empty();
             $('#modal-country-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
-    }
+        },
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("some error");
+            return false;
+        }, true, null, false);
+    });
+
+    // edit country
+        function fnEditCountry(countryId) {
+            var model = { countryId: countryId };
+            AjaxCommunication.CreateRequest(this.window, 'Get', '@Url.Action("EditCountry", "Country")', 'html', model,
+            function (data) {
+                $('#modal-country-master').empty();
+                $('#modal-country-master').html(data).modal('show');
+                return false;
+            },
+           function (XMLHttpRequest, textStatus, errorThrown) {
+                errorCallback(XMLHttpRequest, textStatus, errorThrown);
+            }, true, null, false);
+        }
 </script>
 
-@{ await Html.RenderPartialAsync("_ConfirmDeleteCountry"); }
+@{
+    await Html.RenderPartialAsync("_ConfirmDeleteCountry");
+}
 <div id="modal-country-master" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true"></div>

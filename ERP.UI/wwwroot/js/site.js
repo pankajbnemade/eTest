@@ -29,3 +29,8 @@ function addCommas(yourNumber) {
     return n.join(".");
 }
 
+
+function errorCallback(xmlHttpRequest, textStatus, errorThrown) {
+    fnDangerNotify("ERROR");
+}
+

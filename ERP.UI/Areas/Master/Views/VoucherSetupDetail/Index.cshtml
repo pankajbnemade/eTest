@@ -89,7 +89,10 @@ $('#add-new-voucherSetupDetail').click(function () {
         $('#modal-voucherSetupDetail-master').empty();
         $('#modal-voucherSetupDetail-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit voucherSetupDetail
@@ -100,7 +103,10 @@ $('#add-new-voucherSetupDetail').click(function () {
             $('#modal-voucherSetupDetail-master').empty();
             $('#modal-voucherSetupDetail-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

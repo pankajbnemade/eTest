@@ -84,7 +84,10 @@
             $('#modal-debitnote-detail').empty();
             $('#modal-debitnote-detail').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     });
 
      // edit debitnote tax detail.
@@ -95,7 +98,11 @@
             $('#modal-debitnote-detail').empty();
             $('#modal-debitnote-detail').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, 
+        true, null, false);
     }
 </script>
 @{ await Html.RenderPartialAsync("_ConfirmDeleteDebitNoteTaxDetail"); }

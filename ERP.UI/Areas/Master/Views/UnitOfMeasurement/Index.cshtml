@@ -88,7 +88,10 @@ $('#add-new-unitOfMeasurement').click(function () {
         $('#modal-unitOfMeasurement-master').empty();
         $('#modal-unitOfMeasurement-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit unitOfMeasurement
@@ -99,7 +102,10 @@ $('#add-new-unitOfMeasurement').click(function () {
             $('#modal-unitOfMeasurement-master').empty();
             $('#modal-unitOfMeasurement-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

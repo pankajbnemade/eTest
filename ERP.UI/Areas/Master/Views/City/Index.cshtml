@@ -91,7 +91,10 @@ $('#add-new-city').click(function () {
         $('#modal-city-master').empty();
         $('#modal-city-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit city
@@ -102,7 +105,10 @@ $('#add-new-city').click(function () {
             $('#modal-city-master').empty();
             $('#modal-city-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

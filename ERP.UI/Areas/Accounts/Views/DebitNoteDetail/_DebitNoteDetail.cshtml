@@ -81,7 +81,10 @@
             $('#modal-debitnote').empty();
             $('#modal-debitnote').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     });
 
     // edit debitnote detail.
@@ -93,7 +96,10 @@
             $('#modal-debitnote').empty();
             $('#modal-debitnote').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 
     // debitnote tax deatil.
@@ -104,7 +110,10 @@
             $('#modal-debitnote').empty();
             $('#modal-debitnote').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

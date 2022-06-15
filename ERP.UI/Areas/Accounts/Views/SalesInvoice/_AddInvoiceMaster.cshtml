@@ -238,7 +238,10 @@
                                 $("span[data-valmsg-for='BillToAddressId']").html('<span for="BillToAddressId" class="">No data found.</span>');
                             }
                         }
-                    }, null, true, null, false);
+                    }, 
+                    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
             }
             else {
                 $('#BillToAddressId').empty();
@@ -263,7 +266,10 @@
                     else {
                         $('#ExchangeRate').val(0);
                     }
-                }, null, true, null, false);
+                }, 
+                function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
             }
             else {
                 $('#ExchangeRate').val(0);

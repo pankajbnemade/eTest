@@ -76,7 +76,11 @@
             $('#modal-invoice').empty();
             $('#modal-invoice').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, 
+        true, null, false);
     });
 
     // edit invoice tax master.
@@ -87,7 +91,11 @@
             $('#modal-invoice').empty();
             $('#modal-invoice').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, 
+        true, null, false);
     }
 </script>
 @{ await Html.RenderPartialAsync("_ConfirmDeleteInvoiceTaxMaster"); }

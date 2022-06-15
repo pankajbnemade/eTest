@@ -50,9 +50,10 @@
             else {
                 fnDangerNotify('Error occured while processing request.');
             }
-            }, function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("some error");
-            }, true, null, false);
+            }, 
+            function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     });
 
 </script>

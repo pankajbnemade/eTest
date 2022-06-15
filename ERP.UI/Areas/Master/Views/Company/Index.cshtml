@@ -94,7 +94,10 @@ $('#add-new-company').click(function () {
         $('#modal-company-master').empty();
         $('#modal-company-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit company
@@ -105,7 +108,10 @@ $('#add-new-company').click(function () {
             $('#modal-company-master').empty();
             $('#modal-company-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

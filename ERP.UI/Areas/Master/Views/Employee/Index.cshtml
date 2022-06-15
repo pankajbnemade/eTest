@@ -93,7 +93,10 @@ $('#add-new-employee').click(function () {
         $('#modal-employee-master').empty();
         $('#modal-employee-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit employee
@@ -104,7 +107,10 @@ $('#add-new-employee').click(function () {
             $('#modal-employee-master').empty();
             $('#modal-employee-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

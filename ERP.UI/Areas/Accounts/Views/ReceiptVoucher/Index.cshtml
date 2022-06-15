@@ -216,7 +216,10 @@
             $('#modal-voucher').empty();
             $('#modal-voucher').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 @{ await Html.RenderPartialAsync("_ConfirmDeleteVoucherMaster"); }

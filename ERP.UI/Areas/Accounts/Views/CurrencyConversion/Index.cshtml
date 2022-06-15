@@ -94,7 +94,10 @@ $('#add-new-currencyconversion').click(function () {
         $('#modal-currencyconversion-master').empty();
         $('#modal-currencyconversion-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit currencyconversion
@@ -106,7 +109,10 @@ $('#add-new-currencyconversion').click(function () {
             $('#modal-currencyconversion-master').empty();
             $('#modal-currencyconversion-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

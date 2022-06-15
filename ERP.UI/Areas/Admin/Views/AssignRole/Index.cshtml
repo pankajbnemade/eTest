@@ -90,7 +90,10 @@ $('#add-new-role').click(function () {
         $('#modal-role-master').empty();
         $('#modal-role-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 </script>

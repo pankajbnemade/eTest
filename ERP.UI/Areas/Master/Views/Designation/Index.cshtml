@@ -88,7 +88,10 @@ $('#add-new-designation').click(function () {
         $('#modal-designation-master').empty();
         $('#modal-designation-master').html(data).modal('show');
         return false;
-    }, null, true, null, false);
+    }, 
+    function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
 });
 
 // edit designation
@@ -99,7 +102,10 @@ $('#add-new-designation').click(function () {
             $('#modal-designation-master').empty();
             $('#modal-designation-master').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 

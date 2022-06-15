@@ -72,7 +72,10 @@
             $('#modal-creditnote').empty();
             $('#modal-creditnote').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     });
 
     // edit creditnote tax master.
@@ -83,7 +86,10 @@
             $('#modal-creditnote').empty();
             $('#modal-creditnote').html(data).modal('show');
             return false;
-        }, null, true, null, false);
+        }, 
+        function (XMLHttpRequest, textStatus, errorThrown) {
+            errorCallback(XMLHttpRequest, textStatus, errorThrown);
+        }, true, null, false);
     }
 </script>
 @{ await Html.RenderPartialAsync("_ConfirmDeleteCreditNoteTaxMaster"); }
