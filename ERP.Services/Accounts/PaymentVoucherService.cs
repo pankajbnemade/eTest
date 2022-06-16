@@ -134,6 +134,22 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
+        public async Task<bool> UpdatePDCProcessed(int paymentVoucherId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Paymentvoucher paymentVoucher = await GetByIdAsync(w => w.PaymentVoucherId == paymentVoucherId);
+
+            if (null != paymentVoucher)
+            {
+                paymentVoucher.IsPdcprocessed = 1;
+                isUpdated = await Update(paymentVoucher);
+            }
+
+            return isUpdated; // returns.
+        }
+
         public async Task<bool> DeletePaymentVoucher(int PaymentVoucherId)
         {
             bool isDeleted = false;
@@ -171,6 +187,7 @@ namespace ERP.Services.Accounts
                 if (paymentVoucher.StatusId == (int)DocumentStatus.Approved || paymentVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || paymentVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {
                     paymentVoucher.StatusId = (int)DocumentStatus.Inprocess;
+                    paymentVoucher.IsPdcprocessed = 0;
                 }
 
                 isUpdated = await Update(paymentVoucher);
@@ -343,6 +360,7 @@ namespace ERP.Services.Accounts
                 paymentVoucherModel.AmountFc = paymentVoucher.AmountFc;
                 paymentVoucherModel.Amount = paymentVoucher.Amount;
                 paymentVoucherModel.AmountFcInWord = paymentVoucher.AmountFcinWord;
+                paymentVoucherModel.IsPDCProcessed = Convert.ToBoolean(paymentVoucher.IsPdcprocessed);
 
                 paymentVoucherModel.StatusId = paymentVoucher.StatusId;
                 paymentVoucherModel.CompanyId = Convert.ToInt32(paymentVoucher.CompanyId);
@@ -357,7 +375,8 @@ namespace ERP.Services.Accounts
                 paymentVoucherModel.PreparedByName = null != paymentVoucher.PreparedByUser ? paymentVoucher.PreparedByUser.UserName : null;
 
                 paymentVoucherModel.TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(paymentVoucher.TypeCorB);
-                paymentVoucherModel.PaymentTypeName = EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)paymentVoucher.PaymentTypeId).ToString());
+
+                paymentVoucherModel.PaymentTypeName = paymentVoucher.PaymentTypeId != null ? EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)paymentVoucher.PaymentTypeId).ToString()) : "";
 
                 return paymentVoucherModel;
             });

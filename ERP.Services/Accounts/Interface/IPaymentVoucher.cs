@@ -22,6 +22,8 @@ namespace ERP.Services.Accounts.Interface
 
          Task<bool> UpdateStatusPaymentVoucher(int paymentVoucherId, int action);
 
+         Task<bool> UpdatePDCProcessed(int paymentVoucherId);
+
         Task<PaymentVoucherModel> GetPaymentVoucherById(int paymentVoucherId);
         
         Task<DataTableResultModel<PaymentVoucherModel>> GetPaymentVoucherList(DataTableAjaxPostModel dataTableAjaxPostModel, SearchFilterPaymentVoucherModel searchFilterModel);

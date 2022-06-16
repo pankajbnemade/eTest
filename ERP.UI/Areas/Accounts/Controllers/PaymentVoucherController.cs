@@ -81,11 +81,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.PaymentVoucherId = paymentVoucherId;
 
-            //PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
-
-            //ViewBag.IsApprovalRequestVisible = paymentVoucherModel.StatusId == 1 || paymentVoucherModel.StatusId == 3 ? true : false;
-            //ViewBag.IsApproveVisible = paymentVoucherModel.StatusId == 2 ? true : false;
-
             return await Task.Run(() =>
             {
                 return View();
@@ -104,6 +99,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 IsApprovalRequestVisible = paymentVoucherModel.StatusId == (int)DocumentStatus.Inprocess || paymentVoucherModel.StatusId == (int)DocumentStatus.ApprovalRejected ? true : false,
                 IsApproveVisible = paymentVoucherModel.StatusId == (int)DocumentStatus.ApprovalRequested ? true : false,
                 IsCancelVisible = paymentVoucherModel.StatusId != (int)DocumentStatus.Cancelled ? true : false,
+                IsPDCProcessedVisible = paymentVoucherModel.StatusId == (int)DocumentStatus.Approved
+                                            && paymentVoucherModel.TypeCorB == TypeCorB.B.ToString()
+                                            && paymentVoucherModel.PaymentTypeId == (int)PaymentType.PDC
+                                            && paymentVoucherModel.IsPDCProcessed == false
+                                        ? true : false,
             };
 
             //ViewBag.IsApprovalRequestVisible = paymentVoucherModel.StatusId == 1 || paymentVoucherModel.StatusId == 3 ? true : false;
@@ -236,6 +236,32 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 else
                 {
                     if (true == await _paymentVoucher.UpdateStatusPaymentVoucher(paymentVoucherId, statusId))
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = paymentVoucherId;
+                    }
+                }
+            }
+
+            return Json(data);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdatePDCProcessed(int paymentVoucherId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            if (paymentVoucherId > 0)
+            {
+                PaymentVoucherModel paymentVoucherModel = await _paymentVoucher.GetPaymentVoucherById(paymentVoucherId);
+
+                if (paymentVoucherModel.StatusId != (int)DocumentStatus.Approved)
+                {
+                    data.Result.Data = "Voucher Status should be approved to mark PDC processed";
+                }
+                else
+                {
+                    if (true == await _paymentVoucher.UpdatePDCProcessed(paymentVoucherId))
                     {
                         data.Result.Status = true;
                         data.Result.Data = paymentVoucherId;

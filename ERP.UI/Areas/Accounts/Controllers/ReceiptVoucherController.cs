@@ -81,11 +81,6 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             ViewBag.ReceiptVoucherId = receiptVoucherId;
 
-            //ReceiptVoucherModel receiptVoucherModel = await _receiptVoucher.GetReceiptVoucherById(receiptVoucherId);
-
-            //ViewBag.IsApprovalRequestVisible = receiptVoucherModel.StatusId == 1 || receiptVoucherModel.StatusId == 3 ? true : false;
-            //ViewBag.IsApproveVisible = receiptVoucherModel.StatusId == 2 ? true : false;
-
             return await Task.Run(() =>
             {
                 return View();
@@ -104,10 +99,12 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 IsApprovalRequestVisible = receiptVoucherModel.StatusId == (int)DocumentStatus.Inprocess || receiptVoucherModel.StatusId == (int)DocumentStatus.ApprovalRejected ? true : false,
                 IsApproveVisible = receiptVoucherModel.StatusId == (int)DocumentStatus.ApprovalRequested ? true : false,
                 IsCancelVisible = receiptVoucherModel.StatusId != (int)DocumentStatus.Cancelled ? true : false,
+                IsPDCProcessedVisible = receiptVoucherModel.StatusId == (int)DocumentStatus.Approved
+                                            && receiptVoucherModel.TypeCorB == TypeCorB.B.ToString()
+                                            && receiptVoucherModel.PaymentTypeId == (int)PaymentType.PDC
+                                            && receiptVoucherModel.IsPDCProcessed == false
+                                        ? true : false,
             };
-
-            //ViewBag.IsApprovalRequestVisible = receiptVoucherModel.StatusId == 1 || receiptVoucherModel.StatusId == 3 ? true : false;
-            //ViewBag.IsApproveVisible = receiptVoucherModel.StatusId == 2 ? true : false;
 
             return await Task.Run(() =>
             {
@@ -236,6 +233,32 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 else
                 {
                     if (true == await _receiptVoucher.UpdateStatusReceiptVoucher(receiptVoucherId, statusId))
+                    {
+                        data.Result.Status = true;
+                        data.Result.Data = receiptVoucherId;
+                    }
+                }
+            }
+
+            return Json(data);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdatePDCProcessed(int receiptVoucherId)
+        {
+            JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            if (receiptVoucherId > 0)
+            {
+                ReceiptVoucherModel receiptVoucherModel = await _receiptVoucher.GetReceiptVoucherById(receiptVoucherId);
+
+                if (receiptVoucherModel.StatusId != (int)DocumentStatus.Approved)
+                {
+                    data.Result.Data = "Voucher Status should be approved to mark PDC processed";
+                }
+                else
+                {
+                    if (true == await _receiptVoucher.UpdatePDCProcessed(receiptVoucherId))
                     {
                         data.Result.Status = true;
                         data.Result.Data = receiptVoucherId;

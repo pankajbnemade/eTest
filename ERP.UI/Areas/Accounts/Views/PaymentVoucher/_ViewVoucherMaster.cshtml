@@ -1,4 +1,5 @@
-﻿@model PaymentVoucherModel
+﻿@using ERP.Models.Accounts.Enums; 
+@model PaymentVoucherModel
 
 <div class="row">
     <div class="col-sm-12">
@@ -15,26 +16,22 @@
                     @Html.DisplayFor(model => model.VoucherDate)
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="form-group-sm">
-                    @Html.LabelFor(model => model.TypeCorB, new { @class = "font-weight-bold" }) :
-                    @Html.DisplayFor(model => model.TypeCorBName)
-                </div>
-            </div>
-        </div>
-        <div class="row">
+            
             <div class="col-sm-4">
                 <div class="form-group-sm">
                     @Html.LabelFor(model => model.StatusId, new { @class = "font-weight-bold" }) :
                     @Html.DisplayFor(model => model.StatusName)
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
                 <div class="form-group-sm">
-                    @Html.LabelFor(model => model.PaymentTypeId, new { @class = "font-weight-bold" }) :
-                    @Html.DisplayFor(model => model.PaymentTypeName)
+                    @Html.LabelFor(model => model.TypeCorB, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.TypeCorBName)
                 </div>
             </div>
+            
             <div class="col-sm-4">
                 <div class="form-group-sm">
                     @Html.LabelFor(model => model.AccountLedgerId, new { @class = "font-weight-bold" }) :
@@ -57,10 +54,20 @@
             </div>
             <div class="col-sm-4">
                 <div class="form-group-sm">
-                    @Html.LabelFor(model => model.ClosingBalance, new { @class = "font-weight-bold" }) :
-                    @Html.DisplayFor(model => model.ClosingBalance)
+                    @Html.LabelFor(model => model.PaymentTypeId, new { @class = "font-weight-bold" }) :
+                    @Html.DisplayFor(model => model.PaymentTypeName)
+
+                    @if (Model.PaymentTypeId == (int)PaymentType.PDC && Model.IsPDCProcessed == true)
+                    {
+                        <label class="font-weight-bold"> - Processed</label>}
                 </div>
             </div>
+            @*<div class="col-sm-4">
+            <div class="form-group-sm">
+                @Html.LabelFor(model => model.ClosingBalance, new { @class = "font-weight-bold" }) :
+                @Html.DisplayFor(model => model.ClosingBalance)
+            </div>
+        </div>*@
         </div>
         <div class="row">
             <div class="col-sm-4">

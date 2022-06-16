@@ -8,6 +8,14 @@ namespace ERP.Models.Helpers
 {
     public static class EnumHelper
     {
+        //////////////////
+        ///
+        // To get enum value (int)Enum.Name
+        // To get enum name Enum.Name.tostring()
+
+        //////////////////
+
+
         /// <summary>
         /// Method for retrieve the description on the enum.
         /// e.g. [Description("Ready For Submission")]

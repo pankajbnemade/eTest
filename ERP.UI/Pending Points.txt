@@ -1,4 +1,6 @@
 assigning default value while loading (like exchange rate/unit/account/removing 0 from textbox)
+closing balance show in payment voucher
+JV instead of advance >> Other
 
 
 Print

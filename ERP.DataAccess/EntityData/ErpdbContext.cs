@@ -3176,6 +3176,8 @@ namespace ERP.DataAccess.EntityData
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
 
+                entity.Property(e => e.IsPdcprocessed).HasColumnName("IsPDCProcessed");
+
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")
                     .HasCharSet("utf8mb4")
@@ -3883,6 +3885,8 @@ namespace ERP.DataAccess.EntityData
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.ExchangeRate).HasColumnType("decimal(18,6)");
+
+                entity.Property(e => e.IsPdcprocessed).HasColumnName("IsPDCProcessed");
 
                 entity.Property(e => e.Narration)
                     .HasColumnType("varchar(2000)")

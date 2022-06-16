@@ -5,11 +5,20 @@
     <button type="button" class="btn btn-primary" id="btn-edit-master" title="Edit" onclick="javascript: fnEditVoucherMaster('@Model.PaymentVoucherId');">
         <i class="far fa-edit"></i>  Edit
     </button>
+
+    @if (Model.IsPDCProcessedVisible == true)
+    {
+    <button type="button" class="btn btn-info" id="btn-pdcprocessed" title="PDC Processed" onclick="javascript: fnPDCProcessed('@Model.PaymentVoucherId');">
+        <i class="far fa-calendar-check"></i> PDC Processed
+    </button>
+    }
+
     @if (Model.IsApprovalRequestVisible == true)
     {
-<button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusVoucherMaster('@Model.PaymentVoucherId','@DocumentStatus.ApprovalRequested');">
-    <i class="fas fa-download"></i> Request
-</button>}
+    <button type="button" class="btn btn-info" id="btn-approval-request-master" title="Approval Request" onclick="javascript: fnUpdateStatusVoucherMaster('@Model.PaymentVoucherId','@DocumentStatus.ApprovalRequested');">
+        <i class="fas fa-download"></i> Request
+    </button>
+    }
 
     @if (Model.IsApproveVisible == true)
     {
@@ -73,10 +82,36 @@
                 fnDangerNotify(data.Result.Data);
                 return false;
             }
-            }, 
+            },
             function (XMLHttpRequest, textStatus, errorThrown) {
                 errorCallback(XMLHttpRequest, textStatus, errorThrown);
-            }, 
+            },
+            true, null, false);
+        }
+    }
+
+    function fnPDCProcessed(paymentVoucherId) {
+        if (confirm("Are you sure?")) {
+            var model = {
+                paymentVoucherId: paymentVoucherId
+            };
+
+            AjaxCommunication.CreateRequest(this.window, 'Post', '@Url.Action("UpdatePDCProcessed", "PaymentVoucher")', 'html', model,
+                function (data) {
+                    if (data.Result.Status) {
+                        fnSuccessNotify('PDC Status updated sucessfully.');
+                        var tabUrl = '@Url.Action("ManageVoucher", "PaymentVoucher")?paymentVoucherId=' + data.Result.Data;
+                        window.location.href = tabUrl;
+                        return false;
+                    }
+                    else {
+                        fnDangerNotify(data.Result.Data);
+                        return false;
+                    }
+                },
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    errorCallback(XMLHttpRequest, textStatus, errorThrown);
+                },
             true, null, false);
         }
     }

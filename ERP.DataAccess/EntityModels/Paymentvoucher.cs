@@ -18,7 +18,7 @@ namespace ERP.DataAccess.EntityModels
         public DateTime? VoucherDate { get; set; }
         public int AccountLedgerId { get; set; }
         public string TypeCorB { get; set; }
-        public int PaymentTypeId { get; set; }
+        public int? PaymentTypeId { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
         public string ChequeNo { get; set; }
@@ -28,6 +28,7 @@ namespace ERP.DataAccess.EntityModels
         public decimal AmountFc { get; set; }
         public decimal Amount { get; set; }
         public string AmountFcinWord { get; set; }
+        public sbyte IsPdcprocessed { get; set; }
         public int StatusId { get; set; }
         public int CompanyId { get; set; }
         public int FinancialYearId { get; set; }

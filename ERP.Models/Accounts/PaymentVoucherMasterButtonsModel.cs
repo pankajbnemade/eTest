@@ -10,6 +10,7 @@ namespace ERP.Models.Accounts
         public int PaymentVoucherId { get; set; }
         public bool IsApprovalRequestVisible { get; set; }
         public bool IsApproveVisible { get; set; }
+        public bool IsPDCProcessedVisible { get; set; }
         public bool IsCancelVisible { get; set; }
     }
 }

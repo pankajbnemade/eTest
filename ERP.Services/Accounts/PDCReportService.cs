@@ -25,7 +25,7 @@ namespace ERP.Services.Accounts
         {
             if (searchFilterModel.FromDate < fromDate_FY) { searchFilterModel.FromDate = fromDate_FY; }
 
-            if (searchFilterModel.ToDate > toDate_FY) { searchFilterModel.ToDate = toDate_FY; }
+            //if (searchFilterModel.ToDate > toDate_FY) { searchFilterModel.ToDate = toDate_FY; }
 
             int ledgerId;
 
@@ -89,99 +89,15 @@ namespace ERP.Services.Accounts
             {
                 IList<PDCReportModel> pdcReportModelList = null;
 
-                //if (pdcType=="P")
-                //{
-
-                //    pdcReportModelList = dbContext
-                //                .Paymentvoucherdetails
-                //                .Include(i => i.ParticularLedger)
-                //                .Include(i => i.PaymentVoucher).ThenInclude(i => i.AccountLedger)
-                //                .Include(i => i.PaymentVoucher).ThenInclude(i => i.Currency)
-                //                .Where(w => w.PaymentVoucher.StatusId == (int)DocumentStatus.Approved
-                //                    && w.PaymentVoucher.PaymentTypeId == (int)PaymentType.PDC
-                //                    &&(w.ParticularLedgerId == ledgerId || ledgerId ==0)
-                //                    && w.PaymentVoucher.FinancialYearId == financialYearId
-                //                    && w.PaymentVoucher.CompanyId == companyId
-                //                    && w.PaymentVoucher.ChequeDate >= fromDate
-                //                    && w.PaymentVoucher.ChequeDate <= toDate
-                //                    )
-                //                .ToList()
-                //                .Select(row => new PDCReportModel
-                //                {
-                //                    SequenceNo = 2,
-                //                    //SrNo = index + 1,
-                //                    //DocumentDetId = row.PaymentVoucherDetId,
-                //                    DocumentId = row.PaymentVoucherId,
-                //                    DocumentNo = row.PaymentVoucher.VoucherNo,
-                //                    DocumentDate = row.PaymentVoucher.VoucherDate,
-                //                    ChequeNo = row.PaymentVoucher.ChequeNo,
-                //                    ChequeDate = row.PaymentVoucher.ChequeDate,
-                //                    BankName = (null != row.PaymentVoucher ? (null != row.PaymentVoucher.AccountLedger ? row.PaymentVoucher.AccountLedger.LedgerName : "") : ""),
-                //                    CurrencyId = row.PaymentVoucher.CurrencyId,
-                //                    CurrencyCode = (null != row.PaymentVoucher ? (null != row.PaymentVoucher.Currency ? row.PaymentVoucher.Currency.CurrencyCode : "") : ""),
-                //                    ExchangeRate = row.PaymentVoucher.ExchangeRate,
-                //                    ParticularLedgerName = (null != row.ParticularLedger ? row.ParticularLedger.LedgerName : ""),
-                //                    Narration = row.PaymentVoucher.Narration,
-                //                    Amount_FC = row.PaymentVoucher.AmountFc,
-                //                    Amount = row.PaymentVoucher.Amount
-                //                })
-                //                //.ToList()
-                //                //.GroupBy(row => row)
-                //                //.Select(row => row.FirstOrDefault())
-                //                .ToList()
-                //                ;
-                //}
-                //else
-                //{
-                //    pdcReportModelList = dbContext
-                //               .Receiptvoucherdetails
-                //               .Include(i => i.ReceiptVoucher)
-                //               .Include(i => i.ReceiptVoucher).ThenInclude(i => i.AccountLedger)
-                //               .Include(i => i.ReceiptVoucher).ThenInclude(i => i.Currency)
-                //               .Where(w => w.ReceiptVoucher.StatusId == (int)DocumentStatus.Approved
-                //                    && w.ReceiptVoucher.PaymentTypeId == (int)PaymentType.PDC
-                //                     &&(w.ParticularLedgerId == ledgerId || ledgerId ==0)
-                //                   && w.ReceiptVoucher.FinancialYearId == financialYearId
-                //                   && w.ReceiptVoucher.CompanyId == companyId
-                //                   && w.ReceiptVoucher.ChequeDate >= fromDate
-                //                   && w.ReceiptVoucher.ChequeDate <= toDate
-                //                   )
-                //               .ToList()
-                //               .Select((row, index) => new PDCReportModel
-                //               {
-                //                   SequenceNo = 2,
-                //                   //SrNo = index + 1,
-                //                   //DocumentDetId = row.PaymentVoucherDetId,
-                //                   DocumentId = row.ReceiptVoucherId,
-                //                   DocumentNo = row.ReceiptVoucher.VoucherNo,
-                //                   DocumentDate = row.ReceiptVoucher.VoucherDate,
-                //                   ChequeNo = row.ReceiptVoucher.ChequeNo,
-                //                   ChequeDate = row.ReceiptVoucher.ChequeDate,
-                //                   BankName = (null != row.ReceiptVoucher ? (null != row.ReceiptVoucher.AccountLedger ? row.ReceiptVoucher.AccountLedger.LedgerName : "") : ""),
-                //                   CurrencyId = row.ReceiptVoucher.CurrencyId,
-                //                   CurrencyCode = (null != row.ReceiptVoucher ? (null != row.ReceiptVoucher.Currency ? row.ReceiptVoucher.Currency.CurrencyCode : "") : ""),
-                //                   ExchangeRate = row.ReceiptVoucher.ExchangeRate,
-                //                   ParticularLedgerName = (null != row.ParticularLedger ? row.ParticularLedger.LedgerName : ""),
-                //                   Narration = row.ReceiptVoucher.Narration,
-                //                   Amount_FC = row.ReceiptVoucher.AmountFc,
-                //                   Amount = row.ReceiptVoucher.Amount
-                //               })
-                //            //   .ToList()
-                //            //.GroupBy(row => row)
-                //            //.Select(row => row.FirstOrDefault())
-                //            .ToList();
-                //}
-
-
                 if (pdcType=="P")
                 {
-
                     pdcReportModelList = _dbContext
                                 .Paymentvouchers.Include(i => i.AccountLedger)
                                 .Include(i => i.Currency)
                                 .Where(w => w.StatusId == (int)DocumentStatus.Approved
+                                    && w.TypeCorB == TypeCorB.B.ToString()
                                     && w.PaymentTypeId == (int)PaymentType.PDC
-                                    //&&(w.ParticularLedgerId == ledgerId || ledgerId ==0)
+                                    && w.IsPdcprocessed == 0
                                     && w.FinancialYearId == financialYearId
                                     && w.CompanyId == companyId
                                     && w.ChequeDate >= fromDate
@@ -212,12 +128,13 @@ namespace ERP.Services.Accounts
                                Receiptvouchers.Include(i => i.AccountLedger)
                                .Include(i => i.Currency)
                                .Where(w => w.StatusId == (int)DocumentStatus.Approved
+                                    && w.TypeCorB == TypeCorB.B.ToString()
                                     && w.PaymentTypeId == (int)PaymentType.PDC
-                                     //&&(w.ParticularLedgerId == ledgerId || ledgerId ==0)
-                                   && w.FinancialYearId == financialYearId
-                                   && w.CompanyId == companyId
-                                   && w.ChequeDate >= fromDate
-                                   && w.ChequeDate <= toDate
+                                    && w.IsPdcprocessed == 0
+                                    && w.FinancialYearId == financialYearId
+                                    && w.CompanyId == companyId
+                                    && w.ChequeDate >= fromDate
+                                    && w.ChequeDate <= toDate
                                    )
                                .ToList()
                                .Select((row, index) => new PDCReportModel
@@ -238,7 +155,6 @@ namespace ERP.Services.Accounts
                                })
                             .ToList();
                 }
-
 
                 if (pdcReportModelList==null)
                 {

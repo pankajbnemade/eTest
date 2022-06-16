@@ -6,9 +6,9 @@
             @if (Model.PaymentVoucherId > 0)
             {
 <h5 class="modal-title">Edit Voucher</h5> }
-else
-{
-<h5 class="modal-title">Add Voucher</h5>}
+            else
+            {
+<h5 class="modal-title">Add Voucher</h5>            }
             <button type="button" class="close btn-default" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
@@ -49,23 +49,16 @@ else
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.PaymentTypeId, new { @class = "required" })
-                                @Html.DropDownListFor(model => model.PaymentTypeId, new SelectList(ViewBag.PaymentTypeList, "Value", "Description"), "Select", new { @class = "form-control form-control-sm" })
-                                @Html.ValidationMessageFor(model => model.PaymentTypeId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
                             @Html.LabelFor(model => model.AccountLedgerId, new { @class = "required" })
-                            <select class="form-control" asp-for="AccountLedgerId">
+                            <select class="form-control form-control-sm" asp-for="AccountLedgerId">
                                 <option value="">Select</option>
                             </select>
                             @Html.ValidationMessageFor(model => model.AccountLedgerId, "", new { @class = "text-danger" })
                         </div>
+                    </div>
+                </div>
+                @*<div class="row">
+                    <div class="col-sm-6">
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -74,7 +67,7 @@ else
                             @Html.ValidationMessageFor(model => model.ClosingBalance, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                </div>
+                </div>*@
 
                 @if (Model.NoOfLineItems > 0)
                 {
@@ -82,8 +75,8 @@ else
         <div class="col-sm-6">
             <div class="form-group">
                 @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
-                @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem>{ new SelectListItem{Text=Model.CurrencyCode, Value=Model.CurrencyId.ToString()} },
-                                        new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                @Html.DropDownListFor(model => model.CurrencyId, new List<SelectListItem> { new SelectListItem { Text=Model.CurrencyCode, Value=Model.CurrencyId.ToString() } },
+                                                       new { @class = "form-control form-control-sm", @readonly = "readonly" })
                 @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -95,24 +88,24 @@ else
             </div>
         </div>
     </div> }
-else
-{
-<div class="row">
-    <div class="col-sm-6">
-        <div class="form-group">
-            @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
-            @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
-            @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                else
+                {
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CurrencyId, new { @class = "required" })
+                @Html.DropDownListFor(model => model.CurrencyId, new SelectList(ViewBag.CurrencyList, "Value", "DisplayText"), "Select", new { @class = "form-control form-control-sm" })
+                @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
-            @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
-            @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ExchangeRate, new { @class = "required" })
+                @Html.TextBoxFor(model => model.ExchangeRate, new { @class = "form-control form-control-sm" })
+                @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-</div>}
+    </div>}
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -137,7 +130,15 @@ else
                             @Html.ValidationMessageFor(model => model.ChequeAmountFc, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
+                    <div class="col-sm-6 d-none" id="divPaymentTypeId">
+                        <div class="form-group">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PaymentTypeId, new { @class = "required" })
+                                @Html.DropDownListFor(model => model.PaymentTypeId, new SelectList(ViewBag.PaymentTypeList, "Value", "Description"), "Select", new { @class = "form-control form-control-sm" })
+                                @Html.ValidationMessageFor(model => model.PaymentTypeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
@@ -183,24 +184,26 @@ else
 
         if ('@Model.PaymentVoucherId' > 0 && '@Model.TypeCorB' != "") {
             GetAccountLedger('@Model.TypeCorB');
+
+            fnShowHidePaymentType('@Model.TypeCorB');
         }
 
-        if ('@Model.PaymentVoucherId' > 0 && '@Model.AccountLedgerId' > 0) {
+        @*if ('@Model.PaymentVoucherId' > 0 && '@Model.AccountLedgerId' > 0) {
             GetClosingBalance('@Model.AccountLedgerId');
-        }
-
+        }*@
 
         // TypeCorB change.
         $(document).off('change').on('change', '#TypeCorB', function () {
-            //alert("TypeCorB");
             GetAccountLedger(this.value);
+
+            fnShowHidePaymentType(this.value);
         });
 
-        //account ledger change.
-        $(document).on('change', '#AccountLedgerId', function () {
-            //alert("AccountLedgerId");
-            GetClosingBalance(this.value);
-        });
+        ////account ledger change.
+        //$(document).on('change', '#AccountLedgerId', function () {
+        //    //alert("AccountLedgerId");
+        //    GetClosingBalance(this.value);
+        //});
 
         // currency change.
         $(document).on('change', '#CurrencyId', function () {
@@ -208,6 +211,15 @@ else
             GetExchangeRateByCurrencyId(this.value);
         });
 
+        function fnShowHidePaymentType(typeCorB) {
+            if (typeCorB == "B") {
+                $('#divPaymentTypeId').removeClass("d-none");
+                $('#PaymentTypeId').val('');
+            }
+            else {
+                $('#divPaymentTypeId').addClass("d-none");
+            }
+        }
     });
 
     // get Account Ledger by TypeCorB.
@@ -250,10 +262,11 @@ else
                             $("span[data-valmsg-for='AccountLedgerId']").html('<span for="AccountLedgerId" class="">No data found.</span>');
                         }
                     }
-                }, 
+                },
                 function (XMLHttpRequest, textStatus, errorThrown) {
-            errorCallback(XMLHttpRequest, textStatus, errorThrown);
-        }, true, null, false);
+                        errorCallback(XMLHttpRequest, textStatus, errorThrown);
+                },
+                true, null, false);
         }
         else {
             $('#AccountLedgerId').empty();
@@ -275,7 +288,7 @@ else
                 else {
                     $('#ClosingBalance').val(0);
                 }
-            }, 
+            },
             function (XMLHttpRequest, textStatus, errorThrown) {
             errorCallback(XMLHttpRequest, textStatus, errorThrown);
         }, true, null, false);
@@ -300,7 +313,7 @@ else
                 else {
                     $('#ExchangeRate').val(0);
                 }
-            }, 
+            },
             function (XMLHttpRequest, textStatus, errorThrown) {
             errorCallback(XMLHttpRequest, textStatus, errorThrown);
         }, true, null, false);

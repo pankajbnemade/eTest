@@ -29,7 +29,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Payment Type")]
         //[Required(ErrorMessage = "Payment Type is required.")]
-        public int PaymentTypeId { get; set; }
+        public int? PaymentTypeId { get; set; }
 
         [Display(Name = "Currency")]
         [Required(ErrorMessage = "Currency is required.")]
@@ -63,16 +63,19 @@ namespace ERP.Models.Accounts
         [StringLength(2000, ErrorMessage = "Narration cannot exceed 2000 characters.")]
         public string Narration { get; set; }
 
-        [Display(Name = "Amount FC")]
+        [Display(Name = "Total Amount FC")]
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal AmountFc { get; set; }
 
-        [Display(Name = "Amount")]
+        [Display(Name = "Total Amount")]
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
         public decimal Amount { get; set; }
 
         [Display(Name = "Amount FC in word")]
         public string AmountFcInWord { get; set; }
+
+        [Display(Name = "Is PDC Processed")]
+        public bool IsPDCProcessed { get; set; }
 
         [Display(Name = "Status")]
         public int StatusId { get; set; }

@@ -134,12 +134,28 @@ namespace ERP.Services.Accounts
             return isUpdated; // returns.
         }
 
-        public async Task<bool> DeleteReceiptVoucher(int ReceiptVoucherId)
+        public async Task<bool> UpdatePDCProcessed(int receiptVoucherId)
+        {
+            bool isUpdated = false;
+
+            // get record.
+            Receiptvoucher receiptVoucher = await GetByIdAsync(w => w.ReceiptVoucherId == receiptVoucherId);
+
+            if (null != receiptVoucher)
+            {
+                receiptVoucher.IsPdcprocessed = 1;
+                isUpdated = await Update(receiptVoucher);
+            }
+
+            return isUpdated; // returns.
+        }
+
+        public async Task<bool> DeleteReceiptVoucher(int receiptVoucherId)
         {
             bool isDeleted = false;
 
             // get record.
-            Receiptvoucher receiptVoucher = await GetByIdAsync(w => w.ReceiptVoucherId == ReceiptVoucherId);
+            Receiptvoucher receiptVoucher = await GetByIdAsync(w => w.ReceiptVoucherId == receiptVoucherId);
 
             if (null != receiptVoucher)
             {
@@ -171,6 +187,7 @@ namespace ERP.Services.Accounts
                 if (receiptVoucher.StatusId == (int)DocumentStatus.Approved || receiptVoucher.StatusId == (int)DocumentStatus.ApprovalRequested || receiptVoucher.StatusId == (int)DocumentStatus.Cancelled)
                 {
                     receiptVoucher.StatusId = (int)DocumentStatus.Inprocess;
+                    receiptVoucher.IsPdcprocessed = 0;
                 }
 
                 isUpdated = await Update(receiptVoucher);
@@ -343,6 +360,7 @@ namespace ERP.Services.Accounts
                 receiptVoucherModel.AmountFc = receiptVoucher.AmountFc;
                 receiptVoucherModel.Amount = receiptVoucher.Amount;
                 receiptVoucherModel.AmountFcInWord = receiptVoucher.AmountFcinWord;
+                receiptVoucherModel.IsPDCProcessed = Convert.ToBoolean(receiptVoucher.IsPdcprocessed);
 
                 receiptVoucherModel.StatusId = receiptVoucher.StatusId;
                 receiptVoucherModel.CompanyId = Convert.ToInt32(receiptVoucher.CompanyId);
@@ -357,7 +375,8 @@ namespace ERP.Services.Accounts
                 receiptVoucherModel.PreparedByName = null != receiptVoucher.PreparedByUser ? receiptVoucher.PreparedByUser.UserName : null;
 
                 receiptVoucherModel.TypeCorBName = EnumHelper.GetEnumDescription<TypeCorB>(receiptVoucher.TypeCorB);
-                receiptVoucherModel.PaymentTypeName = EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)receiptVoucher.PaymentTypeId).ToString());
+
+                receiptVoucherModel.PaymentTypeName = receiptVoucher.PaymentTypeId != null ? EnumHelper.GetEnumDescription<PaymentType>(((PaymentType)receiptVoucher.PaymentTypeId).ToString()) : "";
 
                 return receiptVoucherModel;
             });
