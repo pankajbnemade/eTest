@@ -1,7 +1,7 @@
 assigning default value while loading (like exchange rate/unit/account/removing 0 from textbox)
 closing balance show in payment voucher
-JV instead of advance >> Other
-
+session check in all save
+sales invoice sr no update all
 
 Print
 Transaction Date not mandatory in Payment Voucher

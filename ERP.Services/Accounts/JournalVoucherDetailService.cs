@@ -316,7 +316,7 @@ namespace ERP.Services.Accounts
                 journalVoucherDetailModel.DebitNoteId = journalVoucherDetail.DebitNoteId;
 
                 //--####
-                journalVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType>(((TransactionType)journalVoucherDetail.TransactionTypeId).ToString());
+                journalVoucherDetailModel.TransactionTypeName = EnumHelper.GetEnumDescription<TransactionType_JV>(((TransactionType_JV)journalVoucherDetail.TransactionTypeId).ToString());
                 journalVoucherDetailModel.ParticularLedgerName = null != journalVoucherDetail.ParticularLedger ? journalVoucherDetail.ParticularLedger.LedgerName : null;
 
                 if (journalVoucherDetailModel.SalesInvoiceId != 0 && journalVoucherDetailModel.SalesInvoiceId != null)

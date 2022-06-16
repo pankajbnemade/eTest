@@ -117,5 +117,17 @@ namespace ERP.Models.Accounts.Enums
         [Description("Outstanding")]
         Outstanding = 2,
     }
-   
+
+    /// <summary>
+    /// tax total type.
+    /// </summary>
+    public enum TransactionType_JV
+    {
+        [Description("Other")]
+        Other = 1,
+
+        [Description("Outstanding")]
+        Outstanding = 2,
+    }
+
 }

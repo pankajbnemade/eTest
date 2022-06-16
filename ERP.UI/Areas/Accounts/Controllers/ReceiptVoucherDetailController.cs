@@ -36,7 +36,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             ReceiptVoucherModel receiptVoucherModel = await _receiptVoucher.GetReceiptVoucherById(receiptVoucherId);
 
             ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, receiptVoucherModel.CompanyId, true);
-            ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType>();
+            ViewBag.TransactionTypeList = EnumHelper.GetEnumListFor<TransactionType_JV>();
 
             IList<ReceiptVoucherDetailModel> receiptVoucherDetailModelList = await _receiptVoucherDetail.GetReceiptVoucherDetailByVoucherId(receiptVoucherId, addRow_Blank);
 
@@ -72,7 +72,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
                 {
                     ReceiptVoucherId = receiptVoucherId,
                     ParticularLedgerId = particularLedgerId,
-                    TransactionTypeId = (int)TransactionType.Outstanding,
+                    TransactionTypeId = (int)TransactionType_JV.Outstanding,
                     InvoiceId = outstandingInvoiceModel.InvoiceId,
                     InvoiceType = outstandingInvoiceModel.InvoiceType,
                     InvoiceNo = outstandingInvoiceModel.InvoiceNo,

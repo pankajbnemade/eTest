@@ -256,7 +256,7 @@ namespace ERP.Services.Accounts
                                       .Include(i => i.JournalVoucher)
                                      .Where(w => w.JournalVoucher.StatusId == (int)DocumentStatus.Approved
                                             && w.JournalVoucher.CompanyId == companyId
-                                            && w.TransactionTypeId == (int)TransactionType.Advance
+                                            && w.TransactionTypeId == (int)TransactionType_JV.Other
                                             && w.ParticularLedgerId == ledgerId
                                             //&& w.JournalVoucher.VoucherDate >= fromDate
                                             && w.JournalVoucher.VoucherDate <= toDate
