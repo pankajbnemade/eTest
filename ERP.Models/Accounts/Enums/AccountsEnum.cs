@@ -99,8 +99,8 @@ namespace ERP.Models.Accounts.Enums
 
     public enum PaymentType
     {
-        [Description("LC")]
-        LC = 1,
+        //[Description("LC")]
+        //LC = 1,
 
         [Description("PDC")]
         PDC = 2,

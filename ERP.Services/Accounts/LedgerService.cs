@@ -189,10 +189,10 @@ namespace ERP.Services.Accounts
 
             // create query.
             IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
-                                            .Include(w => w.ParentGroup)
-                                            .Include(w => w.PreparedByUser).ThenInclude(w => w.Employee)
-                                            .Include(w => w.Ledgeraddresses)
-                                            .Include(w => w.Ledgercompanyrelations).ThenInclude(w => w.Company);
+                                        .Include(w => w.ParentGroup)
+                                        .Include(w => w.PreparedByUser).ThenInclude(w => w.Employee)
+                                        .Include(w => w.Ledgeraddresses)
+                                        .Include(w => w.Ledgercompanyrelations).ThenInclude(w => w.Company);
 
             // apply filters.
             if (0 != ledgerId)
@@ -375,7 +375,7 @@ namespace ERP.Services.Accounts
             if (await Any(w => w.LedgerId != 0))
             {
                 IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
-                                            .Include(w=>w.Ledgercompanyrelations);
+                                            .Include(w => w.Ledgercompanyrelations);
 
                 if (companyId != 0)
                 {
@@ -395,7 +395,23 @@ namespace ERP.Services.Accounts
 
                 // apply filters.
                 if (0 != parentGroupId)
-                    query = query.Where(w => w.ParentGroupId == parentGroupId);
+                {
+                    IList<int> parentGroupIdList = new List<int>() { parentGroupId };
+
+                    parentGroupIdList = parentGroupIdList.Union
+                                   (await GetQueryByCondition(w => w.LedgerId != 0 && w.IsGroup==1)
+                                   .Where(w => parentGroupIdList.Contains((int)w.ParentGroupId))
+                                   .Select(s => s.LedgerId).ToListAsync()).ToList();
+
+                    parentGroupIdList = parentGroupIdList.Union
+                                    (await GetQueryByCondition(w => w.LedgerId != 0 && w.IsGroup==1)
+                                    .Where(w => parentGroupIdList.Contains((int)w.ParentGroupId))
+                                    .Select(s => s.LedgerId).ToListAsync()).ToList();
+
+                    query = query.Where(w => parentGroupIdList.Contains((int)w.ParentGroupId));
+
+                    //query = query.Where(w => w.ParentGroupId == parentGroupId);
+                }
 
                 resultModel = await query.Select(s => new SelectListModel
                 {
@@ -406,5 +422,57 @@ namespace ERP.Services.Accounts
 
             return resultModel; // returns.
         }
+
+        public async Task<IList<SelectListModel>> GetLedgerSelectList(IList<int> parentGroupIdList, int companyId, Boolean IsLegderOnly)
+        {
+            IList<SelectListModel> resultModel = null;
+
+            if (await Any(w => w.LedgerId != 0))
+            {
+                IQueryable<Ledger> query = GetQueryByCondition(w => w.LedgerId != 0)
+                                            .Include(w => w.Ledgercompanyrelations);
+
+                if (companyId != 0)
+                {
+                    query = query.Where(w => w.Ledgercompanyrelations.Any(c => c.CompanyId == companyId));
+                }
+
+                if (IsLegderOnly == true)
+                {
+                    query = query.Where(w => w.IsGroup == 0);
+                }
+
+                if (IsLegderOnly == true)
+                {
+                    query = query.Where(w => w.IsGroup == 0);
+                }
+
+                // apply filters.
+                if (0 != parentGroupIdList.Count)
+                {
+
+                    parentGroupIdList = parentGroupIdList.Union
+                                    (await GetQueryByCondition(w => w.LedgerId != 0 && w.IsGroup==1)
+                                    .Where(w => parentGroupIdList.Contains((int)w.ParentGroupId))
+                                    .Select(s => s.LedgerId).ToListAsync()).ToList();
+
+                    parentGroupIdList = parentGroupIdList.Union
+                                    (await GetQueryByCondition(w => w.LedgerId != 0 && w.IsGroup==1)
+                                    .Where(w => parentGroupIdList.Contains((int)w.ParentGroupId))
+                                    .Select(s => s.LedgerId).ToListAsync()).ToList();
+
+                    query = query.Where(w => parentGroupIdList.Contains((int)w.ParentGroupId));
+                }
+
+                resultModel = await query.Select(s => new SelectListModel
+                {
+                    DisplayText = s.LedgerName,
+                    Value = s.LedgerId.ToString()
+                }).OrderBy(w => w.DisplayText).ToListAsync();
+            }
+
+            return resultModel; // returns.
+        }
+
     }
 }

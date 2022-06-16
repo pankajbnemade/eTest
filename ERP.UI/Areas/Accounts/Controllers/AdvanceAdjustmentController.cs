@@ -140,7 +140,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
         {
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.SundryCreditor, (int)LedgerName.SundryDebtor }, userSession.CompanyId, true);
 
             AdvanceAdjustmentModel advanceAdjustmentModel = new AdvanceAdjustmentModel();
 
@@ -164,7 +164,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             AdvanceAdjustmentModel advanceAdjustmentModel = await _advanceAdjustment.GetAdvanceAdjustmentById(advanceAdjustmentId);
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(0, advanceAdjustmentModel.CompanyId, true);
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.SundryCreditor, (int)LedgerName.SundryDebtor }, advanceAdjustmentModel.CompanyId, true);
 
             DataTableResultModel<AdvanceAdjustmentDetailModel> resultModel = await _advanceAdjustmentDetail.GetAdvanceAdjustmentDetailByAdvanceAdjustmentId(advanceAdjustmentId, 0);
 

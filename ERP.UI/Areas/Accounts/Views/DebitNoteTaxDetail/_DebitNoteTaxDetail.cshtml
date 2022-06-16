@@ -7,31 +7,30 @@
             </button>
         </div>
         <div class="modal-body">
-            <div class="row">
-                <div class="col-sm-12">
-                    <table id="debitNoteTaxDetailGrid" class="table table-bordered table-striped w-100">
-                        <thead>
-                            <tr class="table-header">
-                                <th class="no-sort">
-                                    <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-debitnote-taxdetl" title="Add New Line">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-
-                                </th>
-                                <th>DebitNoteDetTaxId</th>
-                                <th>DebitNoteDetId</th>
-                                <th>Sr No</th>
-                                <th>Tax Ledger</th>
-                                <th>Per / Amount</th>
-                                <th>Tax Per Or Amount FC</th>
-                                <th>Add or Deduct</th>
-                                <th>Tax Amount FC</th>
-                                <th>Remark</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+            
+            <div class="col-sm-12">
+                <table id="debitNoteTaxDetailGrid" class="table table-bordered table-striped w-100">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="no-sort">
+                                <button class="btn btn-primary mr-1 pr-1 pl-1 pb-0 pt-0" type="button" id="add-new-debitnote-taxdetl" title="Add New Line">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </th>
+                            <th>DebitNoteDetTaxId</th>
+                            <th>DebitNoteDetId</th>
+                            <th>Sr No</th>
+                            <th>Tax Ledger</th>
+                            <th>Per / Amount</th>
+                            <th>Tax Per Or Amount FC</th>
+                            <th>Add or Deduct</th>
+                            <th>Tax Amount FC</th>
+                            <th>Remark</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
+           
         </div>
     </div>
 </div>
@@ -84,7 +83,7 @@
             $('#modal-debitnote-detail').empty();
             $('#modal-debitnote-detail').html(data).modal('show');
             return false;
-        }, 
+        },
         function (XMLHttpRequest, textStatus, errorThrown) {
             errorCallback(XMLHttpRequest, textStatus, errorThrown);
         }, true, null, false);
@@ -98,37 +97,39 @@
             $('#modal-debitnote-detail').empty();
             $('#modal-debitnote-detail').html(data).modal('show');
             return false;
-        }, 
+        },
         function (XMLHttpRequest, textStatus, errorThrown) {
             errorCallback(XMLHttpRequest, textStatus, errorThrown);
-        }, 
+        },
         true, null, false);
     }
 </script>
-@{ await Html.RenderPartialAsync("_ConfirmDeleteDebitNoteTaxDetail"); }
+@{
+    await Html.RenderPartialAsync("_ConfirmDeleteDebitNoteTaxDetail");
+}
 <style>
     /*#modal-debitnote .modal-dialog {
-        height: 90%;*/ /* = 90% of the .modal-backdrop block = %90 of the screen */
+            height: 90%;*/ /* = 90% of the .modal-backdrop block = %90 of the screen */
     /*}
 
-    #modal-debitnote .modal-content {
-        height: 100%;*/ /* = 100% of the .modal-dialog block */
+        #modal-debitnote .modal-content {
+            height: 100%;*/ /* = 100% of the .modal-dialog block */
     /*}
 
-    #modal-debitnote .modal-body {
-        height: 300px;
-        overflow-y: auto;
-    }
-
-    @@media (min-height: 500px) {
         #modal-debitnote .modal-body {
-            height: 400px;
+            height: 300px;
+            overflow-y: auto;
         }
-    }
 
-    @@media (min-height: 800px) {
-        #modal-debitnote .modal-body {
-            height: 600px;
+        @@media (min-height: 500px) {
+            #modal-debitnote .modal-body {
+                height: 400px;
+            }
         }
-    }*/
+
+        @@media (min-height: 800px) {
+            #modal-debitnote .modal-body {
+                height: 600px;
+            }
+        }*/
 </style>

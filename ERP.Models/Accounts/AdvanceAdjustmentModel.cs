@@ -39,7 +39,7 @@ namespace ERP.Models.Accounts
 
         [Display(Name = "Exchange Rate")]
         [Required(ErrorMessage = "Exchange Rate is required.")]
-        [Range(0.000001, Double.MaxValue, ErrorMessage = "Value must be greater than 0.")]
+        //[Range(0.000001, Double.MaxValue, ErrorMessage = "Value must be greater than 0.")]
         [DisplayFormat(DataFormatString = "{0:0.000000}", ApplyFormatInEditMode = true)]
         public decimal ExchangeRate { get; set; }
 
