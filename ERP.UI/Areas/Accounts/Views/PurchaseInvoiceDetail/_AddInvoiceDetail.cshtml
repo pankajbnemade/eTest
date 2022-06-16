@@ -53,13 +53,13 @@ else
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    @*<div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.PerUnit, new { @class = "required" })
                             @Html.TextBoxFor(model => model.PerUnit, new { @class = "form-control form-control-sm" })
                             @Html.ValidationMessageFor(model => model.PerUnit, "", new { @class = "text-danger" })
                         </div>
-                    </div>
+                    </div>*@
                     <div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.UnitPrice, new { @class = "required" })
@@ -68,7 +68,7 @@ else
                         </div>
                     </div>
                 </div>
-                <div class="row">
+               @* <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.GrossAmountFc)
@@ -83,8 +83,8 @@ else
                             @Html.ValidationMessageFor(model => model.TaxAmountFc, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                </div>
-                <div class="row">
+                </div>*@
+                @*<div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.NetAmountFc)
@@ -93,7 +93,7 @@ else
                         </div>
                     </div>
 
-                </div>
+                </div>*@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal" title="Back"><i class="fas fa-arrow-left"></i> Back</button>

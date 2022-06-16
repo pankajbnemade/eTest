@@ -1,3 +1,6 @@
+assigning default value while loading (like exchange rate/unit/account/removing 0 from textbox)
+
+
 Print
 Transaction Date not mandatory in Payment Voucher
 Erro show on error in jQuery
@@ -27,3 +30,4 @@ Company Id in tax details ledger fill dropdown should be from master not from se
 Main bugs
 
 validating for all types of error (like possible error devide by 0)
+no of decimal value as per selection

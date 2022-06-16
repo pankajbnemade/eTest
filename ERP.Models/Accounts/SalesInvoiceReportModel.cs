@@ -100,7 +100,7 @@ namespace ERP.Models.Accounts
 
         public decimal Quantity { get; set; }
 
-        public int PerUnit { get; set; }
+        public int PerUnit { get; set; } = 1;
 
         public decimal UnitPrice { get; set; }
 

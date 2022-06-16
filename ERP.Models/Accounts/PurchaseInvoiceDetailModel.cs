@@ -32,7 +32,7 @@ namespace ERP.Models.Accounts
         [Display(Name = "Per Unit")]
         [Required(ErrorMessage = "Per Unit is required.")]
         [RegularExpression(RegexHelper.NumericOnly, ErrorMessage = "Number only.")]
-        public int PerUnit { get; set; }
+        public int PerUnit { get; set; } = 1;
 
         [Display(Name = "Unit Price")]
         [Required(ErrorMessage = "Unit Price is required.")]
