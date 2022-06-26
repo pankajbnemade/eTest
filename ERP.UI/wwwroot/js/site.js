@@ -31,6 +31,17 @@ function addCommas(yourNumber) {
 
 
 function errorCallback(xmlHttpRequest, textStatus, errorThrown) {
-    fnDangerNotify("ERROR");
+    if (xmlHttpRequest.status == 401) {
+        fnDangerNotify("Please Login");
+    }
+    else if(xmlHttpRequest.status == 403) {
+        fnDangerNotify("Forbidden. Please Login");
+    }
+    else if (xmlHttpRequest.status == 404) {
+        fnDangerNotify("Page not found");
+    }
+    else {
+        fnDangerNotify("Error");
+    }
 }
 

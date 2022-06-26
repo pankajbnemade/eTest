@@ -1,8 +1,11 @@
-﻿using ERP.Models.Common;
+﻿using ERP.Models.Admin;
+using ERP.Models.Common;
+using ERP.Models.Extension;
 using ERP.Models.Helpers;
 using ERP.Models.Master;
 using ERP.Services.Common.Interface;
 using ERP.Services.Master.Interface;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,10 +15,12 @@ namespace ERP.Services.Common
     public class CommonService : ICommon
     {
         IVoucherSetupDetail _voucherSetupDetail;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CommonService(IVoucherSetupDetail voucherSetupDetail)
+        public CommonService(IVoucherSetupDetail voucherSetupDetail, IHttpContextAccessor httpContextAccessor)
         {
             _voucherSetupDetail = voucherSetupDetail;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<GenerateNoModel> GenerateVoucherNo(int maxNo, int voucherSetupId, int companyId, int financialYearId)
@@ -35,6 +40,34 @@ namespace ERP.Services.Common
                 return new GenerateNoModel { MaxNo = maxNo, VoucherStyleId = voucherStyleId, VoucherNo = voucherNo };
             });
         }
+
+
+        //public async Task<Boolean> CheckSession()
+        //{
+        //    Boolean isSession = true;
+
+        //    UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(_httpContextAccessor.HttpContext.Session, "UserSession");
+
+        //    return await Task.Run(() =>
+        //    {
+        //        if (userSession == null)
+        //        {
+        //            isSession = false;
+        //        }
+
+        //        if (isSession == true)
+        //        {
+        //            if (userSession.UserId == 0 || userSession.CompanyId == 0 || userSession.FinancialYearId == 0)
+        //            {
+        //                isSession = false;
+        //            }
+        //        }
+
+        //        return isSession;
+        //    });
+
+        //}
+
 
         #region "Amount To Word Million"
 

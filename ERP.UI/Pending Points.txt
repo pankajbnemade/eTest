@@ -6,8 +6,6 @@ sales invoice sr no update all
 Print
 Transaction Date not mandatory in Payment Voucher
 Erro show on error in jQuery
-PDC Radeem button in payment voucher
-exchange rate should be greater than 0 to avoid devide by 0 error and base currency calculation
 
 
 devide by zero error cross checking in all service 

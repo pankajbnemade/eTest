@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using ERP.DataAccess.Entity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ERP.Models.Admin;
+using ERP.Models.Extension;
 
 namespace ERP.UI.Areas.Identity.Pages.Account
 {
@@ -31,7 +33,11 @@ namespace ERP.UI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
-            //await _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
+
+            UserSessionModel userSessionModel = new UserSessionModel();
+
+            SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
             _logger.LogInformation("User logged out.");
             

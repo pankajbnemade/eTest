@@ -54,8 +54,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-            searchFilterModel.CompanyId=userSession.CompanyId;
-            searchFilterModel.FinancialYearId=userSession.FinancialYearId;
+            searchFilterModel.CompanyId = userSession.CompanyId;
+            searchFilterModel.FinancialYearId = userSession.FinancialYearId;
 
             // get data.
             DataTableResultModel<ContraVoucherModel> resultModel = await _contraVoucher.GetContraVoucherList(dataTableAjaxPostModel, searchFilterModel);
@@ -154,6 +154,17 @@ namespace ERP.UI.Areas.Accounts.Controllers
         public async Task<JsonResult> SaveVoucherMaster(ContraVoucherModel contraVoucherModel)
         {
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
+
+            //UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
+
+            //if (userSession.UserId == 0 || userSession.CompanyId == 0 || userSession.FinancialYearId == 0)
+            //{
+            //    data.Result.Status = false;
+            //    data.Result.Data = 0;
+            //    data.Result.Message = "Session is Invalid. Please login.";
+
+            //    return Json(data);
+            //}
 
             if (ModelState.IsValid)
             {

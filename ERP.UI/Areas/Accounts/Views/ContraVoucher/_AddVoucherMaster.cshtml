@@ -196,10 +196,9 @@ else
 
             var tabUrl = '@Url.Action("ManageVoucher", "ContraVoucher")?contraVoucherId=' + data.Result.Data;
             window.location.href = tabUrl;
-
         }
         else {
-            fnDangerNotify('Error occured while processing request.');
+            fnDangerNotify(data.Result.Message);
             return false;
         }
     }

@@ -28,7 +28,7 @@ namespace ERP.Services.Admin
         private readonly UserManager<ApplicationIdentityUser> _userManager;
         private readonly ICompany _company;
         private readonly IFinancialYear _financialYear;
-        IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public ApplicationIdentityUserService(ErpDbContext dbContext,
             UserManager<ApplicationIdentityUser> userManager, ICompany company, IFinancialYear financialYear,
@@ -244,6 +244,8 @@ namespace ERP.Services.Admin
             {
                 userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
                 userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
+
+                IsSucceed = true;
             }
 
             SessionExtension.SetComplexData(_httpContextAccessor.HttpContext.Session, "UserSession", userSessionModel);
