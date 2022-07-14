@@ -1,3 +1,7 @@
+Ledger creation (dont fill parent group id == null in group list)
+ledger creation validation - Ldger should not be created under parent group (null)
+
+
 assigning default value while loading (like exchange rate/unit/account/removing 0 from textbox)
 closing balance show in payment voucher
 session check in all save

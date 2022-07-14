@@ -10,23 +10,42 @@ namespace ERP.Models.Accounts
 
         public int SrNo { get; set; }
 
-        [Display(Name = "Particular Liability")]
-        public string ParticularLedgerName_Liability { get; set; }
+        public int DocumentId { get; set; }
+
+        public string DocumentType { get; set; }
+
+        [Display(Name = "LedgerId")]
+        public int LedgerId { get; set; }
+
+        [Display(Name = "Code")]
+        public string LedgerCode { get; set; }
+
+        [Display(Name = "Particulars")]
+        public string ParticularLedgerName{ get; set; }
+
+        [Display(Name = "Is Group")]
+        public bool IsGroup { get; set; }
+
+        [Display(Name = "G/L")]
+        public string GroupOrLedger { get; set; }
+
+        [Display(Name = "ParentGroupId")]
+        public int ParentGroupId { get; set; }
+
+        [Display(Name = "TopGroupId")]
+        public int TopGroupId { get; set; }
+
+        [Display(Name = "LevelNo")]
+        public int LevelNo { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
-        public decimal Amount_Liability { get; set; }
+        public decimal DebitAmount { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
-        public decimal ClosingAmount_Liability { get; set; }
-
-        [Display(Name = "Particular Asset")]
-        public string ParticularLedgerName_Asset { get; set; }
+        public decimal CreditAmount { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
-        public decimal Amount_Asset { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:0.00}", ApplyFormatInEditMode = true)]
-        public decimal ClosingAmount_Asset { get; set; }
+        public decimal ClosingAmount { get; set; }
 
     }
 }

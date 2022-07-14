@@ -75,74 +75,30 @@
                 },
             },
             "columns": [
+                { "data": "LevelNo", "name": "LevelNo", "title": "LevelNo" },
+                { "data": "SrNo", "name": "SrNo", "title": "SrNo" },
+                { "data": "GroupOrLedger", "name": "GroupOrLedger", "title": "G/L" },
+                { "data": "LedgerCode", "name": "LedgerCode", "title": "Ledger Code" },
+                { "data": "ParticularLedgerName", "name": "ParticularLedgerName", "title": "Particular Ledger Name" },
                 {
-                    "data": "DocumentNo", "name": "DocumentNo", "title": "Voucher No", className: "dt-nowrap",
+                    "data": "DebitAmount", "name": "DebitAmount", "title": "Debit Amount", className: "dt-right dt-nowrap",
                     "render": function (data, type, full, meta) {
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '<b>' + full.DocumentNo + '</b>';
+                        if (full.IsGroup == 0 || full.IsGroup == 0) {
+                           return addCommas(full.DebitAmount);
                         }
                         else {
-                            return full.DocumentNo;
+                            return '<b>' + addCommas(full.DebitAmount) + '</b>';
                         }
                     }
                 },
                 {
-                    "data": "DocumentDate", "name": "DocumentDate", "title": "Voucher Date",
-                    "render": function (dt) {
-                        if (Date.parse(dt)) {
-                            return moment(dt).format("DD/MMM/YYYY");
-                        }
-                        else {
-                            return "";
-                        }
-                    }
-                },
-                { "data": "ChequeNo", "name": "ChequeNo", "title": "Cheque No" },
-                {
-                    "data": "ChequeDate", "name": "ChequeDate", "title": "Cheque Date",
-                    "render": function (dt) {
-                        if (Date.parse(dt)) {
-                            return moment(dt).format("DD/MMM/YYYY");
-                        }
-                        else {
-                            return "";
-                        }
-                    }
-                },
-                { "data": "BankName", "name": "BankName", "title": "Bank" },
-                { "data": "ParticularLedgerName", "name": "ParticularLedgerName", "title": "Particular" },
-                { "data": "Narration", "name": "Narration", "title": "Narration" },
-                { "data": "CurrencyCode", "name": "CurrencyCode", "title": "Currency" },
-                {
-                    "data": "ExchangeRate", "name": "ExchangeRate", "title": "Exchange Rate", className: "dt-right dt-nowrap",
+                    "data": "CreditAmount", "name": "CreditAmount", "title": "Credit Amount", className: "dt-right dt-nowrap",
                     "render": function (data, type, full, meta) {
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '';
+                        if (full.IsGroup == 0 || full.IsGroup == 0) {
+                            return addCommas(full.CreditAmount);
                         }
                         else {
-                            return addCommas(full.ExchangeRate);
-                        }
-                    }
-                },
-                {
-                    "data": "Amount_FC", "name": "Amount_FC", "title": "Amount FC", className: "dt-right dt-nowrap",
-                    "render": function (data, type, full, meta) {
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '';
-                        }
-                        else {
-                            return addCommas(full.Amount_FC);
-                        }
-                    }
-                },
-                {
-                    "data": "Amount", "name": "Amount", "title": "Amount", className: "dt-right dt-nowrap",
-                    "render": function (data, type, full, meta) {
-                        if (full.SequenceNo == 1 || full.SequenceNo == 3) {
-                            return '<b>' + addCommas(full.Amount) + '</b>';
-                        }
-                        else {
-                            return addCommas(full.Amount);
+                            return '<b>' + addCommas(full.CreditAmount) + '</b>';
                         }
                     }
                 },
