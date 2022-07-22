@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.UI", "ERP.UI\ERP.UI.csproj", "{9A2B7872-C5B9-47E1-BED0-94267DE86D42}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Services", "ERP.Services\ERP.Services.csproj", "{AEA06ADD-D3C0-4322-A6C6-CA397EAF6B89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Models", "ERP.Models\ERP.Models.csproj", "{B4D40DC4-7E2F-4103-B28B-D03AA91094F0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.RDLC", "ERP.RDLC\ERP.RDLC.csproj", "{0A61AB20-6BB1-42AF-85D5-D41F0D8E9091}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{B4D40DC4-7E2F-4103-B28B-D03AA91094F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4D40DC4-7E2F-4103-B28B-D03AA91094F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4D40DC4-7E2F-4103-B28B-D03AA91094F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A61AB20-6BB1-42AF-85D5-D41F0D8E9091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A61AB20-6BB1-42AF-85D5-D41F0D8E9091}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A61AB20-6BB1-42AF-85D5-D41F0D8E9091}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A61AB20-6BB1-42AF-85D5-D41F0D8E9091}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

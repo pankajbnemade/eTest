@@ -104,12 +104,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Report\Accounts\rptSalesInvoice.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="Grpc.Core" Version="2.42.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
@@ -398,45 +392,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ReportDataset\Accounts\dsSalesInvoiceDet.Designer.cs">
-      <DependentUpon>dsSalesInvoiceDet.xsd</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="ReportDataset\Master\dsCompany.Designer.cs">
-      <DependentUpon>dsCompany.xsd</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ReportDataset\Accounts\dsSalesInvoiceDet.xsc">
-      <DependentUpon>dsSalesInvoiceDet.xsd</DependentUpon>
-    </None>
-    <None Update="ReportDataset\Accounts\dsSalesInvoiceDet.xsd">
-      <SubType>Designer</SubType>
-      <LastGenOutput>dsSalesInvoiceDet.Designer.cs</LastGenOutput>
-      <Generator>MSDataSetGenerator</Generator>
-    </None>
-    <None Update="ReportDataset\Accounts\dsSalesInvoiceDet.xss">
-      <DependentUpon>dsSalesInvoiceDet.xsd</DependentUpon>
-    </None>
-    <None Update="ReportDataset\Master\dsCompany.xsc">
-      <DependentUpon>dsCompany.xsd</DependentUpon>
-    </None>
-    <None Update="ReportDataset\Master\dsCompany.xsd">
-      <SubType>Designer</SubType>
-      <LastGenOutput>dsCompany.Designer.cs</LastGenOutput>
-      <Generator>MSDataSetGenerator</Generator>
-    </None>
-    <None Update="ReportDataset\Master\dsCompany.xss">
-      <DependentUpon>dsCompany.xsd</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Database\" />
+    <Folder Include="wwwroot\attachmentstorage\" />
   </ItemGroup>
 
 </Project>
