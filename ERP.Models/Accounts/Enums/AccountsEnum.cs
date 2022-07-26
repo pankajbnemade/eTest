@@ -2,9 +2,50 @@
 
 namespace ERP.Models.Accounts.Enums
 {
-    /// <summary>
-    /// tax add or deduct
-    /// </summary>
+
+    public enum DocumentType
+    {
+        [Description("Ledger")]
+        Ledger = 1,
+
+        [Description("Sales Invoice")]
+        SalesInvoice = 2,
+
+        [Description("Purchase Invoice")]
+        PurchaseInvoice = 3,
+
+        [Description("Credit Note")]
+        CreditNote = 4,
+
+        [Description("Debit Note")]
+        DebitNote = 5,
+
+        [Description("Receipt Voucher")]
+        ReceiptVoucher = 6,
+
+        [Description("Payment Voucher")]
+        PaymentVoucher = 7,
+
+        [Description("Journal Voucher")]
+        JournalVoucher = 8,
+
+        [Description("Contra Voucher")]
+        ContraVoucher = 9,
+
+        [Description("Advance Adjustment")]
+        AdvanceAdjustment = 10,
+
+        [Description("Tax Register")]
+        TaxRegister = 11,
+
+        [Description("Currency Conversion")]
+        CurrencyConversion = 12,
+
+        [Description("Employee Master")]
+        EmployeeMaster = 13,
+    }
+
+
     public enum DocumentStatus
     {
         [Description("Inprocess")]
@@ -73,19 +114,19 @@ namespace ERP.Models.Accounts.Enums
     public enum LedgerName
     {
         [Description("Duties and Taxes")]
-        DutiesAndTaxes = 17,
+        DutiesAndTaxes = 29,
 
         [Description("Sundry Debtor")]
-        SundryDebtor = 26,
+        SundryDebtor = 33,
 
         [Description("Sundry Creditor")]
-        SundryCreditor = 16,
+        SundryCreditor = 28,
 
         [Description("Bank A/C")]
-        BankAccount = 27,
+        BankAccount = 34,
         
         [Description("Cash A/C")]
-        CashAccount = 28,
+        CashAccount = 35,
     }
 
     public enum TypeCorB

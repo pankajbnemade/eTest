@@ -111,6 +111,12 @@ namespace ERP.Services.Master
                 resultModel.ResultList = storageAccountModelList;
                 resultModel.TotalResultCount = storageAccountModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<AttachmentStorageAccountModel>();
+                resultModel.ResultList = new List<AttachmentStorageAccountModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

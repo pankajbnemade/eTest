@@ -2,6 +2,13 @@ Ledger creation (dont fill parent group id == null in group list)
 ledger creation validation - Ldger should not be created under parent group (null)
 
 
+TABLE CHANGES
+LEDGER
+CURRENCY
+CITY
+COUNTRY STATE
+
+
 assigning default value while loading (like exchange rate/unit/account/removing 0 from textbox)
 closing balance show in payment voucher
 session check in all save
@@ -35,3 +42,6 @@ Main bugs
 
 validating for all types of error (like possible error devide by 0)
 no of decimal value as per selection
+
+
+SET DEAFULT MAPROUT TO LOGIN PAGE

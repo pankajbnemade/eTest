@@ -76,11 +76,18 @@ namespace ERP.Services.Master
             DataTableResultModel<UnitOfMeasurementModel> resultModel = new DataTableResultModel<UnitOfMeasurementModel>();
 
             IList<UnitOfMeasurementModel> unitOfMeasurementModelList = await GetUnitOfMeasurementList(0);
+
             if (null != unitOfMeasurementModelList && unitOfMeasurementModelList.Any())
             {
                 resultModel = new DataTableResultModel<UnitOfMeasurementModel>();
                 resultModel.ResultList = unitOfMeasurementModelList;
                 resultModel.TotalResultCount = unitOfMeasurementModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<UnitOfMeasurementModel>();
+                resultModel.ResultList = new List<UnitOfMeasurementModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

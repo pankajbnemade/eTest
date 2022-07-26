@@ -88,6 +88,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = currencyModelList;
                 resultModel.TotalResultCount = currencyModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<CurrencyModel>();
+                resultModel.ResultList = new List<CurrencyModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

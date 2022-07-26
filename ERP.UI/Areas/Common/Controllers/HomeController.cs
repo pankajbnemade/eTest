@@ -38,12 +38,17 @@ namespace ERP.UI.Areas.Common.Controllers
         {
             UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-            if (userSessionModel.CompanyId==0)
+            if (userSessionModel == null)
+            {
+                return LocalRedirect("/Identity/Account/Login");
+            }
+
+            if (userSessionModel.CompanyId == 0)
             {
                 return RedirectToAction("ChangeCompany", "Home", new { area = "" });
             }
 
-            if (userSessionModel.FinancialYearId==0)
+            if (userSessionModel.FinancialYearId == 0)
             {
                 return RedirectToAction("ChangeYear", "Home", new { area = "" });
             }
@@ -92,7 +97,7 @@ namespace ERP.UI.Areas.Common.Controllers
 
             UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-            if (userSessionModel.FinancialYearId==0)
+            if (userSessionModel.FinancialYearId == 0)
             {
                 userSessionModel.CompanyId = companyModel.CompanyId;
                 userSessionModel.CompanyName = companyModel.CompanyName;
@@ -115,8 +120,8 @@ namespace ERP.UI.Areas.Common.Controllers
 
                 SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
-                data.Result.Status=true;
-                data.Result.Message="Company Changed Successfully";
+                data.Result.Status = true;
+                data.Result.Message = "Company Changed Successfully";
                 data.Result.Data = 2;
             }
             else
@@ -158,7 +163,7 @@ namespace ERP.UI.Areas.Common.Controllers
 
             UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-            if (userSessionModel.CompanyId==0)
+            if (userSessionModel.CompanyId == 0)
             {
                 userSessionModel.FinancialYearId = financialYearModel.FinancialYearId;
                 userSessionModel.FinancialYearName = financialYearModel.FinancialYearName;
@@ -184,8 +189,8 @@ namespace ERP.UI.Areas.Common.Controllers
                 SessionExtension.SetComplexData(HttpContext.Session, "UserSession", userSessionModel);
 
                 data.Result.Data = 2;
-                data.Result.Status=true;
-                data.Result.Message="Financial Year Changed Successfully";
+                data.Result.Status = true;
+                data.Result.Message = "Financial Year Changed Successfully";
             }
             else
             {

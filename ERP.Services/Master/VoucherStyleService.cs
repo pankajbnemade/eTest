@@ -77,11 +77,18 @@ namespace ERP.Services.Master
             DataTableResultModel<VoucherStyleModel> resultModel = new DataTableResultModel<VoucherStyleModel>();
 
             IList<VoucherStyleModel> voucherStyleModelList = await GetVoucherStyleList(0);
+            
             if (null != voucherStyleModelList && voucherStyleModelList.Any())
             {
                 resultModel = new DataTableResultModel<VoucherStyleModel>();
                 resultModel.ResultList = voucherStyleModelList;
                 resultModel.TotalResultCount = voucherStyleModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<VoucherStyleModel>();
+                resultModel.ResultList = new List<VoucherStyleModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

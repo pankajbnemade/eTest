@@ -76,11 +76,18 @@ namespace ERP.Services.Master
             DataTableResultModel<DesignationModel> resultModel = new DataTableResultModel<DesignationModel>();
 
             IList<DesignationModel> designationModelList = await GetDesignationList(0);
+
             if (null != designationModelList && designationModelList.Any())
             {
                 resultModel = new DataTableResultModel<DesignationModel>();
                 resultModel.ResultList = designationModelList;
                 resultModel.TotalResultCount = designationModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<DesignationModel>();
+                resultModel.ResultList = new List<DesignationModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

@@ -104,11 +104,18 @@ namespace ERP.Services.Master
             DataTableResultModel<VoucherSetupDetailModel> resultModel = new DataTableResultModel<VoucherSetupDetailModel>();
 
             IList<VoucherSetupDetailModel> voucherSetupDetailModelList = await GetVoucherSetupDetailList(0, 0, 0, 0);
+            
             if (null != voucherSetupDetailModelList && voucherSetupDetailModelList.Any())
             {
                 resultModel = new DataTableResultModel<VoucherSetupDetailModel>();
                 resultModel.ResultList = voucherSetupDetailModelList;
                 resultModel.TotalResultCount = voucherSetupDetailModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<VoucherSetupDetailModel>();
+                resultModel.ResultList = new List<VoucherSetupDetailModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

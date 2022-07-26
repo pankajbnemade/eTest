@@ -107,11 +107,18 @@ namespace ERP.Services.Master
             DataTableResultModel<EmployeeModel> resultModel = new DataTableResultModel<EmployeeModel>();
 
             IList<EmployeeModel> employeeModelList = await GetEmployeeList(0);
+
             if (null != employeeModelList && employeeModelList.Any())
             {
                 resultModel = new DataTableResultModel<EmployeeModel>();
                 resultModel.ResultList = employeeModelList;
                 resultModel.TotalResultCount = employeeModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<EmployeeModel>();
+                resultModel.ResultList = new List<EmployeeModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

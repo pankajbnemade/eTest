@@ -160,11 +160,18 @@ namespace ERP.Services.Master
             DataTableResultModel<CompanyModel> resultModel = new DataTableResultModel<CompanyModel>();
 
             IList<CompanyModel> companyModelList = await GetCompanyList(0);
+
             if (null != companyModelList && companyModelList.Any())
             {
                 resultModel = new DataTableResultModel<CompanyModel>();
                 resultModel.ResultList = companyModelList;
                 resultModel.TotalResultCount = companyModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<CompanyModel>();
+                resultModel.ResultList = new List<CompanyModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

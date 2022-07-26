@@ -79,11 +79,18 @@ namespace ERP.Services.Master
             DataTableResultModel<FormModel> resultModel = new DataTableResultModel<FormModel>();
 
             IList<FormModel> formModelList = await GetFormList(0);
+
             if (null != formModelList && formModelList.Any())
             {
                 resultModel = new DataTableResultModel<FormModel>();
                 resultModel.ResultList = formModelList;
                 resultModel.TotalResultCount = formModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<FormModel>();
+                resultModel.ResultList = new List<FormModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

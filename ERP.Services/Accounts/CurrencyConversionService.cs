@@ -123,6 +123,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = currencyConversionModelList;
                 resultModel.TotalResultCount = currencyConversionModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<CurrencyConversionModel>();
+                resultModel.ResultList = new List<CurrencyConversionModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

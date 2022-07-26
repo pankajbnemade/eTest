@@ -126,11 +126,18 @@ namespace ERP.Services.Master
             DataTableResultModel<CityModel> resultModel = new DataTableResultModel<CityModel>();
 
             IList<CityModel> cityModelList = await GetCityList(0, 0, 0);
+
             if (null != cityModelList && cityModelList.Any())
             {
                 resultModel = new DataTableResultModel<CityModel>();
                 resultModel.ResultList = cityModelList;
                 resultModel.TotalResultCount = cityModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<CityModel>();
+                resultModel.ResultList = new List<CityModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

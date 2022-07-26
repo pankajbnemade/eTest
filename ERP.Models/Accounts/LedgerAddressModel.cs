@@ -34,11 +34,11 @@ namespace ERP.Models.Accounts
         [Display(Name = "Phone No")]
         public string PhoneNo { get; set; }
 
-        [Required(ErrorMessage = "PostalCode is required.")]
+        //[Required(ErrorMessage = "PostalCode is required.")]
         [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
 
-        [Required(ErrorMessage = "FaxNo is required.")]
+        //[Required(ErrorMessage = "FaxNo is required.")]
         [Display(Name = "Fax No")]
         public string FaxNo { get; set; }
 

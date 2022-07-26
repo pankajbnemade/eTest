@@ -87,6 +87,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = financialYearCompanyRelationModelList;
                 resultModel.TotalResultCount = financialYearCompanyRelationModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<FinancialYearCompanyRelationModel>();
+                resultModel.ResultList = new List<FinancialYearCompanyRelationModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

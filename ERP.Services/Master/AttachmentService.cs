@@ -138,6 +138,12 @@ namespace ERP.Services.Master
                 resultModel.ResultList = attachmentModelList;
                 resultModel.TotalResultCount = attachmentModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<AttachmentModel>();
+                resultModel.ResultList = new List<AttachmentModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

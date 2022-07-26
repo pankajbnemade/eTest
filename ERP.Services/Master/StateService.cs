@@ -79,11 +79,18 @@ namespace ERP.Services.Master
             DataTableResultModel<StateModel> resultModel = new DataTableResultModel<StateModel>();
 
             IList<StateModel> stateModelList = await GetStateList(0, 0);
+
             if (null != stateModelList && stateModelList.Any())
             {
                 resultModel = new DataTableResultModel<StateModel>();
                 resultModel.ResultList = stateModelList;
                 resultModel.TotalResultCount = stateModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<StateModel>();
+                resultModel.ResultList = new List<StateModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

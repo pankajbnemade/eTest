@@ -162,6 +162,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = ledgerModelList;
                 resultModel.TotalResultCount = ledgerModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<LedgerModel>();
+                resultModel.ResultList = new List<LedgerModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

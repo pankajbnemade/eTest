@@ -103,12 +103,12 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                     {
                         UserSessionModel userSessionModel = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
-                        if (userSessionModel.CompanyId==0)
+                        if (userSessionModel.CompanyId == 0)
                         {
                             return RedirectToAction("ChangeCompany", "Home", new { area = "" });
                         }
 
-                        else if (userSessionModel.FinancialYearId==0)
+                        else if (userSessionModel.FinancialYearId == 0)
                         {
                             return RedirectToAction("ChangeYear", "Home", new { area = "" });
                         }
@@ -136,8 +136,10 @@ namespace ERP.UI.Areas.Identity.Pages.Account
                     {
                         var user = await _userManager.FindByNameAsync(Input.Email);
 
+
+
                         //Add this to check if the email was confirmed.
-                        if (!await _userManager.IsEmailConfirmedAsync(user))
+                        if (!await _userManager.IsEmailConfirmedAsync(user) && _userManager.Options.SignIn.RequireConfirmedEmail == true)
                         {
                             ModelState.AddModelError("", "You need to confirm your email.");
                             return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });

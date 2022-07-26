@@ -114,6 +114,12 @@ namespace ERP.Services.Accounts
                 resultModel.ResultList = financialYearModelList;
                 resultModel.TotalResultCount = financialYearModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<FinancialYearModel>();
+                resultModel.ResultList = new List<FinancialYearModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

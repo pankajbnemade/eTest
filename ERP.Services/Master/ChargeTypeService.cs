@@ -101,11 +101,18 @@ namespace ERP.Services.Master
             DataTableResultModel<ChargeTypeModel> resultModel = new DataTableResultModel<ChargeTypeModel>();
 
             IList<ChargeTypeModel> chargeTypeModelList = await GetChargeTypeList(0);
+
             if (null != chargeTypeModelList && chargeTypeModelList.Any())
             {
                 resultModel = new DataTableResultModel<ChargeTypeModel>();
                 resultModel.ResultList = chargeTypeModelList;
                 resultModel.TotalResultCount = chargeTypeModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<ChargeTypeModel>();
+                resultModel.ResultList = new List<ChargeTypeModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.

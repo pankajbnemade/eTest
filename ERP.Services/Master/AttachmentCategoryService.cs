@@ -115,6 +115,12 @@ namespace ERP.Services.Master
                 resultModel.ResultList = categoryModelList;
                 resultModel.TotalResultCount = categoryModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<AttachmentCategoryModel>();
+                resultModel.ResultList = new List<AttachmentCategoryModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

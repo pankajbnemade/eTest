@@ -82,6 +82,12 @@ namespace ERP.Services.Master
                 resultModel.ResultList = countryModelList;
                 resultModel.TotalResultCount = countryModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<CountryModel>();
+                resultModel.ResultList = new List<CountryModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

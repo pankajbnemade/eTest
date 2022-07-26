@@ -78,11 +78,18 @@ namespace ERP.Services.Master
             DataTableResultModel<DepartmentModel> resultModel = new DataTableResultModel<DepartmentModel>();
 
             IList<DepartmentModel> departmentModelList = await GetDepartmentList(0);
+
             if (null != departmentModelList && departmentModelList.Any())
             {
                 resultModel = new DataTableResultModel<DepartmentModel>();
                 resultModel.ResultList = departmentModelList;
                 resultModel.TotalResultCount = departmentModelList.Count();
+            }
+            else
+            {
+                resultModel = new DataTableResultModel<DepartmentModel>();
+                resultModel.ResultList = new List<DepartmentModel>();
+                resultModel.TotalResultCount = 0;
             }
 
             return resultModel; // returns.
