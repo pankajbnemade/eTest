@@ -142,6 +142,12 @@ namespace ERP.Services.Admin
                 resultModel.ResultList = applicationIdentityUserModelList;
                 resultModel.TotalResultCount = applicationIdentityUserModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<ApplicationIdentityUserModel>();
+                resultModel.ResultList = new List<ApplicationIdentityUserModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }

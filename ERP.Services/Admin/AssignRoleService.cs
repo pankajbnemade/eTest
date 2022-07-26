@@ -79,6 +79,12 @@ namespace ERP.Services.Admin
                 resultModel.ResultList = roleModelList;
                 resultModel.TotalResultCount = roleModelList.Count();
             }
+            else
+            {
+                resultModel = new DataTableResultModel<AssignRoleModel>();
+                resultModel.ResultList = new List<AssignRoleModel>();
+                resultModel.TotalResultCount = 0;
+            }
 
             return resultModel; // returns.
         }
