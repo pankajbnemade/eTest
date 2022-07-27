@@ -55,7 +55,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, userSession.CompanyId, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.IncomesTrading, (int)LedgerName.IncomesProfitAndLoss }, userSession.CompanyId, true);
 
             return await Task.Run(() =>
             {
@@ -104,8 +104,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, userSession.CompanyId, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
-            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.IncomesTrading, (int)LedgerName.IncomesProfitAndLoss }, userSession.CompanyId, true);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.Bank, userSession.CompanyId, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -136,8 +136,8 @@ namespace ERP.UI.Areas.Accounts.Controllers
             SalesInvoiceModel salesInvoiceModel = await _salesInvoice.GetSalesInvoiceById(salesInvoiceId);
 
             ViewBag.CustomerList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, salesInvoiceModel.CompanyId, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, salesInvoiceModel.CompanyId, true);
-            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, salesInvoiceModel.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.IncomesTrading, (int)LedgerName.IncomesProfitAndLoss }, salesInvoiceModel.CompanyId, true);
+            ViewBag.BankLedgerList = await _ledger.GetLedgerSelectList((int)LedgerName.Bank, salesInvoiceModel.CompanyId, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();

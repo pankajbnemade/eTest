@@ -294,11 +294,11 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             if (typeCorB == "C")
             {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.CashAccount, companyId, true);
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.Cash, companyId, true);
             }
             else
             {
-                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.BankAccount, companyId, true);
+                selectList = await _ledger.GetLedgerSelectList((int)LedgerName.Bank, companyId, true);
             }
 
             if (null != selectList && selectList.Any())

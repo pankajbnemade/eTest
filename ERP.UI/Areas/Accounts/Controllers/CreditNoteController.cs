@@ -56,7 +56,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, userSession.CompanyId, true);
 
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.ExpendituresTrading, (int)LedgerName.ExpendituresProfitAndLoss, (int)LedgerName.IncomesTrading, (int)LedgerName.IncomesProfitAndLoss }, userSession.CompanyId, true);
 
             return await Task.Run(() =>
             {
@@ -105,7 +105,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             UserSessionModel userSession = SessionExtension.GetComplexData<UserSessionModel>(HttpContext.Session, "UserSession");
 
             ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, userSession.CompanyId, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, userSession.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.ExpendituresTrading, (int)LedgerName.ExpendituresProfitAndLoss, (int)LedgerName.IncomesTrading, (int)LedgerName.IncomesProfitAndLoss }, userSession.CompanyId, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -136,7 +136,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             CreditNoteModel creditNoteModel = await _creditNote.GetCreditNoteById(creditNoteId);
 
             ViewBag.PartyList = await _ledger.GetLedgerSelectList((int)LedgerName.SundryDebtor, creditNoteModel.CompanyId, true);
-            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(0, creditNoteModel.CompanyId, true);
+            ViewBag.AccountLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.ExpendituresTrading, (int)LedgerName.ExpendituresProfitAndLoss, (int)LedgerName.IncomesTrading, (int)LedgerName.IncomesProfitAndLoss }, creditNoteModel.CompanyId, true);
             ViewBag.TaxRegisterList = await _taxRegister.GetTaxRegisterSelectList();
             ViewBag.CurrencyList = await _currency.GetCurrencySelectList();
             ViewBag.TaxModelTypeList = EnumHelper.GetEnumListFor<TaxModelType>();
@@ -162,6 +162,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
             JsonData<JsonStatus> data = new JsonData<JsonStatus>(new JsonStatus());
 
             IList<SelectListModel> selectList = await _ledgerAddress.GetLedgerAddressSelectList(ledgerId);
+
             if (null != selectList && selectList.Any())
             {
                 data.Result.Status = true;

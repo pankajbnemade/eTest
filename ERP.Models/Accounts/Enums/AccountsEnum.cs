@@ -122,11 +122,23 @@ namespace ERP.Models.Accounts.Enums
         [Description("Sundry Creditor")]
         SundryCreditor = 28,
 
-        [Description("Bank A/C")]
-        BankAccount = 34,
+        [Description("Bank")]
+        Bank = 34,
         
-        [Description("Cash A/C")]
-        CashAccount = 35,
+        [Description("Cash")]
+        Cash = 35,
+
+        [Description("Incomes (Trading)")]
+        IncomesTrading = 4,
+
+        [Description("Incomes (Profit & Loss)")]
+        IncomesProfitAndLoss = 6,
+
+        [Description("Expenditures (Trading)")]
+        ExpendituresTrading = 3,
+
+        [Description("Expenditures (Profit & Loss)")]
+        ExpendituresProfitAndLoss = 5,
     }
 
     public enum TypeCorB

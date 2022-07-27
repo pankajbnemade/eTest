@@ -69,6 +69,8 @@
 
     $(document).ready(function () {
         $("#taxRegisterGrid").DataTable({
+            "pageLength": 25,
+            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
             "processing": true,
             "scrollX": true,
             "dom": "<'row'<'col-sm-12'tr>>" +

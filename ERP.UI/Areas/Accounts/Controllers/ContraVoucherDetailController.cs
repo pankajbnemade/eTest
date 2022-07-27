@@ -35,7 +35,7 @@ namespace ERP.UI.Areas.Accounts.Controllers
 
             ContraVoucherModel contraVoucherModel = await _contraVoucher.GetContraVoucherById(contraVoucherId);
 
-            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.CashAccount, (int)LedgerName.BankAccount }, contraVoucherModel.CompanyId, true);
+            ViewBag.ParticularLedgerList = await _ledger.GetLedgerSelectList(new List<int>() { (int)LedgerName.Cash, (int)LedgerName.Bank }, contraVoucherModel.CompanyId, true);
 
             IList<ContraVoucherDetailModel> contraVoucherDetailModelList = await _contraVoucherDetail.GetContraVoucherDetailByVoucherId(contraVoucherId, addRow_Blank);
 
